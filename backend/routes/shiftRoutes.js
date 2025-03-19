@@ -1,9 +1,8 @@
-import { Router } from "express";
-import shiftController from "../controllers/shiftController.js";
+import express from "express";
 
-const { getShifts } = shiftController;
+import { getShifts } from "../controllers/shiftController.js";
 
-const router = Router();
+const router = express.Router();
 
 router.get("/", getShifts);
 // router.get("/:id", getShift);

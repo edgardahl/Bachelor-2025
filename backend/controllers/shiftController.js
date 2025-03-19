@@ -11,4 +11,4 @@ const getShifts = async (req, res) => {
   }
 };
 
-export default { getShifts };
+export { getShifts };
