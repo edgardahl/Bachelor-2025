@@ -5,8 +5,8 @@ const { getUser, createUser, getUsers } = userController;
 
 const router = Router();
 
-router.get("/user/", getUsers);
-router.get("/user/:id", getUser);
-router.post("/user", createUser);
+router.get("/all/", getUsers);
+router.get("/:id", getUser);
+router.post("/register", createUser);
 
 export default router;
