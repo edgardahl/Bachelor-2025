@@ -103,4 +103,68 @@ const createUser = async (req, res) => {
   }
 };
 
-export default { getUsers, getUser, createUser };
+const updateUser = async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+
+  try {
+    if (DB_TYPE === "mongo") {
+      const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+        new: true,
+        runValidators: true,
+      });
+
+      if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      return res.json(updatedUser);
+    } else if (DB_TYPE === "postgres") {
+      const fields = Object.keys(updateData);
+      const values = Object.values(updateData);
+
+      const querySet = fields.map((field, index) => `${field} = $${index + 1}`).join(", ");
+
+      const query = `UPDATE users SET ${querySet} WHERE id = $$${fields.length + 1} RETURNING *`;
+      const { rows } = await pool.query(query, [...values, id]);
+
+      if (rows.length === 0) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      return res.json(rows[0]);
+    }
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (DB_TYPE === "mongo") {
+      const deletedUser = await User.findByIdAndDelete(id);
+
+      if (!deletedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      return res.json({ message: "User deleted successfully" });
+    } else if (DB_TYPE === "postgres") {
+      const { rowCount } = await pool.query("DELETE FROM users WHERE id = $1", [id]);
+
+      if (rowCount === 0) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      return res.json({ message: "User deleted successfully" });
+    }
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export { getUsers, getUser, createUser, updateUser, deleteUser };
