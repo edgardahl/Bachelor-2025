@@ -2,7 +2,7 @@ import { DB_TYPE } from "../config/dbConfig.js";
 import User from "../models/userModel.js"; // Import the provided User schema
 import { pool } from "../database/postgres.js";
 
-const getUsers = async (req, res) => {
+export const getUsers = async (req, res) => {
   try {
     if (DB_TYPE === "mongo") {
       const users = await User.find();
@@ -25,7 +25,7 @@ const getUsers = async (req, res) => {
   }
 };
 
-const getUser = async (req, res) => {
+export const getUser = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -50,7 +50,7 @@ const getUser = async (req, res) => {
   }
 };
 
-const createUser = async (req, res) => {
+export const createUser = async (req, res) => {
   const {
     firstName,
     lastName,
@@ -103,7 +103,7 @@ const createUser = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
 
@@ -140,7 +140,7 @@ const updateUser = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -166,5 +166,3 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-export { getUsers, getUser, createUser, updateUser, deleteUser };

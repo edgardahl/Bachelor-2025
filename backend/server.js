@@ -1,19 +1,22 @@
 import express from "express";
+import dotenv from "dotenv";
 import connectDB from "./database/index.js";
 import userRoutes from "./routes/userRoutes.js";
 import shiftRoutes from "./routes/shiftRoutes.js";
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());
 
 // User API routes
-app.use("/api/user", userRoutes);
+app.use("/api/users", userRoutes);
 
 // Shift API routes
-app.use("/api/shift", shiftRoutes);
+app.use("/api/shifts", shiftRoutes);
 
 const PORT = process.env.PORT || 5001;
 
 connectDB().then(() => {
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}/api/`));
 });

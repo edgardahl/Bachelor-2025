@@ -1,7 +1,7 @@
 // import { DB_TYPE } from "../config/dbConfig.js";
 import Shift from "../models/shiftModel.js";
 
-const getShifts = async (req, res) => {
+export const getShifts = async (req, res) => {
   try {
     const shifts = await Shift.find();
     return res.json(shifts);
@@ -10,5 +10,3 @@ const getShifts = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-export { getShifts };
