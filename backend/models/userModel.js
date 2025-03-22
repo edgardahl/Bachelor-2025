@@ -1,44 +1,41 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true, unique: true }, // `unique: true` creates a unique index
-  phone: { type: String, required: true },
-  role: {
+  fornavn: { type: String, required: true }, // First name
+  etternavn: { type: String, required: true }, // Last name
+  email: { type: String, required: true, unique: true },
+  telefon: { type: String, required: true }, // Phone number
+  adresse: { type: String, required: true }, // Address
+  rolle: {
     type: String,
-    enum: ["Cashier", "Stock Associate", "Floor Manager", "Sales Associate"],
-    required: true,
+    enum: ["butikksjef", "butikkansatt"],
+    required: true, // Store manager or store employee
   },
-  store: { type: String, required: true },
-  shiftPreferences: {
+  kompetanse: {
     type: [String],
-    enum: ["Morning", "Afternoon", "Evening", "Night", "Full Day"],
-  },
-  skills: { type: [String] },
-  availability: {
-    monday: { type: String },
-    tuesday: { type: String },
-    wednesday: { type: String },
-    thursday: { type: String },
-    friday: { type: String },
-    weekend: { type: String },
+    enum: ["kasse", "tørrvare", "frukt/grønt", "lager", "bakery", "butikkoppfølging"],
   },
   employmentStatus: {
     type: String,
-    enum: ["Full-Time", "Part-Time", "Temporary"],
+    enum: ["Deltid", "Tilkalling"],
+    required: true, // Part-time or on-call
+  },
+  fødselsdag: { type: Date, required: true }, // Date of birth
+  butikk: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Store", // Relational reference to a store
     required: true,
   },
-  hireDate: { type: Date, default: Date.now },
+  hireDate: { type: Date, default: Date.now }, // Date of hiring
 });
 
 // Virtual field for full name
 userSchema.virtual("fullName").get(function () {
-  return `${this.firstName} ${this.lastName}`;
+  return `${this.fornavn} ${this.etternavn}`;
 });
 
 // Index for store
-userSchema.index({ store: 1 });
+userSchema.index({ butikk: 1 });
 
 const User = mongoose.model("User", userSchema);
 

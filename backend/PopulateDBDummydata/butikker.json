@@ -1,0 +1,47 @@
+[
+    {
+      "butikknavn": "Coop Extra Oslo",
+      "butikkkjede": "Coop Extra",
+      "kontaktinfo": {
+        "telefon": "987654321",
+        "email": "coop.extra.oslo@coop.no"
+      },
+      "butikksjef": "60f1c72d1b2c4b4b6f295ccf",
+      "adresse": "Store Street, Oslo",
+      "openingHours": {
+        "monday": "09:00-18:00",
+        "tuesday": "09:00-18:00",
+        "wednesday": "09:00-18:00",
+        "thursday": "09:00-18:00",
+        "friday": "09:00-18:00",
+        "weekend": "10:00-16:00"
+      },
+      "employees": [
+        "60f1c72d1b2c4b4b6f295cd0",
+        "60f1c72d1b2c4b4b6f295cd1"
+      ]
+    },
+    {
+      "butikknavn": "Coop Obs Trondheim",
+      "butikkkjede": "Coop Obs",
+      "kontaktinfo": {
+        "telefon": "123456789",
+        "email": "coop.obs.trondheim@coop.no"
+      },
+      "butikksjef": "60f1c72d1b2c4b4b6f295ccf",
+      "adresse": "Main Street, Trondheim",
+      "openingHours": {
+        "monday": "10:00-19:00",
+        "tuesday": "10:00-19:00",
+        "wednesday": "10:00-19:00",
+        "thursday": "10:00-19:00",
+        "friday": "10:00-19:00",
+        "weekend": "10:00-18:00"
+      },
+      "employees": [
+        "60f1c72d1b2c4b4b6f295cd2",
+        "60f1c72d1b2c4b4b6f295cd3"
+      ]
+    }
+  ]
+  

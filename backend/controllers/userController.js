@@ -166,3 +166,26 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getAllUsersWithStore = async (req, res) => {
+  try {
+    if (DB_TYPE === "mongo") {
+      // MongoDB: Fetch all users and only populate the store's name
+      const users = await User.find()
+        .populate("butikk", "butikknavn"); // Only include the store's name in the populated field
+      return res.json(users);
+    } else if (DB_TYPE === "postgres") {
+      // PostgreSQL: Modify the SQL to only return the store name
+      const { rows } = await pool.query(`
+        SELECT users.*, stores.butikknavn
+        FROM users
+        LEFT JOIN stores ON users.store = stores.id
+        ORDER BY users.id ASC
+      `);
+      res.status(200).json(rows);
+    }
+  } catch (error) {
+    console.error("Error fetching users with stores:", error);
+    res.status(500).json({ error: "Internal server error", message: error.message });
+  }
+};

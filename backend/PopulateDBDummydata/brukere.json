@@ -1,0 +1,42 @@
+[
+    {
+      "fornavn": "John",
+      "etternavn": "Doe",
+      "email": "john.doe@coop.no",
+      "telefon": "123456789",
+      "adresse": "Main St, Oslo",
+      "rolle": "butikksjef",
+      "kompetanse": ["kasse", "butikkoppfølging"],
+      "employmentStatus": "Deltid",
+      "fødselsdag": "1980-01-15",
+      "butikk": "60f1c72d1b2c4b4b6f295ccf",
+      "hireDate": "2010-06-01"
+    },
+    {
+      "fornavn": "Jane",
+      "etternavn": "Smith",
+      "email": "jane.smith@coop.no",
+      "telefon": "987654321",
+      "adresse": "Second St, Oslo",
+      "rolle": "butikkansatt",
+      "kompetanse": ["tørrvare", "lager"],
+      "employmentStatus": "Tilkalling",
+      "fødselsdag": "1990-05-10",
+      "butikk": "60f1c72d1b2c4b4b6f295ccf",
+      "hireDate": "2021-07-20"
+    },
+    {
+      "fornavn": "Tom",
+      "etternavn": "Hansen",
+      "email": "tom.hansen@coop.no",
+      "telefon": "123987456",
+      "adresse": "Third St, Trondheim",
+      "rolle": "butikkansatt",
+      "kompetanse": ["kasse", "frukt/grønt"],
+      "employmentStatus": "Deltid",
+      "fødselsdag": "1995-08-25",
+      "butikk": "60f1c72d1b2c4b4b6f295cd0",
+      "hireDate": "2019-03-11"
+    }
+  ]
+  

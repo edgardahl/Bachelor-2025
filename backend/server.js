@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./database/index.js";
 import userRoutes from "./routes/userRoutes.js";
 import shiftRoutes from "./routes/shiftRoutes.js";
+import storeRoutes from "./routes/storeRoutes.js";
 
 dotenv.config();
 
@@ -14,6 +15,9 @@ app.use("/api/users", userRoutes);
 
 // Shift API routes
 app.use("/api/shifts", shiftRoutes);
+
+//Store API routes
+app.use("/api/stores", storeRoutes);
 
 const PORT = process.env.PORT || 5001;
 
