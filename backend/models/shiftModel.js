@@ -8,11 +8,12 @@ const shiftSchema = new Schema({
   date: { type: Date, required: true },
   start_time: { type: Date, required: true },
   end_time: { type: Date, required: true },
+  store_id: { type: Schema.Types.ObjectId, ref: 'Store', required: true },  // Added store_id reference
   required_qualifications: [{ type: Schema.Types.ObjectId, ref: 'Qualification' }],
   posted_by_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   applicants: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   pending: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  claimed_by_id: { type: Schema.Types.ObjectId, ref: 'User' }
+  claimed_by_id: { type: Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
 const Shift = mongoose.model('Shift', shiftSchema);

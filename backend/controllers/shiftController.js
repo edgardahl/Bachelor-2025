@@ -6,29 +6,46 @@ import  '../models/storeModel.js';
 import '../models/qualificationModel.js'; // Only needed if you populate qualifications
 
 // Get all shifts
+// Get all shifts
+// Get all shifts
 export const getShifts = async (req, res) => {
   try {
     if (DB_TYPE === 'mongo') {
       const shifts = await Shift.find()
-      .populate({
-        path: 'applicants',
-        select: 'first_name last_name email phone_number qualifications store_id',
-        populate: [
-          {
-            path: 'store_id',
-            select: 'name'
-          },
-          {
-            path: 'qualifications',
-            select: 'name'
+        .populate({
+          path: 'applicants',
+          select: 'first_name last_name email phone_number qualifications store_id',
+          populate: [
+            {
+              path: 'store_id',  // Populate the store_id for applicants
+              select: 'name',
+              populate: {
+                path: 'manager_ids',  // Populate the manager_ids (multiple managers)
+                select: 'first_name last_name email',  // Adjust as needed
+              }
+            },
+            {
+              path: 'qualifications',
+              select: 'name'
+            }
+          ]
+        })
+        .populate({
+          path: 'required_qualifications',
+          select: 'name'
+        })
+        .populate({
+          path: 'store_id',  // Populate the store_id for the shift itself
+          select: 'name',
+          populate: {
+            path: 'manager_ids',  // Populate the manager_ids for the store
+            select: 'first_name last_name email',  // Adjust as needed
           }
-        ]
-      })
-      .populate({
-        path: 'required_qualifications',
-        select: 'name'
-      });
-    
+        })
+        .populate({
+          path: 'posted_by_id',
+          select: 'first_name last_name email phone_number'
+        });
 
       return res.json(shifts);
     } else {
@@ -41,13 +58,15 @@ export const getShifts = async (req, res) => {
 };
 
 
+
+
 // Get shift by ID
 export const getShift = async (req, res) => {
   const { id } = req.params;
   try {
     if (DB_TYPE === 'mongo') {
       const shift = await Shift.findById(id)
-        .populate({
+      .populate({
           path: 'required_qualifications',
           model: 'Qualification',
           select: 'name'
@@ -65,7 +84,13 @@ export const getShift = async (req, res) => {
               select: 'name'
             }
           ]
-        });
+        })
+        .populate({
+          path: 'store_id',
+          model: 'Store',
+          select: 'name'
+        })
+        
 
       if (!shift) return res.status(404).json({ error: 'Shift not found' });
       return res.json(shift);
@@ -78,21 +103,42 @@ export const getShift = async (req, res) => {
   }
 };
 
-
-// Create shift
+// Create a new shift
 export const createShift = async (req, res) => {
   try {
     if (DB_TYPE === 'mongo') {
-      const newShift = await Shift.create(req.body);
-      return res.status(201).json(newShift);
-    } else if (DB_TYPE === 'mysql') {
-      return res.status(201).json({ message: 'Shift created (MySQL placeholder)' });
+      const { title, description, date, start_time, end_time, store_id, required_qualifications, posted_by_id } = req.body;
+
+      // Ensure all required fields are provided
+      if (!title || !description || !date || !start_time || !end_time || !store_id || !posted_by_id) {
+        return res.status(400).json({ error: 'All required fields must be provided' });
+      }
+
+      const newShift = new Shift({
+        title,
+        description,
+        date,
+        start_time,
+        end_time,
+        store_id,
+        required_qualifications,
+        posted_by_id,
+        applicants: [], // No applicants initially
+        pending: [],
+        claimed_by_id: null
+      });
+
+      await newShift.save();
+      return res.status(201).json({ message: 'Shift created successfully', shift: newShift });
+    } else {
+      return res.status(400).json({ error: 'Database type not supported' });
     }
   } catch (error) {
     console.error('Error creating shift:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 // Update shift
 export const updateShift = async (req, res) => {
