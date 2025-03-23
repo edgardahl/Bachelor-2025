@@ -1,15 +1,26 @@
 import User from '../models/userModel.js';
 import { DB_TYPE } from '../config/dbConfig.js';
+import '../models/qualificationModel.js'; 
+import '../models/storeModel.js';
+
 // import { pool } from '../database/mysql.js'; // For future MySQL use
 
 // Get all users
 export const getUsers = async (req, res) => {
   try {
     if (DB_TYPE === 'mongo') {
-      const users = await User.find();
+      const users = await User.find()
+        .populate({
+          path: 'qualifications',
+          select: 'name'
+        })
+        .populate({
+          path: 'store_id',
+          select: 'name'
+        });
+
       return res.json(users);
     } else if (DB_TYPE === 'mysql') {
-      // const [rows] = await pool.query('SELECT * FROM users');
       return res.json([]); // Placeholder
     }
   } catch (error) {
@@ -24,12 +35,19 @@ export const getUser = async (req, res) => {
 
   try {
     if (DB_TYPE === 'mongo') {
-      const user = await User.findById(id);
+      const user = await User.findById(id)
+        .populate({
+          path: 'qualifications',
+          select: 'name'
+        })
+        .populate({
+          path: 'store_id',
+          select: 'name'
+        });
+
       if (!user) return res.status(404).json({ error: 'User not found' });
       return res.json(user);
     } else if (DB_TYPE === 'mysql') {
-      // const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [id]);
-      // if (!rows.length) return res.status(404).json({ error: 'User not found' });
       return res.json({}); // Placeholder
     }
   } catch (error) {
