@@ -1,0 +1,17 @@
+[
+    {
+      "title": "New Shift Posted",
+      "message": "A new cashier shift has been posted for March 30th, 2025. Apply now!",
+      "link": "http://shiftplatform.com/shifts/1",
+      "status": "not_seen",
+      "receiver_id": 2
+    },
+    {
+      "title": "Shift Application Approved",
+      "message": "Your application for the stocking shift on March 31st has been approved!",
+      "link": "http://shiftplatform.com/shifts/2",
+      "status": "not_seen",
+      "receiver_id": 2
+    }
+  ]
+  

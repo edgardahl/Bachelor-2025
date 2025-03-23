@@ -1,0 +1,19 @@
+[
+    {
+      "name": "Coop Extra City Center",
+      "store_chain": "Coop Extra",
+      "email": "coopextra.citycenter@coop.com",
+      "phone_number": "+1234000001",
+      "address": "City Center, 100 Main St, City, Country",
+      "manager_id": "xxxx"
+    },
+    {
+      "name": "Coop Extra Downtown",
+      "store_chain": "Coop Extra",
+      "email": "coopextra.downtown@coop.com",
+      "phone_number": "+1234000002",
+      "address": "Downtown, 200 Elm St, City, Country",
+      "manager_id": "xxxx"
+    }
+  ]
+  

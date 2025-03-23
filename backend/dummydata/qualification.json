@@ -1,0 +1,15 @@
+[
+    {
+      "name": "Cashier",
+      "description": "Ability to work at the cash register."
+    },
+    {
+      "name": "Stocking",
+      "description": "Ability to stock shelves with products."
+    },
+    {
+      "name": "Dry Goods",
+      "description": "Ability to handle dry goods and food items."
+    }
+  ]
+  
