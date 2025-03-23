@@ -2,14 +2,15 @@ import Shift from '../models/shiftModel.js';
 import { DB_TYPE } from '../config/dbConfig.js';
 
 // ✅ Register referenced models for population
-import '../models/storeModel.js';
+import  '../models/storeModel.js';
 import '../models/qualificationModel.js'; // Only needed if you populate qualifications
 
 // Get all shifts
 export const getShifts = async (req, res) => {
   try {
     if (DB_TYPE === 'mongo') {
-      const shifts = await Shift.find().populate({
+      const shifts = await Shift.find()
+      .populate({
         path: 'applicants',
         select: 'first_name last_name email phone_number qualifications store_id',
         populate: [
@@ -22,11 +23,16 @@ export const getShifts = async (req, res) => {
             select: 'name'
           }
         ]
+      })
+      .populate({
+        path: 'required_qualifications',
+        select: 'name'
       });
+    
 
       return res.json(shifts);
-    } else if (DB_TYPE === 'mysql') {
-      return res.json([]); // Placeholder for MySQL
+    } else {
+      return res.json([]); // MySQL placeholder
     }
   } catch (error) {
     console.error('Error fetching shifts:', error);
@@ -34,25 +40,32 @@ export const getShifts = async (req, res) => {
   }
 };
 
+
 // Get shift by ID
 export const getShift = async (req, res) => {
   const { id } = req.params;
   try {
     if (DB_TYPE === 'mongo') {
-      const shift = await Shift.findById(id).populate({
-        path: 'applicants',
-        select: 'first_name last_name email phone_number qualifications store_id',
-        populate: [
-          {
-            path: 'store_id',
-            select: 'name'
-          },
-          {
-            path: 'qualifications',
-            select: 'name'
-          }
-        ]
-      });
+      const shift = await Shift.findById(id)
+        .populate({
+          path: 'required_qualifications',
+          model: 'Qualification',
+          select: 'name'
+        })
+        .populate({
+          path: 'applicants',
+          select: 'first_name last_name email phone_number qualifications store_id',
+          populate: [
+            {
+              path: 'store_id',
+              select: 'name'
+            },
+            {
+              path: 'qualifications',
+              select: 'name'
+            }
+          ]
+        });
 
       if (!shift) return res.status(404).json({ error: 'Shift not found' });
       return res.json(shift);
@@ -64,6 +77,7 @@ export const getShift = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 // Create shift
 export const createShift = async (req, res) => {
