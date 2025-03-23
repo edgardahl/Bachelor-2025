@@ -1,9 +1,11 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+
+const { Schema } = mongoose;
 
 const qualificationSchema = new Schema({
-    name: { type: String, required: true },
-    description: { type: String }
+  name: { type: String, required: true },
+  description: { type: String }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Qualification', qualificationSchema);
+const Qualification = mongoose.model('Qualification', qualificationSchema);
+export default Qualification;
