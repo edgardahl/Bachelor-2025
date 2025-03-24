@@ -1,18 +1,38 @@
+// backend/middleware/authMiddleware.js
 import jwt from 'jsonwebtoken';
 
-export const protect = (req, res, next) => {
+/**
+ * Middleware: Verifies access token from Authorization header.
+ */
+export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
+  const token = authHeader?.split(' ')[1];
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Unauthorized' });
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized: No token provided' });
   }
 
   try {
-    const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Can be used later to get user id/role
+    req.user = {
+      userId: decoded.userId,
+      role: decoded.role,
+    };
     next();
-  } catch (error) {
-    return res.status(401).json({ error: 'Invalid token' });
+  } catch (err) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid token' });
   }
+};
+
+/**
+ * Middleware: Allows only specific roles to access the route.
+ */
+export const authorizeRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    const userRole = req.user?.role;
+    if (!userRole || !allowedRoles.includes(userRole)) {
+      return res.status(403).json({ error: 'Forbidden: Insufficient permissions' });
+    }
+    next();
+  };
 };

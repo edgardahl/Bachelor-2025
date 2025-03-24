@@ -7,7 +7,7 @@ const userSchema = new Schema({
   first_name: { type: String, required: true },
   last_name: { type: String, required: true },
   email: { type: String, unique: true, required: true },
-  password: { type: String, required: true }, // ✅ Added password field
+  password: { type: String, required: true }, 
   role: { type: String, enum: ['store_manager', 'store_employee'], required: true },
   phone_number: { type: String, required: true },
   address: { type: String, required: true },

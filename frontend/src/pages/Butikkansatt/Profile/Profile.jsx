@@ -1,5 +1,5 @@
 import React from 'react'
-import './AnsattProfile.css'
+import './Profile.css'
 
 const AnsattProfile = () => {
   return (
