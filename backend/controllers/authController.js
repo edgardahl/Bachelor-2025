@@ -1,24 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
-
-// 🔐 Generates a short-lived access token (15 minutes)
-// This token is meant for client-side usage, such as in Authorization headers.
-// Example: Authorization: Bearer <accessToken>
-// It contains user ID and role for authorization checks and is sent on every protected API request.
-const generateAccessToken = (user) => {
-  return jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: '15m',
-  });
-};
-
-// 🔁 Generates a long-lived refresh token (7 days)
-// Stored in an HTTP-only cookie on the client.
-// Used to obtain a new access token when it expires without needing to log in again.
-const generateRefreshToken = (user) => {
-  return jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: '7d',
-  });
-};
+import { generateAccessToken, generateRefreshToken } from '../utils/generateTokens.js';
+import { sanitizeUserInput } from '../utils/sanitizeInput.js';
 
 // Login and issue tokens
 export const loginUser = async (req, res) => {
@@ -54,20 +37,16 @@ export const loginUser = async (req, res) => {
 };
 
 // 🔄 Controller: Refresh access token using refresh token
-// Called when the access token expires (e.g., via Axios interceptor).
-// Validates the refresh token from cookie, and issues a new access token.
-// Client stores and uses the new access token to continue authenticated requests.
-export const refreshAccessToken = (req, res) => {
+export const refreshAccessToken = async (req, res) => {
   const token = req.cookies.refreshToken;
   if (!token) return res.status(401).json({ error: 'Missing refresh token' });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-    const accessToken = jwt.sign(
-      { userId: decoded.userId },
-      process.env.JWT_SECRET,
-      { expiresIn: '15m' }
-    );
+    const user = await User.findById(decoded.userId);
+    if (!user) return res.status(401).json({ error: 'Invalid token user' });
+
+    const accessToken = generateAccessToken(user);
     res.json({ accessToken });
   } catch (error) {
     console.error('Refresh token error:', error);
@@ -76,9 +55,6 @@ export const refreshAccessToken = (req, res) => {
 };
 
 // 👤 Controller: Get current logged-in user using access token
-// Useful for frontend to fetch the current user on page load (e.g., /auth/me).
-// Validates access token from Authorization header and returns the user (excluding password).
-// Example request: GET /api/auth/me with header Authorization: Bearer <accessToken>
 export const getCurrentUser = async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
@@ -92,6 +68,30 @@ export const getCurrentUser = async (req, res) => {
   } catch (error) {
     console.error('Get user error:', error);
     res.status(401).json({ error: 'Invalid token' });
+  }
+};
+
+// 🔒 Update profile for current logged-in user
+export const updateOwnProfile = async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Unauthorized' });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+
+    const sanitizedData = sanitizeUserInput(req.body);
+    const updatedUser = await User.findByIdAndUpdate(userId, sanitizedData, {
+      new: true,
+      runValidators: true,
+    }).select('-password');
+
+    if (!updatedUser) return res.status(404).json({ error: 'User not found' });
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
