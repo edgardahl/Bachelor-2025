@@ -1,12 +1,14 @@
-// server.js
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 import connectDB from "./database/index.js";
-import userRoutes from "./routes/userRoutes.js"; // Import user routes
-import shiftRoutes from "./routes/shiftRoutes.js"; // Import shift routes
+import userRoutes from "./routes/userRoutes.js";
+import shiftRoutes from "./routes/shiftRoutes.js";
+import storeRoutes from "./routes/storeRoutes.js"; // Import store routes
+import municipalityRoutes from "./routes/municipalityRoutes.js";
+import authRoutes from "./routes/authRoutes.js"; // Import auth routes
 
 dotenv.config();
 
@@ -36,11 +38,12 @@ app.use(
   })
 );
 
-// User routes
+// API routes
+app.use("/api/auth", authRoutes); // Register the new auth routes
 app.use("/api/users", userRoutes);
-
-// Shifts routes
-app.use("/api/shifts", shiftRoutes);  // Adding the shift routes
+app.use("/api/shifts", shiftRoutes);
+app.use("/api/stores", storeRoutes);  // ✅ Register the new store routes
+app.use("/api/municipalities", municipalityRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5001;

@@ -72,6 +72,15 @@ export default function LoginPage() {
         <button type="submit" className="login-button">
           Log In
         </button>
+
+        {/* Register Button */}
+        <button
+          type="button"
+          className="register-button"
+          onClick={() => navigate("/register")}
+        >
+          Register
+        </button>
       </form>
     </div>
   );
