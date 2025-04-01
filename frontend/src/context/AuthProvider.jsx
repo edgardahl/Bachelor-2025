@@ -48,12 +48,9 @@ export const AuthProvider = ({ children }) => {
       await axios.post("/auth/logout");
     } catch (err) {
       console.error("Logout error:", err);
-    } finally {
-      localStorage.removeItem("accessToken");
-      setUserState(null);
-      window.location.href = "/login";
     }
   };
+  
 
   return (
     <AuthContext.Provider value={{ user, setUser, loading, logout }}>

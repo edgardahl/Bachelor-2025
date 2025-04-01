@@ -142,11 +142,15 @@ export const logoutUser = (req, res) => {
   res.clearCookie("refreshToken", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    path: "/api/auth/refresh-token",
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+    path: "/", // ✅ MUST match the path used when setting the cookie
   });
+
+  console.log("✅ Refresh token cookie cleared");
+
   res.json({ message: "Logged out successfully" });
 };
+
 
 
 // 📝 Register User
