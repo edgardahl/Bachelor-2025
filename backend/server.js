@@ -9,6 +9,7 @@ import shiftRoutes from "./routes/shiftRoutes.js";
 import storeRoutes from "./routes/storeRoutes.js"; // Import store routes
 import municipalityRoutes from "./routes/municipalityRoutes.js";
 import authRoutes from "./routes/authRoutes.js"; // Import auth routes
+import qualificationRoutes from "./routes/qualificationRoutes.js";
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/shifts", shiftRoutes);
 app.use("/api/stores", storeRoutes);  // ✅ Register the new store routes
 app.use("/api/municipalities", municipalityRoutes);
+app.use("/api/qualifications", qualificationRoutes); // Mounting qualification routes here
 
 // Start server
 const PORT = process.env.PORT || 5001;

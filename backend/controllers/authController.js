@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs"; // Use bcryptjs for password comparison
 import { supabase } from "../config/supabaseClient.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/generateTokens.js";
+import { registerUserInDB, insertUserQualifications} from "../models/authModel.js";
 
 // 🟢 Login User
 export const loginUser = async (req, res) => {
@@ -121,4 +122,48 @@ export const logoutUser = (req, res) => {
     path: "/api/auth/refresh-token",
   });
   res.json({ message: "Logged out successfully" });
+};
+
+
+// 📝 Register User
+export const registerUser = async (req, res) => {
+  try {
+    const { first_name, last_name, email, password, phone_number, availability, role, store_id, municipality_id, qualifications } = req.body;
+
+    console.log("Received registration data:", req.body);
+
+    // ✅ Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // ✅ Call the model function to insert the user into DB
+    const newUser = await registerUserInDB({
+      first_name,
+      last_name,
+      email,
+      password: hashedPassword,
+      phone_number,
+      availability,
+      role,
+      store_id,
+      municipality_id
+    });
+
+    if (!newUser) {
+      return res.status(400).json({ error: "Failed to register user" });
+    }
+
+    // ✅ Insert the qualifications into the user_qualifications junction table
+    if (qualifications && qualifications.length > 0) {
+      const qualificationsInserted = await insertUserQualifications(newUser.user_id, qualifications);
+
+      if (!qualificationsInserted) {
+        return res.status(400).json({ error: "Failed to insert qualifications" });
+      }
+    }
+
+    res.status(201).json({ message: "User registered successfully", user: newUser });
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };

@@ -14,8 +14,12 @@ const Register = () => {
   const [municipalityId, setMunicipalityId] = useState("");
   const [municipalities, setMunicipalities] = useState([]);
   const [stores, setStores] = useState([]);
+  const [qualifications, setQualifications] = useState([]); // Qualifications state
+  const [selectedQualifications, setSelectedQualifications] = useState([]); // Selected qualifications
+  const [message, setMessage] = useState(""); // Message for success or error
+  const [loading, setLoading] = useState(false); // Loading state
 
-  // Fetch municipalities and stores
+  // Fetch municipalities, stores, and qualifications
   useEffect(() => {
     const fetchMunicipalities = async () => {
       try {
@@ -31,20 +35,42 @@ const Register = () => {
         const response = await axios.get("/api/stores");
         const sortedStores = response.data.sort((a, b) =>
           a.name.localeCompare(b.name)
-        ); // Sort alphabetically
+        );
         setStores(sortedStores);
       } catch (error) {
         console.error("Error fetching stores:", error);
       }
     };
 
+    const fetchQualifications = async () => {
+      try {
+        const response = await axios.get("/api/qualifications");
+        setQualifications(response.data);
+      } catch (error) {
+        console.error("Error fetching qualifications:", error);
+      }
+    };
+
     fetchMunicipalities();
     fetchStores();
+    fetchQualifications(); // Fetch qualifications here
   }, []);
 
-  const handleSubmit = (e) => {
+  // Handle qualification selection
+  const handleQualificationChange = (qualificationId) => {
+    setSelectedQualifications((prevSelected) =>
+      prevSelected.includes(qualificationId)
+        ? prevSelected.filter((id) => id !== qualificationId)
+        : [...prevSelected, qualificationId]
+    );
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    setMessage(""); // Reset message
+    setLoading(true);
+
     const userData = {
       first_name: firstName,
       last_name: lastName,
@@ -55,15 +81,29 @@ const Register = () => {
       role,
       store_id: storeId,
       municipality_id: municipalityId,
+      qualifications: selectedQualifications, // Add selected qualifications here
     };
-  
-    console.log("User Registration Data:", userData);
+
+    try {
+      const response = await axios.post("http://localhost:5001/api/auth/register", userData);
+      setMessage("Registration successful! 🎉");
+      console.log("Success:", response.data);
+      
+      // Optionally, redirect to login page after successful registration
+      // window.location.href = "/login";
+
+    } catch (error) {
+      console.error("Registration error:", error.response?.data || error.message);
+      setMessage("Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
-  
 
   return (
     <div className="register-container">
       <h2>Register</h2>
+      {message && <p className={message.includes("failed") ? "error" : "success"}>{message}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>First Name</label>
@@ -152,7 +192,31 @@ const Register = () => {
             ))}
           </select>
         </div>
-        <button type="submit">Register</button>
+
+        {/* Qualifications Section */}
+        <div>
+          <label>Qualifications</label>
+          <div>
+            {qualifications.map((qualification) => (
+              <div key={qualification.qualification_id}>
+                <input
+                  type="checkbox"
+                  id={`qualification-${qualification.qualification_id}`}
+                  value={qualification.qualification_id}
+                  checked={selectedQualifications.includes(qualification.qualification_id)}
+                  onChange={() => handleQualificationChange(qualification.qualification_id)}
+                />
+                <label htmlFor={`qualification-${qualification.qualification_id}`}>
+                  {qualification.name}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
       </form>
     </div>
   );
