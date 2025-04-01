@@ -5,6 +5,7 @@ import Footer from './components/Footer/Footer';
 import ProtectedRoute from './components/Auth/ProtectedRoute.jsx';
 
 import LoginPage from './pages/Login/Login.jsx';
+import RegisterPage from './pages/Register/Register.jsx';  // ✅ import the RegisterPage
 import ButikksjefDashboard from './pages/Butikksjef/Dashboard/Dashboard.jsx';
 import AnsattDashboard from './pages/Butikkansatt/Dashboard/Dashboard.jsx';
 import useAuth from './context/UseAuth';
@@ -35,6 +36,7 @@ function App() {
         />
 
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />  {/* ✅ Add the Register route */}
 
         <Route
           path="/dashboard/butikksjef"
