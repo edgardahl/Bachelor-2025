@@ -1,21 +1,13 @@
-import mongoose from 'mongoose';
+import { supabase } from "../config/supabaseClient.js";
 
-const { Schema } = mongoose;
+// Get all shifts a user is qualified for
+export const getShiftsUserIsQualifiedForModel = async (userId) => {
+  const { data, error } = await supabase
+    .rpc("get_shifts_user_is_qualified_for", { user_id: userId });  // Passing user_id as parameter
 
-const shiftSchema = new Schema({
-  title: { type: String, required: true, trim: true },
-  description: { type: String, required: true, trim: true },
-  date: { type: Date, required: true },
-  start_time: { type: Date, required: true },
-  end_time: { type: Date, required: true },
-  store_id: { type: Schema.Types.ObjectId, ref: 'Store', required: true },
-  required_qualifications: [{ type: Schema.Types.ObjectId, ref: 'Qualification' }],
-  posted_by_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  applicants: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
-  pending: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
-  claimed_by_id: { type: Schema.Types.ObjectId, ref: 'User' }
-}, { timestamps: true });
+  if (error) {
+    throw new Error(error.message);
+  }
 
-const Shift = mongoose.model('Shift', shiftSchema);
-
-export default Shift;
+  return data;
+};

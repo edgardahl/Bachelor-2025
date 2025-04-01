@@ -1,18 +1,23 @@
 import pkg from "pg";
-import { POSTGRES_URI } from "../config/dbConfig.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const { Pool } = pkg;
 
-const pool = new Pool({ connectionString: POSTGRES_URI });
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URI,
+  ssl: { rejectUnauthorized: false },
+});
 
-const connectPostgres = async () => {
+export const connectPostgres = async () => {
   try {
     await pool.connect();
-    console.log("Connected to PostgreSQL");
-  } catch (err) {
-    console.error("PostgreSQL connection error:", err);
+    console.log("✅ PostgreSQL connected successfully!");
+  } catch (error) {
+    console.error("❌ PostgreSQL connection error:", error);
     process.exit(1);
   }
 };
 
-export { pool, connectPostgres };
+export default pool;

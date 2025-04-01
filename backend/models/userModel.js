@@ -1,52 +1,30 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+// models/userModel.js
+import { supabase } from "../config/supabaseClient.js";
 
-const { Schema } = mongoose;
+// Get all users from the database
+export const getAllUsersModel = async () => {
+  const { data, error } = await supabase
+    .from('users')
+    .select('user_id, email, first_name'); // Replace 'id' with 'user_id'
 
-const userSchema = new Schema({
-  first_name: { type: String, required: true },
-  last_name: { type: String, required: true },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    match: [/.+\@.+\..+/, 'Please enter a valid email address'],
-  },
-  password: {
-    type: String,
-    required: true,
-    select: false, // ✅ Prevent password from being returned in queries
-  },
-  role: {
-    type: String,
-    enum: ['store_manager', 'store_employee'],
-    required: true,
-  },
-  phone_number: { type: String, required: true },
-  address: { type: String, required: true },
-  availability: { type: Boolean, required: true, default: true },
-  store_id: { type: Schema.Types.ObjectId, ref: 'Store', required: true },
-  qualifications: [{ type: Schema.Types.ObjectId, ref: 'Qualification' }],
-}, { timestamps: true });
-
-// ✅ Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    return next();
-  } catch (err) {
-    return next(err);
+  if (error) {
+    throw new Error(error.message);
   }
-});
-
-// ✅ Method to compare passwords later during login
-userSchema.methods.comparePassword = function (candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
+  return data;
 };
 
-const User = mongoose.model('User', userSchema);
+// Get one user by ID from the database
+export const getUserByIdModel = async (id) => {
+  const { data, error } = await supabase
+    .from('users')
+    .select('user_id, email, first_name') // Replace 'id' with 'user_id'
+    .eq('user_id', id) // Adjust the column name here as well
+    .single();
 
-export default User;
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
+
+

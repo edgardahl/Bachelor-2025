@@ -1,20 +1,9 @@
-import express from 'express';
-import {
-  getShifts,
-  getShift,
-  createShift,
-  updateShift,
-  deleteShift,
-  applyToShift
-} from '../controllers/shiftController.js';
+import express from "express";
+import { getShiftsUserIsQualifiedForController } from "../controllers/shiftController.js";
 
 const router = express.Router();
 
-router.get('/', getShifts);
-router.post('/new', createShift);
-router.get('/:id', getShift);
-router.put('/:id', updateShift);
-router.delete('/:id', deleteShift);
-router.post('/:id/apply', applyToShift);
+// Route to get all shifts a user is qualified for
+router.get("/user_is_qualified_for/:user_id", getShiftsUserIsQualifiedForController);  // Fixed route path
 
 export default router;
