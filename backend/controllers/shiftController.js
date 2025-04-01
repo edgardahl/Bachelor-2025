@@ -72,16 +72,22 @@ export const claimShiftController = async (req, res) => {
     // Fetch qualifications the user has
     const userQualifications = await getUserQualificationsModel(userId);
 
-    // Check if the user has all the required qualifications
-    const hasRequiredQualifications = shiftQualifications.every(
-      (qualification) =>
-        userQualifications.some(
-          (userQualification) => userQualification.id === qualification.id
-        )
+    // Extract qualification IDs for comparison
+    const shiftQualificationIds = shiftQualifications.map(
+      (q) => q.qualification_id
+    );
+    const userQualificationIds = userQualifications.map(
+      (q) => q.qualification_id
     );
 
+    // Check if the user has exactly the required qualifications
+    const hasAllQualifications =
+      shiftQualificationIds.every((qualificationId) =>
+        userQualificationIds.includes(qualificationId)
+      ) && shiftQualificationIds.length === userQualificationIds.length;
+
     // If the user doesn't have the required qualifications, return an error
-    if (!hasRequiredQualifications) {
+    if (!hasAllQualifications) {
       return res.status(403).json({
         error:
           "You don't have the required qualifications to claim this shift.",
