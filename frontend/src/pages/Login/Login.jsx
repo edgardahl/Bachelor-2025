@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../api/axiosInstance";
-import useAuth from "../../context/UseAuth"; // ✅ import context
+import useAuth from "../../context/UseAuth";
 import "./Login.css";
 
 export default function LoginPage() {
@@ -9,15 +9,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { user, setUser } = useAuth(); // ✅ include setUser
-
-  useEffect(() => {
-    if (user?.role === "store_manager") {
-      navigate("/dashboard/butikksjef");
-    } else if (user?.role === "employee") {
-      navigate("/dashboard/butikkansatt");
-    }
-  }, [user, navigate]);
+  const { setUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,19 +18,12 @@ export default function LoginPage() {
     try {
       const res = await axios.post("/auth/login", { email, password });
 
-      // Save token + update context
       localStorage.setItem("accessToken", res.data.accessToken);
-      const user = res.data.user;
-      setUser(user); // ✅ update global auth state
+      const loggedInUser = res.data.user;
+      setUser(loggedInUser);
 
-      // Redirect based on role
-      if (user.role === "store_manager") {
-        navigate("/dashboard/butikksjef");
-      } else if (user.role === "employee") {
-        navigate("/dashboard/butikkansatt");
-      } else {
-        console.log("fakk dette")
-      }
+      // 🔁 Let App.jsx handle the role-based redirect
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");
     }
