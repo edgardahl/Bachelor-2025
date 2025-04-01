@@ -1,44 +1,65 @@
-// src/context/AuthProvider.jsx
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import axios from '../api/axiosInstance';
-import { AuthContext } from './AuthContext';
+import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "../api/axiosInstance";
+import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUserState] = useState(null);
   const [loading, setLoading] = useState(true);
+  const skipNextFetch = useRef(false);
   const location = useLocation();
 
+  const setUser = (userData) => {
+    skipNextFetch.current = true;
+    setUserState(userData);
+  };
+
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+  
+    // If no token, don't attempt fetch
+    if (!token) {
+      console.log("[AuthProvider] No token found");
+      setUserState(null);
+      setLoading(false);
+      return;
+    }
+  
+    // Only try once unless login explicitly sets a user
+    if (skipNextFetch.current) {
+      console.log("[AuthProvider] Skipping /auth/me after login");
+      skipNextFetch.current = false;
+      setLoading(false);
+      return;
+    }
+  
+    console.log("[AuthProvider] Validating token with /auth/me...");
     axios
-      .get('/auth/me')
-      .then(res => {
-        console.log('[AuthProvider] ✅ Authenticated user:', res.data.user);
-        setUser(res.data.user);
+      .get("/auth/me")
+      .then((res) => {
+        console.log("[AuthProvider] ✅ User:", res.data.user);
+        setUserState(res.data.user);
       })
-      .catch(err => {
-        // Avoid console spam on login page
-        if (location.pathname !== '/login') {
-          console.warn('[AuthProvider] ❌ Not authenticated:', err?.response?.data || err.message);
-        }
-        setUser(null);
+      .catch((err) => {
+        console.error("[AuthProvider] ❌ /auth/me failed:", err?.response?.data || err.message);
+        localStorage.removeItem("accessToken"); // Clear token to avoid repeat
+        setUserState(null);
       })
       .finally(() => {
-        console.log('[AuthProvider] 🟡 Finished loading');
         setLoading(false);
       });
   }, [location.pathname]);
+  
 
-  // ✅ Logout function (clears cookie + localStorage)
   const logout = async () => {
     try {
-      await axios.post('/auth/logout'); // Clears refresh token cookie
+      await axios.post("/auth/logout");
     } catch (err) {
-      console.error('Logout error:', err);
+      console.error("Logout error:", err);
     } finally {
-      localStorage.removeItem('accessToken');
-      setUser(null);
-      window.location.href = '/login';
+      localStorage.removeItem("accessToken");
+      setUserState(null);
+      window.location.href = "/login";
     }
   };
 

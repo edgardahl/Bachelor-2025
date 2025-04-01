@@ -1,54 +1,49 @@
-/**
- * 🚀 seedUsers.js
- *
- * This script reads dummy user data from `dummydata/users.json`
- * and inserts it into the MongoDB database using Mongoose.
- * 
- * It ensures passwords are properly hashed by using `.save()`
- * on each `User` document (instead of insertMany).
- * 
- * Usage:
- *   Run this from the backend root:
- *     node seed/seedUsers.js
- *
- * Notes:
- * - Be sure your `.env` file contains a valid `MONGO_URI`.
- * - This script clears the `users` collection before seeding.
- */
-
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
-import User from '../models/userModel.js';
-
-dotenv.config({ path: path.resolve('../.env') });
+import bcrypt from 'bcrypt';
+import { supabase } from '../config/supabaseClient.js'; // ✅
 
 
-const seedUsers = async () => {
+
+dotenv.config();
+
+const usersToUpdate = [
+  {
+    email: 'alice.johnson@example.com',
+    password: 'Password123!',
+  },
+  {
+    email: 'john.doe@example.com',
+    password: 'Password123!',
+  },
+  {
+    email: 'jane.smith@example.com',
+    password: 'Password123!',
+  },
+];
+
+const setPasswordsForUsers = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ Connected to MongoDB');
+    for (const user of usersToUpdate) {
+      const hashedPassword = await bcrypt.hash(user.password, 10);
 
-    // Optional: Clear existing users
-    await User.deleteMany();
+      const { data, error } = await supabase
+        .from('users')
+        .update({ password: hashedPassword })
+        .eq('email', user.email);
 
-    // Load JSON
-    const filePath = path.resolve('./dummydata/users.json');
-    const users = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
-    for (const data of users) {
-      const user = new User(data);
-      await user.save(); // ✅ triggers password hashing
-      console.log(`✅ Created user: ${user.email}`);
+      if (error) {
+        console.error(`❌ Failed to update ${user.email}:`, error.message);
+      } else {
+        console.log(`✅ Password updated for ${user.email}`);
+      }
     }
 
-    console.log('🎉 All users seeded!');
+    console.log('🎉 All passwords set!');
     process.exit();
   } catch (err) {
-    console.error('❌ Error seeding users:', err);
+    console.error('❌ Error updating passwords:', err.message);
     process.exit(1);
   }
 };
 
-seedUsers();
+setPasswordsForUsers();

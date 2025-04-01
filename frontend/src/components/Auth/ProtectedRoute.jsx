@@ -1,24 +1,22 @@
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from '../../context/UseAuth';
 
 export default function ProtectedRoute({ children, allowedRoles }) {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (!loading) {
-      const isOnLoginPage = location.pathname === '/login';
+  if (loading) return null; // Or a spinner
 
-      if (!user || !allowedRoles.includes(user.role)) {
-        if (!isOnLoginPage) {
-          navigate('/login');
-        }
-      }
-    }
-  }, [user, loading, allowedRoles, navigate, location]);
+  // 🚫 Not logged in
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
-  if (loading) return null;
-  return user && allowedRoles.includes(user.role) ? children : null;
+  // 🚫 Role not allowed
+  if (!allowedRoles.includes(user.role)) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // ✅ User is authorized
+  return children;
 }

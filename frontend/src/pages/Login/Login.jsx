@@ -9,13 +9,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { user } = useAuth(); // ✅ get user from context
+  const { user, setUser } = useAuth(); // ✅ include setUser
 
   useEffect(() => {
-    // ✅ If already logged in, redirect
     if (user?.role === "store_manager") {
       navigate("/dashboard/butikksjef");
-    } else if (user?.role === "store_employee") {
+    } else if (user?.role === "employee") {
       navigate("/dashboard/butikkansatt");
     }
   }, [user, navigate]);
@@ -26,16 +25,19 @@ export default function LoginPage() {
 
     try {
       const res = await axios.post("/auth/login", { email, password });
-      localStorage.setItem("accessToken", res.data.accessToken);
-      
-      const user = res.data.user;
 
+      // Save token + update context
+      localStorage.setItem("accessToken", res.data.accessToken);
+      const user = res.data.user;
+      setUser(user); // ✅ update global auth state
+
+      // Redirect based on role
       if (user.role === "store_manager") {
         navigate("/dashboard/butikksjef");
-      } else if (user.role === "store_employee") {
+      } else if (user.role === "employee") {
         navigate("/dashboard/butikkansatt");
       } else {
-        navigate("/dashboard"); // fallback
+        console.log("fakk dette")
       }
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");
@@ -73,7 +75,6 @@ export default function LoginPage() {
           Log In
         </button>
 
-        {/* Register Button */}
         <button
           type="button"
           className="register-button"
