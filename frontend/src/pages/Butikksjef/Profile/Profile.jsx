@@ -1,5 +1,5 @@
 import React from 'react'
-import './ButikksjefProfile.css'
+import './Profile.css'
 
 const ButikksjefProfile = () => {
   return (

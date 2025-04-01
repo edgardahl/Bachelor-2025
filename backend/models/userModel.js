@@ -1,45 +1,30 @@
-import mongoose from "mongoose";
+// models/userModel.js
+import { supabase } from "../config/supabaseClient.js";
 
-const userSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true, unique: true }, // `unique: true` creates a unique index
-  phone: { type: String, required: true },
-  role: {
-    type: String,
-    enum: ["Cashier", "Stock Associate", "Floor Manager", "Sales Associate"],
-    required: true,
-  },
-  store: { type: String, required: true },
-  shiftPreferences: {
-    type: [String],
-    enum: ["Morning", "Afternoon", "Evening", "Night", "Full Day"],
-  },
-  skills: { type: [String] },
-  availability: {
-    monday: { type: String },
-    tuesday: { type: String },
-    wednesday: { type: String },
-    thursday: { type: String },
-    friday: { type: String },
-    weekend: { type: String },
-  },
-  employmentStatus: {
-    type: String,
-    enum: ["Full-Time", "Part-Time", "Temporary"],
-    required: true,
-  },
-  hireDate: { type: Date, default: Date.now },
-});
+// Get all users from the database
+export const getAllUsersModel = async () => {
+  const { data, error } = await supabase
+    .from('users')
+    .select('user_id, email, first_name'); // Replace 'id' with 'user_id'
 
-// Virtual field for full name
-userSchema.virtual("fullName").get(function () {
-  return `${this.firstName} ${this.lastName}`;
-});
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
 
-// Index for store
-userSchema.index({ store: 1 });
+// Get one user by ID from the database
+export const getUserByIdModel = async (id) => {
+  const { data, error } = await supabase
+    .from('users')
+    .select('user_id, email, first_name') // Replace 'id' with 'user_id'
+    .eq('user_id', id) // Adjust the column name here as well
+    .single();
 
-const User = mongoose.model("User", userSchema);
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
 
-export default User;
+
