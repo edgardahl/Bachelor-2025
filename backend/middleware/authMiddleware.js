@@ -1,15 +1,15 @@
 // backend/middleware/authMiddleware.js
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 /**
  * Middleware: Verifies access token from Authorization header.
  */
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  const token = authHeader?.split(' ')[1];
+  const token = authHeader?.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ error: 'Unauthorized: No token provided' });
+    return res.status(401).json({ error: "Unauthorized: No token provided" });
   }
 
   try {
@@ -20,7 +20,7 @@ export const verifyToken = (req, res, next) => {
     };
     next();
   } catch (err) {
-    return res.status(401).json({ error: 'Unauthorized: Invalid token' });
+    return res.status(401).json({ error: "Unauthorized: Invalid token" });
   }
 };
 
@@ -31,7 +31,9 @@ export const authorizeRoles = (...allowedRoles) => {
   return (req, res, next) => {
     const userRole = req.user?.role;
     if (!userRole || !allowedRoles.includes(userRole)) {
-      return res.status(403).json({ error: 'Forbidden: Insufficient permissions' });
+      return res
+        .status(403)
+        .json({ error: "Forbidden: Insufficient permissions" });
     }
     next();
   };

@@ -12,3 +12,16 @@ export const getAllQualificationsModel = async () => {
 
   return data; // Return the qualifications
 };
+
+export const getShiftQualificationsModel = async (shiftId) => {
+  const { data, error } = await supabase
+    .from("shift_qualifications")
+    .select("qualification_id")
+    .eq("shift_id", shiftId); // Get all qualifications for the shift
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data; // Return the qualifications for the shift
+};
