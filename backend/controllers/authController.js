@@ -81,10 +81,12 @@ export const getCurrentUser = async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    console.log("🔍 Decoded JWT in /auth/me:", decoded); // ✅ Add this
+
     const { data: user, error } = await supabase
       .from("users")
       .select("user_id, email, first_name, role")
-      .eq("user_id", decoded.userId)
+      .eq("user_id", decoded.userId) // 👈 this MUST match the token!
       .single();
 
     if (error || !user) return res.status(404).json({ error: "User not found" });
@@ -102,6 +104,7 @@ export const getCurrentUser = async (req, res) => {
     res.status(401).json({ error: "Invalid token" });
   }
 };
+
 
 // 🔒 Update Profile
 export const updateOwnProfile = async (req, res) => {

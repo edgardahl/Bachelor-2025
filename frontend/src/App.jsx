@@ -1,13 +1,13 @@
 import './App.css';
-import { Routes, Route, Navigate } from 'react-router-dom'; // ✅ No BrowserRouter here!
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
-import ProtectedRoute from './components/Auth/ProtectedRoute.jsx';
+import ProtectedRoute from './components/Auth/ProtectedRoute';
 
-import LoginPage from './pages/Login/Login.jsx';
-import RegisterPage from './pages/Register/Register.jsx';  // ✅ import the RegisterPage
-import ButikksjefDashboard from './pages/Butikksjef/Dashboard/Dashboard.jsx';
-import AnsattDashboard from './pages/Butikkansatt/Dashboard/Dashboard.jsx';
+import LoginPage from './pages/Login/Login';
+import RegisterPage from './pages/Register/Register';
+import ButikksjefDashboard from './pages/Butikksjef/Dashboard/Dashboard';
+import AnsattDashboard from './pages/Butikkansatt/Dashboard/Dashboard';
 import useAuth from './context/UseAuth';
 
 function App() {
@@ -20,24 +20,35 @@ function App() {
       {user && <Navbar />}
 
       <Routes>
+        {/* Redirect root based on role */}
         <Route
           path="/"
           element={
             user ? (
               user.role === 'store_manager' ? (
-                <Navigate to="/dashboard/butikksjef" />
+                <Navigate to="/dashboard/butikksjef" replace />
+              ) : user.role === 'employee' ? (
+                <Navigate to="/dashboard/butikkansatt" replace />
               ) : (
-                <Navigate to="/dashboard/butikkansatt" />
+                <Navigate to="/login" replace />
               )
             ) : (
-              <Navigate to="/login" />
+              <Navigate to="/login" replace />
             )
           }
         />
 
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />  {/* ✅ Add the Register route */}
+        {/* Prevent access to login/register if already logged in */}
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/" replace /> : <LoginPage />}
+        />
+        <Route
+          path="/register"
+          element={user ? <Navigate to="/" replace /> : <RegisterPage />}
+        />
 
+        {/* Protected dashboards */}
         <Route
           path="/dashboard/butikksjef"
           element={
@@ -49,7 +60,7 @@ function App() {
         <Route
           path="/dashboard/butikkansatt"
           element={
-            <ProtectedRoute allowedRoles={['store_employee']}>
+            <ProtectedRoute allowedRoles={['employee']}>
               <AnsattDashboard />
             </ProtectedRoute>
           }

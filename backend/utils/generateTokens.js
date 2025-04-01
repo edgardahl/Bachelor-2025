@@ -15,17 +15,18 @@
 import jwt from 'jsonwebtoken';
 
 export const generateAccessToken = (user) => {
-  return jwt.sign(
-    { userId: user._id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: '15h' }
-  );
-};
-
-export const generateRefreshToken = (user) => {
-  return jwt.sign(
-    { userId: user._id },
-    process.env.JWT_REFRESH_SECRET,
-    { expiresIn: '7d' }
-  );
-};
+    return jwt.sign(
+      { userId: user.userId, role: user.role }, // ✅ fixed key
+      process.env.JWT_SECRET,
+      { expiresIn: '15m' } // shorter is better for access tokens
+    );
+  };
+  
+  export const generateRefreshToken = (user) => {
+    return jwt.sign(
+      { userId: user.userId }, // ✅ fixed key
+      process.env.JWT_REFRESH_SECRET,
+      { expiresIn: '7d' }
+    );
+  };
+  
