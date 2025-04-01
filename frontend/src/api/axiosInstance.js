@@ -1,11 +1,15 @@
 import axios from 'axios';
 
+const isDev = window.location.hostname === 'localhost';
+
 const instance = axios.create({
-  baseURL: '/api',
-  withCredentials: true, // ✅ send refresh token cookie
+  baseURL: isDev
+    ? 'https://localhost:5001/api'
+    : 'https://your-production-backend-url.com/api', // Replace with real domain
+  withCredentials: true,
 });
 
-// 🔐 Request interceptor: attach access token
+// Request interceptor to attach access token to requests
 instance.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
   if (token) {
@@ -14,7 +18,7 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
-// 🔁 Response interceptor: handle expired tokens
+// Response interceptor to handle expired tokens
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -34,15 +38,10 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // If 401 and we haven't retried yet
-    if (
-      error.response?.status === 401 &&
-      !originalRequest._retry
-    ) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       if (isRefreshing) {
-        // If refresh is already in progress, queue the request
         return new Promise((resolve, reject) => {
           failedQueue.push({
             resolve: (token) => {
@@ -57,16 +56,13 @@ instance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Attempt to refresh token
         const res = await instance.post('/auth/refresh-token');
         const newAccessToken = res.data.accessToken;
 
-        // Store new token and update headers
         localStorage.setItem('accessToken', newAccessToken);
         instance.defaults.headers.Authorization = `Bearer ${newAccessToken}`;
         processQueue(null, newAccessToken);
 
-        // Retry original request
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return instance(originalRequest);
       } catch (refreshError) {
