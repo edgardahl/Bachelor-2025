@@ -35,8 +35,10 @@ app.use(
   cors({
     origin: isProduction ? "https://your-frontend.vercel.app" : "http://localhost:5173",
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"], // ✅ make sure this is included
   })
 );
+
 
 // API routes
 app.use("/api/auth", authRoutes); // Register the new auth routes
