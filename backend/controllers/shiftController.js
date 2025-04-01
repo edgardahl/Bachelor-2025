@@ -2,6 +2,7 @@ import {
   getAllShiftsModel,
   getShiftsByStoreModel,
   getShiftByIdModel,
+  getClaimedShiftsModel,
   createShiftModel,
   deleteShiftModel,
   getShiftsUserIsQualifiedForModel,
@@ -40,6 +41,17 @@ export const getShiftByIdController = async (req, res) => {
     return res.json(shift);
   } catch (error) {
     console.error("Error fetching shift:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Get all claimed shifts
+export const getClaimedShiftsController = async (req, res) => {
+  try {
+    const claimedShifts = await getClaimedShiftsModel();
+    return res.json(claimedShifts);
+  } catch (error) {
+    console.error("Error fetching claimed shifts:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

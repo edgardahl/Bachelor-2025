@@ -31,6 +31,17 @@ export const getShiftByIdModel = async (shiftId) => {
   return data;
 };
 
+// Get all claimed shifts
+export const getClaimedShiftsModel = async () => {
+  const { data, error } = await supabase
+    .from("shifts")
+    .select("*")
+    .not("claimed_by_id", "is", null);
+
+  if (error) throw new Error(error.message);
+  return data;
+};
+
 // Create a new shift
 export const createShiftModel = async (shiftData) => {
   const { data, error } = await supabase
@@ -61,7 +72,7 @@ export const getShiftsUserIsQualifiedForModel = async (userId) => {
   const { data, error } = await supabase.rpc(
     "get_shifts_user_is_qualified_for",
     { user_id: userId }
-  ); // Passing user_id as parameter
+  );
 
   if (error) {
     throw new Error(error.message);

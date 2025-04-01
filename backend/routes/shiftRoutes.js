@@ -4,6 +4,7 @@ import {
   getShiftsUserIsQualifiedForController,
   getShiftsByStoreController,
   getShiftByIdController,
+  getClaimedShiftsController,
   createShiftController,
   deleteShiftController,
 } from "../controllers/shiftController.js";
@@ -21,6 +22,8 @@ router.get(
 router.get("/store/:store_id", getShiftsByStoreController);
 // Route to get a single shift by ID
 router.get("/:shift_id", getShiftByIdController);
+// Route to get all claimed shifts
+router.get("/claimed", getClaimedShiftsController);
 // Route to create a new shift
 router.post("/", createShiftController);
 // Route to delete a shift
