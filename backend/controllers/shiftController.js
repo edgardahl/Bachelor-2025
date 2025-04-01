@@ -3,6 +3,7 @@ import {
   getShiftsByStoreModel,
   getShiftByIdModel,
   getClaimedShiftsModel,
+  claimShiftModel,
   createShiftModel,
   deleteShiftModel,
   getShiftsUserIsQualifiedForModel,
@@ -56,12 +57,30 @@ export const getClaimedShiftsController = async (req, res) => {
   }
 };
 
-// Create a new shift
-export const createShiftController = async (req, res) => {
-  const shiftData = req.body;
+// Claim a shift
+export const claimShiftController = async (req, res) => {
+  const { shift_id } = req.params; // Extract shift_id from request parameters
+  const userId = req.user.userId; // User ID from the request (added by verifyToken middleware)
 
   try {
-    const newShift = await createShiftModel(shiftData);
+    const claimedShift = await claimShiftModel(shift_id, userId);
+    return res.json(claimedShift);
+  } catch (error) {
+    console.error("Error claiming shift:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Create a new shift
+export const createShiftController = async (req, res) => {
+  const shiftData = req.body; // Shift data from request body
+  const userId = req.user.userId; // User ID from the request (added by verifyToken middleware)
+
+  try {
+    // Pass both shiftData and userId to the model
+    const newShift = await createShiftModel(shiftData, userId);
+
+    // Send response back to the client with the created shift
     return res.status(201).json(newShift);
   } catch (error) {
     console.error("Error creating shift:", error);

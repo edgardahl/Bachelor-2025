@@ -1,28 +1,36 @@
 [
-    {
-      "title": "Cashier Shift",
-      "description": "Cashier position for 4 hours.",
-      "date": "2025-03-30",
-      "start_time": "2025-03-30T08:00:00.000Z",
-      "end_time": "2025-03-30T12:00:00.000Z",
-      "required_qualifications": [1],
-      "posted_by_id": 1,
-      "applicants": [2],
-      "pending": [],
-      "claimed_by_id": null
-    },
-    {
-      "_id": 2,
-      "title": "Stocking Shift",
-      "description": "Stocking dry goods for 5 hours.",
-      "date": "2025-03-31",
-      "start_time": "2025-03-31T14:00:00.000Z",
-      "end_time": "2025-03-31T19:00:00.000Z",
-      "required_qualifications": [2],
-      "posted_by_id": 3,
-      "applicants": [2],
-      "pending": [],
-      "claimed_by_id": null
-    }
-  ]
-  
+  {
+    "title": "Cashier Shift",
+    "description": "Cashier position for 4 hours.",
+    "date": "2025-03-30",
+    "start_time": "2025-03-30T08:00:00.000Z",
+    "end_time": "2025-03-30T12:00:00.000Z",
+    "required_qualifications": [1],
+    "posted_by_id": 1,
+    "applicants": [2],
+    "pending": [],
+    "claimed_by_id": null
+  },
+  {
+    "_id": 2,
+    "title": "Stocking Shift",
+    "description": "Stocking dry goods for 5 hours.",
+    "date": "2025-03-31",
+    "start_time": "2025-03-31T14:00:00.000Z",
+    "end_time": "2025-03-31T19:00:00.000Z",
+    "required_qualifications": [2],
+    "posted_by_id": 3,
+    "applicants": [2],
+    "pending": [],
+    "claimed_by_id": null
+  },
+  {
+    "title": "Morning Shift",
+    "description": "Opening shift, responsible for setting up the store.",
+    "date": "2025-04-02",
+    "start_time": "2025-04-02T08:00:00.000Z",
+    "end_time": "2025-04-02T16:00:00.000Z",
+    "store_id": "3b13abba-8be7-4845-9dac-7abcb01d1b23",
+    "posted_by": "d0d51865-ffb8-4fe2-ad72-e13feb0f9d33"
+  }
+]

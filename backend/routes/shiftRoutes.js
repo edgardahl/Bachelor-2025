@@ -5,9 +5,11 @@ import {
   getShiftsByStoreController,
   getShiftByIdController,
   getClaimedShiftsController,
+  claimShiftController,
   createShiftController,
   deleteShiftController,
 } from "../controllers/shiftController.js";
+import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -24,8 +26,20 @@ router.get("/store/:store_id", getShiftsByStoreController);
 router.get("/:shift_id", getShiftByIdController);
 // Route to get all claimed shifts
 router.get("/claimed", getClaimedShiftsController);
+// Route to claim a shift
+router.post(
+  "/claim/:shift_id",
+  verifyToken,
+  authorizeRoles("employee"),
+  claimShiftController
+);
 // Route to create a new shift
-router.post("/", createShiftController);
+router.post(
+  "/",
+  verifyToken,
+  authorizeRoles("store_manager"),
+  createShiftController
+);
 // Route to delete a shift
 router.delete("/:shift_id", deleteShiftController);
 
