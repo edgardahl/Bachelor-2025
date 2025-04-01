@@ -32,5 +32,32 @@
     "end_time": "2025-04-02T16:00:00.000Z",
     "store_id": "3b13abba-8be7-4845-9dac-7abcb01d1b23",
     "posted_by": "d0d51865-ffb8-4fe2-ad72-e13feb0f9d33"
+  },
+  {
+    "title": "Cashier Shift",
+    "description": "Shift for cashier at Coop store",
+    "date": "2025-04-02",
+    "start_time": "2025-04-02T08:00:00",
+    "end_time": "2025-04-02T16:00:00",
+    "store_id": "some-store-id",
+    "posted_by": "d0d51865-ffb8-4fe2-ad72-e13feb0f9d33",
+    "qualifications": [
+      "7e480201-80dc-4f3f-9163-d63a122d00d7",
+      "2a14071d-56a2-4670-9ccb-6b83ce47d5ba"
+    ]
+  },
+  {
+    "title": "Cashier Shift",
+    "description": "Shift for cashier at Coop store",
+    "date": "2025-04-02",
+    "start_time": "2025-04-02T08:00:00",
+    "end_time": "2025-04-02T16:00:00",
+    "store_id": "3b13abba-8be7-4845-9dac-7abcb01d1b23",
+    "posted_by": "d0d51865-ffb8-4fe2-ad72-e13feb0f9d33",
+    "qualifications": [
+      "7e480201-80dc-4f3f-9163-d63a122d00d7",
+      "2a14071d-56a2-4670-9ccb-6b83ce47d5ba",
+      "1c387c4b-5f0c-460b-8835-fdaf99021773"
+    ]
   }
 ]

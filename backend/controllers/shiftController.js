@@ -8,6 +8,9 @@ import {
   deleteShiftModel,
   getShiftsUserIsQualifiedForModel,
 } from "../models/shiftModel.js";
+import { getShiftQualificationsModel } from "../models/qualificationModel.js";
+import { getUserQualificationsModel } from "../models/userModel.js";
+import { assignQualificationsToShift } from "./qualificationController.js";
 
 // Get all shifts
 export const getAllShiftsController = async (req, res) => {
@@ -63,28 +66,54 @@ export const claimShiftController = async (req, res) => {
   const userId = req.user.userId; // User ID from the request (added by verifyToken middleware)
 
   try {
+    // Fetch required qualifications for the shift
+    const shiftQualifications = await getShiftQualificationsModel(shift_id);
+
+    // Fetch qualifications the user has
+    const userQualifications = await getUserQualificationsModel(userId);
+
+    // Check if the user has all the required qualifications
+    const hasRequiredQualifications = shiftQualifications.every(
+      (qualification) =>
+        userQualifications.some(
+          (userQualification) => userQualification.id === qualification.id
+        )
+    );
+
+    // If the user doesn't have the required qualifications, return an error
+    if (!hasRequiredQualifications) {
+      return res.status(403).json({
+        error:
+          "You don't have the required qualifications to claim this shift.",
+      });
+    }
+
+    // Proceed with claiming the shift
     const claimedShift = await claimShiftModel(shift_id, userId);
     return res.json(claimedShift);
   } catch (error) {
     console.error("Error claiming shift:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
-// Create a new shift
+// Create a new shift with qualifications
 export const createShiftController = async (req, res) => {
-  const shiftData = req.body; // Shift data from request body
-  const userId = req.user.userId; // User ID from the request (added by verifyToken middleware)
+  const shiftData = req.body;
+  const userId = req.user.userId;
 
   try {
-    // Pass both shiftData and userId to the model
-    const newShift = await createShiftModel(shiftData, userId);
+    const newShift = await createShiftModel(shiftData, userId); // First create the shift
+    const qualifications = shiftData.qualifications; // Get qualifications for the shift
 
-    // Send response back to the client with the created shift
+    if (qualifications && qualifications.length > 0) {
+      await assignQualificationsToShift(newShift.shift_id, qualifications); // Then assign qualifications to the shift
+    }
+
     return res.status(201).json(newShift);
   } catch (error) {
     console.error("Error creating shift:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 

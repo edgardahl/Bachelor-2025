@@ -14,10 +14,10 @@ const sanitizeShift = (shiftData, userId) => {
     throw new Error("Description is required and must be a non-empty string.");
   }
 
-  // Date: Ensure it's a valid date string in 'DD-MM-YYYY' format
-  const isValidDate = /^\d{2}-\d{2}-\d{4}$/.test(date);
+  // Date: Ensure it's a valid date string in 'YYYY-MM-DD' format
+  const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(date);
   if (!isValidDate) {
-    throw new Error("Date must be in the format DD-MM-YYYY.");
+    throw new Error("Date must be in the format YYYY-MM-DD.");
   }
 
   // Start Time: Ensure it's a valid Date object
