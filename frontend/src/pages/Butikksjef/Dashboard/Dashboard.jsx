@@ -6,9 +6,10 @@ const ButikksjefDashboard = () => {
   return (
     <div className="dashboard">
       <h1>Butikksjef Dashboard</h1>
-      
+
       {/* Add a navigation link to the new page */}
       <Link to="/dashboard/butikksjef/minevakter">Mine Vakter</Link>
+      <Link to="/dashboard/butikksjef/butikker">Butikker</Link>
     </div>
   );
 };
