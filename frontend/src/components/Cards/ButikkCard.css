@@ -1,0 +1,31 @@
+.butikk-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.butikk-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.butikk-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.butikk-card p {
+  margin: 4px 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.butikk-card p:last-child {
+  font-weight: bold;
+  color: #007bff;
+}

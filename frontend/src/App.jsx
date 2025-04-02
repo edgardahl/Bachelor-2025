@@ -1,16 +1,17 @@
-import './App.css';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/Navbar/Navbar';
-import Footer from './components/Footer/Footer';
-import ProtectedRoute from './components/Auth/ProtectedRoute';
+import "./App.css";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
+import ProtectedRoute from "./components/Auth/ProtectedRoute";
 
-import LoginPage from './pages/Login/Login';
-import RegisterPage from './pages/Register/Register';
-import ButikksjefDashboard from './pages/Butikksjef/Dashboard/Dashboard';
-import AnsattDashboard from './pages/Butikkansatt/Dashboard/Dashboard';
-import useAuth from './context/UseAuth';
-import MineVakter from './pages/Butikksjef/MineVakter/MineVakter';
-import CreateShift from './pages/Butikksjef/CreateShift/CreateShift';
+import LoginPage from "./pages/Login/Login";
+import RegisterPage from "./pages/Register/Register";
+import ButikksjefDashboard from "./pages/Butikksjef/Dashboard/Dashboard";
+import AnsattDashboard from "./pages/Butikkansatt/Dashboard/Dashboard";
+import useAuth from "./context/UseAuth";
+import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter";
+import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift";
+import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
 
 function App() {
   const { user, loading } = useAuth();
@@ -27,9 +28,9 @@ function App() {
           path="/"
           element={
             user ? (
-              user.role === 'store_manager' ? (
+              user.role === "store_manager" ? (
                 <Navigate to="/dashboard/butikksjef" replace />
-              ) : user.role === 'employee' ? (
+              ) : user.role === "employee" ? (
                 <Navigate to="/dashboard/butikkansatt" replace />
               ) : (
                 <Navigate to="/login" replace />
@@ -51,12 +52,12 @@ function App() {
         />
 
         {/* BUTIKKSJEF ROUTES*/}
-        
+
         {/* Protected dashboards Butikksjef */}
         <Route
           path="/dashboard/butikksjef"
           element={
-            <ProtectedRoute allowedRoles={['store_manager']}>
+            <ProtectedRoute allowedRoles={["store_manager"]}>
               <ButikksjefDashboard />
             </ProtectedRoute>
           }
@@ -66,17 +67,27 @@ function App() {
         <Route
           path="/dashboard/butikksjef/minevakter"
           element={
-            <ProtectedRoute allowedRoles={['store_manager']}>
+            <ProtectedRoute allowedRoles={["store_manager"]}>
               <MineVakter />
             </ProtectedRoute>
           }
         />
 
-         {/* Protected dashboards Butikkansatt */}
+        {/* Protected butikksjef Butikk Oversikt */}
+        <Route
+          path="/dashboard/butikksjef/butikker"
+          element={
+            <ProtectedRoute allowedRoles={["store_manager"]}>
+              <ButikkOversikt />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected dashboards Butikkansatt */}
         <Route
           path="/dashboard/butikkansatt"
           element={
-            <ProtectedRoute allowedRoles={['employee']}>
+            <ProtectedRoute allowedRoles={["employee"]}>
               <AnsattDashboard />
             </ProtectedRoute>
           }
@@ -86,12 +97,11 @@ function App() {
         <Route
           path="/dashboard/butikksjef/createshift"
           element={
-            <ProtectedRoute allowedRoles={['store_manager']}>
+            <ProtectedRoute allowedRoles={["store_manager"]}>
               <CreateShift />
             </ProtectedRoute>
           }
         />
-
       </Routes>
 
       {user && <Footer />}
