@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../../api/axiosInstance";
 import "./Register.css";
 
 const Register = () => {
@@ -23,16 +23,21 @@ const Register = () => {
   useEffect(() => {
     const fetchMunicipalities = async () => {
       try {
-        const response = await axios.get("/api/municipalities");
-        setMunicipalities(response.data);
+        const response = await axios.get("/municipalities");
+        if (Array.isArray(response.data)) {
+          setMunicipalities(response.data);
+        } else {
+          console.error("Municipalities response is not an array", response.data);
+        }
       } catch (error) {
         console.error("Error fetching municipalities:", error);
       }
     };
+    
 
     const fetchStores = async () => {
       try {
-        const response = await axios.get("/api/stores");
+        const response = await axios.get("/stores");
         const sortedStores = response.data.sort((a, b) =>
           a.name.localeCompare(b.name)
         );
@@ -44,7 +49,7 @@ const Register = () => {
 
     const fetchQualifications = async () => {
       try {
-        const response = await axios.get("/api/qualifications");
+        const response = await axios.get("/qualifications");
         setQualifications(response.data);
       } catch (error) {
         console.error("Error fetching qualifications:", error);
