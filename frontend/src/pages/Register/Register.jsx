@@ -27,13 +27,15 @@ const Register = () => {
         if (Array.isArray(response.data)) {
           setMunicipalities(response.data);
         } else {
-          console.error("Municipalities response is not an array", response.data);
+          console.error(
+            "Municipalities response is not an array",
+            response.data
+          );
         }
       } catch (error) {
         console.error("Error fetching municipalities:", error);
       }
     };
-    
 
     const fetchStores = async () => {
       try {
@@ -90,15 +92,17 @@ const Register = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:5001/api/auth/register", userData);
+      const response = await axios.post("/auth/register", userData);
       setMessage("Registration successful! 🎉");
       console.log("Success:", response.data);
-      
+
       // Optionally, redirect to login page after successful registration
       // window.location.href = "/login";
-
     } catch (error) {
-      console.error("Registration error:", error.response?.data || error.message);
+      console.error(
+        "Registration error:",
+        error.response?.data || error.message
+      );
       setMessage("Registration failed. Please try again.");
     } finally {
       setLoading(false);
@@ -108,7 +112,11 @@ const Register = () => {
   return (
     <div className="register-container">
       <h2>Register</h2>
-      {message && <p className={message.includes("failed") ? "error" : "success"}>{message}</p>}
+      {message && (
+        <p className={message.includes("failed") ? "error" : "success"}>
+          {message}
+        </p>
+      )}
       <form onSubmit={handleSubmit}>
         <div>
           <label>First Name</label>
@@ -157,7 +165,11 @@ const Register = () => {
         </div>
         <div>
           <label>Availability</label>
-          <select value={availability} onChange={(e) => setAvailability(e.target.value)} required>
+          <select
+            value={availability}
+            onChange={(e) => setAvailability(e.target.value)}
+            required
+          >
             <option value="">Select Availability</option>
             <option value="available">Available</option>
             <option value="unavailable">Unavailable</option>
@@ -165,7 +177,11 @@ const Register = () => {
         </div>
         <div>
           <label>Role</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)} required>
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            required
+          >
             <option value="employee">Employee</option>
             <option value="store_manager">Store Manager</option>
             <option value="admin">Admin</option>
@@ -173,7 +189,11 @@ const Register = () => {
         </div>
         <div>
           <label>Store</label>
-          <select value={storeId} onChange={(e) => setStoreId(e.target.value)} required>
+          <select
+            value={storeId}
+            onChange={(e) => setStoreId(e.target.value)}
+            required
+          >
             <option value="">Select Store</option>
             {stores.map((store) => (
               <option key={store.store_id} value={store.store_id}>
@@ -191,7 +211,10 @@ const Register = () => {
           >
             <option value="">Select Municipality</option>
             {municipalities.map((municipality) => (
-              <option key={municipality.municipality_id} value={municipality.municipality_id}>
+              <option
+                key={municipality.municipality_id}
+                value={municipality.municipality_id}
+              >
                 {municipality.municipality_name}
               </option>
             ))}
@@ -208,10 +231,16 @@ const Register = () => {
                   type="checkbox"
                   id={`qualification-${qualification.qualification_id}`}
                   value={qualification.qualification_id}
-                  checked={selectedQualifications.includes(qualification.qualification_id)}
-                  onChange={() => handleQualificationChange(qualification.qualification_id)}
+                  checked={selectedQualifications.includes(
+                    qualification.qualification_id
+                  )}
+                  onChange={() =>
+                    handleQualificationChange(qualification.qualification_id)
+                  }
                 />
-                <label htmlFor={`qualification-${qualification.qualification_id}`}>
+                <label
+                  htmlFor={`qualification-${qualification.qualification_id}`}
+                >
                   {qualification.name}
                 </label>
               </div>
