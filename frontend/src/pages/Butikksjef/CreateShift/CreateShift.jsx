@@ -28,8 +28,6 @@ const CreateShift = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get("/auth/me");
-        console.log("User id:", response.data.user.id);
-        console.log("User store:", response.data.user.storeId);
         setUserId(response.data.user.id);
         setStoreId(response.data.user.storeId);
       } catch (error) {
