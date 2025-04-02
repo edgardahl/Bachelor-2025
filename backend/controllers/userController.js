@@ -1,5 +1,6 @@
 // controllers/userController.js
-import { getAllUsersModel, getUserByIdModel } from "../models/userModel.js";
+import { getAllUsersModel, getUserByIdModel, getEmployeesByStoreIdModel } from "../models/userModel.js";
+import jwt from 'jsonwebtoken';
 
 // Get all users
 export const getAllUsersController = async (req, res) => {
@@ -27,5 +28,36 @@ export const getUserByIdController = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Get employees by store ID for store managers
+export const getEmployeesByStoreIdController = async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1]; // Get the token from Authorization header
+
+  if (!token) {
+    return res.status(401).json({ error: 'Token not provided' });
+  }
+
+  try {
+    // Decode the token to get the store_id from the access token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const storeId = decoded.storeId; // Extract storeId from the decoded token
+    console.log('Store ID from decoded token:', storeId);  // Log the storeId to verify it's correct
+
+    const employees = await getEmployeesByStoreIdModel(storeId);
+
+    if (!employees || employees.length === 0) {
+      return res.status(404).json({ error: 'No employees found for this store' });
+    }
+
+    return res.json(employees); // Return the list of employees
+  } catch (error) {
+    console.error('Error fetching employees:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+
 
 

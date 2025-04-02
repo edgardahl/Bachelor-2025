@@ -1,14 +1,20 @@
-// routes/userRoutes.js
 import express from 'express';
-import { getAllUsersController, getUserByIdController } from '../controllers/userController.js';
+import {
+  getAllUsersController,
+  getUserByIdController,
+  getEmployeesByStoreIdController
+} from '../controllers/userController.js';
+import { verifyToken, authorizeRoles } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Route to get all users
+// Route to get all users (public access)
 router.get('/', getAllUsersController);
 
-// Route to get a user by ID
-router.get('/:id', getUserByIdController);
+// Route to get employees for a store manager (protected by verifyToken and authorizeRoles)
+router.get('/employees', verifyToken, authorizeRoles('store_manager'), getEmployeesByStoreIdController);
 
+// Route to get a user by ID (public access)
+router.get('/:id', getUserByIdController);
 
 export default router;
