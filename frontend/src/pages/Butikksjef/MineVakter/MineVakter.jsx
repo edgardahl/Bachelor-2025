@@ -8,6 +8,11 @@ const MineVakter = () => {
       <h1>Mine Vakter</h1>
       <p>Her kan du se mine vakter.</p>
 
+      {/* Link to Create New Shift Page */}
+      <Link to="/dashboard/butikksjef/createshift">
+        <button className="create-shift-button">Opprett ny vakt</button>
+      </Link>
+
       {/* Add a link to go back to the dashboard */}
       <Link to="/dashboard/butikksjef">Tilbake til Dashboard</Link>
     </div>

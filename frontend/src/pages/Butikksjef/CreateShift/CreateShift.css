@@ -1,0 +1,34 @@
+.create-shift-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .create-shift-form label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .create-shift-form input,
+  .create-shift-form select,
+  .create-shift-form button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .create-shift-form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .create-shift-form button:hover {
+    background-color: #45a049;
+  }
+  
