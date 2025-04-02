@@ -9,7 +9,7 @@ import RegisterPage from './pages/Register/Register';
 import ButikksjefDashboard from './pages/Butikksjef/Dashboard/Dashboard';
 import AnsattDashboard from './pages/Butikkansatt/Dashboard/Dashboard';
 import useAuth from './context/UseAuth';
-import DineVakter from './pages/Butikksjef/DineVakter/DineVakter';
+import MineVakter from './pages/Butikksjef/MineVakter/MineVakter';
 
 function App() {
   const { user, loading } = useAuth();
@@ -67,12 +67,12 @@ function App() {
           }
         />
 
-        {/* ✅ Add a separate route for Dine Vakter */}
+        {/* ✅ Add a separate route for Mine Vakter */}
         <Route
-          path="/dashboard/butikksjef/DineVakter"
+          path="/dashboard/butikksjef/minevakter"
           element={
             <ProtectedRoute allowedRoles={['store_manager']}>
-              <DineVakter />
+              <MineVakter />
             </ProtectedRoute>
           }
         />

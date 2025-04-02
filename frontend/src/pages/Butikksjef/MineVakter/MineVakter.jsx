@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./DineVakter.css";
+import "./MineVakter.css";
 
-const DineVakter = () => {
+const MineVakter = () => {
   return (
     <div className="dine-vakter">
-      <h1>Dine Vakter</h1>
-      <p>Her kan du se dine vakter.</p>
+      <h1>Mine Vakter</h1>
+      <p>Her kan du se mine vakter.</p>
 
       {/* Add a link to go back to the dashboard */}
       <Link to="/dashboard/butikksjef">Tilbake til Dashboard</Link>
@@ -14,4 +14,4 @@ const DineVakter = () => {
   );
 };
 
-export default DineVakter;
+export default MineVakter;
