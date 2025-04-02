@@ -72,14 +72,13 @@ export const refreshAccessToken = async (req, res) => {
 
 // 👤 Get Current User
 export const getCurrentUser = async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(400).json({ error: "Token not provided" }); // Updated error message for missing token
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await getUserById(decoded.userId);
+    const userId = req.user.userId;  // This comes from the token, added by the verifyToken middleware
+    const user = await getUserById(userId);
 
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
     res.json({
       user: {
@@ -87,7 +86,7 @@ export const getCurrentUser = async (req, res) => {
         email: user.email,
         name: user.first_name,
         role: user.role,
-        storeId: user.store_id
+        storeId: user.store_id,
       },
     });
   } catch (error) {

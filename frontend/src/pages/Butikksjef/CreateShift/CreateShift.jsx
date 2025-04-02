@@ -24,19 +24,22 @@ const CreateShift = () => {
     const [StoreId, setStoreId] = useState("");
 
  //Fetch user info
+    // Fetch user info using the access token from localStorage
     useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get("/auth/me");
-        setUserId(response.data.user.id);
-        setStoreId(response.data.user.storeId);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
+      const fetchUser = async () => {
+        try {
+          const response = await axios.get("/auth/me"); // No need to manually attach the token
+          console.log("GET CURRENT USER", response.data);
+    
+          setUserId(response.data.user.id);
+          setStoreId(response.data.user.storeId);
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
+      };
+    
+      fetchUser();
+    }, []);
 
   // Fetch qualifications (similar to Register component)
   useEffect(() => {
