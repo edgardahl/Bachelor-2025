@@ -8,7 +8,7 @@ const ButikksjefDashboard = () => {
       <h1>Butikksjef Dashboard</h1>
       
       {/* Add a navigation link to the new page */}
-      <Link to="/dashboard/butikksjef/vakter">Dine Vakter</Link>
+      <Link to="/dashboard/butikksjef/DineVakter">Dine Vakter</Link>
     </div>
   );
 };
