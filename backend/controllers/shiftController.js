@@ -103,18 +103,11 @@ export const claimShiftController = async (req, res) => {
   }
 };
 
-// Create a new shift with qualifications
+// Create a new shift
 export const createShiftController = async (req, res) => {
-  const shiftData = req.body;
-  const userId = req.user.userId;
-
   try {
-    const newShift = await createShiftModel(shiftData, userId); // First create the shift
-    const qualifications = shiftData.qualifications; // Get qualifications for the shift
-
-    if (qualifications && qualifications.length > 0) {
-      await assignQualificationsToShift(newShift.shift_id, qualifications); // Then assign qualifications to the shift
-    }
+    const shiftData = req.body;
+    const newShift = await createShiftModel(shiftData);
 
     return res.status(201).json(newShift);
   } catch (error) {

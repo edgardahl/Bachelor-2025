@@ -57,36 +57,42 @@ export const claimShiftModel = async (shiftId, userId) => {
 };
 
 // Create a new shift with qualifications
-export const createShiftModel = async (shiftData, userId) => {
-  const sanitizedData = sanitizeShift(shiftData, userId);
+export const createShiftModel = async (shiftData) => {
+  const sanitizedData = sanitizeShift(shiftData);
 
   // Insert the shift into the database
   const { data: shiftDataResponse, error: shiftError } = await supabase
     .from("shifts")
-    .insert([sanitizedData])
+    .insert([
+      {
+        title: sanitizedData.title,
+        description: sanitizedData.description,
+        date: sanitizedData.date,
+        start_time: sanitizedData.start_time,
+        end_time: sanitizedData.end_time,
+        store_id: sanitizedData.store_id,
+        posted_by: sanitizedData.posted_by,
+      },
+    ])
     .select()
     .single();
 
   if (shiftError) throw new Error(shiftError.message);
 
-  // Now, insert the qualifications needed for this shift into the 'shift_qualifications' table
-  const qualificationPromises = shiftData.qualifications.map(
-    async (qualificationId) => {
-      const { error } = await supabase
-        .from("shift_qualifications")
-        .insert([
-          {
-            shift_id: shiftDataResponse.shift_id,
-            qualification_id: qualificationId,
-          },
-        ]);
+  // Insert qualifications into the 'shift_qualifications' table
+  if (sanitizedData.qualifications.length > 0) {
+    const qualificationInserts = sanitizedData.qualifications.map(
+      async (qualificationId) => {
+        const { error } = await supabase
+          .from("shift_qualifications")
+          .insert([{ shift_id: shiftDataResponse.shift_id, qualification_id: qualificationId }]);
 
-      if (error) throw new Error(error.message);
-    }
-  );
+        if (error) throw new Error(error.message);
+      }
+    );
 
-  // Wait for all qualifications to be inserted
-  await Promise.all(qualificationPromises);
+    await Promise.all(qualificationInserts);
+  }
 
   return shiftDataResponse;
 };

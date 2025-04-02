@@ -28,9 +28,10 @@ const CreateShift = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get("/auth/me");
-        console.log(response.data);
-        setUserId(response.data.user_id);
-        setStoreId(response.data.store_id);
+        console.log("User id:", response.data.user.id);
+        console.log("User store:", response.data.user.storeId);
+        setUserId(response.data.user.id);
+        setStoreId(response.data.user.storeId);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -63,37 +64,49 @@ const CreateShift = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage(""); // Reset message
-    setLoading(true);
+  // Handle form submission
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setMessage(""); // Reset message
+  setLoading(true);
 
-    const shiftData = {
-      title,
-      description,
-      date,
-      start_time: `${date}T${startTime}:00`, // Combine date and time
-      end_time: `${date}T${endTime}:00`,
-      store_id: 1, // Assuming store ID is 1 for now
-      posted_by: 2, // Assuming user ID is 1 for now
-      qualifications: selectedQualifications
-    };
-
-    try {
-      // Assuming this POST endpoint is set up to create a shift
-      console.log("Creating shift with data:", shiftData);
-      const response = await axios.post("/shifts", shiftData);
-
-      // Success
-      console.log("Shift created:", response.data);
-      setMessage("Shift created successfully! 🎉");
-    } catch (error) {
-      console.error("Error creating shift:", error);
-      setMessage("Shift creation failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  // Ensure times are in the correct format (HH:mm)
+  const shiftData = {
+    title,
+    description,
+    date, // already in YYYY-MM-DD format from <input type="date">
+    start_time: startTime, // HH:mm
+    end_time: endTime, // HH:mm
+    store_id: StoreId,
+    posted_by: UserId,
+    qualifications: selectedQualifications, // Send selected qualifications
   };
+
+  try {
+    console.log("Shift Data:", shiftData);
+    const response = await axios.post("/shifts", shiftData);
+    setMessage("Shift created successfully! 🎉");
+    console.log("Shift Created:", response.data);
+
+    // Reset form fields
+    setDate("");
+    setStartTime("");
+    setEndTime("");
+    setTitle("");
+    setDescription("");
+    setSelectedQualifications([]);
+  } catch (error) {
+    console.error("Error creating shift:", error.response?.data || error.message);
+    setMessage("Failed to create shift. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+  
+  
+
+  
 
   return (
     <div className="create-shift-container">
