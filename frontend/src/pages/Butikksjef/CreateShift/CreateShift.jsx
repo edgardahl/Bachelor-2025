@@ -19,6 +19,26 @@ const CreateShift = () => {
   const [message, setMessage] = useState(""); // Error or success message
   const [loading, setLoading] = useState(false);
 
+   //user INFO
+    const [UserId, setUserId] = useState("");
+    const [StoreId, setStoreId] = useState("");
+
+ //Fetch user info
+    useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("/auth/me");
+        console.log(response.data);
+        setUserId(response.data.user_id);
+        setStoreId(response.data.store_id);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   // Fetch qualifications (similar to Register component)
   useEffect(() => {
     const fetchQualifications = async () => {

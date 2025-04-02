@@ -87,6 +87,7 @@ export const getCurrentUser = async (req, res) => {
         email: user.email,
         name: user.first_name,
         role: user.role,
+        storeId: user.store_id
       },
     });
   } catch (error) {
