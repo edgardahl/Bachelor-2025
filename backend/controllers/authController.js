@@ -1,21 +1,22 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { supabase } from "../config/supabaseClient.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/generateTokens.js";
-import { registerUserInDB, insertUserQualifications} from "../models/authModel.js";
+import {
+  registerUserInDB,
+  insertUserQualifications,
+  getUserByEmail,
+  getUserById,
+  getUserBasicById,
+  updateUserById
+} from "../models/authModel.js";
 
 // 🟢 Login User
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const { data: user, error } = await supabase
-      .from("users")
-      .select("user_id, email, password, first_name, role")
-      .eq("email", email)
-      .single();
-
-    if (error || !user) {
+    const user = await getUserByEmail(email);
+    if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
@@ -25,11 +26,12 @@ export const loginUser = async (req, res) => {
     const accessToken = generateAccessToken({ userId: user.user_id, role: user.role });
     const refreshToken = generateRefreshToken({ userId: user.user_id, role: user.role });
 
-    const isProduction = process.env.NODE_ENV === "production";
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "strict" : "lax",
+      secure: true,
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", /* If you're deploying the frontend (e.g., on Vercel) and backend (e.g., on Render) on different domains,
+                                                                           change "strict" to "none" and also set `secure: true` to allow cross-site cookies.
+                                                                          */
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -52,18 +54,13 @@ export const loginUser = async (req, res) => {
 // 🔄 Refresh Access Token
 export const refreshAccessToken = async (req, res) => {
   const token = req.cookies.refreshToken;
-  if (!token) return res.status(401).json({ error: "Missing refresh token" });
+  if (!token) return res.status(400).json({ error: "Token not provided" }); // Updated error message for missing token
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+    const user = await getUserBasicById(decoded.userId);
 
-    const { data: user, error } = await supabase
-      .from("users")
-      .select("user_id")
-      .eq("user_id", decoded.userId)
-      .single();
-
-    if (error || !user) return res.status(401).json({ error: "Invalid token user" });
+    if (!user) return res.status(401).json({ error: "Invalid token user" });
 
     const accessToken = generateAccessToken({ userId: user.user_id, role: decoded.role });
     res.json({ accessToken });
@@ -76,20 +73,13 @@ export const refreshAccessToken = async (req, res) => {
 // 👤 Get Current User
 export const getCurrentUser = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "Unauthorized" });
+  if (!token) return res.status(400).json({ error: "Token not provided" }); // Updated error message for missing token
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await getUserById(decoded.userId);
 
-    console.log("🔍 Decoded JWT in /auth/me:", decoded); // ✅ Add this
-
-    const { data: user, error } = await supabase
-      .from("users")
-      .select("user_id, email, first_name, role")
-      .eq("user_id", decoded.userId) // 👈 this MUST match the token!
-      .single();
-
-    if (error || !user) return res.status(404).json({ error: "User not found" });
+    if (!user) return res.status(404).json({ error: "User not found" });
 
     res.json({
       user: {
@@ -105,26 +95,19 @@ export const getCurrentUser = async (req, res) => {
   }
 };
 
-
 // 🔒 Update Profile
 export const updateOwnProfile = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "Unauthorized" });
+  if (!token) return res.status(400).json({ error: "Token not provided" }); // Updated error message for missing token
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.userId;
 
     const sanitizedData = sanitizeUserInput(req.body);
+    const updatedUser = await updateUserById(userId, sanitizedData);
 
-    const { data: updatedUser, error } = await supabase
-      .from("users")
-      .update(sanitizedData)
-      .eq("user_id", userId)
-      .select("user_id, email, first_name")
-      .single();
-
-    if (error || !updatedUser) return res.status(404).json({ error: "User not found" });
+    if (!updatedUser) return res.status(404).json({ error: "User not found" });
 
     res.json({
       id: updatedUser.user_id,
@@ -141,29 +124,32 @@ export const updateOwnProfile = async (req, res) => {
 export const logoutUser = (req, res) => {
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-    path: "/", // ✅ MUST match the path used when setting the cookie
+    path: "/",
   });
-
-  console.log("✅ Refresh token cookie cleared");
 
   res.json({ message: "Logged out successfully" });
 };
 
-
-
 // 📝 Register User
 export const registerUser = async (req, res) => {
   try {
-    const { first_name, last_name, email, password, phone_number, availability, role, store_id, municipality_id, qualifications } = req.body;
+    const {
+      first_name,
+      last_name,
+      email,
+      password,
+      phone_number,
+      availability,
+      role,
+      store_id,
+      municipality_id,
+      qualifications,
+    } = req.body;
 
-    console.log("Received registration data:", req.body);
-
-    // ✅ Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ Call the model function to insert the user into DB
     const newUser = await registerUserInDB({
       first_name,
       last_name,
@@ -173,16 +159,18 @@ export const registerUser = async (req, res) => {
       availability,
       role,
       store_id,
-      municipality_id
+      municipality_id,
     });
 
     if (!newUser) {
       return res.status(400).json({ error: "Failed to register user" });
     }
 
-    // ✅ Insert the qualifications into the user_qualifications junction table
     if (qualifications && qualifications.length > 0) {
-      const qualificationsInserted = await insertUserQualifications(newUser.user_id, qualifications);
+      const qualificationsInserted = await insertUserQualifications(
+        newUser.user_id,
+        qualifications
+      );
 
       if (!qualificationsInserted) {
         return res.status(400).json({ error: "Failed to insert qualifications" });

@@ -2,6 +2,16 @@ import { useState, useEffect, useRef } from "react";
 import axios from "../api/axiosInstance";
 import { AuthContext } from "./AuthContext";
 
+// Helper function to check if token is expired
+const isTokenExpired = (token) => {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.exp * 1000 < Date.now(); // exp is in seconds, so multiply by 1000 for milliseconds
+  } catch {
+    return true; // If decoding fails, assume the token is expired
+  }
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUserState] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,8 +24,25 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem("accessToken");
+      let token = localStorage.getItem("accessToken");
 
+      if (!token || isTokenExpired(token)) {
+        console.warn("[AuthProvider] Access token expired or missing, attempting to refresh.");
+
+        // If token is expired, try to get a new access token with the refresh token
+        const refreshToken = document.cookie.split("; ").find(row => row.startsWith("refreshToken="));
+        if (refreshToken) {
+          const refreshRes = await axios.post("/auth/refresh-token", null, { withCredentials: true });
+
+          if (refreshRes.status === 200) {
+            const newAccessToken = refreshRes.data.accessToken;
+            localStorage.setItem("accessToken", newAccessToken); // Update access token in localStorage
+            token = newAccessToken; // Update token for current session
+          }
+        }
+      }
+
+      // If there is no valid access token, log out
       if (!token) {
         setUserState(null);
         setLoading(false);
@@ -29,14 +56,22 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const res = await axios.get("/auth/me");
+        // Send the token in the request header
+        const res = await axios.get("/auth/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setUserState(res.data.user);
       } catch (err) {
-        console.error("[AuthProvider] /auth/me failed:", err?.response?.data || err.message);
-        localStorage.removeItem("accessToken");
-        setUserState(null);
+        console.error("[AuthProvider] /auth/me failed:", err);
+        if (err.response?.status === 401) {
+          console.warn("[AuthProvider] Access token expired, clearing session.");
+          localStorage.removeItem("accessToken");
+          setUserState(null);
+        }
       } finally {
-        setLoading(false);
+        setLoading(false); // ✅ Always stop loading, even after error
       }
     };
 
@@ -48,9 +83,11 @@ export const AuthProvider = ({ children }) => {
       await axios.post("/auth/logout");
     } catch (err) {
       console.error("Logout error:", err);
+    } finally {
+      localStorage.removeItem("accessToken");
+      setUserState(null);
     }
   };
-  
 
   return (
     <AuthContext.Provider value={{ user, setUser, loading, logout }}>

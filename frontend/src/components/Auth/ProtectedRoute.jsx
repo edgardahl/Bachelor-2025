@@ -5,7 +5,8 @@ export default function ProtectedRoute({ children, allowedRoles }) {
   const { user, loading } = useAuth();
   const location = useLocation();
 
-  if (loading) return null; // Or a spinner
+  // ✅ Display a loading state (could be a spinner or a loading message) until we verify user data
+  if (loading) return <p>Loading...</p>;
 
   // 🚫 Not logged in
   if (!user) {
