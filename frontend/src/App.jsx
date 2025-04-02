@@ -9,6 +9,7 @@ import RegisterPage from './pages/Register/Register';
 import ButikksjefDashboard from './pages/Butikksjef/Dashboard/Dashboard';
 import AnsattDashboard from './pages/Butikkansatt/Dashboard/Dashboard';
 import useAuth from './context/UseAuth';
+import DineVakter from './pages/Butikksjef/DineVakter/DineVakter';
 
 function App() {
   const { user, loading } = useAuth();
@@ -62,6 +63,16 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['employee']}>
               <AnsattDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ✅ Add a separate route for Dine Vakter */}
+        <Route
+          path="/dashboard/butikksjef/DineVakter"
+          element={
+            <ProtectedRoute allowedRoles={['store_manager']}>
+              <DineVakter />
             </ProtectedRoute>
           }
         />
