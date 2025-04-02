@@ -16,15 +16,15 @@ export const loginUser = async (req, res) => {
 
   try {
     const user = await getUserByEmail(email);
+    console.log("FROM GET BY EMAIL", user);
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
-
-    const accessToken = generateAccessToken({ userId: user.user_id, role: user.role });
-    const refreshToken = generateRefreshToken({ userId: user.user_id, role: user.role });
+    const accessToken = generateAccessToken({ userId: user.user_id, role: user.role, storeId: user.store_id });
+    const refreshToken = generateRefreshToken({ userId: user.user_id, role: user.role, storeId: user.store_id });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -62,7 +62,7 @@ export const refreshAccessToken = async (req, res) => {
 
     if (!user) return res.status(401).json({ error: "Invalid token user" });
 
-    const accessToken = generateAccessToken({ userId: user.user_id, role: decoded.role });
+    const accessToken = generateAccessToken({ userId: user.user_id, role: decoded.role, storeId: decoded.storeId });
     res.json({ accessToken });
   } catch (error) {
     console.error("Refresh token error:", error);
@@ -87,6 +87,7 @@ export const getCurrentUser = async (req, res) => {
         email: user.email,
         name: user.first_name,
         role: user.role,
+        storeId: user.store_id
       },
     });
   } catch (error) {

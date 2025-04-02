@@ -38,7 +38,7 @@ export const insertUserQualifications = async (userId, qualifications) => {
 export const getUserByEmail = async (email) => {
   const { data, error } = await supabase
     .from("users")
-    .select("user_id, email, password, first_name, role")
+    .select("user_id, email, password, first_name, role, store_id")
     .eq("email", email)
     .single();
 
@@ -54,7 +54,7 @@ export const getUserByEmail = async (email) => {
 export const getUserById = async (userId) => {
   const { data, error } = await supabase
     .from("users")
-    .select("user_id, email, first_name, role")
+    .select("user_id, email, first_name, role, store_id")
     .eq("user_id", userId)
     .single();
 
@@ -70,7 +70,7 @@ export const getUserById = async (userId) => {
 export const getUserBasicById = async (userId) => {
   const { data, error } = await supabase
     .from("users")
-    .select("user_id, role")
+    .select("user_id, role, store_id")
     .eq("user_id", userId)
     .single();
 

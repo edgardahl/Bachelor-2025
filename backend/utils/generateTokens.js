@@ -16,15 +16,16 @@ import jwt from 'jsonwebtoken';
 
 export const generateAccessToken = (user) => {
     return jwt.sign(
-      { userId: user.userId, role: user.role }, // ✅ fixed key
+      { userId: user.userId, role: user.role, storeId: user.storeId }, // ✅ fixed key
       process.env.JWT_SECRET,
-      { expiresIn: '20s' } // shorter is better for access tokens
+      { expiresIn: '15m' } // shorter is better for access tokens
     );
   };
   
   export const generateRefreshToken = (user) => {
+    console.log('generateRefreshToken', user);
     return jwt.sign(
-      { userId: user.userId }, // ✅ fixed key
+      { userId: user.userId, role: user.role, storeId: user.storeId }, // ✅ fixed key
       process.env.JWT_REFRESH_SECRET,
       { expiresIn: '7d' }
     );
