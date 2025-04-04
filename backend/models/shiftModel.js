@@ -5,45 +5,35 @@ import { sanitizeShift } from "../utils/sanitizeInput.js";
 
 // Get all shifts
 export const getAllShiftsModel = async () => {
-  const { data, error } = await supabase.from("shifts").select("*");
-
-  if (error) throw new Error(error.message);
-  return data;
+    const { data, error } = await supabase.rpc('get_all_shifts');
+    
+    if (error) throw new Error(`Supabase Error: ${error.message}`);
+    return { data };
 };
 
 // Get all shifts from a store
 export const getShiftsByStoreModel = async (storeId) => {
-  const { data, error } = await supabase
-    .from("shifts")
-    .select("*")
-    .eq("store_id", storeId);
-
+  const { data, error } = await supabase.rpc("get_shifts_by_store", { p_store_id: storeId });
   if (error) throw new Error(error.message);
   return data;
 };
 
 // Get a single shift by ID
 export const getShiftByIdModel = async (shiftId) => {
-  const { data, error } = await supabase
-    .from("shifts")
-    .select("*")
-    .eq("shift_id", shiftId)
-    .single();
+  const { data, error } = await supabase.rpc("get_shift_by_id", { p_shift_id: shiftId });
 
   if (error) throw new Error(error.message);
   return data;
 };
 
-//Get shift by Posted_by
-export const getShiftByPostedByModel = async (postedBy) => {
-  const { data, error } = await supabase
-    .from("shifts")
-    .select("*")
-    .eq("posted_by", postedBy);
+// Get all shifts posted by a specific user
+export const getShiftByPostedByModel = async (postedById) => {
+  const { data, error } = await supabase.rpc("get_shifts_by_posted_by", { p_posted_by: postedById });
 
   if (error) throw new Error(error.message);
   return data;
 };
+
 
 // Get all claimed shifts
 export const getClaimedShiftsModel = async () => {

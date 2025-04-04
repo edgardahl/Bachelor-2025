@@ -16,6 +16,7 @@ const router = express.Router();
 
 // Route to get all shifts
 router.get("/", getAllShiftsController);
+
 // Route to get all shifts a user is qualified for
 router.get(
   "/user_is_qualified_for/:user_id",
@@ -29,6 +30,7 @@ router.get("/posted_by/:posted_by", getShiftByPostedByController);
 
 // Route to get a single shift by ID
 router.get("/:shift_id", getShiftByIdController);
+
 // Route to get all claimed shifts
 router.get("/claimed", getClaimedShiftsController);
 // Route to claim a shift

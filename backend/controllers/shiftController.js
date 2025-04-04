@@ -27,7 +27,6 @@ export const getAllShiftsController = async (req, res) => {
 // Get all shifts from a store
 export const getShiftsByStoreController = async (req, res) => {
   const { store_id } = req.params;
-
   try {
     const shifts = await getShiftsByStoreModel(store_id);
     return res.json(shifts);
@@ -37,10 +36,9 @@ export const getShiftsByStoreController = async (req, res) => {
   }
 };
 
-//Get shift by Posted_by
+// Get shift by Posted_by
 export const getShiftByPostedByController = async (req, res) => {
   const { posted_by } = req.params;
-
   try {
     const shifts = await getShiftByPostedByModel(posted_by);
     return res.json(shifts);
@@ -48,12 +46,11 @@ export const getShiftByPostedByController = async (req, res) => {
     console.error("Error fetching shifts:", error);
     res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 // Get a single shift by ID
 export const getShiftByIdController = async (req, res) => {
   const { shift_id } = req.params;
-
   try {
     const shift = await getShiftByIdModel(shift_id);
     return res.json(shift);
@@ -62,6 +59,7 @@ export const getShiftByIdController = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Get all claimed shifts
 export const getClaimedShiftsController = async (req, res) => {
