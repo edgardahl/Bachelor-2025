@@ -1,7 +1,6 @@
 import "./App.css";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import Layout from "./components/Layout/Layout";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 
 import LoginPage from "./pages/Login/Login";
@@ -12,16 +11,29 @@ import useAuth from "./context/UseAuth";
 import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter";
 import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift";
 import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
+import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 
 function App() {
   const { user, loading } = useAuth();
+  const location = useLocation();
+
+  // Define routes where the back button should be shown
+  const routesWithBackButton = [
+    "/dashboard/butikksjef/minevakter",
+    "/dashboard/butikksjef/butikker",
+    "/dashboard/butikksjef/createshift",
+    "/dashboard/butikksjef", // Base path for dynamic routes
+  ];
+
+  // Check if the current route matches any of the routes that need a back button
+  const showBackButton =
+    location.pathname.startsWith("/dashboard/butikksjef/") &&
+    location.pathname.split("/").length > 4;
 
   if (loading) return <p>Loading...</p>;
 
   return (
-    <>
-      {user && <Navbar />}
-
+    <Layout showBackButton={showBackButton}>
       <Routes>
         {/* Redirect root based on role */}
         <Route
@@ -51,7 +63,7 @@ function App() {
           element={user ? <Navigate to="/" replace /> : <RegisterPage />}
         />
 
-        {/* BUTIKKSJEF ROUTES*/}
+        {/* BUTIKKSJEF ROUTES */}
 
         {/* Protected dashboards Butikksjef */}
         <Route
@@ -83,6 +95,16 @@ function App() {
           }
         />
 
+        {/* Protected butikksjef Butikk */}
+        <Route
+          path="/dashboard/butikksjef/:store_chain/:name/:store_id"
+          element={
+            <ProtectedRoute allowedRoles={["store_manager"]}>
+              <Butikk />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Protected dashboards Butikkansatt */}
         <Route
           path="/dashboard/butikkansatt"
@@ -103,9 +125,7 @@ function App() {
           }
         />
       </Routes>
-
-      {user && <Footer />}
-    </>
+    </Layout>
   );
 }
 
