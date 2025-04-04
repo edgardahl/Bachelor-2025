@@ -1,16 +1,16 @@
 import { validate as isUUID } from "uuid";
 export const sanitizeShift = (shiftData) => {
-  const { 
-    title, 
-    description, 
-    date, 
-    start_time, 
-    end_time, 
-    store_id, 
+  const {
+    title,
+    description,
+    date,
+    start_time,
+    end_time,
+    store_id,
     posted_by: UserId, // Renaming posted_by to UserId
-    qualifications 
+    qualifications,
   } = shiftData;
-  
+
   console.log("Received shiftData:", shiftData);
 
   // Title: Ensure it's a non-empty string
@@ -31,20 +31,30 @@ export const sanitizeShift = (shiftData) => {
 
   // Start Time: Ensure it's a valid time string (HH:mm)
   const startTimeParts = start_time.split(":");
-  if (startTimeParts.length !== 2 || isNaN(Number(startTimeParts[0])) || isNaN(Number(startTimeParts[1]))) {
+  if (
+    startTimeParts.length !== 2 ||
+    isNaN(Number(startTimeParts[0])) ||
+    isNaN(Number(startTimeParts[1]))
+  ) {
     throw new Error("Start time is invalid. Ensure it's in HH:mm format.");
   }
 
   // End Time: Ensure it's a valid time string (HH:mm)
   const endTimeParts = end_time.split(":");
-  if (endTimeParts.length !== 2 || isNaN(Number(endTimeParts[0])) || isNaN(Number(endTimeParts[1]))) {
+  if (
+    endTimeParts.length !== 2 ||
+    isNaN(Number(endTimeParts[0])) ||
+    isNaN(Number(endTimeParts[1]))
+  ) {
     throw new Error("End time is invalid. Ensure it's in HH:mm format.");
   }
 
   // Ensure end time is after start time (Comparing times in "HH:mm" format)
-  const startTimeInMinutes = Number(startTimeParts[0]) * 60 + Number(startTimeParts[1]);
-  const endTimeInMinutes = Number(endTimeParts[0]) * 60 + Number(endTimeParts[1]);
-  
+  const startTimeInMinutes =
+    Number(startTimeParts[0]) * 60 + Number(startTimeParts[1]);
+  const endTimeInMinutes =
+    Number(endTimeParts[0]) * 60 + Number(endTimeParts[1]);
+
   if (endTimeInMinutes <= startTimeInMinutes) {
     throw new Error("End time must be later than start time.");
   }
@@ -56,7 +66,9 @@ export const sanitizeShift = (shiftData) => {
 
   // User ID (posted_by): Ensure it's a valid UUID
   if (!isUUID(UserId)) {
-    throw new Error(`User ID is invalid. Expected a valid UUID, but received: ${UserId}`);
+    throw new Error(
+      `User ID is invalid. Expected a valid UUID, but received: ${UserId}`
+    );
   }
 
   // Ensure qualifications is an array of valid UUIDs (if provided)
@@ -73,7 +85,17 @@ export const sanitizeShift = (shiftData) => {
   const end_time_formatted = `${endTimeParts[0]}:${endTimeParts[1]}:00`; // Add seconds to make it HH:mm:ss
 
   // Return sanitized data
-  console.log("raturning data", title.trim(), description.trim(), date, start_time_formatted, end_time_formatted, store_id, UserId, qualifications);
+  console.log(
+    "raturning data",
+    title.trim(),
+    description.trim(),
+    date,
+    start_time_formatted,
+    end_time_formatted,
+    store_id,
+    UserId,
+    qualifications
+  );
   return {
     title: title.trim(),
     description: description.trim(),
@@ -81,14 +103,13 @@ export const sanitizeShift = (shiftData) => {
     start_time: start_time_formatted,
     end_time: end_time_formatted,
     store_id,
-    posted_by: UserId,  // Use UserId here as it's passed in as that
+    posted_by: UserId, // Use UserId here as it's passed in as that
     qualifications,
   };
 };
 
 export const sanitizeUserData = (userData) => {
-
-  const { 
+  const {
     first_name,
     last_name,
     email,
@@ -104,13 +125,23 @@ export const sanitizeUserData = (userData) => {
 
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/; // Supports accents, spaces, hyphens, apostrophes
 
-if (typeof first_name !== "string" || first_name.trim() === "" || !nameRegex.test(first_name)) {
-  throw new Error("First name must only contain letters and cannot be empty.");
-}
+  if (
+    typeof first_name !== "string" ||
+    first_name.trim() === "" ||
+    !nameRegex.test(first_name)
+  ) {
+    throw new Error(
+      "First name must only contain letters and cannot be empty."
+    );
+  }
 
-if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(last_name)) {
-  throw new Error("Last name must only contain letters and cannot be empty.");
-}
+  if (
+    typeof last_name !== "string" ||
+    last_name.trim() === "" ||
+    !nameRegex.test(last_name)
+  ) {
+    throw new Error("Last name must only contain letters and cannot be empty.");
+  }
 
   // Basic email regex check
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -186,8 +217,4 @@ if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(
     municipality_id,
     qualifications: qualifications ?? [],
   };
-
-}
-
-
-
+};
