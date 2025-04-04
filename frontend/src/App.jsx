@@ -1,7 +1,6 @@
 import "./App.css";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import Layout from "./components/Layout/Layout";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 
 import LoginPage from "./pages/Login/Login";
@@ -13,16 +12,21 @@ import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter";
 import MineAnsatte from "./pages/Butikksjef/MineAnsatte/MineAnsatte";  // <-- New component for employees
 import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift";
 import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
+import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 
 function App() {
   const { user, loading } = useAuth();
+  const location = useLocation();
+
+  // Check if the current route matches any of the routes that need a back button
+  const showBackButton =
+    location.pathname.startsWith("/dashboard/butikksjef/") &&
+    location.pathname.split("/").length > 4;
 
   if (loading) return <p>Laster inn...</p>;
 
   return (
-    <>
-      {user && <Navbar />}
-
+    <Layout showBackButton={showBackButton}>
       <Routes>
         {/* Redirect root based on role */}
         <Route
@@ -94,6 +98,16 @@ function App() {
           }
         />
 
+        {/* Protected butikksjef Butikk */}
+        <Route
+          path="/dashboard/butikksjef/:store_chain/:name/:store_id"
+          element={
+            <ProtectedRoute allowedRoles={["store_manager"]}>
+              <Butikk />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Protected dashboards for Butikkansatt */}
         <Route
           path="/dashboard/butikkansatt"
@@ -114,9 +128,7 @@ function App() {
           }
         />
       </Routes>
-
-      {user && <Footer />}
-    </>
+    </Layout>
   );
 }
 
