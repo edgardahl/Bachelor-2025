@@ -19,7 +19,8 @@ router.post('/refresh-token', refreshAccessToken);
 router.post("/register", registerUser);
 
 // 👤 User session & profile
-router.get('/me', getCurrentUser);
+// Get the current user (Protected route)
+router.get('/me', verifyToken, getCurrentUser);  // Only authenticated users can access
 router.put('/me', verifyToken, updateOwnProfile); // ✅ Allow logged-in users to update their own profile
 
 export default router;

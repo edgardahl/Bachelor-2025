@@ -25,15 +25,16 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       let token = localStorage.getItem("accessToken");
-
+    
       if (!token || isTokenExpired(token)) {
         console.warn("[AuthProvider] Access token expired or missing, attempting to refresh.");
-
+        console.log("[AuthProvider] Access token expired or missing, attempting to refresh.");
+    
         // If token is expired, try to get a new access token with the refresh token
         const refreshToken = document.cookie.split("; ").find(row => row.startsWith("refreshToken="));
         if (refreshToken) {
           const refreshRes = await axios.post("/auth/refresh-token", null, { withCredentials: true });
-
+    
           if (refreshRes.status === 200) {
             const newAccessToken = refreshRes.data.accessToken;
             localStorage.setItem("accessToken", newAccessToken); // Update access token in localStorage
@@ -41,28 +42,25 @@ export const AuthProvider = ({ children }) => {
           }
         }
       }
-
+    
       // If there is no valid access token, log out
       if (!token) {
         setUserState(null);
         setLoading(false);
         return;
       }
-
+    
       if (skipNextFetch.current) {
         skipNextFetch.current = false;
         setLoading(false);
         return;
       }
-
+    
       try {
-        // Send the token in the request header
-        const res = await axios.get("/auth/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        // ✅ No need to manually add the Authorization header
+        const res = await axios.get("/auth/me");
         setUserState(res.data.user);
+        console.log("[AuthProvider] /auth/me response:", res.data);
       } catch (err) {
         console.error("[AuthProvider] /auth/me failed:", err);
         if (err.response?.status === 401) {
@@ -71,9 +69,10 @@ export const AuthProvider = ({ children }) => {
           setUserState(null);
         }
       } finally {
-        setLoading(false); // ✅ Always stop loading, even after error
+        setLoading(false);
       }
     };
+    
 
     fetchUser();
   }, []);

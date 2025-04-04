@@ -39,3 +39,21 @@ export const getUserQualificationsModel = async (userId) => {
 
   return data; // Return the user's qualifications
 };
+
+// Model function to get employees by store ID
+export const getEmployeesByStoreIdModel = async (storeId) => {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*') // Fetch all user fields or select specific ones you need
+    .eq('store_id', storeId) // Filter by dynamic store_id passed as parameter
+    .eq('role', 'employee'); // Only employees
+
+  if (error) {
+    console.error('Error fetching employees:', error);
+    return null; // Return null in case of error
+  }
+
+  return data; // Return the list of employees
+};
+
+
