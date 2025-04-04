@@ -1,5 +1,6 @@
 .pagination {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 16px;
@@ -7,19 +8,20 @@
 }
 
 .pagination button {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
+  padding: 10px 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
-.pagination button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.pagination button img {
+  width: 20px; /* Adjust size as needed */
+  height: 20px;
+  transition: filter 0.3s ease;
 }
 
-.pagination span {
-  font-size: 1rem;
+.pagination button:disabled img {
+  filter: opacity(0.5);
 }

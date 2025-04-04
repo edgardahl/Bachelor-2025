@@ -10,7 +10,8 @@ const ButikkOversikt = () => {
   const [shiftsCount, setShiftsCount] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [filters, setFilters] = useState({}); // Store the current filters
+  const [totalStores, setTotalStores] = useState(0);
+  const [filters, setFilters] = useState({});
 
   const fetchStores = async (filters = {}, page = 1, pageSize = 4) => {
     try {
@@ -26,6 +27,7 @@ const ButikkOversikt = () => {
       );
 
       setStores(response.data.stores); // Assuming the response contains a `stores` array
+      setTotalStores(response.data.total); // Set the total number of stores
       setTotalPages(Math.ceil(response.data.total / pageSize)); // Calculate total pages
 
       // Fetch shifts count for each store
@@ -67,6 +69,8 @@ const ButikkOversikt = () => {
         }}
       />
 
+      <p>{totalStores} butikker</p>
+
       {/* Store List */}
       <div className="butikk-liste">
         {stores.map((store) => (
@@ -88,10 +92,10 @@ const ButikkOversikt = () => {
           }}
           disabled={currentPage === 1}
         >
-          Previous
+          <img src="/icons/chevron_left.svg" alt="Forrige" />
         </button>
         <span>
-          Page {currentPage} of {totalPages}
+          {currentPage} av {totalPages}
         </span>
         <button
           onClick={() => {
@@ -101,7 +105,7 @@ const ButikkOversikt = () => {
           }}
           disabled={currentPage === totalPages}
         >
-          Next
+          <img src="/icons/chevron_right.svg" alt="Neste" />
         </button>
       </div>
 

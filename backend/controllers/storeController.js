@@ -1,7 +1,7 @@
 import {
   getAllStoresModel,
   getStoreByIdModel,
-  getStoresWithMunicipality, // Import from storeModel.js
+  getStoresWithMunicipality,
 } from "../models/storeModel.js";
 
 // Get all stores
