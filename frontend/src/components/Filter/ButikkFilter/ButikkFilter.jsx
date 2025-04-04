@@ -4,29 +4,24 @@ import "./ButikkFilter.css";
 
 const ButikkFilter = ({ onFilter }) => {
   const [counties, setCounties] = useState([]);
-  const [municipalities, setMunicipalities] = useState([]);
-  const [selectedCounty, setSelectedCounty] = useState("");
-  const [selectedMunicipality, setSelectedMunicipality] = useState("");
+  const [municipalities, setMunicipalities] = useState({});
+  const [selectedCounties, setSelectedCounties] = useState([]);
+  const [selectedMunicipalities, setSelectedMunicipalities] = useState([]);
+  const [isOpen, setIsOpen] = useState(false); // Toggle filters
 
-  // Fetch counties and municipalities
   useEffect(() => {
     const fetchCountiesAndMunicipalities = async () => {
       try {
         const response = await axios.get("/stores/stores-with-municipality");
-
         const uniqueCounties = new Set();
         const municipalitiesByCounty = {};
 
-        // Check if response.data contains a "stores" property
-        const stores = response.data.stores || response.data; // Adjust based on API response
-
-        stores.forEach((store) => {
-          if (!store.municipality) return; // ✅ Skip stores without municipality
+        (response.data.stores || response.data).forEach((store) => {
+          if (!store.municipality) return;
 
           const { county_name, municipality_name } = store.municipality;
 
           if (county_name) uniqueCounties.add(county_name);
-
           if (county_name && municipality_name) {
             if (!municipalitiesByCounty[county_name]) {
               municipalitiesByCounty[county_name] = new Set();
@@ -36,7 +31,14 @@ const ButikkFilter = ({ onFilter }) => {
         });
 
         setCounties([...uniqueCounties]);
-        setMunicipalities(municipalitiesByCounty);
+        setMunicipalities(
+          Object.fromEntries(
+            Object.entries(municipalitiesByCounty).map(([key, value]) => [
+              key,
+              [...value],
+            ])
+          )
+        );
       } catch (error) {
         console.error("Error fetching counties and municipalities:", error);
       }
@@ -45,56 +47,110 @@ const ButikkFilter = ({ onFilter }) => {
     fetchCountiesAndMunicipalities();
   }, []);
 
-  // Handle county selection
-  const handleCountyChange = (e) => {
-    const county = e.target.value;
-    setSelectedCounty(county);
-    setSelectedMunicipality(""); // Reset municipality when county changes
+  const handleCountyChange = (county) => {
+    setSelectedCounties((prev) =>
+      prev.includes(county)
+        ? prev.filter((c) => c !== county)
+        : [...prev, county]
+    );
+    setSelectedMunicipalities([]); // Reset municipalities when counties change
   };
 
-  // Handle filter submission
+  const handleMunicipalityChange = (municipality) => {
+    setSelectedMunicipalities((prev) =>
+      prev.includes(municipality)
+        ? prev.filter((m) => m !== municipality)
+        : [...prev, municipality]
+    );
+  };
+
   const handleFilter = () => {
-    onFilter({ county: selectedCounty, municipality: selectedMunicipality });
+    onFilter({
+      county: selectedCounties.join(","), // Pass as a comma-separated string
+      municipality: selectedMunicipalities.join(","),
+    });
+  };
+
+  const resetFilters = () => {
+    setSelectedCounties([]);
+    setSelectedMunicipalities([]);
   };
 
   return (
     <div className="store-filter">
-      <div className="filter-group">
-        <label htmlFor="county">Fylke:</label>
-        <select
-          id="county"
-          value={selectedCounty}
-          onChange={handleCountyChange}
-        >
-          <option value="">Velg fylke</option>
-          {counties.map((county) => (
-            <option key={county} value={county}>
-              {county}
-            </option>
-          ))}
-        </select>
+      <div className="filter-buttons">
+        <button className="toggle-button" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? "Skjul filter" : "Vis filter"}
+        </button>
+        <div className="button-group">
+          <button onClick={handleFilter} className="filter-button">
+            Filtrer
+          </button>
+          <button onClick={resetFilters} className="reset-button">
+            Nullstill
+          </button>
+        </div>
       </div>
-      <div className="filter-group">
-        <label htmlFor="municipality">Kommune:</label>
-        <select
-          id="municipality"
-          value={selectedMunicipality}
-          onChange={(e) => setSelectedMunicipality(e.target.value)}
-          disabled={!selectedCounty}
-        >
-          <option value="">Velg kommune</option>
-          {selectedCounty &&
-            municipalities[selectedCounty] &&
-            [...municipalities[selectedCounty]].map((municipality) => (
-              <option key={municipality} value={municipality}>
-                {municipality}
-              </option>
+
+      {isOpen && (
+        <div className="filter-group">
+          <label>Fylker og kommuner:</label>
+          <div className="dropdown">
+            {counties.map((county) => (
+              <div
+                key={county}
+                className={`county-group ${
+                  selectedCounties.includes(county) ? "selected" : ""
+                }`}
+                onClick={() => handleCountyChange(county)} // Make the entire div clickable
+              >
+                <div className="county">
+                  <input
+                    type="checkbox"
+                    id={`county-${county}`}
+                    value={county}
+                    checked={selectedCounties.includes(county)}
+                    onChange={() => {}} // Prevent default checkbox behavior
+                  />
+                  <label htmlFor={`county-${county}`}>{county}</label>
+                </div>
+
+                {selectedCounties.includes(county) && (
+                  <div className="municipalities">
+                    {municipalities[county]?.map((municipality) => (
+                      <div
+                        key={municipality}
+                        className={`municipality ${
+                          selectedMunicipalities.includes(municipality)
+                            ? "selected"
+                            : ""
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent parent click event
+                          handleMunicipalityChange(municipality);
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          id={`municipality-${municipality}`}
+                          value={municipality}
+                          checked={selectedMunicipalities.includes(
+                            municipality
+                          )}
+                          onChange={() => {}} // Prevent default checkbox behavior
+                        />
+                        <label htmlFor={`municipality-${municipality}`}>
+                          {municipality}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
-        </select>
-      </div>
-      <button onClick={handleFilter} className="filter-button">
-        Filtrer
-      </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
