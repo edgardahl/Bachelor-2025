@@ -17,14 +17,6 @@ function App() {
   const { user, loading } = useAuth();
   const location = useLocation();
 
-  // Define routes where the back button should be shown
-  const routesWithBackButton = [
-    "/dashboard/butikksjef/minevakter",
-    "/dashboard/butikksjef/butikker",
-    "/dashboard/butikksjef/createshift",
-    "/dashboard/butikksjef", // Base path for dynamic routes
-  ];
-
   // Check if the current route matches any of the routes that need a back button
   const showBackButton =
     location.pathname.startsWith("/dashboard/butikksjef/") &&
