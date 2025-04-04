@@ -1,6 +1,5 @@
 import { validate as isUUID } from "uuid";
-
-const sanitizeShift = (shiftData) => {
+export const sanitizeShift = (shiftData) => {
   const { 
     title, 
     description, 
@@ -87,7 +86,7 @@ const sanitizeShift = (shiftData) => {
   };
 };
 
-const sanitizeUserData = (userData) => {
+export const sanitizeUserData = (userData) => {
 
   const { 
     first_name,
@@ -130,7 +129,7 @@ if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(
   }
 
   // Availability check (you can refine values if enum is known)
-  const validAvailability = ["available", "unavailable"];
+  const validAvailability = ["Fleksibel", "Ikke-fleksibel"];
   if (!validAvailability.includes(availability)) {
     throw new Error("Availability must be 'available' or 'unavailable'.");
   }
@@ -190,9 +189,5 @@ if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(
 
 }
 
-export default {
-  sanitizeShift,
-  sanitizeUserData,
-};
 
 

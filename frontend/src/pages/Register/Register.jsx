@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../api/axiosInstance";
 import "./Register.css";
-import sanitize from "../../../../backend/utils/sanitizeInput"; // Import the sanitize function
+import {sanitizeUserData} from "../../../../backend/utils/sanitizeInput"; // Import the sanitize function
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -95,9 +95,24 @@ const Register = () => {
     };
   
     try {
-      const sanitizedData = sanitize.sanitizeUserData(userData); // 👈 May throw field-specific errors
+      const sanitizedData = sanitizeUserData(userData); // 👈 May throw field-specific errors
       const response = await axios.post("/auth/register", sanitizedData);
-      setMessage("Registration successful! 🎉");
+    
+      setMessage("Bruker registrert! 🎉");
+    
+      // ✅ Clear all form fields
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPassword("");
+      setPhoneNumber("");
+      setAvailability("");
+      setRole("employee");
+      setStoreId("");
+      setMunicipalityId("");
+      setSelectedQualifications([]);
+      setFieldErrors({});
+    
     } catch (error) {
       console.error("Registration error:", error.message);
   
@@ -129,11 +144,6 @@ const Register = () => {
   return (
     <div className="register-container">
       <h2>Register</h2>
-      {message && (
-        <p className={message.includes("failed") ? "error" : "success"}>
-          {message}
-        </p>
-      )}
       <form onSubmit={handleSubmit}>
       <div>
         <label>First Name</label>
@@ -193,8 +203,8 @@ const Register = () => {
             required
           >
             <option value="">Select Availability</option>
-            <option value="available">Available</option>
-            <option value="unavailable">Unavailable</option>
+            <option value="Fleksibel">Available</option>
+            <option value="Ikke-fleksibel">Unavailable</option>
           </select>
         </div>
         <div>
@@ -273,6 +283,11 @@ const Register = () => {
         <button type="submit" disabled={loading}>
           {loading ? "Registering..." : "Register"}
         </button>
+        {message && (
+        <p className={message.includes("failed") ? "error" : "success"}>
+          {message}
+        </p>
+      )}
       </form>
     </div>
   );
