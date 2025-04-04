@@ -9,10 +9,11 @@ import ButikksjefDashboard from "./pages/Butikksjef/Dashboard/Dashboard";
 import AnsattDashboard from "./pages/Butikkansatt/Dashboard/Dashboard";
 import useAuth from "./context/UseAuth";
 import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter";
-import MineAnsatte from "./pages/Butikksjef/MineAnsatte/MineAnsatte";  // <-- New component for employees
+import MineAnsatte from "./pages/Butikksjef/MineAnsatte/MineAnsatte"; 
 import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift";
 import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
 import Butikk from "./pages/Butikksjef/Butikk/Butikk";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
 function App() {
   const { user, loading } = useAuth();
@@ -94,6 +95,16 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["store_manager"]}>
               <MineAnsatte /> {/* <-- New route for viewing employees */}
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected route for profile page (Min Profil) */}
+        <Route
+          path="/dashboard/butikksjef/minprofil"
+          element={
+            <ProtectedRoute allowedRoles={["store_manager"]}>
+              <ProfilePage /> {/* <-- Profile page for butikksjef */}
             </ProtectedRoute>
           }
         />
