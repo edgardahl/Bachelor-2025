@@ -1,6 +1,9 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { generateAccessToken, generateRefreshToken } from "../utils/generateTokens.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../utils/generateTokens.js";
 import {
   registerUserInDB,
   insertUserQualifications,
@@ -8,7 +11,7 @@ import {
   getUserById,
   getUserBasicById,
   updateUserById,
-  getUserByPhoneNumber
+  getUserByPhoneNumber,
 } from "../models/authModel.js";
 
 // 🟢 Login User
@@ -46,7 +49,12 @@ export const loginUser = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      sameSite:
+        process.env.NODE_ENV === "production"
+          ? "strict"
+          : "lax" /* If you're deploying the frontend (e.g., on Vercel) and backend (e.g., on Render) on different domains,
+      change "strict" to "none" and also set `secure: true` to allow cross-site cookies.
+     */,
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // Refresh token expiration (7 days)
     });
@@ -67,7 +75,6 @@ export const loginUser = async (req, res) => {
   }
 };
 
-
 // 🔄 Refresh Access Token
 export const refreshAccessToken = async (req, res) => {
   const token = req.cookies.refreshToken;
@@ -79,7 +86,11 @@ export const refreshAccessToken = async (req, res) => {
 
     if (!user) return res.status(401).json({ error: "Invalid token user" });
 
-    const accessToken = generateAccessToken({ userId: user.user_id, role: decoded.role, storeId: decoded.storeId });
+    const accessToken = generateAccessToken({
+      userId: user.user_id,
+      role: decoded.role,
+      storeId: decoded.storeId,
+    });
     res.json({ accessToken });
   } catch (error) {
     console.error("Refresh token error:", error);
@@ -90,7 +101,7 @@ export const refreshAccessToken = async (req, res) => {
 // 👤 Get Current User
 export const getCurrentUser = async (req, res) => {
   try {
-    const userId = req.user.userId;  // This comes from the token, added by the verifyToken middleware
+    const userId = req.user.userId; // This comes from the token, added by the verifyToken middleware
     const user = await getUserById(userId);
 
     if (!user) {
@@ -149,7 +160,6 @@ export const logoutUser = (req, res) => {
   res.json({ message: "Logged out successfully" });
 };
 
-
 // 📝 Register User
 export const registerUser = async (req, res) => {
   try {
@@ -203,15 +213,17 @@ export const registerUser = async (req, res) => {
       );
 
       if (!qualificationsInserted) {
-        return res.status(400).json({ error: "Failed to insert qualifications" });
+        return res
+          .status(400)
+          .json({ error: "Failed to insert qualifications" });
       }
     }
 
-    res.status(201).json({ message: "User registered successfully", user: newUser });
+    res
+      .status(201)
+      .json({ message: "User registered successfully", user: newUser });
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
