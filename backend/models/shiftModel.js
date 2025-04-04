@@ -85,7 +85,12 @@ export const createShiftModel = async (shiftData) => {
       async (qualificationId) => {
         const { error } = await supabase
           .from("shift_qualifications")
-          .insert([{ shift_id: shiftDataResponse.shift_id, qualification_id: qualificationId }]);
+          .insert([
+            {
+              shift_id: shiftDataResponse.shift_id,
+              qualification_id: qualificationId,
+            },
+          ]);
 
         if (error) throw new Error(error.message);
       }
