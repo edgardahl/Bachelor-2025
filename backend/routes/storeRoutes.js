@@ -1,7 +1,14 @@
 import express from "express";
-import { getAllStoresController, getStoreByIdController } from "../controllers/storeController.js";
+import {
+  getAllStoresController,
+  getStoreByIdController,
+  getStoresWithMunicipalityController,
+} from "../controllers/storeController.js";
 
 const router = express.Router();
+
+// Route to get stores with municipality details
+router.get("/stores-with-municipality", getStoresWithMunicipalityController);
 
 // Route to get all stores
 router.get("/", getAllStoresController);

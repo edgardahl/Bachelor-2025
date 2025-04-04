@@ -1,4 +1,8 @@
-import { getAllStoresModel, getStoreByIdModel } from "../models/storeModel.js";
+import {
+  getAllStoresModel,
+  getStoreByIdModel,
+  getStoresWithMunicipality,
+} from "../models/storeModel.js";
 
 // Get all stores
 export const getAllStoresController = async (req, res) => {
@@ -23,6 +27,25 @@ export const getStoreByIdController = async (req, res) => {
     return res.json(store);
   } catch (error) {
     console.error("Error fetching store:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Get stores filtered by municipality and county
+export const getStoresWithMunicipalityController = async (req, res) => {
+  try {
+    const { municipality, county, page = 1, pageSize = 10 } = req.query;
+
+    const storesWithPagination = await getStoresWithMunicipality(
+      municipality,
+      county,
+      Number(page),
+      Number(pageSize)
+    );
+
+    res.json(storesWithPagination);
+  } catch (error) {
+    console.error("Error fetching stores with municipality:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

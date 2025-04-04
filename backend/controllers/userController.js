@@ -1,5 +1,5 @@
 // controllers/userController.js
-import { getAllUsersModel, getUserByIdModel, getEmployeesByStoreIdModel } from "../models/userModel.js";
+import { getAllUsersModel, getUserByIdModel, getEmployeesByStoreIdModel, getUserQualificationsModel } from "../models/userModel.js";
 import jwt from 'jsonwebtoken';
 
 // Get all users
@@ -56,6 +56,31 @@ export const getEmployeesByStoreIdController = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+// Controller to get qualifications for multiple users (employees)
+export const getEmployeesQualificationsController = async (req, res) => {
+  try {
+    const { user_ids } = req.body; // The request body should include a list of user_ids
+
+    if (!user_ids || user_ids.length === 0) {
+      return res.status(400).json({ error: "No user IDs provided." });
+    }
+
+    const qualifications = await getUserQualificationsModel(user_ids); // Fetch qualifications for multiple users
+
+    // Check if qualifications are found
+    if (!qualifications || qualifications.length === 0) {
+      return res.status(404).json({ error: "No qualifications found for these users." });
+    }
+
+    return res.json(qualifications); // Return the qualifications as response
+  } catch (error) {
+    console.error("Error fetching qualifications:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
 
 
 
