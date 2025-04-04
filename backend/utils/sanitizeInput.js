@@ -109,4 +109,112 @@ const sanitizeShift = (shiftData) => {
   };
 };
 
-export default sanitizeShift;
+const sanitizeUserData = (userData) => {
+
+  const { 
+    first_name,
+    last_name,
+    email,
+    password,
+    phone_number,
+    availability,
+    role,
+    store_id,
+    municipality_id,
+    qualifications,
+  } = userData;
+  console.log("Received userData:", userData);
+
+  const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/; // Supports accents, spaces, hyphens, apostrophes
+
+if (typeof first_name !== "string" || first_name.trim() === "" || !nameRegex.test(first_name)) {
+  throw new Error("First name must only contain letters and cannot be empty.");
+}
+
+if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(last_name)) {
+  throw new Error("Last name must only contain letters and cannot be empty.");
+}
+
+  // Basic email regex check
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email)) {
+    throw new Error("Invalid email format.");
+  }
+
+  if (typeof password !== "string" || password.length < 6) {
+    throw new Error("Password must be at least 6 characters long.");
+  }
+
+  // Phone number: simple numeric string check (customize as needed)
+  const phoneRegex = /^[0-9+\- ]{6,20}$/;
+  if (!phoneRegex.test(phone_number)) {
+    throw new Error("Phone number is invalid.");
+  }
+
+  // Availability check (you can refine values if enum is known)
+  const validAvailability = ["available", "unavailable"];
+  if (!validAvailability.includes(availability)) {
+    throw new Error("Availability must be 'available' or 'unavailable'.");
+  }
+
+  // Role check (same here)
+  const validRoles = ["employee", "store_manager", "admin"];
+  if (!validRoles.includes(role)) {
+    throw new Error(`Role must be one of: ${validRoles.join(", ")}`);
+  }
+
+  // UUID checks (optional fields can be null or valid UUIDs)
+  if (store_id && !isUUID(store_id)) {
+    throw new Error("Store ID must be a valid UUID.");
+  }
+
+  if (municipality_id && !isUUID(municipality_id)) {
+    throw new Error("Municipality ID must be a valid UUID.");
+  }
+
+  if (qualifications && !Array.isArray(qualifications)) {
+    throw new Error("Qualifications must be an array.");
+  }
+
+  if (qualifications?.length) {
+    qualifications.forEach((q) => {
+      if (!isUUID(q)) {
+        throw new Error(`Invalid qualification ID: ${q}`);
+      }
+    });
+  }
+
+  console.log("Data is sanitized:", {
+    first_name: first_name.trim(),
+    last_name: last_name.trim(),
+    email: email.toLowerCase().trim(),
+    password: password.trim(),
+    phone_number: phone_number.trim(),
+    availability,
+    role,
+    store_id,
+    municipality_id,
+    qualifications: qualifications ?? [],
+  });
+  // Return sanitized data
+  return {
+    first_name: first_name.trim(),
+    last_name: last_name.trim(),
+    email: email.toLowerCase().trim(),
+    password: password.trim(),
+    phone_number: phone_number.trim(),
+    availability,
+    role,
+    store_id,
+    municipality_id,
+    qualifications: qualifications ?? [],
+  };
+
+}
+
+export default {
+  sanitizeShift,
+  sanitizeUserData,
+};
+
+

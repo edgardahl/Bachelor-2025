@@ -7,7 +7,8 @@ import {
   getUserByEmail,
   getUserById,
   getUserBasicById,
-  updateUserById
+  updateUserById,
+  getUserByPhoneNumber
 } from "../models/authModel.js";
 
 // 🟢 Login User
@@ -132,6 +133,7 @@ export const logoutUser = (req, res) => {
   res.json({ message: "Logged out successfully" });
 };
 
+
 // 📝 Register User
 export const registerUser = async (req, res) => {
   try {
@@ -147,6 +149,18 @@ export const registerUser = async (req, res) => {
       municipality_id,
       qualifications,
     } = req.body;
+
+    // Check if the email already exists
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ error: "Email is already in use" });
+    }
+
+    // Check if the phone number already exists
+    const existingPhoneNumber = await getUserByPhoneNumber(phone_number);
+    if (existingPhoneNumber) {
+      return res.status(400).json({ error: "Phone number is already in use" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -183,3 +197,5 @@ export const registerUser = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
