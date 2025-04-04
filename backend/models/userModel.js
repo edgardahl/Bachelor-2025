@@ -27,18 +27,19 @@ export const getUserByIdModel = async (id) => {
   return data;
 };
 
-export const getUserQualificationsModel = async (userId) => {
+/// Fetch qualifications for multiple users using the RPC function
+export const getUserQualificationsModel = async (userIds) => {
   const { data, error } = await supabase
-    .from("user_qualifications") // Assuming this table maps users to qualifications
-    .select("qualification_id")
-    .eq("user_id", userId); // Get all qualifications for the user
+    .rpc("get_user_qualifications", { user_ids: userIds }); // Call the RPC function
 
   if (error) {
+    console.error("Error fetching qualifications:", error);
     throw new Error(error.message);
   }
 
-  return data; // Return the user's qualifications
+  return data; // Return the qualifications along with user IDs
 };
+
 
 // Model function to get employees by store ID
 export const getEmployeesByStoreIdModel = async (storeId) => {

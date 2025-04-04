@@ -16,27 +16,42 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Step 1: Get the user from the database by email
     const user = await getUserByEmail(email);
-    console.log("FROM GET BY EMAIL", user);
+
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
+    // Step 2: Compare the password provided with the stored hashed password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
-    const accessToken = generateAccessToken({ userId: user.user_id, role: user.role, storeId: user.store_id });
-    const refreshToken = generateRefreshToken({ userId: user.user_id, role: user.role, storeId: user.store_id });
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid credentials" }); // Return error for wrong password
+    }
 
+    // Step 3: Generate the access token and refresh token
+    const accessToken = generateAccessToken({
+      userId: user.user_id,
+      role: user.role,
+      storeId: user.store_id,
+    });
+
+    const refreshToken = generateRefreshToken({
+      userId: user.user_id,
+      role: user.role,
+      storeId: user.store_id,
+    });
+
+    // Step 4: Set the refresh token in an HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", /* If you're deploying the frontend (e.g., on Vercel) and backend (e.g., on Render) on different domains,
-                                                                           change "strict" to "none" and also set `secure: true` to allow cross-site cookies.
-                                                                          */
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
       path: "/",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Refresh token expiration (7 days)
     });
 
+    // Step 5: Respond with the access token and user data
     res.json({
       accessToken,
       user: {
@@ -51,6 +66,7 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // 🔄 Refresh Access Token
 export const refreshAccessToken = async (req, res) => {
