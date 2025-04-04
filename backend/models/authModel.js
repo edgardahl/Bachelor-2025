@@ -70,7 +70,7 @@ export const getUserByEmail = async (email) => {
 export const getUserById = async (userId) => {
   const { data, error } = await supabase
     .from("users")
-    .select("user_id, email, first_name, role, store_id")
+    .select("user_id, email, first_name, password, role, store_id") // 👈 include password
     .eq("user_id", userId)
     .single();
 
@@ -109,6 +109,22 @@ export const updateUserById = async (userId, updateData) => {
 
   if (error) {
     console.error("Error updating user:", error);
+    return null;
+  }
+
+  return data;
+};
+
+export const updateUserPasswordById = async (userId, hashedPassword) => {
+  const { data, error } = await supabase
+    .from("users")
+    .update({ password: hashedPassword })
+    .eq("user_id", userId)
+    .select("user_id")
+    .single();
+
+  if (error) {
+    console.error("Error updating password:", error);
     return null;
   }
 

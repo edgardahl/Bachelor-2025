@@ -1,45 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import ProfileOverview from "../../components/Profile/ProfileOverview"; // Import the ProfileOverview component
+import { useNavigate } from "react-router-dom";
+import ProfileOverview from "../../components/Profile/ProfileOverview";
+import axios from "../../api/axiosInstance";
+import useAuth from "../../context/UseAuth";
 
-const ProfilePage = ({ isManager, user, setUser }) => {
-  const { id } = useParams(); // Get the user ID from the URL
+const ProfilePage = () => {
+  const { user } = useAuth();
   const [profileData, setProfileData] = useState(null);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProfileData = async () => {
+    const fetchProfile = async () => {
       try {
-        // Fetch the profile data using the provided ID
-        const response = await fetch(`/api/users/${id}`);
-        const data = await response.json();
-
-        // If the user is trying to access a profile that doesn't exist, navigate to an error page or redirect
-        if (!data) {
-          navigate("/error"); // Adjust to your error page
-        }
-
-        setProfileData(data); // Set profile data
-      } catch (error) {
-        console.error("Error fetching profile data:", error);
-        navigate("/error"); // Adjust to your error page
+        if (!user?.id) return;
+        const res = await axios.get(`/users/${user.id}`);
+        setProfileData(res.data);
+      } catch (err) {
+        console.error("Error fetching user by ID:", err);
+        setError("Kunne ikke hente profildata");
+        navigate("/login");
       }
     };
 
-    fetchProfileData();
-  }, [id, navigate]);
+    fetchProfile();
+  }, [user?.id, navigate]);
 
-  if (!profileData) return <div>Loading...</div>;
+  if (error) return <p>{error}</p>;
+  if (!profileData) return <p>Laster profildata...</p>;
 
   return (
     <div className="profile-page">
-      <h1>Profile Page</h1>
-      <ProfileOverview 
-        isManager={isManager} 
-        user={user} 
-        setUser={setUser} 
-        profileData={profileData} 
-      />
+      <h1>Min profil</h1>
+      <ProfileOverview profileData={profileData} />
     </div>
   );
 };

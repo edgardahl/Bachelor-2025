@@ -1,39 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
-const ContactInfoEditor = ({ profileData, isManager, setUser }) => {
-  const [email, setEmail] = useState(profileData.email);
-  const [phone, setPhone] = useState(profileData.phone_number);
-
-  const handleSave = async () => {
-    const response = await fetch(`/api/users/${profileData.user_id}`, {
-      method: "PUT",
-      body: JSON.stringify({ email, phone_number: phone }),
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await response.json();
-    setUser(data); // Update the user state after saving
-  };
-
+const ContactInfoEditor = ({ profileData }) => {
   return (
     <div>
-      <h2>Contact Information</h2>
-      <p>Email: 
-        <input 
-          type="email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          disabled={!isManager} 
-        />
-      </p>
-      <p>Phone Number: 
-        <input 
-          type="text" 
-          value={phone} 
-          onChange={(e) => setPhone(e.target.value)} 
-          disabled={!isManager} 
-        />
-      </p>
-      {isManager && <button onClick={handleSave}>Save</button>}
+      <h2>Kontaktinformasjon</h2>
+      <p><strong>Navn:</strong> {profileData.first_name} {profileData.last_name}</p>
+      <p><strong>E-post:</strong> {profileData.email}</p>
+      <p><strong>Telefonnummer:</strong> {profileData.phone_number}</p>
+      <p><strong>Tilgjengelighet:</strong> {profileData.availability}</p>
+      <p><strong>Rolle:</strong> {profileData.role === "store_manager" ? "Butikksjef" : "Butikkansatt"}</p>
     </div>
   );
 };
