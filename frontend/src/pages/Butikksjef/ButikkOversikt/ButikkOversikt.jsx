@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
-import ButikkCard from "../../../components/Cards/ButikkCard";
+import ButikkCard from "../../../components/Cards/ButikkCard/ButikkCard";
 import ButikkFilter from "../../../components/Filter/Butikkfilter/ButikkFilter";
 import "./ButikkOversikt.css";
 

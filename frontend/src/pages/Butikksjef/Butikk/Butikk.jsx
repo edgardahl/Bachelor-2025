@@ -45,7 +45,7 @@ const Butikk = () => {
       <div className="shifts-list">
         {shifts.length > 0 ? (
           shifts.map((shift) => (
-            <div key={shift.id} className="shift-card">
+            <div key={shift.shift_id} className="shift-card">
               <p>
                 <strong>Dato:</strong> {shift.date}
               </p>
@@ -54,9 +54,6 @@ const Butikk = () => {
               </p>
               <p>
                 <strong>Sluttid:</strong> {shift.end_time}
-              </p>
-              <p>
-                <strong>Antall ansatte:</strong> {shift.employee_count}
               </p>
             </div>
           ))
