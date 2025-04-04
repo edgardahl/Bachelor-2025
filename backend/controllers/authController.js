@@ -1,6 +1,9 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { generateAccessToken, generateRefreshToken } from "../utils/generateTokens.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../utils/generateTokens.js";
 import {
   registerUserInDB,
   insertUserQualifications,
@@ -8,7 +11,7 @@ import {
   getUserById,
   getUserBasicById,
   updateUserById,
-  getUserByPhoneNumber
+  getUserByPhoneNumber,
 } from "../models/authModel.js";
 
 // 🟢 Login User
@@ -16,27 +19,47 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Step 1: Get the user from the database by email
     const user = await getUserByEmail(email);
-    console.log("FROM GET BY EMAIL", user);
+
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
+    // Step 2: Compare the password provided with the stored hashed password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
-    const accessToken = generateAccessToken({ userId: user.user_id, role: user.role, storeId: user.store_id });
-    const refreshToken = generateRefreshToken({ userId: user.user_id, role: user.role, storeId: user.store_id });
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid credentials" }); // Return error for wrong password
+    }
 
+    // Step 3: Generate the access token and refresh token
+    const accessToken = generateAccessToken({
+      userId: user.user_id,
+      role: user.role,
+      storeId: user.store_id,
+    });
+
+    const refreshToken = generateRefreshToken({
+      userId: user.user_id,
+      role: user.role,
+      storeId: user.store_id,
+    });
+
+    // Step 4: Set the refresh token in an HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", /* If you're deploying the frontend (e.g., on Vercel) and backend (e.g., on Render) on different domains,
-                                                                           change "strict" to "none" and also set `secure: true` to allow cross-site cookies.
-                                                                          */
+      sameSite:
+        process.env.NODE_ENV === "production"
+          ? "strict"
+          : "lax" /* If you're deploying the frontend (e.g., on Vercel) and backend (e.g., on Render) on different domains,
+      change "strict" to "none" and also set `secure: true` to allow cross-site cookies.
+     */,
       path: "/",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Refresh token expiration (7 days)
     });
 
+    // Step 5: Respond with the access token and user data
     res.json({
       accessToken,
       user: {
@@ -63,7 +86,11 @@ export const refreshAccessToken = async (req, res) => {
 
     if (!user) return res.status(401).json({ error: "Invalid token user" });
 
-    const accessToken = generateAccessToken({ userId: user.user_id, role: decoded.role, storeId: decoded.storeId });
+    const accessToken = generateAccessToken({
+      userId: user.user_id,
+      role: decoded.role,
+      storeId: decoded.storeId,
+    });
     res.json({ accessToken });
   } catch (error) {
     console.error("Refresh token error:", error);
@@ -74,7 +101,7 @@ export const refreshAccessToken = async (req, res) => {
 // 👤 Get Current User
 export const getCurrentUser = async (req, res) => {
   try {
-    const userId = req.user.userId;  // This comes from the token, added by the verifyToken middleware
+    const userId = req.user.userId; // This comes from the token, added by the verifyToken middleware
     const user = await getUserById(userId);
 
     if (!user) {
@@ -133,7 +160,6 @@ export const logoutUser = (req, res) => {
   res.json({ message: "Logged out successfully" });
 };
 
-
 // 📝 Register User
 export const registerUser = async (req, res) => {
   try {
@@ -187,15 +213,17 @@ export const registerUser = async (req, res) => {
       );
 
       if (!qualificationsInserted) {
-        return res.status(400).json({ error: "Failed to insert qualifications" });
+        return res
+          .status(400)
+          .json({ error: "Failed to insert qualifications" });
       }
     }
 
-    res.status(201).json({ message: "User registered successfully", user: newUser });
+    res
+      .status(201)
+      .json({ message: "User registered successfully", user: newUser });
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
