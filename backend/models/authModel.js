@@ -34,6 +34,22 @@ export const insertUserQualifications = async (userId, qualifications) => {
   return true;
 };
 
+// 📝 Check if the phone number already exists
+export const getUserByPhoneNumber = async (phoneNumber) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("user_id")
+    .eq("phone_number", phoneNumber)
+    .single();
+
+  if (error) {
+    console.error("Error checking phone number:", error);
+    return null;
+  }
+
+  return data;
+};
+
 // 🔍 Get user by email (for login)
 export const getUserByEmail = async (email) => {
   const { data, error } = await supabase

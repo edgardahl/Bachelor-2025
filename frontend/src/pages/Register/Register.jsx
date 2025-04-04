@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../api/axiosInstance";
 import "./Register.css";
+import sanitize from "../../../../backend/utils/sanitizeInput"; // Import the sanitize function
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -16,7 +17,8 @@ const Register = () => {
   const [stores, setStores] = useState([]);
   const [qualifications, setQualifications] = useState([]); // Qualifications state
   const [selectedQualifications, setSelectedQualifications] = useState([]); // Selected qualifications
-  const [message, setMessage] = useState(""); // Message for success or error
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [message, setMessage] = useState(""); // Message state
   const [loading, setLoading] = useState(false); // Loading state
 
   // Fetch municipalities, stores, and qualifications
@@ -75,9 +77,10 @@ const Register = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(""); // Reset message
+    setMessage("");
     setLoading(true);
-
+    setFieldErrors({}); // Clear previous errors
+  
     const userData = {
       first_name: firstName,
       last_name: lastName,
@@ -88,26 +91,40 @@ const Register = () => {
       role,
       store_id: storeId,
       municipality_id: municipalityId,
-      qualifications: selectedQualifications, // Add selected qualifications here
+      qualifications: selectedQualifications,
     };
-
+  
     try {
-      const response = await axios.post("/auth/register", userData);
+      const sanitizedData = sanitize.sanitizeUserData(userData); // 👈 May throw field-specific errors
+      const response = await axios.post("/auth/register", sanitizedData);
       setMessage("Registration successful! 🎉");
-      console.log("Success:", response.data);
-
-      // Optionally, redirect to login page after successful registration
-      // window.location.href = "/login";
     } catch (error) {
-      console.error(
-        "Registration error:",
-        error.response?.data || error.message
-      );
-      setMessage("Registration failed. Please try again.");
+      console.error("Registration error:", error.message);
+  
+      const errMsg = error.response?.data?.error || error.message;
+  
+      // Specific check for errors
+      if (errMsg === "Email is already in use") {
+        setFieldErrors((prev) => ({ ...prev, email: "This email is already registered" }));
+      } else if (errMsg === "Phone number is already in use") {
+        setFieldErrors((prev) => ({ ...prev, phone_number: "This phone number is already in use" }));
+      } else if (errMsg.includes("First name")) setFieldErrors((prev) => ({ ...prev, first_name: errMsg }));
+      else if (errMsg.includes("Last name")) setFieldErrors((prev) => ({ ...prev, last_name: errMsg }));
+      else if (errMsg.includes("email")) setFieldErrors((prev) => ({ ...prev, email: errMsg }));
+      else if (errMsg.includes("Password")) setFieldErrors((prev) => ({ ...prev, password: errMsg }));
+      else if (errMsg.includes("Phone number")) setFieldErrors((prev) => ({ ...prev, phone_number: errMsg }));
+      else if (errMsg.includes("Availability")) setFieldErrors((prev) => ({ ...prev, availability: errMsg }));
+      else if (errMsg.includes("role")) setFieldErrors((prev) => ({ ...prev, role: errMsg }));
+      else if (errMsg.includes("store")) setFieldErrors((prev) => ({ ...prev, store_id: errMsg }));
+      else if (errMsg.includes("municipality")) setFieldErrors((prev) => ({ ...prev, municipality_id: errMsg }));
+      else setMessage("Registration failed. Please check your inputs and try again.");
     } finally {
       setLoading(false);
     }
   };
+  
+  
+  
 
   return (
     <div className="register-container">
@@ -118,15 +135,16 @@ const Register = () => {
         </p>
       )}
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>First Name</label>
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
-        </div>
+      <div>
+        <label>First Name</label>
+        <input
+          type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
+        {fieldErrors.first_name && <p className="error">{fieldErrors.first_name}</p>}
+      </div>
         <div>
           <label>Last Name</label>
           <input
@@ -135,6 +153,7 @@ const Register = () => {
             onChange={(e) => setLastName(e.target.value)}
             required
           />
+          {fieldErrors.last_name && <p className="error">{fieldErrors.last_name}</p>}
         </div>
         <div>
           <label>Email</label>
@@ -144,6 +163,7 @@ const Register = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          {fieldErrors.email && <p className="error">{fieldErrors.email}</p>}
         </div>
         <div>
           <label>Password</label>
@@ -153,6 +173,7 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          {fieldErrors.password && <p className="error">{fieldErrors.password}</p>}
         </div>
         <div>
           <label>Phone Number</label>
@@ -162,6 +183,7 @@ const Register = () => {
             onChange={(e) => setPhoneNumber(e.target.value)}
             required
           />
+          {fieldErrors.phone_number && <p className="error">{fieldErrors.phone_number}</p>}
         </div>
         <div>
           <label>Availability</label>
