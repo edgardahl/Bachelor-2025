@@ -13,16 +13,20 @@ const ButikkFilter = ({ onFilter }) => {
     const fetchCountiesAndMunicipalities = async () => {
       try {
         const response = await axios.get("/stores/stores-with-municipality");
+
         const uniqueCounties = new Set();
         const municipalitiesByCounty = {};
 
-        response.data.forEach((store) => {
+        // Check if response.data contains a "stores" property
+        const stores = response.data.stores || response.data; // Adjust based on API response
+
+        stores.forEach((store) => {
+          if (!store.municipality) return; // ✅ Skip stores without municipality
+
           const { county_name, municipality_name } = store.municipality;
 
-          // Populate counties
           if (county_name) uniqueCounties.add(county_name);
 
-          // Populate municipalities grouped by county
           if (county_name && municipality_name) {
             if (!municipalitiesByCounty[county_name]) {
               municipalitiesByCounty[county_name] = new Set();

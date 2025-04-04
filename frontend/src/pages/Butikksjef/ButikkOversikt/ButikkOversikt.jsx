@@ -10,6 +10,7 @@ const ButikkOversikt = () => {
   const [shiftsCount, setShiftsCount] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [filters, setFilters] = useState({}); // Store the current filters
 
   const fetchStores = async (filters = {}, page = 1, pageSize = 4) => {
     try {
@@ -23,9 +24,11 @@ const ButikkOversikt = () => {
       const response = await axios.get(
         `/stores/stores-with-municipality?${queryParams.toString()}`
       );
+
       setStores(response.data.stores); // Assuming the response contains a `stores` array
       setTotalPages(Math.ceil(response.data.total / pageSize)); // Calculate total pages
 
+      // Fetch shifts count for each store
       const shiftsData = {};
       for (const store of response.data.stores) {
         try {
@@ -47,16 +50,24 @@ const ButikkOversikt = () => {
     }
   };
 
+  // Fetch stores when the component mounts or when filters or page changes
   useEffect(() => {
-    fetchStores({}, currentPage); // Fetch stores for the current page
-  }, [currentPage]);
+    fetchStores(filters, currentPage);
+  }, [filters, currentPage]);
 
   return (
     <div className="dine-vakter">
       <h1>Butikker</h1>
 
-      <ButikkFilter onFilter={(filters) => fetchStores(filters, 1)} />
+      {/* Filter Component */}
+      <ButikkFilter
+        onFilter={(newFilters) => {
+          setFilters(newFilters); // Update filters
+          setCurrentPage(1); // Reset to the first page
+        }}
+      />
 
+      {/* Store List */}
       <div className="butikk-liste">
         {stores.map((store) => (
           <ButikkCard
@@ -67,6 +78,7 @@ const ButikkOversikt = () => {
         ))}
       </div>
 
+      {/* Pagination Controls */}
       <div className="pagination">
         <button
           onClick={() => {

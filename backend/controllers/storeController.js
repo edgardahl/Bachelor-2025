@@ -1,7 +1,7 @@
 import {
   getAllStoresModel,
   getStoreByIdModel,
-  getStoresWithMunicipality,
+  getStoresWithMunicipality, // Import from storeModel.js
 } from "../models/storeModel.js";
 
 // Get all stores
@@ -31,6 +31,7 @@ export const getStoreByIdController = async (req, res) => {
   }
 };
 
+// Get stores filtered by municipality and county
 export const getStoresWithMunicipalityController = async (req, res) => {
   try {
     const { municipality, county, page = 1, pageSize = 10 } = req.query;
