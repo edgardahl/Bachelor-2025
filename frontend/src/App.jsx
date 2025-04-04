@@ -9,6 +9,7 @@ import ButikksjefDashboard from "./pages/Butikksjef/Dashboard/Dashboard";
 import AnsattDashboard from "./pages/Butikkansatt/Dashboard/Dashboard";
 import useAuth from "./context/UseAuth";
 import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter";
+import MineAnsatte from "./pages/Butikksjef/MineAnsatte/MineAnsatte";  // <-- New component for employees
 import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift";
 import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
 import Butikk from "./pages/Butikksjef/Butikk/Butikk";
@@ -22,7 +23,7 @@ function App() {
     location.pathname.startsWith("/dashboard/butikksjef/") &&
     location.pathname.split("/").length > 4;
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Laster inn...</p>;
 
   return (
     <Layout showBackButton={showBackButton}>
@@ -57,7 +58,7 @@ function App() {
 
         {/* BUTIKKSJEF ROUTES */}
 
-        {/* Protected dashboards Butikksjef */}
+        {/* Protected dashboards for Butikksjef */}
         <Route
           path="/dashboard/butikksjef"
           element={
@@ -67,7 +68,7 @@ function App() {
           }
         />
 
-        {/* Protected butikksjef Mine Vakter */}
+        {/* Protected route for Butikksjef Mine Vakter */}
         <Route
           path="/dashboard/butikksjef/minevakter"
           element={
@@ -77,12 +78,22 @@ function App() {
           }
         />
 
-        {/* Protected butikksjef Butikk Oversikt */}
+        {/* Protected route for Butikksjef Butikk Oversikt */}
         <Route
           path="/dashboard/butikksjef/butikker"
           element={
             <ProtectedRoute allowedRoles={["store_manager"]}>
               <ButikkOversikt />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected route for viewing employees (Mine Ansatte) */}
+        <Route
+          path="/dashboard/butikksjef/mineansatte"
+          element={
+            <ProtectedRoute allowedRoles={["store_manager"]}>
+              <MineAnsatte /> {/* <-- New route for viewing employees */}
             </ProtectedRoute>
           }
         />
@@ -97,7 +108,7 @@ function App() {
           }
         />
 
-        {/* Protected dashboards Butikkansatt */}
+        {/* Protected dashboards for Butikkansatt */}
         <Route
           path="/dashboard/butikkansatt"
           element={
@@ -107,7 +118,7 @@ function App() {
           }
         />
 
-        {/* Protected butikksjef Create Shift */}
+        {/* Protected route for Butikksjef Create Shift */}
         <Route
           path="/dashboard/butikksjef/createshift"
           element={

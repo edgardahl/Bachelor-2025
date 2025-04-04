@@ -6,7 +6,7 @@ export default function ProtectedRoute({ children, allowedRoles }) {
   const location = useLocation();
 
   // ✅ Display a loading state (could be a spinner or a loading message) until we verify user data
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Laster inn..</p>;
 
   // 🚫 Not logged in
   if (!user) {
