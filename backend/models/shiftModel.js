@@ -1,5 +1,7 @@
 import { supabase } from "../config/supabaseClient.js";
-import sanitizeShift from "../utils/sanitizeInput.js";
+// ✅ Named import
+import { sanitizeShift } from "../utils/sanitizeInput.js";
+
 
 // Get all shifts
 export const getAllShiftsModel = async () => {
@@ -27,6 +29,17 @@ export const getShiftByIdModel = async (shiftId) => {
     .select("*")
     .eq("shift_id", shiftId)
     .single();
+
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+//Get shift by Posted_by
+export const getShiftByPostedByModel = async (postedBy) => {
+  const { data, error } = await supabase
+    .from("shifts")
+    .select("*")
+    .eq("posted_by", postedBy);
 
   if (error) throw new Error(error.message);
   return data;

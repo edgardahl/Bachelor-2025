@@ -1,6 +1,5 @@
 import { validate as isUUID } from "uuid";
-
-const sanitizeShift = (shiftData) => {
+export const sanitizeShift = (shiftData) => {
   const {
     title,
     description,
@@ -87,7 +86,7 @@ const sanitizeShift = (shiftData) => {
 
   // Return sanitized data
   console.log(
-    "returning data",
+    "raturning data",
     title.trim(),
     description.trim(),
     date,
@@ -109,9 +108,8 @@ const sanitizeShift = (shiftData) => {
   };
 };
 
-const sanitizeUserData = (userData) => {
-
-  const { 
+export const sanitizeUserData = (userData) => {
+  const {
     first_name,
     last_name,
     email,
@@ -127,13 +125,23 @@ const sanitizeUserData = (userData) => {
 
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/; // Supports accents, spaces, hyphens, apostrophes
 
-if (typeof first_name !== "string" || first_name.trim() === "" || !nameRegex.test(first_name)) {
-  throw new Error("First name must only contain letters and cannot be empty.");
-}
+  if (
+    typeof first_name !== "string" ||
+    first_name.trim() === "" ||
+    !nameRegex.test(first_name)
+  ) {
+    throw new Error(
+      "First name must only contain letters and cannot be empty."
+    );
+  }
 
-if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(last_name)) {
-  throw new Error("Last name must only contain letters and cannot be empty.");
-}
+  if (
+    typeof last_name !== "string" ||
+    last_name.trim() === "" ||
+    !nameRegex.test(last_name)
+  ) {
+    throw new Error("Last name must only contain letters and cannot be empty.");
+  }
 
   // Basic email regex check
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -152,7 +160,7 @@ if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(
   }
 
   // Availability check (you can refine values if enum is known)
-  const validAvailability = ["available", "unavailable"];
+  const validAvailability = ["Fleksibel", "Ikke-fleksibel"];
   if (!validAvailability.includes(availability)) {
     throw new Error("Availability must be 'available' or 'unavailable'.");
   }
@@ -209,12 +217,4 @@ if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(
     municipality_id,
     qualifications: qualifications ?? [],
   };
-
-}
-
-export default {
-  sanitizeShift,
-  sanitizeUserData,
 };
-
-

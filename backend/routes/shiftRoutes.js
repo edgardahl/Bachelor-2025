@@ -8,6 +8,7 @@ import {
   claimShiftController,
   createShiftController,
   deleteShiftController,
+  getShiftByPostedByController
 } from "../controllers/shiftController.js";
 import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
@@ -22,6 +23,10 @@ router.get(
 );
 // Route to get all shifts from a store
 router.get("/store/:store_id", getShiftsByStoreController);
+
+// Route to get all shifts posted by a specific user
+router.get("/posted_by/:posted_by", getShiftByPostedByController);
+
 // Route to get a single shift by ID
 router.get("/:shift_id", getShiftByIdController);
 // Route to get all claimed shifts

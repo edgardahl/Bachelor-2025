@@ -7,6 +7,7 @@ import {
   createShiftModel,
   deleteShiftModel,
   getShiftsUserIsQualifiedForModel,
+  getShiftByPostedByModel
 } from "../models/shiftModel.js";
 import { getShiftQualificationsModel } from "../models/qualificationModel.js";
 import { getUserQualificationsModel } from "../models/userModel.js";
@@ -35,6 +36,19 @@ export const getShiftsByStoreController = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+//Get shift by Posted_by
+export const getShiftByPostedByController = async (req, res) => {
+  const { posted_by } = req.params;
+
+  try {
+    const shifts = await getShiftByPostedByModel(posted_by);
+    return res.json(shifts);
+  } catch (error) {
+    console.error("Error fetching shifts:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
 
 // Get a single shift by ID
 export const getShiftByIdController = async (req, res) => {
