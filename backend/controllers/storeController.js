@@ -34,7 +34,7 @@ export const getStoreByIdController = async (req, res) => {
 // Get stores filtered by municipality and county
 export const getStoresWithMunicipalityController = async (req, res) => {
   try {
-    const { municipality, county, page = 1, pageSize = 10 } = req.query;
+    const { municipality, county, page = 1, pageSize = 10000 } = req.query;
 
     const storesWithPagination = await getStoresWithMunicipality(
       municipality,

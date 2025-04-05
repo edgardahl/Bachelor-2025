@@ -36,12 +36,18 @@ const Butikk = () => {
 
   return (
     <div className="butikk-page">
-      <h1 className="butikk-title">{store.name}</h1>
-      <p className="butikk-email">{store.email}</p>
-      <p className="butikk-phone">{store.phone_number}</p>
-      <p className="butikk-chain">{store.store_chain}</p>
-      <p className="butikk-address">{store.address}</p>
-
+      <h1>
+        {store.store_chain} {store.name}
+      </h1>
+      <p>
+        {" "}
+        <a href={`mailto:${store.email}`}>{store.email}</a>
+      </p>
+      <p>
+        {" "}
+        <a href={`tel:${store.phone_number}`}>{store.phone_number}</a>
+      </p>
+      <p>{store.address}</p>
       <h2 className="butikk-shift-heading">Publiserte Vakter</h2>
       <div className="butikk-shift-list">
         {shifts.length > 0 ? (
