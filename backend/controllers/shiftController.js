@@ -2,7 +2,7 @@ import {
   getAllShiftsModel,
   getShiftsByStoreModel,
   getShiftByIdModel,
-  getClaimedShiftsModel,
+  getClaimedShiftsByUserModel,
   claimShiftModel,
   createShiftModel,
   deleteShiftModel,
@@ -24,10 +24,10 @@ export const getAllShiftsController = async (req, res) => {
   }
 };
 
+
 // Get all shifts from a store
 export const getShiftsByStoreController = async (req, res) => {
   const { store_id } = req.params;
-
   try {
     const shifts = await getShiftsByStoreModel(store_id);
     return res.json(shifts);
@@ -37,10 +37,9 @@ export const getShiftsByStoreController = async (req, res) => {
   }
 };
 
-//Get shift by Posted_by
+// Get shift by Posted_by
 export const getShiftByPostedByController = async (req, res) => {
   const { posted_by } = req.params;
-
   try {
     const shifts = await getShiftByPostedByModel(posted_by);
     return res.json(shifts);
@@ -48,12 +47,11 @@ export const getShiftByPostedByController = async (req, res) => {
     console.error("Error fetching shifts:", error);
     res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 // Get a single shift by ID
 export const getShiftByIdController = async (req, res) => {
   const { shift_id } = req.params;
-
   try {
     const shift = await getShiftByIdModel(shift_id);
     return res.json(shift);
@@ -63,16 +61,21 @@ export const getShiftByIdController = async (req, res) => {
   }
 };
 
-// Get all claimed shifts
-export const getClaimedShiftsController = async (req, res) => {
+
+// Route to get claimed shifts by user ID
+export const getClaimedShiftsByUserController = async (req, res) => {
+  const userId = req.user.userId; // assuming verifyToken sets req.user
+  console.log("User ID from token:", userId);
+
   try {
-    const claimedShifts = await getClaimedShiftsModel();
-    return res.json(claimedShifts);
+    const shifts = await getClaimedShiftsByUserModel(userId);
+    return res.json({ data: shifts });
   } catch (error) {
-    console.error("Error fetching claimed shifts:", error);
+    console.error("Error fetching claimed shifts for user:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Claim a shift
 export const claimShiftController = async (req, res) => {
@@ -132,21 +135,35 @@ export const createShiftController = async (req, res) => {
 
 // Delete a shift
 export const deleteShiftController = async (req, res) => {
-  const { shift_id } = req.params;
+  // Extract shift info from request body
+  const { shiftId, shiftStoreId} = req.body;
+
+  // Check if the store ID in the request matches the store ID in the JWT
+  if (shiftStoreId !== req.user.storeId) {
+    console.error("Store ID mismatch:", shiftStoreId, req.user.storeId);
+    return res.status(403).json({ error: "You do not have permission to delete this shift." });
+  }
 
   try {
-    const deletedShift = await deleteShiftModel(shift_id);
-    return res.json({ message: "Shift deleted successfully", deletedShift });
+    // Call the delete model with the shift ID
+    const deletedShift = await deleteShiftModel(shiftId);
+
+    // Return success response if the shift is deleted
+    return res.json({
+      message: "Shift deleted successfully",
+      deletedShift,
+    });
   } catch (error) {
     console.error("Error deleting shift:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
+
 // Get all shifts that a specific user is qualified for
 export const getShiftsUserIsQualifiedForController = async (req, res) => {
-  const { user_id } = req.params; // The user_id will be passed as a URL parameter
-
+  const user_id = req.user.userId; // assuming verifyToken sets req.user
+  
   try {
     const shifts = await getShiftsUserIsQualifiedForModel(user_id);
     return res.json(shifts);

@@ -9,11 +9,16 @@ const ButikkCard = ({ store, shiftsCount }) => {
       className="butikk-card-link"
     >
       <div className="butikk-card">
-        <h2>{store.name}</h2>
+        <h2>
+          {store.store_chain} {store.name}
+        </h2>
+        <p>{store.address}</p>
+        <p>
+          <b>Kontaktinfo:</b>
+        </p>
         <p>{store.email}</p>
         <p>{store.phone_number}</p>
-        <p>{store.store_chain}</p>
-        <p>{store.address}</p>
+
         <p>Trenger ansatte: {shiftsCount}</p>
       </div>
     </Link>

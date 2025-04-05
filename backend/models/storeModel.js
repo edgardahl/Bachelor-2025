@@ -35,7 +35,7 @@ export const getStoresWithMunicipality = async (
   municipalities = [],
   counties = [],
   page = 1,
-  pageSize = 10
+  pageSize = 10000
 ) => {
   // Fetch all stores without pagination for filtering
   const { data, error } = await supabase.from("stores").select(

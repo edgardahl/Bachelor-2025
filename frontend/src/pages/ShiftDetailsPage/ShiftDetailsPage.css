@@ -1,0 +1,62 @@
+/* Overall container for the shift details page */
+.shift-details-container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header section */
+.shift-header {
+  background-color: #4CAF50;
+  padding: 20px;
+  border-radius: 8px 8px 0 0;
+  color: white;
+  text-align: center;
+}
+
+.shift-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Shift info sections */
+.shift-details {
+  margin-top: 20px;
+}
+
+.shift-info {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.shift-info strong {
+  font-weight: bold;
+}
+
+/* Loading message */
+.loading-message {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 50px;
+  color: #666;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .shift-details-container {
+    width: 95%;
+  }
+
+  .shift-info {
+    font-size: 14px;
+  }
+
+  .shift-title {
+    font-size: 20px;
+  }
+}

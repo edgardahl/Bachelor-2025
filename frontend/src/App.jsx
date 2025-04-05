@@ -13,7 +13,8 @@ import MineAnsatte from "./pages/Butikksjef/MineAnsatte/MineAnsatte";
 import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift";
 import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
 import Butikk from "./pages/Butikksjef/Butikk/Butikk";
-import Profile from "./pages/Profile/Profile"; 
+import Profile from "./pages/Profile/Profile";
+import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
 
 function App() {
   const { user, loading } = useAuth();
@@ -51,6 +52,16 @@ function App() {
       <Route
         path="/register"
         element={user ? <Navigate to="/" replace /> : <RegisterPage />}
+      />
+
+      {/* General route shared by roles */}
+      <Route
+        path="/shift-details/:shiftId"
+        element={
+          <ProtectedRoute allowedRoles={["store_manager", "employee"]}>
+            <ShiftDetailsPage />
+          </ProtectedRoute>
+        }
       />
 
       {/* Butikksjef routes */}

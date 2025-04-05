@@ -20,7 +20,6 @@ export const verifyToken = (req, res, next) => {
       role: decoded.role,
       storeId: decoded.storeId, // If you want the storeId from token
     };
-    console.log("Decoded token:", decoded);
     next();
   } catch (err) {
     return res.status(401).json({ error: "Unauthorized: Invalid token" });

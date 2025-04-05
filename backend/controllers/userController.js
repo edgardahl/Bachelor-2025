@@ -69,18 +69,14 @@ export const changePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
   if (!currentPassword || !newPassword) {
-    return res
-      .status(400)
-      .json({ error: "Both current and new passwords are required." });
+    return res.status(400).json({ error: "Both current and new passwords are required." });
   }
 
   try {
     const user = await getUserWithPasswordById(userId);
 
     if (!user || !user.password) {
-      return res
-        .status(404)
-        .json({ error: "User not found or missing password." });
+      return res.status(404).json({ error: "User not found or missing password." });
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
@@ -101,6 +97,7 @@ export const changePassword = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Get employees by store ID
 export const getEmployeesByStoreIdController = async (req, res) => {

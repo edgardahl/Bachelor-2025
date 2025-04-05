@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
+import ShiftCard from "../../../components/shiftCard/shiftCard"; // Import ShiftCard
 import "./MineVakter.css";
 
 const MineVakter = () => {
   const [userId, setUserId] = useState(null);
   const [storeId, setStoreId] = useState(null);
   const [shifts, setShifts] = useState([]);
-  const [activeTab, setActiveTab] = useState("mine"); // "mine" or "store"
+  const [activeTab, setActiveTab] = useState("mine");
 
   useEffect(() => {
     const fetchUserAndShifts = async () => {
@@ -18,7 +19,6 @@ const MineVakter = () => {
         setUserId(id);
         setStoreId(storeId);
 
-        // Default fetch
         fetchShifts("mine", id, storeId);
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -35,6 +35,7 @@ const MineVakter = () => {
         response = await axios.get(`/shifts/posted_by/${userId}`);
       } else {
         response = await axios.get(`/shifts/store/${storeId}`);
+        console.log("Mine vakter response:", response.data);
       }
       setShifts(response.data);
     } catch (error) {
@@ -45,6 +46,11 @@ const MineVakter = () => {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     fetchShifts(tab, userId, storeId);
+  };
+
+  // Handle deleting a shift and immediately remove it from the UI
+  const deleteShift = (shiftId) => {
+    setShifts((prevShifts) => prevShifts.filter((shift) => shift.shift_id !== shiftId));
   };
 
   return (
@@ -83,13 +89,23 @@ const MineVakter = () => {
           <p className="mine-vakter-empty-message">Ingen vakter funnet.</p>
         ) : (
           shifts.map((shift) => (
-            <div key={shift.shift_id} className="mine-vakter-shift-card">
-              <h4 className="mine-vakter-shift-title">{shift.title}</h4>
-              <p className="mine-vakter-shift-description">{shift.description}</p>
-              <p className="mine-vakter-shift-time">
-                {shift.date} | {shift.start_time} - {shift.end_time}
-              </p>
-            </div>
+            <ShiftCard
+              key={shift.shift_id}
+              shiftId={shift.shift_id}
+              title={shift.title}
+              description={shift.description}
+              date={shift.date}
+              startTime={shift.start_time}
+              endTime={shift.end_time}
+              qualifications={shift.qualifications}
+              storeName={shift.store_name}
+              postedBy={shift.posted_by_first_name + " " + shift.posted_by_last_name}
+              postedById={shift.posted_by_id}  // Pass the postedById here
+              userId={userId}  // Pass userId here
+              usersstoreId={storeId}  // Pass storeId here
+              shiftStoreId={shift.store_id}  // Pass the storeId from the shift
+              deleteShift={deleteShift} // Pass the deleteShift function
+            />
           ))
         )}
       </div>
