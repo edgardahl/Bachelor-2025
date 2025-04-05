@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
+import ShiftCard from "../../../components/shiftCard/shiftCard"; // Import ShiftCard
 import "./Butikk.css";
 
 const Butikk = () => {
@@ -35,30 +36,30 @@ const Butikk = () => {
 
   return (
     <div className="butikk-page">
-      <h1>{store.name}</h1>
-      <p>{store.email}</p>
-      <p>{store.phone_number}</p>
-      <p>{store.store_chain}</p>
-      <p>{store.address}</p>
+      <h1 className="butikk-title">{store.name}</h1>
+      <p className="butikk-email">{store.email}</p>
+      <p className="butikk-phone">{store.phone_number}</p>
+      <p className="butikk-chain">{store.store_chain}</p>
+      <p className="butikk-address">{store.address}</p>
 
-      <h2>Publiserte Vakter</h2>
-      <div className="shifts-list">
+      <h2 className="butikk-shift-heading">Publiserte Vakter</h2>
+      <div className="butikk-shift-list">
         {shifts.length > 0 ? (
           shifts.map((shift) => (
-            <div key={shift.shift_id} className="shift-card">
-              <p>
-                <strong>Dato:</strong> {shift.date}
-              </p>
-              <p>
-                <strong>Starttid:</strong> {shift.start_time}
-              </p>
-              <p>
-                <strong>Sluttid:</strong> {shift.end_time}
-              </p>
-            </div>
+            <ShiftCard
+              key={shift.shift_id}
+              shiftId={shift.shift_id}
+              title={shift.title}
+              description={shift.description}
+              date={shift.date}
+              startTime={shift.start_time}
+              endTime={shift.end_time}
+              qualifications={shift.qualifications}
+              storeName={shift.store_name}
+            />
           ))
         ) : (
-          <p>Ingen vakter publisert for denne butikken.</p>
+          <p className="butikk-no-shifts">Ingen vakter publisert for denne butikken.</p>
         )}
       </div>
     </div>
