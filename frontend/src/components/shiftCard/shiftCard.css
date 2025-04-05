@@ -1,0 +1,58 @@
+/* Overall container for the shift card */
+.shift-card-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shift-card-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Header section of the card */
+.shift-card-header {
+  background-color: #4caf50;
+  padding: 15px;
+  border-radius: 8px 8px 0 0;
+  color: white;
+  text-align: center;
+}
+
+.shift-card-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Details section of the card */
+.shift-card-details {
+  margin-top: 20px;
+}
+
+.shift-card-store {
+  font-size: 16px;
+  font-weight: normal;
+  color: #333;
+}
+
+.shift-card-time {
+  font-size: 14px;
+  color: #777;
+  margin-top: 5px;
+}
+
+.shift-card-qualifications {
+  font-size: 14px;
+  font-weight: normal;
+  margin-top: 10px;
+  color: #333;
+}
+
+/* Hover effect for*

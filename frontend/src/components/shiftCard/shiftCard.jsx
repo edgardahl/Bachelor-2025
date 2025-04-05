@@ -1,15 +1,39 @@
-// components/ShiftCard.jsx
 import React from "react";
-import "./ShiftCard.css"; // Optional: style separately
+import { useNavigate } from "react-router-dom"; // Use useNavigate for navigation in React Router v6
+import "./ShiftCard.css";
 
-const ShiftCard = ({ shift }) => {
+const ShiftCard = ({
+  shiftId,
+  title,
+  description,
+  date,
+  startTime,
+  endTime,
+  qualifications,
+  storeName
+}) => {
+  const navigate = useNavigate(); // Initialize navigate function
+
+  const handleCardClick = () => {
+    // Navigate to the details page for this shift
+    navigate(`/shift-details/${shiftId}`);
+  };
+
   return (
-    <div className="mine-vakter-shift-card">
-      <h4 className="mine-vakter-shift-title">{shift.title}</h4>
-      <p className="mine-vakter-shift-description">{shift.description}</p>
-      <p className="mine-vakter-shift-time">
-        {shift.date} | {shift.start_time} - {shift.end_time}
-      </p>
+    <div className="shift-card-container" onClick={handleCardClick}>
+      <div className="shift-card-header">
+        <h4 className="shift-card-title">{title}</h4>
+      </div>
+
+      <div className="shift-card-details">
+        <p className="shift-card-store">{storeName}</p>
+        <p className="shift-card-time">
+          {date} | {startTime} - {endTime}
+        </p>
+        <p className="shift-card-qualifications">
+          Qualifications: {qualifications.join(", ")}
+        </p>
+      </div>
     </div>
   );
 };
