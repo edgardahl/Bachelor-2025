@@ -32,13 +32,13 @@ export const getStoreByIdModel = async (storeId) => {
 
 // Fetch stores with pagination and filtering by municipality and county
 export const getStoresWithMunicipality = async (
-  municipality,
-  county,
+  municipalities = [],
+  counties = [],
   page = 1,
   pageSize = 10
 ) => {
   // Fetch all stores without pagination for filtering
-  const { data, error, count } = await supabase.from("stores").select(
+  const { data, error } = await supabase.from("stores").select(
     `store_id, name, store_chain, address, phone_number, email, manager_id,
       municipality:municipality_id (municipality_name, county_name)`
   );
@@ -47,27 +47,31 @@ export const getStoresWithMunicipality = async (
     throw new Error(error.message);
   }
 
-  // Filter stores based on the selected municipality and county
+  // Filter stores based on selected municipalities and counties
   let filteredData = data;
-  if (municipality) {
+  if (municipalities.length > 0) {
     filteredData = filteredData.filter(
-      (store) => store.municipality?.municipality_name === municipality
+      (store) =>
+        store.municipality?.municipality_name &&
+        municipalities.includes(store.municipality.municipality_name)
     );
   }
-  if (county) {
+  if (counties.length > 0) {
     filteredData = filteredData.filter(
-      (store) => store.municipality?.county_name === county
+      (store) =>
+        store.municipality?.county_name &&
+        counties.includes(store.municipality.county_name)
     );
   }
 
-  // Calculate the total number of pages
+  // Calculate total pages
   const totalFiltered = filteredData.length;
   const totalPages = Math.ceil(totalFiltered / pageSize);
 
-  // Ensure the page doesn't exceed the total pages
-  const validPage = page > totalPages ? totalPages : page;
+  // Ensure the page is within range
+  const validPage = Math.max(1, Math.min(page, totalPages));
 
-  // Apply pagination on filtered data
+  // Apply pagination
   const start = (validPage - 1) * pageSize;
   const end = start + pageSize;
   const pagedData = filteredData.slice(start, end);

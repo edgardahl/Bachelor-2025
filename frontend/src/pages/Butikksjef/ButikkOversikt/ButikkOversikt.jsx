@@ -15,10 +15,12 @@ const ButikkOversikt = () => {
 
   const fetchStores = async (filters = {}, page = 1, pageSize = 4) => {
     try {
-      const { county, municipality } = filters;
       const queryParams = new URLSearchParams();
-      if (county) queryParams.append("county", county);
-      if (municipality) queryParams.append("municipality", municipality);
+
+      if (filters.county) queryParams.append("county", filters.county);
+      if (filters.municipality)
+        queryParams.append("municipality", filters.municipality);
+
       queryParams.append("page", page);
       queryParams.append("pageSize", pageSize);
 
@@ -26,11 +28,10 @@ const ButikkOversikt = () => {
         `/stores/stores-with-municipality?${queryParams.toString()}`
       );
 
-      setStores(response.data.stores); // Assuming the response contains a `stores` array
-      setTotalStores(response.data.total); // Set the total number of stores
-      setTotalPages(Math.ceil(response.data.total / pageSize)); // Calculate total pages
+      setStores(response.data.stores);
+      setTotalStores(response.data.total);
+      setTotalPages(Math.ceil(response.data.total / pageSize));
 
-      // Fetch shifts count for each store
       const shiftsData = {};
       for (const store of response.data.stores) {
         try {
