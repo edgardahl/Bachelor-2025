@@ -2,18 +2,18 @@ import "./App.css";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
+import useAuth from "./context/UseAuth";
 
 import LoginPage from "./pages/Login/Login";
 import RegisterPage from "./pages/Register/Register";
 import ButikksjefDashboard from "./pages/Butikksjef/Dashboard/Dashboard";
 import AnsattDashboard from "./pages/Butikkansatt/Dashboard/Dashboard";
-import useAuth from "./context/UseAuth";
 import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter";
 import MineAnsatte from "./pages/Butikksjef/MineAnsatte/MineAnsatte";
 import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift";
 import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
 import Butikk from "./pages/Butikksjef/Butikk/Butikk";
-import Profile from "./pages/Profile/Profile"; // ✅ Reusable profile page
+import Profile from "./pages/Profile/Profile"; 
 
 function App() {
   const { user, loading } = useAuth();
