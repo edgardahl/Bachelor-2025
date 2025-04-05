@@ -35,10 +35,17 @@ const Butikk = () => {
 
   return (
     <div className="butikk-page">
-      <h1>{store.name}</h1>
-      <p>{store.email}</p>
-      <p>{store.phone_number}</p>
-      <p>{store.store_chain}</p>
+      <h1>
+        {store.store_chain} {store.name}
+      </h1>
+      <p>
+        {" "}
+        <a href={`mailto:${store.email}`}>{store.email}</a>
+      </p>
+      <p>
+        {" "}
+        <a href={`tel:${store.phone_number}`}>{store.phone_number}</a>
+      </p>
       <p>{store.address}</p>
 
       <h2>Publiserte Vakter</h2>

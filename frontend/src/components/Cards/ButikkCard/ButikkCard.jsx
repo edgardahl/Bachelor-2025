@@ -18,6 +18,7 @@ const ButikkCard = ({ store, shiftsCount }) => {
         </p>
         <p>{store.email}</p>
         <p>{store.phone_number}</p>
+
         <p>Trenger ansatte: {shiftsCount}</p>
       </div>
     </Link>
