@@ -103,7 +103,7 @@ export const createShiftModel = async (shiftData) => {
   return shiftDataResponse;
 };
 
-// Delete a shift
+// Delete a shift from the database
 export const deleteShiftModel = async (shiftId) => {
   const { data, error } = await supabase
     .from("shifts")
@@ -115,6 +115,7 @@ export const deleteShiftModel = async (shiftId) => {
   if (error) throw new Error(error.message);
   return data;
 };
+
 
 // Get all shifts a user is qualified for
 export const getShiftsUserIsQualifiedForModel = async (userId) => {

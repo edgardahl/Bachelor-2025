@@ -135,16 +135,30 @@ export const createShiftController = async (req, res) => {
 
 // Delete a shift
 export const deleteShiftController = async (req, res) => {
-  const { shift_id } = req.params;
+  // Extract shift info from request body
+  const { shiftId, shiftStoreId} = req.body;
+
+  // Check if the store ID in the request matches the store ID in the JWT
+  if (shiftStoreId !== req.user.storeId) {
+    console.error("Store ID mismatch:", shiftStoreId, req.user.storeId);
+    return res.status(403).json({ error: "You do not have permission to delete this shift." });
+  }
 
   try {
-    const deletedShift = await deleteShiftModel(shift_id);
-    return res.json({ message: "Shift deleted successfully", deletedShift });
+    // Call the delete model with the shift ID
+    const deletedShift = await deleteShiftModel(shiftId);
+
+    // Return success response if the shift is deleted
+    return res.json({
+      message: "Shift deleted successfully",
+      deletedShift,
+    });
   } catch (error) {
     console.error("Error deleting shift:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Get all shifts that a specific user is qualified for
 export const getShiftsUserIsQualifiedForController = async (req, res) => {

@@ -42,7 +42,6 @@ export const getEmployeesByStoreIdController = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const storeId = decoded.storeId; // Extract storeId from the decoded token
-    console.log('Store ID from decoded token:', storeId);  // Log the storeId to verify it's correct
 
     const employees = await getEmployeesByStoreIdModel(storeId);
 

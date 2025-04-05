@@ -1,4 +1,3 @@
-// MineVakter.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
@@ -36,6 +35,7 @@ const MineVakter = () => {
         response = await axios.get(`/shifts/posted_by/${userId}`);
       } else {
         response = await axios.get(`/shifts/store/${storeId}`);
+        console.log("Mine vakter response:", response.data);
       }
       setShifts(response.data);
     } catch (error) {
@@ -46,6 +46,11 @@ const MineVakter = () => {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     fetchShifts(tab, userId, storeId);
+  };
+
+  // Handle deleting a shift and immediately remove it from the UI
+  const deleteShift = (shiftId) => {
+    setShifts((prevShifts) => prevShifts.filter((shift) => shift.shift_id !== shiftId));
   };
 
   return (
@@ -94,6 +99,12 @@ const MineVakter = () => {
               endTime={shift.end_time}
               qualifications={shift.qualifications}
               storeName={shift.store_name}
+              postedBy={shift.posted_by_first_name + " " + shift.posted_by_last_name}
+              postedById={shift.posted_by_id}  // Pass the postedById here
+              userId={userId}  // Pass userId here
+              usersstoreId={storeId}  // Pass storeId here
+              shiftStoreId={shift.store_id}  // Pass the storeId from the shift
+              deleteShift={deleteShift} // Pass the deleteShift function
             />
           ))
         )}

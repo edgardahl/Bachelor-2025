@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"; // To access the shiftId from the URL
+import { useParams, useNavigate } from "react-router-dom"; // To access the shiftId from the URL and use navigate
 import axios from "../../api/axiosInstance"; // Assuming you are using axios for API calls
+import DeleteShiftPopup from "../../components/DeleteShiftPopup/DeleteShiftPopup"; // Import DeleteShiftPopup component
 import "./ShiftDetailsPage.css";
 
 const ShiftDetailsPage = () => {
   const { shiftId } = useParams(); // Get the shiftId from the URL params
   const [shiftDetails, setShiftDetails] = useState(null);
+  const [showDeletePopup, setShowDeletePopup] = useState(false); // State for the delete popup
+  const [error, setError] = useState(null); // State to handle error in deleting
+  const [storeId, setStoreId] = useState(null); // State to store the user's store ID
+  const navigate = useNavigate(); // To navigate to other pages
 
   useEffect(() => {
     const fetchShiftDetails = async () => {
@@ -15,11 +20,51 @@ const ShiftDetailsPage = () => {
         setShiftDetails(response.data[0]); // Assuming your API returns the shift details for a specific shiftId
       } catch (error) {
         console.error("Error fetching shift details:", error);
+        setError("Failed to fetch shift details.");
       }
     };
 
+    const fetchUserStore = async () => {
+        try {
+          const response = await axios.get("/auth/me");
+          const storeId = response.data.user.storeId;
+          setStoreId(storeId);
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
+      };
+
+    fetchUserStore(); // Fetch user store details
     fetchShiftDetails();
   }, [shiftId]);
+
+  // Function to handle shift deletion
+  const handleDeleteShift = async () => {
+    try {
+      const response = await axios.delete("/shifts/deleteShiftById", {
+        data: {
+          shiftId: shiftId, // shiftId to be deleted
+          shiftStoreId: shiftDetails.store_id, // store ID of the shift
+        },
+      });
+
+      if (response.status === 200) {
+        console.log("Shift deleted successfully:", response.data.message);
+        setShowDeletePopup(false); // Close the popup after confirming
+        navigate("/dashboard/butikksjef/butikker"); // Redirect back to the store page or wherever you want
+      } else {
+        console.error("Error deleting shift:", response.data.error);
+        alert(response.data.error); // Show error message if deletion fails
+      }
+    } catch (error) {
+      console.error("Error during deletion:", error);
+      alert("Failed to delete shift.");
+    }
+  };
+
+  const handleCancel = () => {
+    setShowDeletePopup(false); // Close the popup if canceled
+  };
 
   if (!shiftDetails) {
     return <div className="loading-message">Loading...</div>;
@@ -29,6 +74,12 @@ const ShiftDetailsPage = () => {
   const qualifications = shiftDetails.qualifications && Array.isArray(shiftDetails.qualifications)
     ? shiftDetails.qualifications.join(", ")
     : "No qualifications available";
+
+  // Conditionally render the delete button based on user and shift store association
+  const canDelete = shiftDetails.store_id === storeId; // Add logic to check if the user can delete this shift
+  console.log("Can delete:", canDelete);
+  console.log("Shift store id:", shiftDetails.store_id);
+    console.log("User store id:", storeId);
 
   return (
     <div className="shift-details-container">
@@ -51,6 +102,22 @@ const ShiftDetailsPage = () => {
         <p className="shift-info"><strong>Store Email:</strong> {shiftDetails.store_email}</p>
         <p className="shift-info"><strong>Store Phone:</strong> {shiftDetails.store_phone}</p>
       </div>
+
+      {/* Conditionally render the delete button */}
+      {canDelete && (
+        <button className="delete-button" onClick={() => setShowDeletePopup(true)}>
+          🗑️ Delete Shift
+        </button>
+      )}
+
+      {/* Render the delete confirmation popup */}
+      {showDeletePopup && (
+        <DeleteShiftPopup
+          shiftTitle={shiftDetails.title}
+          onCancel={handleCancel}
+          onConfirm={handleDeleteShift}
+        />
+      )}
     </div>
   );
 };

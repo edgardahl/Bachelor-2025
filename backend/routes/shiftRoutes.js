@@ -24,7 +24,7 @@ router.get("/user_is_qualified_for", verifyToken, getShiftsUserIsQualifiedForCon
 router.get("/claimedByCurrentUser", verifyToken, getClaimedShiftsByUserController);
 
 // Route to get all shifts from a store
-router.get("/store/:store_id", getShiftsByStoreController);
+router.get("/store/:store_id", verifyToken, getShiftsByStoreController);
 
 // Route to get all shifts posted by a specific user
 router.get("/posted_by/:posted_by", getShiftByPostedByController);
@@ -41,6 +41,7 @@ router.post("/claim/:shift_id", verifyToken, authorizeRoles("employee"), claimSh
 router.post("/", verifyToken, authorizeRoles("store_manager"), createShiftController);
 
 // Route to delete a shift
-router.delete("/:shift_id", deleteShiftController);
+router.delete("/deleteShiftById",verifyToken,authorizeRoles("store_manager"), deleteShiftController);
+
 
 export default router;
