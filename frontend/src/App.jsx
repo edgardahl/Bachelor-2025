@@ -2,24 +2,24 @@ import "./App.css";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
+import useAuth from "./context/UseAuth";
 
 import LoginPage from "./pages/Login/Login";
 import RegisterPage from "./pages/Register/Register";
 import ButikksjefDashboard from "./pages/Butikksjef/Dashboard/Dashboard";
 import AnsattDashboard from "./pages/Butikkansatt/Dashboard/Dashboard";
-import useAuth from "./context/UseAuth";
 import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter";
 import MineAnsatte from "./pages/Butikksjef/MineAnsatte/MineAnsatte";
 import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift";
 import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
 import Butikk from "./pages/Butikksjef/Butikk/Butikk";
+import Profile from "./pages/Profile/Profile";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
 
 function App() {
   const { user, loading } = useAuth();
   const location = useLocation();
 
-  // Check if the current route matches any of the routes that need a back button
   const showBackButton =
     location.pathname.startsWith("/dashboard/butikksjef/") &&
     location.pathname.split("/").length > 4;
@@ -28,7 +28,6 @@ function App() {
 
   const appContent = (
     <Routes>
-      {/* Redirect root based on role */}
       <Route
         path="/"
         element={
@@ -46,7 +45,6 @@ function App() {
         }
       />
 
-      {/* Prevent access to login/register if already logged in */}
       <Route
         path="/login"
         element={user ? <Navigate to="/" replace /> : <LoginPage />}
@@ -56,20 +54,17 @@ function App() {
         element={user ? <Navigate to="/" replace /> : <RegisterPage />}
       />
 
-        {/* General Routes */}
-        <Route
-          path="/shift-details/:shiftId"
-          element={
-            <ProtectedRoute allowedRoles={["store_manager", "employee"]}>
-              <ShiftDetailsPage />
-            </ProtectedRoute>
-          }
-        />
+      {/* General route shared by roles */}
+      <Route
+        path="/shift-details/:shiftId"
+        element={
+          <ProtectedRoute allowedRoles={["store_manager", "employee"]}>
+            <ShiftDetailsPage />
+          </ProtectedRoute>
+        }
+      />
 
-
-      {/* BUTIKKSJEF ROUTES */}
-
-      {/* Protected dashboards for Butikksjef */}
+      {/* Butikksjef routes */}
       <Route
         path="/dashboard/butikksjef"
         element={
@@ -78,8 +73,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
-      {/* Protected route for Butikksjef Mine Vakter */}
       <Route
         path="/dashboard/butikksjef/minevakter"
         element={
@@ -88,8 +81,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
-      {/* Protected route for Butikksjef Butikk Oversikt */}
       <Route
         path="/dashboard/butikksjef/butikker"
         element={
@@ -98,8 +89,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
-      {/* Protected route for viewing employees (Mine Ansatte) */}
       <Route
         path="/dashboard/butikksjef/mineansatte"
         element={
@@ -108,8 +97,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
-      {/* Protected butikksjef Butikk */}
       <Route
         path="/dashboard/butikksjef/:store_chain/:name/:store_id"
         element={
@@ -118,8 +105,32 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/dashboard/butikksjef/minprofil"
+        element={
+          <ProtectedRoute allowedRoles={["store_manager"]}>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/butikksjef/ansatt/:id"
+        element={
+          <ProtectedRoute allowedRoles={["store_manager"]}>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/butikksjef/createshift"
+        element={
+          <ProtectedRoute allowedRoles={["store_manager"]}>
+            <CreateShift />
+          </ProtectedRoute>
+        }
+      />
 
-      {/* Protected dashboards for Butikkansatt */}
+      {/* Butikkansatt routes */}
       <Route
         path="/dashboard/butikkansatt"
         element={
@@ -128,13 +139,11 @@ function App() {
           </ProtectedRoute>
         }
       />
-
-      {/* Protected route for Butikksjef Create Shift */}
       <Route
-        path="/dashboard/butikksjef/createshift"
+        path="/dashboard/butikkansatt/minprofil"
         element={
-          <ProtectedRoute allowedRoles={["store_manager"]}>
-            <CreateShift />
+          <ProtectedRoute allowedRoles={["employee"]}>
+            <Profile />
           </ProtectedRoute>
         }
       />

@@ -11,6 +11,7 @@ const ButikksjefDashboard = () => {
       <Link to="/dashboard/butikksjef/minevakter">Mine Vakter</Link>
       <Link to="/dashboard/butikksjef/mineansatte">Mine Ansatte</Link>
       <Link to="/dashboard/butikksjef/butikker">Butikker</Link>
+      <Link to="/dashboard/butikksjef/minprofil">Min Profil</Link>
     </div>
   );
 };

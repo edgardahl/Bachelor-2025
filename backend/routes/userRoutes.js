@@ -2,23 +2,35 @@ import express from 'express';
 import {
   getAllUsersController,
   getUserByIdController,
+  updateUserByIdController,
   getEmployeesByStoreIdController,
-  getEmployeesQualificationsController
+  getEmployeesQualificationsController,
+  updateEmployeeQualificationsController,
+  changePassword
 } from '../controllers/userController.js';
 import { verifyToken, authorizeRoles } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Route to get all users (public access)
-router.get('/', getAllUsersController);
+// ✅ Get all users (protected)
+router.get('/', verifyToken, getAllUsersController);
 
-// Route to get employees for a store manager (protected by verifyToken and authorizeRoles)
+// ✅ Get employees for a store manager
 router.get('/myemployees', verifyToken, authorizeRoles('store_manager'), getEmployeesByStoreIdController);
 
-// Route to get a user by ID (public access)
-router.get('/:id', getUserByIdController);
+// ✅ Fetch qualifications for multiple employees
+router.post('/myemployees/qualifications/fetch', verifyToken, authorizeRoles('store_manager'), getEmployeesQualificationsController);
 
-// Route to get qualifications for multiple users (POST request)
-router.post("/myemployees/qualifications", verifyToken, getEmployeesQualificationsController);
+// ✅ Update qualifications for a specific employee
+router.post('/myemployees/qualifications/update', verifyToken, authorizeRoles('store_manager'), updateEmployeeQualificationsController);
+
+// ✅ Get a specific user by ID
+router.get('/:id', verifyToken, getUserByIdController);
+
+// ✅ Update user info by ID
+router.put('/updateCurrentUser', verifyToken, updateUserByIdController);
+
+// ✅ Update own password
+router.patch('/me/password', verifyToken, changePassword);
 
 export default router;

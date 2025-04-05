@@ -70,7 +70,7 @@ export const getUserByEmail = async (email) => {
 export const getUserById = async (userId) => {
   const { data, error } = await supabase
     .from("users")
-    .select("user_id, email, first_name, role, store_id")
+    .select("user_id, email, first_name, role, store_id") 
     .eq("user_id", userId)
     .single();
 
@@ -98,19 +98,3 @@ export const getUserBasicById = async (userId) => {
   return data;
 };
 
-// ✏️ Update user profile
-export const updateUserById = async (userId, updateData) => {
-  const { data, error } = await supabase
-    .from("users")
-    .update(updateData)
-    .eq("user_id", userId)
-    .select("user_id, email, first_name")
-    .single();
-
-  if (error) {
-    console.error("Error updating user:", error);
-    return null;
-  }
-
-  return data;
-};

@@ -4,8 +4,7 @@ import {
   logoutUser,
   getCurrentUser,
   refreshAccessToken,
-  updateOwnProfile,
-  registerUser
+  registerUser,
 } from '../controllers/authController.js';
 
 import { verifyToken } from '../middleware/authMiddleware.js'; 
@@ -16,11 +15,9 @@ const router = express.Router();
 router.post('/login', loginUser);
 router.post('/logout', logoutUser);
 router.post('/refresh-token', refreshAccessToken);
-router.post("/register", registerUser);
+router.post('/register', registerUser);
 
 // 👤 User session & profile
-// Get the current user (Protected route)
-router.get('/me', verifyToken, getCurrentUser);  // Only authenticated users can access
-router.put('/me', verifyToken, updateOwnProfile); // ✅ Allow logged-in users to update their own profile
+router.get('/me', verifyToken, getCurrentUser);
 
 export default router;

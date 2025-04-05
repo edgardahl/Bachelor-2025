@@ -1,60 +1,136 @@
-// models/userModel.js
 import { supabase } from "../config/supabaseClient.js";
 
-// Get all users from the database
+// Get all users
 export const getAllUsersModel = async () => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("user_id, email, first_name"); // Replace 'id' with 'user_id'
+  const { data, error } = await supabase.rpc("get_all_users");
 
   if (error) {
+    console.error("Error fetching all users:", error);
     throw new Error(error.message);
   }
+
   return data;
 };
 
-// Get one user by ID from the database
-export const getUserByIdModel = async (id) => {
+// Get user by ID
+export const getUserByIdModel = async (userId) => {
+  const { data, error } = await supabase.rpc("get_user_by_id", {
+    user_id_input: userId,
+  });
+
+  if (error) {
+    console.error("Error fetching user by ID:", error);
+    throw new Error(error.message);
+  }
+
+  return data?.[0];
+};
+
+// Update user
+export const updateUserByIdModel = async (id, updates) => {
   const { data, error } = await supabase
     .from("users")
-    .select("user_id, email, first_name") // Replace 'id' with 'user_id'
-    .eq("user_id", id) // Adjust the column name here as well
+    .update(updates)
+    .eq("user_id", id)
+    .select("user_id, email, first_name")
     .single();
 
-  if (error) {
-    throw new Error(error.message);
+  if (error || !data) {
+    console.error("Supabase error in updateUserByIdModel:", error);
+    return null;
   }
+
   return data;
 };
 
-/// Fetch qualifications for multiple users using the RPC function
-export const getUserQualificationsModel = async (userIds) => {
+// Get employees by store ID
+export const getEmployeesByStoreIdModel = async (storeId) => {
   const { data, error } = await supabase
-    .rpc("get_user_qualifications", { user_ids: userIds }); // Call the RPC function
+    .from("users")
+    .select("*")
+    .eq("store_id", storeId)
+    .eq("role", "employee");
+
+  if (error) {
+    console.error("Error fetching employees:", error);
+    return null;
+  }
+
+  return data;
+};
+
+// Get user qualifications
+export const getUserQualificationsModel = async (userIds) => {
+  const { data, error } = await supabase.rpc("get_user_qualifications", {
+    user_ids: userIds,
+  });
 
   if (error) {
     console.error("Error fetching qualifications:", error);
     throw new Error(error.message);
   }
 
-  return data; // Return the qualifications along with user IDs
+  return data;
 };
 
+// Update employee qualifications
+export const updateUserQualificationsModel = async (user_id, qualification_ids) => {
+  const { error: deleteError } = await supabase
+    .from("user_qualifications")
+    .delete()
+    .eq("user_id", user_id);
 
-// Model function to get employees by store ID
-export const getEmployeesByStoreIdModel = async (storeId) => {
-  const { data, error } = await supabase
-    .from('users')
-    .select('*') // Fetch all user fields or select specific ones you need
-    .eq('store_id', storeId) // Filter by dynamic store_id passed as parameter
-    .eq('role', 'employee'); // Only employees
-
-  if (error) {
-    console.error('Error fetching employees:', error);
-    return null; // Return null in case of error
+  if (deleteError) {
+    console.error("Error deleting qualifications:", deleteError);
+    return false;
   }
 
-  return data; // Return the list of employees
+  const inserts = qualification_ids.map((qid) => ({
+    user_id,
+    qualification_id: qid,
+  }));
+
+  const { error: insertError } = await supabase
+    .from("user_qualifications")
+    .insert(inserts);
+
+  if (insertError) {
+    console.error("Error inserting qualifications:", insertError);
+    return false;
+  }
+
+  return true;
 };
 
+// Get user (including password) for password change
+export const getUserWithPasswordById = async (userId) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("user_id, password")
+    .eq("user_id", userId)
+    .single();
 
+  if (error) {
+    console.error("Error fetching user with password:", error);
+    return null;
+  }
+
+  return data;
+};
+
+// Update password
+export const updateUserPasswordById = async (userId, hashedPassword) => {
+  const { data, error } = await supabase
+    .from("users")
+    .update({ password: hashedPassword })
+    .eq("user_id", userId)
+    .select("user_id")
+    .single();
+
+  if (error) {
+    console.error("Error updating password:", error);
+    return null;
+  }
+
+  return data;
+};

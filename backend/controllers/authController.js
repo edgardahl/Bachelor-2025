@@ -10,7 +10,6 @@ import {
   getUserByEmail,
   getUserById,
   getUserBasicById,
-  updateUserById,
   getUserByPhoneNumber,
 } from "../models/authModel.js";
 
@@ -67,6 +66,7 @@ export const loginUser = async (req, res) => {
         email: user.email,
         name: user.first_name,
         role: user.role,
+        store_id: user.store_id
       },
     });
   } catch (error) {
@@ -120,31 +120,6 @@ export const getCurrentUser = async (req, res) => {
   } catch (error) {
     console.error("Get user error:", error);
     res.status(401).json({ error: "Invalid token" });
-  }
-};
-
-// 🔒 Update Profile
-export const updateOwnProfile = async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(400).json({ error: "Token not provided" }); // Updated error message for missing token
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.userId;
-
-    const sanitizedData = sanitizeUserInput(req.body);
-    const updatedUser = await updateUserById(userId, sanitizedData);
-
-    if (!updatedUser) return res.status(404).json({ error: "User not found" });
-
-    res.json({
-      id: updatedUser.user_id,
-      email: updatedUser.email,
-      name: updatedUser.first_name,
-    });
-  } catch (error) {
-    console.error("Update profile error:", error);
-    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -224,6 +199,40 @@ export const registerUser = async (req, res) => {
       .json({ message: "User registered successfully", user: newUser });
   } catch (error) {
     console.error("Registration error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  const userId = req.user.userId;
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: "Both current and new passwords are required." });
+  }
+
+  try {
+    const user = await getUserWithPasswordById(userId); // Must return user with `password` field
+
+    if (!user || !user.password) {
+      return res.status(404).json({ error: "User not found or missing password." });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Current password is incorrect." });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    const updated = await updateUserById(userId, { password: hashedNewPassword });
+
+    if (!updated) {
+      return res.status(500).json({ error: "Failed to update password" });
+    }
+
+    return res.json({ message: "Password updated successfully." });
+  } catch (error) {
+    console.error("Change password error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
