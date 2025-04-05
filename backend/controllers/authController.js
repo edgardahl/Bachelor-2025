@@ -11,7 +11,6 @@ import {
   getUserById,
   getUserBasicById,
   getUserByPhoneNumber,
-  updateUserById,
 } from "../models/authModel.js";
 
 // 🟢 Login User
@@ -67,6 +66,7 @@ export const loginUser = async (req, res) => {
         email: user.email,
         name: user.first_name,
         role: user.role,
+        store_id: user.store_id
       },
     });
   } catch (error) {
@@ -212,7 +212,7 @@ export const changePassword = async (req, res) => {
   }
 
   try {
-    const user = await getUserById(userId); // Must return user with `password` field
+    const user = await getUserWithPasswordById(userId); // Must return user with `password` field
 
     if (!user || !user.password) {
       return res.status(404).json({ error: "User not found or missing password." });

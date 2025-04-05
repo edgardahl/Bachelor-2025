@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
-import ButikkansattCard from "../../../components/Cards/ButikkansattCard/ButikkansattCard";  // Import the reusable card component
+import ButikkansattCard from "../../../components/Cards/ButikkansattCard/ButikkansattCard"; // Import the reusable card component
 import "./MineAnsatte.css"; // Import CSS for styling
 
 const MineAnsatte = () => {
@@ -19,9 +19,12 @@ const MineAnsatte = () => {
         const userIds = employeesData.map((employee) => employee.user_id);
 
         // Fetch qualifications for each employee using RPC
-        const qualificationsResponse = await axios.post("/users/myemployees/qualifications", {
-          user_ids: userIds,
-        });
+        const qualificationsResponse = await axios.post(
+          "/users/myemployees/qualifications/fetch",
+          {
+            user_ids: userIds,
+          }
+        );
 
         const employeesWithQualifications = employeesData.map((employee) => {
           const qualifications = qualificationsResponse.data.filter(
@@ -55,7 +58,12 @@ const MineAnsatte = () => {
       <div className="employee-list">
         {employees.length > 0 ? (
           employees.map((employee) => (
-            <ButikkansattCard key={employee.user_id} employee={employee} />
+            <Link
+              to={`/dashboard/butikksjef/ansatt/${employee.user_id}`}
+              key={employee.user_id}
+            >
+              <ButikkansattCard employee={employee} />
+            </Link>
           ))
         ) : (
           <p>No employees found.</p>

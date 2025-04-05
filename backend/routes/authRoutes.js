@@ -5,7 +5,6 @@ import {
   getCurrentUser,
   refreshAccessToken,
   registerUser,
-  changePassword, // ✅ New controller function
 } from '../controllers/authController.js';
 
 import { verifyToken } from '../middleware/authMiddleware.js'; 
@@ -20,8 +19,5 @@ router.post('/register', registerUser);
 
 // 👤 User session & profile
 router.get('/me', verifyToken, getCurrentUser);
-
-// 🔒 Update own password (authenticated users only)
-router.patch('/me/password', verifyToken, changePassword); // ✅ New route
 
 export default router;
