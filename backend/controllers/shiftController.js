@@ -2,7 +2,7 @@ import {
   getAllShiftsModel,
   getShiftsByStoreModel,
   getShiftByIdModel,
-  getClaimedShiftsModel,
+  getClaimedShiftsByUserModel,
   claimShiftModel,
   createShiftModel,
   deleteShiftModel,
@@ -23,6 +23,7 @@ export const getAllShiftsController = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Get all shifts from a store
 export const getShiftsByStoreController = async (req, res) => {
@@ -61,16 +62,20 @@ export const getShiftByIdController = async (req, res) => {
 };
 
 
-// Get all claimed shifts
-export const getClaimedShiftsController = async (req, res) => {
+// Route to get claimed shifts by user ID
+export const getClaimedShiftsByUserController = async (req, res) => {
+  const userId = req.user.userId; // assuming verifyToken sets req.user
+  console.log("User ID from token:", userId);
+
   try {
-    const claimedShifts = await getClaimedShiftsModel();
-    return res.json(claimedShifts);
+    const shifts = await getClaimedShiftsByUserModel(userId);
+    return res.json({ data: shifts });
   } catch (error) {
-    console.error("Error fetching claimed shifts:", error);
+    console.error("Error fetching claimed shifts for user:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Claim a shift
 export const claimShiftController = async (req, res) => {
@@ -143,8 +148,8 @@ export const deleteShiftController = async (req, res) => {
 
 // Get all shifts that a specific user is qualified for
 export const getShiftsUserIsQualifiedForController = async (req, res) => {
-  const { user_id } = req.params; // The user_id will be passed as a URL parameter
-
+  const user_id = req.user.userId; // assuming verifyToken sets req.user
+  
   try {
     const shifts = await getShiftsUserIsQualifiedForModel(user_id);
     return res.json(shifts);

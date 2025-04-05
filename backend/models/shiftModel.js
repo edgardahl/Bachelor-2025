@@ -35,13 +35,11 @@ export const getShiftByPostedByModel = async (postedById) => {
 };
 
 
-// Get all claimed shifts
-export const getClaimedShiftsModel = async () => {
-  const { data, error } = await supabase
-    .from("shifts")
-    .select("*")
-    .not("claimed_by_id", "is", null);
-
+// Get claimed shifts by user
+export const getClaimedShiftsByUserModel = async (claimedById) => {
+  const { data, error } = await supabase.rpc("get_claimed_shifts_by_user", {
+    p_claimed_by: claimedById,
+  });
   if (error) throw new Error(error.message);
   return data;
 };
@@ -120,9 +118,10 @@ export const deleteShiftModel = async (shiftId) => {
 
 // Get all shifts a user is qualified for
 export const getShiftsUserIsQualifiedForModel = async (userId) => {
+  console.log("userId", userId);
   const { data, error } = await supabase.rpc(
     "get_shifts_user_is_qualified_for",
-    { user_id: userId }
+    { p_user_id: userId }
   );
 
   if (error) {
