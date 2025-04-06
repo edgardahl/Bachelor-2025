@@ -1,5 +1,7 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+:root {
+  /* Colors */
+  --Main-body-background: #FFFFFF;
+  --Main-dark-color: #103463;
+  --Main-light-color: #E0F0F9;
+  --Text-color: #000000;
 }

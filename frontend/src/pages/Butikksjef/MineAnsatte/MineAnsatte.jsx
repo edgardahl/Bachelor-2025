@@ -59,7 +59,7 @@ const MineAnsatte = () => {
         {employees.length > 0 ? (
           employees.map((employee) => (
             <Link
-              to={`/dashboard/butikksjef/ansatt/${employee.user_id}`}
+              to={`/dashboard/butikksjef/butikkansatt/${employee.user_id}`}
               key={employee.user_id}
             >
               <ButikkansattCard employee={employee} />
