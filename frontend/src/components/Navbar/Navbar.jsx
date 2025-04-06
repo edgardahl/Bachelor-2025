@@ -1,14 +1,17 @@
-import { useState, useRef, useEffect } from "react";
+import { FaRegCircleUser } from "react-icons/fa6";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../context/UseAuth";
 import { Link } from "react-router-dom";
+import { FaHamburger, FaTimes } from "react-icons/fa";
 import "./Navbar.css";
 
 export default function Navbar() {
   const { setUser, logout: serverLogout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
+  const { user } = useAuth();
+  console.log("User in Navbar:", user.role);
 
   const handleLogout = async () => {
     try {
@@ -21,56 +24,71 @@ export default function Navbar() {
     }
   };
 
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  // Dummy links for employee role
+  const employeeLinks = (
+    <>
+      <Link to="/dashboard/butikkansatt" onClick={() => setMenuOpen(false)}>
+        Dashboard
+      </Link>
+      <Link to="/dashboard/butikkansatt/minevakter" onClick={() => setMenuOpen(false)}>
+        Mine Vakter
+      </Link>
+      <Link to="/dashboard/butikkansatt/butikker" onClick={() => setMenuOpen(false)}>
+        Butikker
+      </Link>
+    </>
+  );
+
+  // Links for store_manager role
+  const storeManagerLinks = (
+    <>
+      <Link to="/dashboard/butikksjef" onClick={() => setMenuOpen(false)}>
+        Dashboard
+      </Link>
+      <Link to="/dashboard/butikksjef/minevakter" onClick={() => setMenuOpen(false)}>
+        Mine vakter
+      </Link>
+      <Link to="/dashboard/butikksjef/mineansatte" onClick={() => setMenuOpen(false)}>
+        Mine Ansatte
+      </Link>
+      <Link to="/dashboard/butikksjef/butikker" onClick={() => setMenuOpen(false)}>
+        Alle Butikker
+      </Link>
+    </>
+  );
 
   return (
     <nav className="navbar">
-      <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)}>
-        <img src="/icons/menu-list.svg" width="40px" alt="Menu" />
+      {/* Desktop Home logo */}
+      <Link to="/dashboard/butikksjef" className="home-button desktop-only">
+        <img src="/icons/coop_logo_neg.png" alt="Home" />
+      </Link>
+
+      {/* Hamburger button (mobile only) */}
+      <button className="menu-button" onClick={() => setMenuOpen((prev) => !prev)}>
+        {menuOpen ? <FaTimes size={30} /> : <FaHamburger size={30} />}
       </button>
 
-      {menuOpen && (
-        <div className="dropdown-menu" ref={menuRef}>
-          <Link to={"/dashboard/butikksjef"} onClick={() => setMenuOpen(false)}>
-            Hjæm
-          </Link>
+      {/* Dropdown menu */}
+      <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+        {user?.role === "employee" ? employeeLinks : storeManagerLinks}
 
-          <Link
-            to={"/dashboard/butikksjef/minevakter"}
-            onClick={() => setMenuOpen(false)}
-          >
-            Vakter
-          </Link>
+        {/* Logout (mobile only) */}
+        <button className="logout-button mobile-only" onClick={handleLogout}>
+          Logg ut
+        </button>
+      </div>
 
-          <Link
-            to={"/dashboard/butikksjef/mineansatte"}
-            onClick={() => setMenuOpen(false)}
-          >
-            Ansatte
-          </Link>
-          <Link
-            to={"/dashboard/butikksjef/butikker"}
-            onClick={() => setMenuOpen(false)}
-          >
-            Butikker
-          </Link>
-        </div>
-      )}
+      {/* Profile + Logout (desktop only) */}
+      <div className="nav-right">
+        <Link to={user?.role === "employee" ? "/dashboard/butikkansatt/minprofil" : "/dashboard/butikksjef/minprofil"} className="profile-icon">
+          <FaRegCircleUser size={50} />
+        </Link>
 
-      <button className="logout-button" onClick={handleLogout}>
-        Logg ut
-      </button>
+        <button className="logout-button desktop-only" onClick={handleLogout}>
+          Logg ut
+        </button>
+      </div>
     </nav>
   );
 }

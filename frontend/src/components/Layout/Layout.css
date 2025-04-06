@@ -1,4 +1,9 @@
 /* General layout styling */
+body{
+  padding: 0;
+  margin: 0;
+}
+
 .layout {
   display: flex;
   flex-direction: column;
@@ -13,13 +18,7 @@
   box-sizing: border-box;
 }
 
-/* Navbar styling */
-.layout .navbar {
-  background-color: #007bff; /* Primary color */
-  color: white;
-  padding: 16px;
-  text-align: center;
-}
+
 
 /* Footer styling */
 .layout .footer {
