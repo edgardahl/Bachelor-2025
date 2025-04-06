@@ -1,67 +1,122 @@
 /* Profile.css */
 
 .profile-page {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    border-radius: 12px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    font-family: Arial, sans-serif;
-  }
-  
-  .profile-page h1 {
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: #222;
-    font-size: 1.8rem;
-  }
-  
-  .profile-page p {
-    display: flex;
-    justify-content: space-between;
-    margin: 0.5rem 0;
-    padding: 0.4rem 0;
-    border-bottom: 1px solid #eee;
-    font-size: 1rem;
-  }
-  
-  .profile-page p strong {
-    color: #444;
-    flex: 1;
-  }
-  
-  .profile-page p span,
-  .profile-page p:not(:has(strong)) {
-    flex: 2;
-    text-align: right;
-    color: #333;
-  }
-  
-  ul {
-    margin-top: 0.5rem;
-    padding-left: 1.5rem;
-  }
-  
-  ul li {
-    margin-bottom: 0.3rem;
-    list-style-type: disc;
-    color: #555;
-  }
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: Arial, sans-serif;
+}
 
-  .cancel-button {
-    margin-left: 10px;
-    padding: 8px 12px;
-    background-color: #eee;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    color: #333;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .cancel-button:hover {
-    background-color: #ddd;
-  }
-  
-  
+.profile-page h1 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #222;
+  font-size: 1.8rem;
+}
+
+.profile-page p {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5rem 0;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+}
+
+.profile-page p strong {
+  color: #444;
+  flex: 1;
+}
+
+.profile-page p span,
+.profile-page p:not(:has(strong)) {
+  flex: 2;
+  text-align: right;
+  color: #333;
+}
+
+ul {
+  margin-top: 0.5rem;
+  padding-left: 1.5rem;
+}
+
+ul li {
+  margin-bottom: 0.3rem;
+  list-style-type: disc;
+  color: #555;
+}
+
+.cancel-button {
+  margin-left: 10px;
+  padding: 8px 12px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cancel-button:hover {
+  background-color: #ddd;
+}
+
+.profile-subsection {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+/* react-select custom styles */
+.municipality-select {
+  margin-top: 4px;
+}
+
+.select__control {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-height: 38px;
+  box-shadow: none;
+  font-size: 14px;
+}
+
+.select__control--is-focused {
+  border-color: #2684ff;
+  box-shadow: 0 0 0 1px #2684ff;
+}
+
+.select__value-container {
+  padding: 4px 8px;
+}
+
+.select__multi-value {
+  background-color: #e6f0ff;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 13px;
+}
+
+.select__multi-value__remove {
+  color: #333;
+  cursor: pointer;
+}
+
+.select__multi-value__remove:hover {
+  background-color: #d3e3fd;
+  color: #000;
+}
+
+.select__menu {
+  z-index: 5;
+}
+
+.profile-page ul.municipality-list {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #eee;
+}
+

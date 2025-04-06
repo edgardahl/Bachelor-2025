@@ -27,20 +27,48 @@ export const getUserByIdModel = async (userId) => {
 };
 
 // Update user
-export const updateUserByIdModel = async (id, updates) => {
-  const { data, error } = await supabase
+export const updateUserByIdModel = async (id, updates, municipality_ids = []) => {
+  // 1. Update main user info
+  const { data: userData, error: userError } = await supabase
     .from("users")
     .update(updates)
     .eq("user_id", id)
     .select("user_id, email, first_name")
     .single();
 
-  if (error || !data) {
-    console.error("Supabase error in updateUserByIdModel:", error);
+  if (userError || !userData) {
+    console.error("Supabase error updating user:", userError);
     return null;
   }
 
-  return data;
+  // 2. Replace preferred municipalities
+  const { error: deleteError } = await supabase
+    .from("user_municipality")
+    .delete()
+    .eq("user_id", id);
+
+  if (deleteError) {
+    console.error("Error clearing user_municipality:", deleteError);
+    return null;
+  }
+
+  if (municipality_ids.length > 0) {
+    const insertRows = municipality_ids.map((municipality_id) => ({
+      user_id: id,
+      municipality_id,
+    }));
+
+    const { error: insertError } = await supabase
+      .from("user_municipality")
+      .insert(insertRows);
+
+    if (insertError) {
+      console.error("Error inserting user municipalities:", insertError);
+      return null;
+    }
+  }
+
+  return userData;
 };
 
 // Get employees by store ID

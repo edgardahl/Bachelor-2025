@@ -96,7 +96,7 @@ const Register = () => {
   
     try {
       const sanitizedData = sanitizeUserData(userData); // 👈 May throw field-specific errors
-      const response = await axios.post("/auth/register", sanitizedData);
+      await axios.post("/auth/register", sanitizedData);
     
       setMessage("Bruker registrert! 🎉");
     
