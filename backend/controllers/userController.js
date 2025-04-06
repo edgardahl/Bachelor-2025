@@ -41,16 +41,27 @@ export const getUserByIdController = async (req, res) => {
 // Update user by ID
 export const updateUserByIdController = async (req, res) => {
   const userId = req.user.userId;
-  const { first_name, last_name, email, phone_number, availability } = req.body;
+  const {
+    first_name,
+    last_name,
+    email,
+    phone_number,
+    availability,
+    work_municipality_ids, // ✅ renamed to match frontend
+  } = req.body;
 
   try {
-    const updatedUser = await updateUserByIdModel(userId, {
-      first_name,
-      last_name,
-      email,
-      phone_number,
-      availability,
-    });
+    const updatedUser = await updateUserByIdModel(
+      userId,
+      {
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        availability,
+      },
+      work_municipality_ids // ✅ pass to model
+    );
 
     if (!updatedUser) {
       return res.status(400).json({ error: "Failed to update user" });
@@ -62,6 +73,7 @@ export const updateUserByIdController = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Change user password
 export const changePassword = async (req, res) => {
