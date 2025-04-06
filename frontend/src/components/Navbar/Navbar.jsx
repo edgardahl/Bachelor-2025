@@ -82,6 +82,7 @@ export default function Navbar() {
       {/* Profile + Logout (desktop only) */}
       <div className="nav-right">
         <Link to={user?.role === "employee" ? "/dashboard/butikkansatt/minprofil" : "/dashboard/butikksjef/minprofil"} className="profile-icon">
+
           <FaRegCircleUser size={50} />
         </Link>
 
