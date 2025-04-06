@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
+import Select from "react-select";
 import "./Profile.css";
 
 const Profile = () => {
@@ -12,24 +13,44 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingQualifications, setIsEditingQualifications] = useState(false);
   const [formData, setFormData] = useState({});
-  const [passwords, setPasswords] = useState({
-    currentPassword: "",
-    newPassword: "",
-  });
+  const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" });
   const [allQualifications, setAllQualifications] = useState([]);
+  const [municipalityOptions, setMunicipalityOptions] = useState([]);
+  const [selectedMunicipalityOptions, setSelectedMunicipalityOptions] = useState([]);
 
   const navigate = useNavigate();
   const isOwnProfile = !profileId || user?.id === profileId;
 
+  // 🆕 Fetch all municipalities (label = name, value = uuid)
+  const fetchMunicipalities = async () => {
+    const res = await axios.get("/municipalities");
+    return res.data.map((m) => ({
+      label: m.municipality_name,
+      value: m.municipality_id,
+    }));
+  };
+
+  // 🆕 Fetch user + municipalities and match selected
   const fetchProfile = useCallback(async () => {
     try {
       const idToFetch = profileId || user?.id;
       if (!idToFetch) return;
 
-      const res = await axios.get(`/users/${idToFetch}`);
-      setProfileData(res.data);
-      console.log(res.data);
-      setFormData(res.data);
+      const [municipalityOptionsRes, profileRes] = await Promise.all([
+        fetchMunicipalities(),
+        axios.get(`/users/${idToFetch}`),
+      ]);
+
+      setMunicipalityOptions(municipalityOptionsRes);
+      setProfileData(profileRes.data);
+      setFormData(profileRes.data);
+
+      const currentSelected = profileRes.data.work_municipalities?.map((name) => {
+        const match = municipalityOptionsRes.find((m) => m.label === name);
+        return match ? { label: match.label, value: match.value } : null;
+      }).filter(Boolean) || [];
+
+      setSelectedMunicipalityOptions(currentSelected);
     } catch (err) {
       console.error("Error fetching profile:", err);
       setError("Kunne ikke hente profildata");
@@ -69,6 +90,7 @@ const Profile = () => {
           email: formData.email,
           phone_number: formData.phone_number,
           availability: formData.availability,
+          work_municipality_ids: selectedMunicipalityOptions.map((opt) => opt.value),
         });
         await fetchProfile();
         setIsEditing(false);
@@ -92,10 +114,7 @@ const Profile = () => {
   };
 
   const handleQualificationToggle = (id) => {
-    const isSelected = formData.qualifications.some(
-      (q) => q.qualification_id === id
-    );
-
+    const isSelected = formData.qualifications.some((q) => q.qualification_id === id);
     const updated = isSelected
       ? formData.qualifications.filter((q) => q.qualification_id !== id)
       : [
@@ -105,11 +124,7 @@ const Profile = () => {
             qualification_name: allQualifications.find((q) => q.id === id)?.name,
           },
         ];
-
-    setFormData((prev) => ({
-      ...prev,
-      qualifications: updated,
-    }));
+    setFormData((prev) => ({ ...prev, qualifications: updated }));
   };
 
   const saveQualifications = async () => {
@@ -149,7 +164,7 @@ const Profile = () => {
   };
 
   if (error) return <p>{error}</p>;
-  if (!user || !profileData) return <p>Laster inn profildata...</p>; // ✅ Guard added
+  if (!user || !profileData) return <p>Laster inn profildata...</p>;
 
   const {
     first_name,
@@ -161,23 +176,13 @@ const Profile = () => {
     store_name,
     municipality_name,
     qualifications,
+    work_municipalities,
   } = formData;
 
   const canEditQualifications =
-  user?.role === "store_manager" &&
-  !isOwnProfile &&
-  user?.storeId === profileData?.store_id;
-
-
-
-
-  console.log("canEditQualifications?", {
-    isOwnProfile,
-    userRole: user?.role,
-    userStore: user?.store_id,
-    profileStore: profileData?.store_id,
-  });
-    
+    user?.role === "store_manager" &&
+    !isOwnProfile &&
+    user?.storeId === profileData?.store_id;
 
   return (
     <div className="profile-page">
@@ -238,6 +243,28 @@ const Profile = () => {
 
         {role === "employee" && (
           <>
+            <label>Ønsker å jobbe i kommune(r):</label>
+            {isEditing ? (
+              <Select
+                className="municipality-select"
+                classNamePrefix="select"
+                isMulti
+                isClearable={false}
+                options={municipalityOptions}
+                value={selectedMunicipalityOptions}
+                onChange={setSelectedMunicipalityOptions}
+                placeholder="Velg kommuner..."
+              />
+            ) : (
+              <ul className="municipality-list">
+                {work_municipalities?.length > 0 ? (
+                  work_municipalities.map((name, i) => <li key={i}>{name}</li>)
+                ) : (
+                  <li>Ingen valgt</li>
+                )}
+              </ul>
+            )}
+
             <label>Tilgjengelighet:</label>
             {isEditing ? (
               <select
@@ -284,8 +311,12 @@ const Profile = () => {
                     </label>
                   ))}
                 </div>
-                <button onClick={saveQualifications}>Lagre kvalifikasjoner</button>
-                <button onClick={() => setIsEditingQualifications(false)}>Avbryt</button>
+                <button onClick={saveQualifications}>
+                  Lagre kvalifikasjoner
+                </button>
+                <button onClick={() => setIsEditingQualifications(false)}>
+                  Avbryt
+                </button>
               </>
             ) : (
               <ul>
@@ -312,6 +343,11 @@ const Profile = () => {
                 onClick={() => {
                   setIsEditing(false);
                   setFormData(profileData);
+                  setSelectedMunicipalityOptions(
+                    municipalityOptions.filter((m) =>
+                      profileData.work_municipalities?.includes(m.label)
+                    )
+                  );
                   setPasswords({ currentPassword: "", newPassword: "" });
                 }}
               >
