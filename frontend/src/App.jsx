@@ -117,7 +117,7 @@ function App() {
         }
       />
       <Route
-        path="/dashboard/butikksjef/ansatt/:id"
+        path="/dashboard/butikksjef/butikkansatt/:id"
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <Profile />
