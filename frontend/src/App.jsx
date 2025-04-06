@@ -9,12 +9,15 @@ import RegisterPage from "./pages/Register/Register";
 import ButikksjefDashboard from "./pages/Butikksjef/Dashboard/Dashboard";
 import AnsattDashboard from "./pages/Butikkansatt/Dashboard/Dashboard";
 import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter";
+import MineVakterAnsatt from "./pages/Butikkansatt/MineVakter/MineVakter";
 import MineAnsatte from "./pages/Butikksjef/MineAnsatte/MineAnsatte";
 import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift";
 import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
 import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 import Profile from "./pages/Profile/Profile";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
+
+import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
   const { user, loading } = useAuth();
@@ -147,6 +150,18 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/dashboard/butikkansatt/minevakter"
+        element={
+          <ProtectedRoute allowedRoles={["employee"]}>
+            <MineVakterAnsatt />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Not Found route */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 

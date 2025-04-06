@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DeleteShiftPopup from "../../components/DeleteShiftPopup/DeleteShiftPopup"; // Import the popup
-import axios from "../../api/axiosInstance";
+import DeleteShiftPopup from "../../../components/DeleteShiftPopup/DeleteShiftPopup"; // Import the popup
+import axios from "../../../api/axiosInstance";
 import "./ShiftCard.css";
 
 const ShiftCard = ({
@@ -41,11 +41,11 @@ const ShiftCard = ({
       // Sending the API request to delete the shift using axios
       const response = await axios.delete("/shifts/deleteShiftById", {
         data: {
-          shiftId: shiftId,           // shiftId to be deleted
+          shiftId: shiftId, // shiftId to be deleted
           shiftStoreId: shiftStoreId, // store ID of the shift
         },
       });
-  
+
       if (response.status === 200) {
         console.log("Shift deleted successfully:", response.data.message);
         deleteShift(shiftId); // Remove shift from state immediately
@@ -77,9 +77,7 @@ const ShiftCard = ({
         <p className="shift-card-qualifications">
           Qualifications: {qualifications.join(", ")}
         </p>
-        <p>
-          Posted by: {postedById === userId ? "YOU" : postedBy}
-        </p>
+        <p>Posted by: {postedById === userId ? "YOU" : postedBy}</p>
       </div>
 
       {/* Conditionally render the delete icon */}
