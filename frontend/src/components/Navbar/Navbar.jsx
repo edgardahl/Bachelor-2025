@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import useAuth from "../../context/UseAuth";
-import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 export default function Navbar() {
-  const { setUser, logout: serverLogout } = useAuth();
+  const { user, setUser, logout: serverLogout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -42,29 +41,64 @@ export default function Navbar() {
 
       {menuOpen && (
         <div className="dropdown-menu" ref={menuRef}>
-          <Link to={"/dashboard/butikksjef"} onClick={() => setMenuOpen(false)}>
-            Hjæm
-          </Link>
+          {user?.role === "store_manager" && (
+            <>
+              <Link
+                to={"/dashboard/butikksjef"}
+                onClick={() => setMenuOpen(false)}
+              >
+                Hjem
+              </Link>
+              <Link
+                to={"/dashboard/butikksjef/minevakter"}
+                onClick={() => setMenuOpen(false)}
+              >
+                Vakter
+              </Link>
+              <Link
+                to={"/dashboard/butikksjef/mineansatte"}
+                onClick={() => setMenuOpen(false)}
+              >
+                Ansatte
+              </Link>
+              <Link
+                to={"/dashboard/butikksjef/butikker"}
+                onClick={() => setMenuOpen(false)}
+              >
+                Butikker
+              </Link>
+              <Link
+                to={"/dashboard/butikksjef/minprofil"}
+                onClick={() => setMenuOpen(false)}
+              >
+                Profil
+              </Link>
+            </>
+          )}
 
-          <Link
-            to={"/dashboard/butikksjef/minevakter"}
-            onClick={() => setMenuOpen(false)}
-          >
-            Vakter
-          </Link>
-
-          <Link
-            to={"/dashboard/butikksjef/mineansatte"}
-            onClick={() => setMenuOpen(false)}
-          >
-            Ansatte
-          </Link>
-          <Link
-            to={"/dashboard/butikksjef/butikker"}
-            onClick={() => setMenuOpen(false)}
-          >
-            Butikker
-          </Link>
+          {/* Employee-Specific Links */}
+          {user?.role === "employee" && (
+            <>
+              <Link
+                to={"/dashboard/butikkansatt"}
+                onClick={() => setMenuOpen(false)}
+              >
+                Hjem
+              </Link>
+              <Link
+                to={"/dashboard/butikkansatt/minevakter"}
+                onClick={() => setMenuOpen(false)}
+              >
+                Vakter
+              </Link>
+              <Link
+                to={"/dashboard/butikkansatt/minprofil"}
+                onClick={() => setMenuOpen(false)}
+              >
+                Profil
+              </Link>
+            </>
+          )}
         </div>
       )}
 

@@ -1,0 +1,28 @@
+.not-found-container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.not-found-container h1 {
+  font-size: 2.5rem;
+  color: #333;
+}
+
+.not-found-container p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.not-found-link {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.not-found-link:hover {
+  background-color: #0056b3;
+}

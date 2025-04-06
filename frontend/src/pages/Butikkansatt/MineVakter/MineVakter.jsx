@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
-import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import "./MineVakter.css";
+import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 
-const MineVakter = () => {
+const MineVakterAnsatt = () => {
   const [userId, setUserId] = useState(null);
   const [storeId, setStoreId] = useState(null);
   const [shifts, setShifts] = useState([]);
@@ -32,10 +31,9 @@ const MineVakter = () => {
     try {
       let response;
       if (type === "mine") {
-        response = await axios.get(`/shifts/posted_by/${userId}`);
+        response = await axios.get(`/shifts/user_is_qualified_for/${userId}`);
       } else {
         response = await axios.get(`/shifts/store/${storeId}`);
-        console.log("Mine vakter response:", response.data);
       }
       setShifts(response.data);
     } catch (error) {
@@ -48,34 +46,30 @@ const MineVakter = () => {
     fetchShifts(tab, userId, storeId);
   };
 
-  // Handle deleting a shift and immediately remove it from the UI
-  const deleteShift = (shiftId) => {
-    setShifts((prevShifts) =>
-      prevShifts.filter((shift) => shift.shift_id !== shiftId)
-    );
+  const claimShift = async (shiftId) => {
+    try {
+      const response = await axios.post(`/shifts/claim/${shiftId}`, {
+        user_id: userId,
+      });
+      alert("Vakt er nå reservert!");
+      // Optionally, refetch shifts to update the UI
+      fetchShifts(activeTab, userId, storeId);
+    } catch (error) {
+      console.error("Error claiming shift:", error);
+      alert("Kunne ikke reservere vakt.");
+    }
   };
 
   return (
     <div className="mine-vakter-container">
       <h1 className="mine-vakter-title">Vakter</h1>
 
-      <div className="mine-vakter-button-group">
-        <Link to="/dashboard/butikksjef/createshift">
-          <button className="mine-vakter-create-button">
-            ➕ Opprett ny vakt
-          </button>
-        </Link>
-        <Link to="/dashboard/butikksjef" className="mine-vakter-back-link">
-          ⬅️ Tilbake til Dashboard
-        </Link>
-      </div>
-
       <div className="mine-vakter-tabs">
         <button
           className={`mine-vakter-tab ${activeTab === "mine" ? "active" : ""}`}
           onClick={() => handleTabChange("mine")}
         >
-          Mine vakter
+          Mine kvalifiserte vakter
         </button>
         <button
           className={`mine-vakter-tab ${activeTab === "store" ? "active" : ""}`}
@@ -88,7 +82,7 @@ const MineVakter = () => {
       <div className="mine-vakter-shift-list">
         <h3 className="mine-vakter-shift-list-title">
           {activeTab === "mine"
-            ? "Dine opprettede vakter:"
+            ? "Vakter du er kvalifisert for:"
             : "Alle vakter i butikken:"}
         </h3>
         {shifts.length === 0 ? (
@@ -108,11 +102,21 @@ const MineVakter = () => {
               postedBy={
                 shift.posted_by_first_name + " " + shift.posted_by_last_name
               }
-              postedById={shift.posted_by_id} // Pass the postedById here
-              userId={userId} // Pass userId here
-              usersstoreId={storeId} // Pass storeId here
-              shiftStoreId={shift.store_id} // Pass the storeId from the shift
-              deleteShift={deleteShift} // Pass the deleteShift function
+              postedById={shift.posted_by_id}
+              userId={userId}
+              usersstoreId={storeId}
+              shiftStoreId={shift.store_id}
+              // Add a "Claim" button for shifts
+              actions={
+                activeTab === "mine" && (
+                  <button
+                    className="claim-shift-button"
+                    onClick={() => claimShift(shift.shift_id)}
+                  >
+                    Reserver vakt
+                  </button>
+                )
+              }
             />
           ))
         )}
@@ -121,4 +125,4 @@ const MineVakter = () => {
   );
 };
 
-export default MineVakter;
+export default MineVakterAnsatt;

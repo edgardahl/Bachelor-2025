@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
-import ShiftCard from "../../../components/shiftCard/shiftCard"; // Import ShiftCard
+import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import "./Butikk.css";
 
 const Butikk = () => {
@@ -54,7 +54,9 @@ const Butikk = () => {
 
   // Handle deleting a shift and immediately removing it from the UI
   const deleteShift = (shiftId) => {
-    setShifts((prevShifts) => prevShifts.filter((shift) => shift.shift_id !== shiftId));
+    setShifts((prevShifts) =>
+      prevShifts.filter((shift) => shift.shift_id !== shiftId)
+    );
   };
 
   if (!store) return <p>Loading...</p>;
@@ -85,16 +87,20 @@ const Butikk = () => {
               endTime={shift.end_time}
               qualifications={shift.qualifications}
               storeName={shift.store_name}
-              postedBy={shift.posted_by_first_name + " " + shift.posted_by_last_name}
-              postedById={shift.posted_by_id}  // Pass postedById here
-              userId={userId}  // Pass userId here
-              usersstoreId={storeId}  // Pass storeId here
-              shiftStoreId={shift.store_id}  // Pass the storeId from the shift
+              postedBy={
+                shift.posted_by_first_name + " " + shift.posted_by_last_name
+              }
+              postedById={shift.posted_by_id} // Pass postedById here
+              userId={userId} // Pass userId here
+              usersstoreId={storeId} // Pass storeId here
+              shiftStoreId={shift.store_id} // Pass the storeId from the shift
               deleteShift={deleteShift} // Pass the deleteShift function
             />
           ))
         ) : (
-          <p className="butikk-no-shifts">Ingen vakter publisert for denne butikken.</p>
+          <p className="butikk-no-shifts">
+            Ingen vakter publisert for denne butikken.
+          </p>
         )}
       </div>
     </div>
