@@ -4,7 +4,7 @@ import https from "https";
 import path from "path";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import helmet from "helmet";
+import helmetMiddleware from './middleware/helmet.js';
 import dotenv from "dotenv";
 
 import authRoutes from "./routes/authRoutes.js";
@@ -27,33 +27,15 @@ if (isProduction) {
 // CORS Setup: Allow only trusted origins in production
 app.use(
   cors({
-    origin: isProduction ? "https://your-frontend-domain.com" : "https://localhost:5173", // Change to the actual frontend URL in production
+    origin: isProduction
+      ? "https://your-frontend-domain.com"
+      : "https://localhost:5173", // Change to the actual frontend URL in production
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// Helmet security headers
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"], // Customize this based on your needs
-        objectSrc: ["'none'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:"],
-        fontSrc: ["'self'"],
-        connectSrc: ["'self'", "https://your-backend-url.com"], // Add your backend URL for API calls in production
-        upgradeInsecureRequests: [],
-      },
-    },
-    frameguard: { action: "sameorigin" }, // Protect against clickjacking
-    xssFilter: true, // Enable XSS filter
-    hidePoweredBy: true, // Hide "X-Powered-By" header
-    noSniff: true, // Prevent browsers from interpreting files as something else
-  })
-);
+app.use(helmetMiddleware);
 
 // Middleware for parsing JSON and cookies
 app.use(express.json());
@@ -61,7 +43,7 @@ app.use(cookieParser());
 
 // 🔐 Ensure req.secure is available (for HTTPS cookie logic)
 app.use((req, res, next) => {
-  if (req.headers['x-forwarded-proto'] === 'https') {
+  if (req.headers["x-forwarded-proto"] === "https") {
     req.secure = true;
   }
   next();
@@ -91,4 +73,3 @@ if (!isProduction) {
     console.log(`🚀 Production backend running on port ${PORT}`);
   });
 }
-
