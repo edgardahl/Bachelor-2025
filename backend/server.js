@@ -4,7 +4,7 @@ import https from "https";
 import path from "path";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import helmetMiddleware from './middleware/helmet.js';
+import helmetMiddleware from './middleware/helmetMiddleware.js';
 import dotenv from "dotenv";
 
 import authRoutes from "./routes/authRoutes.js";
