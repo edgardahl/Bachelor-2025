@@ -178,8 +178,8 @@ const Register = () => {
             required
           >
             <option value="">Select Availability</option>
-            <option value="Fleksibel">Available</option>
-            <option value="Ikke-fleksibel">Unavailable</option>
+            <option value="Fleksibel">Fleksibel</option>
+            <option value="Ikke-fleksibel">Ikke-fleksibel</option>
           </select>
         </div>
         <div>
