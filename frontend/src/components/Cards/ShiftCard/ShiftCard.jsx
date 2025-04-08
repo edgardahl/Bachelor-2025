@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DeleteShiftPopup from "../../../components/DeleteShiftPopup/DeleteShiftPopup"; // Import the popup
+import DeleteShiftPopup from "../../Popup/DeleteShiftPopup/DeleteShiftPopup"; // Import the popup
 import axios from "../../../api/axiosInstance";
 import "./ShiftCard.css";
 

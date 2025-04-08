@@ -113,9 +113,16 @@ export const claimShiftController = async (req, res) => {
       });
     }
 
+    const user = await getUserByIdModel(userId); // Assuming this function exists
+
     // Proceed with claiming the shift
-    const claimedShift = await claimShiftModel(shift_id, userId);
-    return res.json(claimedShift);
+    return res.json({
+      ...claimedShift,
+      claimed_by_first_name: user.first_name,
+      claimed_by_last_name: user.last_name,
+      claimed_by_email: user.email,
+      claimed_by_phone: user.phone,
+    });
   } catch (error) {
     console.error("Error claiming shift:", error);
     return res.status(500).json({ error: "Internal server error" });
