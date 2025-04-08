@@ -1,0 +1,15 @@
+.ledige-ansatte {
+    padding: 2rem;
+  }
+  
+  .ledige-ansatte .ledige-employee-list {
+    display: grid;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  
+  .ledige-ansatte .ledige-error-message {
+    color: red;
+    margin-top: 1rem;
+  }
+  

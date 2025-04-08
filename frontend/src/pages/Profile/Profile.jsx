@@ -16,6 +16,7 @@ const Profile = () => {
     currentPassword: "",
     newPassword: "",
   });
+  console.log("My profile", user)
   const [municipalityOptions, setMunicipalityOptions] = useState([]);
   const [selectedMunicipalityOptions, setSelectedMunicipalityOptions] =
     useState([]);
@@ -55,6 +56,8 @@ const Profile = () => {
       setMunicipalityOptions(municipalityOptionsRes);
       setAllQualifications(qualificationsRes);
       setFormData(profileRes.data);
+      console.log("Clicked user: ", profileRes.data)
+
 
       const currentSelected =
         profileRes.data.work_municipalities

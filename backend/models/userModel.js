@@ -71,6 +71,20 @@ export const updateUserByIdModel = async (id, updates, municipality_ids = []) =>
   return userData;
 };
 
+export const getAvailableEmployeesInMunicipality = async (municipalityId) => {
+  const { data, error } = await supabase.rpc("get_available_employees_in_municipality", {
+    municipality_input: municipalityId,
+  });
+
+  if (error) {
+    console.error("Error fetching available employees:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
+
 // Get employees by store ID
 export const getEmployeesByStoreIdModel = async (storeId) => {
   const { data, error } = await supabase

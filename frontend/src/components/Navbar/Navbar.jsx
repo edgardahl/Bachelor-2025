@@ -49,10 +49,13 @@ export default function Navbar() {
         Mine vakter
       </Link>
       <Link to="/dashboard/butikksjef/mineansatte" onClick={() => setMenuOpen(false)}>
-        Mine Ansatte
+        Mine ansatte
+      </Link>
+      <Link to="/dashboard/butikksjef/ledigeansatte" onClick={() => setMenuOpen(false)}>
+        Ledige ansatte
       </Link>
       <Link to="/dashboard/butikksjef/butikker" onClick={() => setMenuOpen(false)}>
-        Alle Butikker
+        Alle butikker
       </Link>
     </>
   );
