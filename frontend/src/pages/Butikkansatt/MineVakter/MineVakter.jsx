@@ -48,7 +48,7 @@ const MineVakterAnsatt = () => {
 
   const claimShift = async (shiftId) => {
     try {
-      const response = await axios.post(`/shifts/claim/${shiftId}`, {
+      await axios.post(`/shifts/claim/${shiftId}`, {
         user_id: userId,
       });
       alert("Vakt er nå reservert!");
