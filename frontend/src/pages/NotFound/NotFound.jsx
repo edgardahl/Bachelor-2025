@@ -8,7 +8,7 @@ const NotFound = () => {
       <h1>404 - Siden ble ikke funnet</h1>
       <p>Beklager, siden du leter etter eksisterer ikke.</p>
       <Link to="/" className="not-found-link">
-        Gå tilbake til Hjem
+        Gå tilbake
       </Link>
     </div>
   );

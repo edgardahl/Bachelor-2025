@@ -18,7 +18,8 @@ const ShiftCard = ({
   userId,
   usersstoreId,
   shiftStoreId,
-  deleteShift, // New prop to handle deletion
+  userRole, // New prop to check the user's role
+  deleteShift, // Function to handle deletion
 }) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false); // State to manage the popup visibility
   const navigate = useNavigate();
@@ -60,8 +61,9 @@ const ShiftCard = ({
     }
   };
 
-  // Check if the current user belongs to the store associated with this shift
-  const canDelete = shiftStoreId === usersstoreId;
+  // Check if the current user is a manager and belongs to the store associated with this shift
+  const canDelete =
+    userRole === "store_manager" && shiftStoreId === usersstoreId;
 
   return (
     <div className="shift-card-container" onClick={handleCardClick}>
