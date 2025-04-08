@@ -6,6 +6,7 @@ import "./MineVakter.css";
 
 const MineVakter = () => {
   const [userId, setUserId] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const [storeId, setStoreId] = useState(null);
   const [shifts, setShifts] = useState([]);
   const [activeTab, setActiveTab] = useState("mine");
@@ -17,6 +18,8 @@ const MineVakter = () => {
         const response = await axios.get("/auth/me");
         const id = response.data.user.id;
         const storeId = response.data.user.storeId;
+        const userRole = response.data.user.role;
+        setUserRole(userRole);
         setUserId(id);
         setStoreId(storeId);
 
@@ -122,6 +125,7 @@ const MineVakter = () => {
               }
               postedById={shift.posted_by_id} // Pass the postedById here
               userId={userId} // Pass userId here
+              userRole={userRole} // Pass userRole here
               usersstoreId={storeId} // Pass storeId here
               shiftStoreId={shift.store_id} // Pass the storeId from the shift
               deleteShift={deleteShift} // Pass the deleteShift function

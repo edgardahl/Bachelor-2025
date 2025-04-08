@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import "./Butikk.css";
+import { set } from "lodash";
 
 const Butikk = () => {
   const { store_id } = useParams();
   const [store, setStore] = useState(null);
   const [shifts, setShifts] = useState([]); // State to store shifts
   const [userId, setUserId] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const [storeId, setStoreId] = useState(null);
 
   useEffect(() => {
@@ -37,8 +39,10 @@ const Butikk = () => {
       try {
         const response = await axios.get("/auth/me");
         const id = response.data.user.id;
+        const userRole = response.data.user.role;
         const storeId = response.data.user.storeId;
         setUserId(id);
+        setUserRole(userRole);
         setStoreId(storeId);
 
         fetchShifts("mine", id, storeId);
@@ -92,6 +96,7 @@ const Butikk = () => {
               }
               postedById={shift.posted_by_id} // Pass postedById here
               userId={userId} // Pass userId here
+              userRole={userRole} // Pass userRole here
               usersstoreId={storeId} // Pass storeId here
               shiftStoreId={shift.store_id} // Pass the storeId from the shift
               deleteShift={deleteShift} // Pass the deleteShift function

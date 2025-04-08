@@ -27,7 +27,11 @@ export const getUserByIdModel = async (userId) => {
 };
 
 // Update user
-export const updateUserByIdModel = async (id, updates, municipality_ids = []) => {
+export const updateUserByIdModel = async (
+  id,
+  updates,
+  municipality_ids = []
+) => {
   // 1. Update main user info
   const { data: userData, error: userError } = await supabase
     .from("users")
@@ -99,10 +103,15 @@ export const getEmployeesByStoreIdModel = async (storeId) => {
 };
 
 // Get user qualifications
-export const getUserQualificationsModel = async (userIds) => {
-  const { data, error } = await supabase.rpc("get_user_qualifications", {
-    user_ids: userIds,
-  });
+export const getUserQualificationsModel = async (userIds = []) => {
+  if (!Array.isArray(userIds) || userIds.length === 0) {
+    throw new Error("userIds must be a non-empty array");
+  }
+
+  const { data, error } = await supabase
+    .from("user_qualifications")
+    .select("user_id, qualification_id")
+    .in("user_id", userIds);
 
   if (error) {
     console.error("Error fetching qualifications:", error);
@@ -113,7 +122,10 @@ export const getUserQualificationsModel = async (userIds) => {
 };
 
 // Update employee qualifications
-export const updateUserQualificationsModel = async (user_id, qualification_ids) => {
+export const updateUserQualificationsModel = async (
+  user_id,
+  qualification_ids
+) => {
   const { error: deleteError } = await supabase
     .from("user_qualifications")
     .delete()
