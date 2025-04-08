@@ -10,6 +10,7 @@ const MineVakter = () => {
   const [storeId, setStoreId] = useState(null);
   const [shifts, setShifts] = useState([]);
   const [activeTab, setActiveTab] = useState("mine");
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     const fetchUserAndShifts = async () => {
@@ -43,6 +44,8 @@ const MineVakter = () => {
       setShifts(response.data);
     } catch (error) {
       console.error("Error fetching shifts:", error);
+    } finally {
+      setLoading(false); // Set loading to false once data has been fetched
     }
   };
 
@@ -51,12 +54,21 @@ const MineVakter = () => {
     fetchShifts(tab, userId, storeId);
   };
 
-  // Handle deleting a shift and immediately remove it from the UI
   const deleteShift = (shiftId) => {
     setShifts((prevShifts) =>
       prevShifts.filter((shift) => shift.shift_id !== shiftId)
     );
   };
+
+  // Show header and loading spinner when loading
+  if (loading) {
+    return (
+      <div className="mine-vakter-container">
+        <h1 className="mine-vakter-title">Vakter</h1>
+        <div className="spinner"></div> {/* You can customize the spinner here */}
+      </div>
+    );
+  }
 
   return (
     <div className="mine-vakter-container">

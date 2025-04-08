@@ -11,6 +11,7 @@ import AnsattDashboard from "./pages/Butikkansatt/Dashboard/Dashboard";
 import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter";
 import MineVakterAnsatt from "./pages/Butikkansatt/MineVakter/MineVakter";
 import MineAnsatte from "./pages/Butikksjef/MineAnsatte/MineAnsatte";
+import LedigeAnsatte from "./pages/Butikksjef/LedigeAnsatte/LedigeAnsatte";
 import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift";
 import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
 import Butikk from "./pages/Butikksjef/Butikk/Butikk";
@@ -129,6 +130,15 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <CreateShift />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/dashboard/butikksjef/ledigeansatte"
+        element={
+          <ProtectedRoute allowedRoles={["store_manager"]}>
+            <LedigeAnsatte />
           </ProtectedRoute>
         }
       />

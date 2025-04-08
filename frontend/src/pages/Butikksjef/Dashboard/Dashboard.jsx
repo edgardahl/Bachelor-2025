@@ -91,7 +91,7 @@ const ButikksjefDashboard = () => {
             statValue="36"
             statText="Tilgjengelige i ditt område"
             linkText="Utforsk ansatte i området"
-            linkTo="/dashboard/butikksjef/LedigeAnsatte"
+            linkTo="/dashboard/butikksjef/ledigeansatte"
           />
           <DashboardCard
             icon="👤"

@@ -4,6 +4,7 @@ import {
   getEmployeesByStoreIdModel,
   getUserQualificationsModel,
   getUserWithPasswordById,
+  getAvailableEmployeesInMunicipality,
   updateUserPasswordById,
   updateUserByIdModel,
   updateUserQualificationsModel,
@@ -113,21 +114,23 @@ export const changePassword = async (req, res) => {
 
 // Get employees by store ID
 export const getEmployeesByStoreIdController = async (req, res) => {
-  const storeId = req.user.storeId;
+  const storeId = req.user.storeId; // Get storeId from the authenticated user
 
   try {
-    const employees = await getEmployeesByStoreIdModel(storeId);
+    const employees = await getEmployeesByStoreIdModel(storeId); // Call the model to get employees with qualifications
 
     if (!employees || employees.length === 0) {
       return res.status(404).json({ error: "No employees found for this store" });
     }
 
-    return res.json(employees);
+    return res.json(employees); // Return the employees with qualifications
   } catch (error) {
     console.error("Error fetching employees:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
 
 // Fetch qualifications for multiple users
 export const getEmployeesQualificationsController = async (req, res) => {
@@ -147,6 +150,23 @@ export const getEmployeesQualificationsController = async (req, res) => {
     return res.json(qualifications);
   } catch (error) {
     console.error("Error fetching qualifications:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getAvailableEmployeesController = async (req, res) => {
+  try {
+    const manager = await getUserByIdModel(req.user.userId);
+
+    if (!manager || !manager.municipality_id) {
+      return res.status(400).json({ error: "Manager does not have a municipality set." });
+    }
+
+    const matchingEmployees = await getAvailableEmployeesInMunicipality(manager.municipality_id);
+
+    res.json(matchingEmployees);
+  } catch (error) {
+    console.error("Error fetching available employees:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
