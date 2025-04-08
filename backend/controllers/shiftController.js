@@ -7,11 +7,10 @@ import {
   createShiftModel,
   deleteShiftModel,
   getShiftsUserIsQualifiedForModel,
-  getShiftByPostedByModel
+  getShiftByPostedByModel,
 } from "../models/shiftModel.js";
 import { getShiftQualificationsModel } from "../models/qualificationModel.js";
 import { getUserQualificationsModel } from "../models/userModel.js";
-import { assignQualificationsToShift } from "./qualificationController.js";
 
 // Get all shifts
 export const getAllShiftsController = async (req, res) => {
@@ -23,7 +22,6 @@ export const getAllShiftsController = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 // Get all shifts from a store
 export const getShiftsByStoreController = async (req, res) => {
@@ -61,7 +59,6 @@ export const getShiftByIdController = async (req, res) => {
   }
 };
 
-
 // Route to get claimed shifts by user ID
 export const getClaimedShiftsByUserController = async (req, res) => {
   const userId = req.user.userId; // assuming verifyToken sets req.user
@@ -76,11 +73,17 @@ export const getClaimedShiftsByUserController = async (req, res) => {
   }
 };
 
-
 // Claim a shift
 export const claimShiftController = async (req, res) => {
   const { shift_id } = req.params; // Extract shift_id from request parameters
   const userId = req.user.userId; // User ID from the request (added by verifyToken middleware)
+
+  console.log("Shift ID:", shift_id);
+  console.log("User ID:", userId);
+
+  if (!shift_id) {
+    return res.status(400).json({ error: "Shift ID is required." });
+  }
 
   try {
     // Fetch required qualifications for the shift
@@ -97,23 +100,29 @@ export const claimShiftController = async (req, res) => {
       (q) => q.qualification_id
     );
 
-    // Check if the user has exactly the required qualifications
-    const hasAllQualifications =
-      shiftQualificationIds.every((qualificationId) =>
-        userQualificationIds.includes(qualificationId)
-      ) && shiftQualificationIds.length === userQualificationIds.length;
+    // Check if the user has the required qualifications
+    const hasAllQualifications = shiftQualificationIds.every((id) =>
+      userQualificationIds.includes(id)
+    );
 
     // If the user doesn't have the required qualifications, return an error
     if (!hasAllQualifications) {
       return res.status(403).json({
         error:
-          "You don't have the required qualifications to claim this shift.",
+          "You do not have the required qualifications to claim this shift.",
       });
     }
 
+    const user = await getUserByIdModel(userId); // Assuming this function exists
+
     // Proceed with claiming the shift
-    const claimedShift = await claimShiftModel(shift_id, userId);
-    return res.json(claimedShift);
+    return res.json({
+      ...claimedShift,
+      claimed_by_first_name: user.first_name,
+      claimed_by_last_name: user.last_name,
+      claimed_by_email: user.email,
+      claimed_by_phone: user.phone,
+    });
   } catch (error) {
     console.error("Error claiming shift:", error);
     return res.status(500).json({ error: "Internal server error" });
@@ -136,12 +145,14 @@ export const createShiftController = async (req, res) => {
 // Delete a shift
 export const deleteShiftController = async (req, res) => {
   // Extract shift info from request body
-  const { shiftId, shiftStoreId} = req.body;
+  const { shiftId, shiftStoreId } = req.body;
 
   // Check if the store ID in the request matches the store ID in the JWT
   if (shiftStoreId !== req.user.storeId) {
     console.error("Store ID mismatch:", shiftStoreId, req.user.storeId);
-    return res.status(403).json({ error: "You do not have permission to delete this shift." });
+    return res
+      .status(403)
+      .json({ error: "You do not have permission to delete this shift." });
   }
 
   try {
@@ -159,11 +170,10 @@ export const deleteShiftController = async (req, res) => {
   }
 };
 
-
 // Get all shifts that a specific user is qualified for
 export const getShiftsUserIsQualifiedForController = async (req, res) => {
   const user_id = req.user.userId; // assuming verifyToken sets req.user
-  
+
   try {
     const shifts = await getShiftsUserIsQualifiedForModel(user_id);
     return res.json(shifts);
