@@ -92,11 +92,15 @@ export const getEmployeesByStoreIdModel = async (storeId) => {
 };
 
 // Get user qualifications
-export const getUserQualificationsModel = async (userId) => {
+export const getUserQualificationsModel = async (userIds = []) => {
+  if (!Array.isArray(userIds) || userIds.length === 0) {
+    throw new Error("userIds must be a non-empty array");
+  }
+
   const { data, error } = await supabase
     .from("user_qualifications")
-    .select("qualification_id")
-    .eq("user_id", userId);
+    .select("user_id, qualification_id")
+    .in("user_id", userIds);
 
   if (error) {
     console.error("Error fetching qualifications:", error);
