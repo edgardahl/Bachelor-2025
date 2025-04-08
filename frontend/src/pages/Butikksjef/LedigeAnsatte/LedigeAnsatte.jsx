@@ -25,6 +25,16 @@ const LedigeAnsatte = () => {
     fetchAvailableEmployees();
   }, []);
 
+  // Show header and loading spinner when loading
+  if (loading) {
+    return (
+      <div className="ledige-ansatte">
+        <h1>Ledige Ansatte</h1>
+        <div className="spinner"></div> {/* You can customize the spinner here */}
+      </div>
+    );
+  }
+
   return (
     <div className="ledige-ansatte">
       <h1>Ledige Ansatte</h1>
@@ -33,10 +43,9 @@ const LedigeAnsatte = () => {
         kommune.
       </p>
 
-      {loading && <p>Laster inn...</p>}
       {error && <p className="ledige-error-message">{error}</p>}
 
-      {!loading && employees.length === 0 && (
+      {employees.length === 0 && !error && (
         <p>Ingen ledige ansatte funnet i ditt område.</p>
       )}
 
@@ -46,7 +55,7 @@ const LedigeAnsatte = () => {
             key={employee.user_id}
             to={`/dashboard/butikksjef/butikkansatt/${employee.user_id}`}
           >
-            <ButikkansattCard employee={employee} />
+            <ButikkansattCard employee={employee} show="store" />
           </Link>
         ))}
       </div>

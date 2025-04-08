@@ -1,11 +1,13 @@
+/* LedigeAnsatte.css */
 .ledige-ansatte {
     padding: 2rem;
   }
   
   .ledige-ansatte .ledige-employee-list {
     display: grid;
-    gap: 1.5rem;
+    gap: 3rem; /* Increased gap to add more space between the cards */
     margin: 2rem 0;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for 2x2 grid */
   }
   
   .ledige-ansatte .ledige-error-message {

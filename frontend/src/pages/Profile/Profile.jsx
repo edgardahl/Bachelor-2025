@@ -16,11 +16,11 @@ const Profile = () => {
     currentPassword: "",
     newPassword: "",
   });
-  console.log("My profile", user)
   const [municipalityOptions, setMunicipalityOptions] = useState([]);
   const [selectedMunicipalityOptions, setSelectedMunicipalityOptions] =
     useState([]);
   const [allQualifications, setAllQualifications] = useState([]);
+  const [qualificationMap, setQualificationMap] = useState({});
 
   const navigate = useNavigate();
   const isOwnProfile = !profileId || user?.id === profileId;
@@ -56,8 +56,6 @@ const Profile = () => {
       setMunicipalityOptions(municipalityOptionsRes);
       setAllQualifications(qualificationsRes);
       setFormData(profileRes.data);
-      console.log("Clicked user: ", profileRes.data)
-
 
       const currentSelected =
         profileRes.data.work_municipalities
@@ -68,6 +66,14 @@ const Profile = () => {
           .filter(Boolean) || [];
 
       setSelectedMunicipalityOptions(currentSelected);
+
+      const qualificationMap = qualificationsRes.reduce((acc, q) => {
+        acc[q.id] = q.name;
+        return acc;
+      }, {});
+
+      setQualificationMap(qualificationMap);
+
     } catch (err) {
       console.error("Error fetching profile:", err);
       setError("Kunne ikke hente profildata");
@@ -145,8 +151,7 @@ const Profile = () => {
           ...formData.qualifications,
           {
             qualification_id: id,
-            qualification_name: allQualifications.find((q) => q.id === id)
-              ?.name,
+            qualification_name: qualificationMap[id],
           },
         ];
     setFormData((prev) => ({ ...prev, qualifications: updated }));

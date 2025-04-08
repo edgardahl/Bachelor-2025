@@ -88,17 +88,14 @@ export const getAvailableEmployeesInMunicipality = async (municipalityId) => {
 // Get employees by store ID
 export const getEmployeesByStoreIdModel = async (storeId) => {
   const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("store_id", storeId)
-    .eq("role", "employee");
+    .rpc('get_employees_in_store_with_qualifications', { store_id: storeId });
 
   if (error) {
-    console.error("Error fetching employees:", error);
-    return null;
+    console.error("Error fetching employees with qualifications:", error);
+    return null;  // If error occurs, return null
   }
 
-  return data;
+  return data; // Return the data which contains employees and their qualifications
 };
 
 // Get user qualifications

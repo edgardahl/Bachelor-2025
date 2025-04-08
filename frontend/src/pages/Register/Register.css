@@ -14,21 +14,19 @@
     color: #333;
   }
   
-  form > div {
+  .register-form-group {
     margin-bottom: 1rem;
   }
   
-  label {
+  .register-label {
     display: block;
     font-weight: 600;
     margin-bottom: 0.5rem;
     color: #333;
   }
   
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  select {
+  .register-input,
+  .register-select {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ccc;
@@ -37,13 +35,13 @@
     transition: border-color 0.2s;
   }
   
-  input:focus,
-  select:focus {
+  .register-input:focus,
+  .register-select:focus {
     border-color: #0077cc;
     outline: none;
   }
   
-  button {
+  .register-button {
     width: 100%;
     padding: 0.9rem;
     background-color: #0077cc;
@@ -56,16 +54,20 @@
     transition: background-color 0.2s;
   }
   
-  button:disabled {
+  .register-button:disabled {
     background-color: #999;
     cursor: not-allowed;
   }
   
-  button:hover:not(:disabled) {
+  .register-button:hover:not(:disabled) {
     background-color: #005fa3;
   }
   
-  .error {
+  .register-checkbox {
+    margin-right: 0.5rem;
+  }
+  
+  .register-error {
     color: #d8000c;
     background-color: #ffdddd;
     padding: 0.5rem;
@@ -74,7 +76,7 @@
     font-size: 0.9rem;
   }
   
-  .success {
+  .register-success {
     color: #270;
     background-color: #d4edda;
     padding: 0.5rem;
@@ -83,7 +85,17 @@
     font-size: 0.95rem;
   }
   
-  input[type="checkbox"] {
-    margin-right: 0.5rem;
+  .register-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  
+  .login-link {
+    color: #0077cc;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  .login-link:hover {
+    text-decoration: underline;
   }
   

@@ -1,4 +1,3 @@
-// src/pages/Butikksjef/MineAnsatte/MineAnsatte.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
@@ -12,31 +11,10 @@ const MineAnsatte = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get("/users/myemployees");
-        const employeesData = response.data;
+        const response = await axios.get("/users/myemployees"); // Now it just calls the employees endpoint
 
-        // Get user IDs for the RPC call
-        const userIds = employeesData.map((employee) => employee.user_id);
-
-        // Fetch qualifications for each employee using RPC
-        const qualificationsResponse = await axios.post(
-          "/users/myemployees/qualifications/fetch",
-          {
-            user_ids: userIds,
-          }
-        );
-
-        const employeesWithQualifications = employeesData.map((employee) => {
-          const qualifications = qualificationsResponse.data.filter(
-            (q) => q.user_id === employee.user_id
-          );
-          return {
-            ...employee,
-            qualifications: qualifications.map((q) => q.qualification_name), // Now qualifications will have the name
-          };
-        });
-
-        setEmployees(employeesWithQualifications); // Save employees data with qualifications into state
+        // Directly set the employees data with qualifications
+        setEmployees(response.data);
       } catch (err) {
         setError("Failed to load employee data.");
         console.error(err);
@@ -46,10 +24,20 @@ const MineAnsatte = () => {
     fetchEmployees();
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 
+  if (employees.length === 0 && !error) {
+    // Show only the header and the loading spinner when data is still being loaded
+    return (
+      <div className="mine-ansatte">
+        <h1>Mine Ansatte</h1>
+        <div className="spinner"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="mine-ansatte">
       <h1>Mine Ansatte</h1>
-      <p>Her kan du se mine ansatte som er tilknyttet min butikk.</p>
+      <p className="mine-ansatte-text">Her kan du se mine ansatte som er tilknyttet min butikk.</p>
 
       {/* Show error message if there's any */}
       {error && <p className="error-message">{error}</p>}

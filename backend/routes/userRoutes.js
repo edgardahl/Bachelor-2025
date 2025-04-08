@@ -4,7 +4,6 @@ import {
   getUserByIdController,
   updateUserByIdController,
   getEmployeesByStoreIdController,
-  getEmployeesQualificationsController,
   getAvailableEmployeesController,
   updateEmployeeQualificationsController,
   changePassword
@@ -16,13 +15,10 @@ const router = express.Router();
 // ✅ Get all users (protected)
 router.get('/', verifyToken, getAllUsersController);
 
-// ✅ Get employees for a store manager
+// ✅ Get employees for a store manager (now it fetches both employees and qualifications)
 router.get('/myemployees', verifyToken, authorizeRoles('store_manager'), getEmployeesByStoreIdController);
 
-// ✅ Fetch qualifications for multiple employees
-router.post('/myemployees/qualifications/fetch', verifyToken, authorizeRoles('store_manager'), getEmployeesQualificationsController);
-
-// ✅ Update qualifications for a specific employee
+// ✅ Update qualifications for a specific employee (this route remains as is)
 router.post('/myemployees/qualifications/update', verifyToken, authorizeRoles('store_manager'), updateEmployeeQualificationsController);
 
 // ✅ Get available employees in manager's municipality
