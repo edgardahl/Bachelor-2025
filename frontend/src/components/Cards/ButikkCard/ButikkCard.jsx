@@ -1,11 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./ButikkCard.css";
+import useAuth from "../../../context/UseAuth";
 
 const ButikkCard = ({ store, shiftsCount }) => {
+  const { user } = useAuth();
+  const role = user.role === "employee" ? "ba" : "bs";
+
   return (
     <Link
-      to={`/bs/butikker/${store.store_chain}/${store.name}/${store.store_id}`}
+      to={`/${role}/butikker/${store.store_chain}/${store.name}/${store.store_id}`}
       className="butikk-card-link"
     >
       <div className="butikk-card">

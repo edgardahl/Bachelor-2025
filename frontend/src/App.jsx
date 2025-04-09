@@ -168,6 +168,24 @@ function App() {
       />
 
       <Route
+        path="/ba/butikker"
+        element={
+          <ProtectedRoute allowedRoles={["employee"]}>
+            <ButikkOversikt />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/ba/butikker/:store_chain/:name/:store_id"
+        element={
+          <ProtectedRoute allowedRoles={["employee"]}>
+            <Butikk />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
         path="/ba/vakter/detaljer/:shiftId"
         element={
           <ProtectedRoute allowedRoles={["employee"]}>
