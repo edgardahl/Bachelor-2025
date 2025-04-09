@@ -37,7 +37,9 @@ const MineAnsatte = () => {
   return (
     <div className="mine-ansatte">
       <h1>Mine Ansatte</h1>
-      <p className="mine-ansatte-text">Her kan du se mine ansatte som er tilknyttet min butikk.</p>
+      <p className="mine-ansatte-text">
+        Her kan du se mine ansatte som er tilknyttet min butikk.
+      </p>
 
       {/* Show error message if there's any */}
       {error && <p className="error-message">{error}</p>}
@@ -47,7 +49,7 @@ const MineAnsatte = () => {
         {employees.length > 0 ? (
           employees.map((employee) => (
             <Link
-              to={`/dashboard/butikksjef/butikkansatt/${employee.user_id}`}
+              to={`/bs/ansatte/profil/${employee.user_id}`}
               key={employee.user_id}
             >
               <ButikkansattCard employee={employee} />

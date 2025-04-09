@@ -5,7 +5,7 @@ import "./ButikkCard.css";
 const ButikkCard = ({ store, shiftsCount }) => {
   return (
     <Link
-      to={`/dashboard/butikksjef/${store.store_chain}/${store.name}/${store.store_id}`}
+      to={`/bs/butikker/${store.store_chain}/${store.name}/${store.store_id}`}
       className="butikk-card-link"
     >
       <div className="butikk-card">
