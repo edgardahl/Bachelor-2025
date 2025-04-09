@@ -185,3 +185,17 @@ export const updateUserPasswordById = async (userId, hashedPassword) => {
 
   return data;
 };
+
+// ➕ Insert default preferred municipality (same as residence)
+export const insertDefaultWorkMunicipality = async (user_id, municipality_id) => {
+  const { error } = await supabase
+    .from("user_municipality")
+    .insert([{ user_id, municipality_id }], { ignoreDuplicates: true }); // This avoids inserting duplicates
+
+  if (error) {
+    console.error("Error inserting default municipality:", error);
+    return null;
+  }
+
+  return true;
+};

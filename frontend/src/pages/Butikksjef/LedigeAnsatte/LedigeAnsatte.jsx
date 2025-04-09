@@ -39,10 +39,7 @@ const LedigeAnsatte = () => {
   return (
     <div className="ledige-ansatte">
       <h1>Ledige Ansatte</h1>
-      <p>
-        Her ser du ansatte som både bor i din kommune og ønsker å jobbe i din
-        kommune.
-      </p>
+      <p>Her ser du ansatte som ønsker å jobbe i din kommune.</p>
 
       {error && <p className="ledige-error-message">{error}</p>}
 

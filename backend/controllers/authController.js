@@ -12,6 +12,7 @@ import {
   getUserBasicById,
   getUserByPhoneNumber,
 } from "../models/authModel.js";
+import { insertDefaultWorkMunicipality } from "../models/userModel.js"
 
 // 🟢 Login User
 export const loginUser = async (req, res) => {
@@ -163,8 +164,10 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ error: "Phone number is already in use" });
     }
 
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Register user in DB
     const newUser = await registerUserInDB({
       first_name,
       last_name,
@@ -181,6 +184,7 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ error: "Failed to register user" });
     }
 
+    // Insert qualifications if any
     if (qualifications && qualifications.length > 0) {
       const qualificationsInserted = await insertUserQualifications(
         newUser.user_id,
@@ -194,7 +198,12 @@ export const registerUser = async (req, res) => {
       }
     }
 
-    res
+    // ✅ Insert residence municipality as preferred if not already handled client-side
+    if (role === "employee" && municipality_id) {
+      await insertDefaultWorkMunicipality(newUser.user_id, municipality_id);
+    }
+
+    return res
       .status(201)
       .json({ message: "User registered successfully", user: newUser });
   } catch (error) {
@@ -202,6 +211,7 @@ export const registerUser = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 export const changePassword = async (req, res) => {
   const userId = req.user.userId;
