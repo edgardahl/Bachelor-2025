@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import "./MineVakter.css";
+import useAuth from "../../../context/UseAuth";
 
 const MineVakter = () => {
+  const { user } = useAuth(); // Get the user from context
   const [userId, setUserId] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [storeId, setStoreId] = useState(null);
@@ -12,13 +14,13 @@ const MineVakter = () => {
   const [activeTab, setActiveTab] = useState("mine");
   const [loading, setLoading] = useState(true); // Loading state
 
+
   useEffect(() => {
     const fetchUserAndShifts = async () => {
       try {
-        const response = await axios.get("/auth/me");
-        const id = response.data.user.id;
-        const storeId = response.data.user.storeId;
-        const userRole = response.data.user.role;
+        const id = user.id;
+        const storeId = user.storeId;
+        const userRole = user.role;
         setUserRole(userRole);
         setUserId(id);
         setStoreId(storeId);

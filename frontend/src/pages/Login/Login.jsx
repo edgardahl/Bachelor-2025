@@ -21,6 +21,7 @@ export default function LoginPage() {
       localStorage.setItem("accessToken", res.data.accessToken);
       const loggedInUser = res.data.user;
       setUser(loggedInUser);
+      console.log("User logged in:", loggedInUser);
 
       // 🔁 Let App.jsx handle the role-based redirect
       navigate("/", { replace: true });

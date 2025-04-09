@@ -4,12 +4,13 @@ import axios from "../../api/axiosInstance";
 import DeleteShiftPopup from "../../components/Popup/DeleteShiftPopup/DeleteShiftPopup";
 import ClaimShiftPopup from "../../components/Popup/ClaimShiftPopup/ClaimShiftPopup";
 import ErrorPopup from "../../components/Popup/ErrorPopup/ErrorPopup";
-import SuccessPopup from "../../components/Popup/SuccessPopup/SuccessPopup";
 import "./ShiftDetailsPage.css";
 import { set } from "lodash";
 import { Link } from "react-router-dom";
+import useAuth from "../../context/UseAuth";
 
 const ShiftDetailsPage = () => {
+  const { user } = useAuth(); // Get the user from context
   const { shiftId } = useParams(); // Get the shiftId from the URL params
   const [shiftDetails, setShiftDetails] = useState(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false); // State for the delete popup
@@ -35,11 +36,10 @@ const ShiftDetailsPage = () => {
 
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get("/auth/me");
-        const { id, storeId, role } = response.data.user;
-        setUserId(id);
-        setStoreId(storeId);
-        setUserRole(role);
+        setUserId(user.id);
+        setStoreId(user.storeId);
+        setUserRole(user.role);
+        console.log("User ID:", user.id, "Store ID:", user.storeId, "Role:", user.role);
       } catch (error) {
         console.error("Error fetching user details:", error);
         setError("Failed to fetch user details.");
@@ -87,6 +87,8 @@ const ShiftDetailsPage = () => {
       });
 
       if (response.status === 200) {
+        alert("Shift successfully claimed!");
+
         // Update the shift details with the claimed user's information
         setShiftDetails((prevDetails) => ({
           ...prevDetails,
@@ -119,10 +121,6 @@ const ShiftDetailsPage = () => {
 
   const handleErrorPopupClose = () => {
     setShowErrorPopup(false); // Close the error popup
-  };
-
-  const handleCloseSuccessPopup = () => {
-    setSuccessMessage(null); // Clear the success message
   };
 
   if (!shiftDetails) {
@@ -229,13 +227,16 @@ const ShiftDetailsPage = () => {
         />
       )}
 
-      {/* Render the success message if there's one */}
-      {successMessage && (
-        <SuccessPopup
-          message={successMessage}
-          onClose={handleCloseSuccessPopup}
+      {/* Render the error popup if there's an error */}
+      {error && (
+        <ErrorPopup
+          message={error}
+          onClose={() => setError(null)} // Clear the error when the popup is closed
         />
       )}
+
+      {/* Render the success message if there's one */}
+      {successMessage && <SuccessPopup onClose={handleCloseSuccessPopup} />}
 
       {/* Render the error popup if there's an error */}
       {error && <ErrorPopup message={error} onClose={handleErrorPopupClose} />}
