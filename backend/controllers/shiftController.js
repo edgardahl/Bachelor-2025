@@ -9,6 +9,7 @@ import {
   getShiftsUserIsQualifiedForModel,
   getShiftByPostedByModel,
 } from "../models/shiftModel.js";
+import { getUserByIdModel } from "../models/userModel.js";
 import { getShiftQualificationsModel } from "../models/qualificationModel.js";
 import { getUserQualificationsModel } from "../models/userModel.js";
 
@@ -52,6 +53,7 @@ export const getShiftByIdController = async (req, res) => {
   const { shift_id } = req.params;
   try {
     const shift = await getShiftByIdModel(shift_id);
+    console.log("Fetched shift:", shift);
     return res.json(shift);
   } catch (error) {
     console.error("Error fetching shift:", error);
@@ -73,10 +75,9 @@ export const getClaimedShiftsByUserController = async (req, res) => {
   }
 };
 
-// Claim a shift
 export const claimShiftController = async (req, res) => {
-  const { shift_id } = req.params; // Extract shift_id from request parameters
-  const userId = req.user.userId; // User ID from the request (added by verifyToken middleware)
+  const { shift_id } = req.params;
+  const userId = req.user.userId;
 
   console.log("Shift ID:", shift_id);
   console.log("User ID:", userId);
@@ -88,46 +89,45 @@ export const claimShiftController = async (req, res) => {
   try {
     // Fetch required qualifications for the shift
     const shiftQualifications = await getShiftQualificationsModel(shift_id);
+    console.log("Shift Qualifications:", shiftQualifications);
 
-    // Fetch qualifications the user has
-    const userQualifications = await getUserQualificationsModel(userId);
+    // Fetch user and their qualifications
+    const user = await getUserByIdModel(userId);
+    const userQualifications = user.qualifications || [];
+    console.log("User Qualifications:", userQualifications);
 
-    // Extract qualification IDs for comparison
-    const shiftQualificationIds = shiftQualifications.map(
-      (q) => q.qualification_id
-    );
-    const userQualificationIds = userQualifications.map(
-      (q) => q.qualification_id
-    );
+    // Extract qualification IDs
+    const shiftQualificationIds = shiftQualifications.map((q) => q.qualification_id);
+    const userQualificationIds = userQualifications.map((q) => q.qualification_id);
 
-    // Check if the user has the required qualifications
+    // Check if user has ALL required qualifications
     const hasAllQualifications = shiftQualificationIds.every((id) =>
       userQualificationIds.includes(id)
     );
 
-    // If the user doesn't have the required qualifications, return an error
     if (!hasAllQualifications) {
       return res.status(403).json({
-        error:
-          "You do not have the required qualifications to claim this shift.",
+        error: "You do not have the required qualifications to claim this shift.",
       });
     }
 
-    const user = await getUserByIdModel(userId); // Assuming this function exists
+ // Claim the shift using the model
+ const claimedShift = await claimShiftModel(shift_id, userId);
 
-    // Proceed with claiming the shift
+
     return res.json({
       ...claimedShift,
       claimed_by_first_name: user.first_name,
       claimed_by_last_name: user.last_name,
       claimed_by_email: user.email,
-      claimed_by_phone: user.phone,
+      claimed_by_phone: user.phone_number, // fixed this
     });
   } catch (error) {
     console.error("Error claiming shift:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Create a new shift
 export const createShiftController = async (req, res) => {

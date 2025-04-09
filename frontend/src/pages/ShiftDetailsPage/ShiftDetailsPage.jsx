@@ -6,6 +6,7 @@ import ClaimShiftPopup from "../../components/Popup/ClaimShiftPopup/ClaimShiftPo
 import ErrorPopup from "../../components/Popup/ErrorPopup/ErrorPopup";
 import "./ShiftDetailsPage.css";
 import { set } from "lodash";
+import { Link } from "react-router-dom";
 
 const ShiftDetailsPage = () => {
   const { shiftId } = useParams(); // Get the shiftId from the URL params
@@ -176,9 +177,13 @@ const ShiftDetailsPage = () => {
         </p>
         <p className="shift-info">
           <strong>Claimed By:</strong>{" "}
-          {shiftDetails.claimed_by_first_name
-            ? `${shiftDetails.claimed_by_first_name} ${shiftDetails.claimed_by_last_name}`
-            : "Not yet claimed"}
+          {shiftDetails.claimed_by_first_name ? (
+            <Link to={`/dashboard/butikksjef/butikkansatt/${shiftDetails.claimed_by_id}`}>
+              {shiftDetails.claimed_by_first_name} {shiftDetails.claimed_by_last_name}
+            </Link>
+          ) : (
+            "Not yet claimed"
+          )}
         </p>
       </div>
 
