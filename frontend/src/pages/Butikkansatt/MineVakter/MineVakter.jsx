@@ -60,6 +60,29 @@ const MineVakterAnsatt = () => {
     }
   };
 
+  const groupShiftsByDate = (shifts) => {
+    const sortedShifts = [...shifts].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
+
+    return sortedShifts.reduce((acc, shift) => {
+      const dateKey = new Date(shift.date).toLocaleDateString("no-NO", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      });
+
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(shift);
+
+      return acc;
+    }, {});
+  };
+
+  const groupedShifts = groupShiftsByDate(shifts);
+
   return (
     <div className="mine-vakter-container">
       <h1 className="mine-vakter-title">Vakter</h1>
@@ -85,41 +108,41 @@ const MineVakterAnsatt = () => {
             ? "Vakter du er kvalifisert for:"
             : "Alle vakter i butikken:"}
         </h3>
-        {shifts.length === 0 ? (
-          <p className="mine-vakter-empty-message">Ingen vakter funnet.</p>
-        ) : (
-          shifts.map((shift) => (
-            <ShiftCard
-              key={shift.shift_id}
-              shiftId={shift.shift_id}
-              title={shift.title}
-              description={shift.description}
-              date={shift.date}
-              startTime={shift.start_time}
-              endTime={shift.end_time}
-              qualifications={shift.qualifications}
-              storeName={shift.store_name}
-              postedBy={
-                shift.posted_by_first_name + " " + shift.posted_by_last_name
-              }
-              postedById={shift.posted_by_id}
-              userId={userId}
-              usersstoreId={storeId}
-              shiftStoreId={shift.store_id}
-              // Add a "Claim" button for shifts
-              actions={
-                activeTab === "mine" && (
-                  <button
-                    className="claim-shift-button"
-                    onClick={() => claimShift(shift.shift_id)}
-                  >
-                    Reserver vakt
-                  </button>
-                )
-              }
-            />
-          ))
-        )}
+        {Object.entries(groupedShifts).map(([date, dateShifts]) => (
+          <div key={date} className="shift-date-group">
+            <h4 className="shift-date-heading">{date}</h4>
+            {dateShifts.map((shift) => (
+              <ShiftCard
+                key={shift.shift_id}
+                shiftId={shift.shift_id}
+                title={shift.title}
+                description={shift.description}
+                date={shift.date}
+                startTime={shift.start_time}
+                endTime={shift.end_time}
+                qualifications={shift.qualifications}
+                storeName={shift.store_name}
+                postedBy={
+                  shift.posted_by_first_name + " " + shift.posted_by_last_name
+                }
+                postedById={shift.posted_by_id}
+                userId={userId}
+                usersstoreId={storeId}
+                shiftStoreId={shift.store_id}
+                actions={
+                  activeTab === "mine" && (
+                    <button
+                      className="claim-shift-button"
+                      onClick={() => claimShift(shift.shift_id)}
+                    >
+                      Reserver vakt
+                    </button>
+                  )
+                }
+              />
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );
