@@ -4,7 +4,7 @@ import {
   getUserByIdController,
   updateUserByIdController,
   getEmployeesByStoreIdController,
-  getEmployeesQualificationsController,
+  getAvailableEmployeesController,
   updateEmployeeQualificationsController,
   changePassword,
 } from "../controllers/userController.js";
@@ -23,20 +23,20 @@ router.get(
   getEmployeesByStoreIdController
 );
 
-// ✅ Fetch qualifications for multiple employees
-router.post(
-  "/myemployees/qualifications/fetch",
-  verifyToken,
-  authorizeRoles("store_manager"),
-  getEmployeesQualificationsController
-);
-
 // ✅ Update qualifications for a specific employee
 router.post(
   "/myemployees/qualifications/update",
   verifyToken,
   authorizeRoles("store_manager"),
   updateEmployeeQualificationsController
+);
+
+// ✅ Get available employees in manager's municipality
+router.get(
+  "/available-employees",
+  verifyToken,
+  authorizeRoles("store_manager"),
+  getAvailableEmployeesController
 );
 
 // ✅ Get a specific user by ID

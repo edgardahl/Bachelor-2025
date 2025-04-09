@@ -12,6 +12,7 @@ const ButikkOversikt = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalStores, setTotalStores] = useState(0);
   const [filters, setFilters] = useState({});
+  const [loading, setLoading] = useState(true); // New state for loading
 
   const fetchStores = async (filters = {}, page = 1, pageSize = 4) => {
     try {
@@ -50,13 +51,26 @@ const ButikkOversikt = () => {
       setShiftsCount(shiftsData);
     } catch (error) {
       console.error("Error fetching stores:", error);
+    } finally {
+      setLoading(false); // Set loading to false after data has been fetched
     }
   };
 
   // Fetch stores when the component mounts or when filters or page changes
   useEffect(() => {
+    setLoading(true); // Set loading to true before each fetch
     fetchStores(filters, currentPage);
   }, [filters, currentPage]);
+
+  // Show header and loading spinner when loading
+  if (loading) {
+    return (
+      <div className="dine-vakter">
+        <h1>Butikker</h1>
+        <div className="spinner"></div> {/* You can customize the spinner here */}
+      </div>
+    );
+  }
 
   return (
     <div className="dine-vakter">

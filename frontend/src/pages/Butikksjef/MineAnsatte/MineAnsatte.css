@@ -1,70 +1,16 @@
-/* Container styles for the MineAnsatte component */
+/* MineAnsatte.css */
 .mine-ansatte {
-    padding: 20px;
-    background-color: #f4f4f9;
-    min-height: 100vh;
-  }
-  
-  /* Heading styles */
-  .mine-ansatte h1 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  .mine-ansatte p {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 20px;
-  }
-  
-  /* Error message styling */
-  .error-message {
-    color: red;
-    font-size: 1rem;
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #f8d7da;
-    border-radius: 5px;
-    border: 1px solid #f5c6cb;
-  }
-  
-  /* Employee list container with gap and layout */
-  .employee-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px; /* Adds spacing between cards */
-    justify-content: flex-start; /* Align items to start */
-    margin-top: 20px;
-  }
-  
-  /* Flexbox container for the employee card items */
-  .employee-list > div {
-    flex: 1 1 calc(33.33% - 20px); /* 3 cards per row with space between */
-    max-width: 320px;
-    min-width: 250px;
-  }
-  
-  /* Ensure it's responsive and on smaller screens, one card per row */
-  @media (max-width: 768px) {
-    .employee-list > div {
-      flex: 1 1 100%; /* One card per row */
-    }
-  }
-  
-  /* Link back to dashboard styling */
-  .mine-ansatte a {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-top: 20px;
-  }
-  
-  .mine-ansatte a:hover {
-    background-color: #0056b3;
-  }
-  
+  padding: 2rem;
+}
+
+.mine-ansatte .employee-list {
+  display: grid;
+  gap: 3rem;
+  margin: 2rem 0;
+  grid-template-columns: repeat(2, 1fr); /* 2x2 grid layout */
+}
+
+.mine-ansatte .error-message {
+  color: red;
+  margin-top: 1rem;
+}

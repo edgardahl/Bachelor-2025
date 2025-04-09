@@ -120,59 +120,65 @@ const Register = () => {
     <div className="register-container">
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>First Name</label>
+        <div className="register-form-group">
+          <label className="register-label">First Name</label>
           <input
             type="text"
+            className="register-input"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             required
           />
-          {fieldErrors.first_name && <p className="error">{fieldErrors.first_name}</p>}
+          {fieldErrors.first_name && <p className="register-error">{fieldErrors.first_name}</p>}
         </div>
-        <div>
-          <label>Last Name</label>
+        <div className="register-form-group">
+          <label className="register-label">Last Name</label>
           <input
             type="text"
+            className="register-input"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             required
           />
-          {fieldErrors.last_name && <p className="error">{fieldErrors.last_name}</p>}
+          {fieldErrors.last_name && <p className="register-error">{fieldErrors.last_name}</p>}
         </div>
-        <div>
-          <label>Email</label>
+        <div className="register-form-group">
+          <label className="register-label">Email</label>
           <input
             type="email"
+            className="register-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          {fieldErrors.email && <p className="error">{fieldErrors.email}</p>}
+          {fieldErrors.email && <p className="register-error">{fieldErrors.email}</p>}
         </div>
-        <div>
-          <label>Password</label>
+        <div className="register-form-group">
+          <label className="register-label">Password</label>
           <input
             type="password"
+            className="register-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {fieldErrors.password && <p className="error">{fieldErrors.password}</p>}
+          {fieldErrors.password && <p className="register-error">{fieldErrors.password}</p>}
         </div>
-        <div>
-          <label>Phone Number</label>
+        <div className="register-form-group">
+          <label className="register-label">Phone Number</label>
           <input
             type="text"
+            className="register-input"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             required
           />
-          {fieldErrors.phone_number && <p className="error">{fieldErrors.phone_number}</p>}
+          {fieldErrors.phone_number && <p className="register-error">{fieldErrors.phone_number}</p>}
         </div>
-        <div>
-          <label>Availability</label>
+        <div className="register-form-group">
+          <label className="register-label">Availability</label>
           <select
+            className="register-select"
             value={availability}
             onChange={(e) => setAvailability(e.target.value)}
             required
@@ -182,9 +188,10 @@ const Register = () => {
             <option value="Ikke-fleksibel">Ikke-fleksibel</option>
           </select>
         </div>
-        <div>
-          <label>Role</label>
+        <div className="register-form-group">
+          <label className="register-label">Role</label>
           <select
+            className="register-select"
             value={role}
             onChange={(e) => setRole(e.target.value)}
             required
@@ -194,9 +201,10 @@ const Register = () => {
             <option value="admin">Admin</option>
           </select>
         </div>
-        <div>
-          <label>Store</label>
+        <div className="register-form-group">
+          <label className="register-label">Store</label>
           <select
+            className="register-select"
             value={storeId}
             onChange={(e) => setStoreId(e.target.value)}
             required
@@ -209,9 +217,10 @@ const Register = () => {
             ))}
           </select>
         </div>
-        <div>
-          <label>Municipality</label>
+        <div className="register-form-group">
+          <label className="register-label">Municipality</label>
           <select
+            className="register-select"
             value={municipalityId}
             onChange={(e) => setMunicipalityId(e.target.value)}
             required
@@ -224,14 +233,14 @@ const Register = () => {
             ))}
           </select>
         </div>
-
-        <div>
-          <label>Qualifications</label>
+        <div className="register-form-group">
+          <label className="register-label">Qualifications</label>
           <div>
             {qualifications.map((qualification) => (
               <div key={qualification.qualification_id}>
                 <input
                   type="checkbox"
+                  className="register-checkbox"
                   id={`qualification-${qualification.qualification_id}`}
                   value={qualification.qualification_id}
                   checked={selectedQualifications.includes(qualification.qualification_id)}
@@ -245,16 +254,17 @@ const Register = () => {
           </div>
         </div>
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" className="register-button" disabled={loading}>
           {loading ? "Registering..." : "Register"}
         </button>
 
         {message && (
-          <p className={message.includes("failed") ? "error" : "success"}>{message}</p>
+          <p className={message.includes("failed") ? "register-error" : "register-success"}>
+            {message}
+          </p>
         )}
       </form>
 
-      {/* Already have an account? */}
       <div className="register-footer">
         <p>
           Already have an account?{" "}
