@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       let token = localStorage.getItem("accessToken");
+      console.log("[AuthProvider] Access token:", token);
     
       if (!token || isTokenExpired(token)) {
         console.warn("[AuthProvider] Access token expired or missing, attempting to refresh.");
@@ -39,6 +40,7 @@ export const AuthProvider = ({ children }) => {
             const newAccessToken = refreshRes.data.accessToken;
             localStorage.setItem("accessToken", newAccessToken); // Update access token in localStorage
             token = newAccessToken; // Update token for current session
+            console.log("[AuthProvider] Access token refreshed successfully.");
           }
         }
       }

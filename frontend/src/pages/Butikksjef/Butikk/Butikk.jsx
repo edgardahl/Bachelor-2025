@@ -4,8 +4,10 @@ import axios from "../../../api/axiosInstance";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import "./Butikk.css";
 import { set } from "lodash";
+import useAuth from "../../../context/UseAuth";
 
 const Butikk = () => {
+  const { user } = useAuth(); // Get the user from context
   const { store_id } = useParams();
   const [store, setStore] = useState(null);
   const [shifts, setShifts] = useState([]); // State to store shifts
@@ -37,10 +39,9 @@ const Butikk = () => {
     // Fetch current user's details (for userId)
     const fetchUserAndShifts = async () => {
       try {
-        const response = await axios.get("/auth/me");
-        const id = response.data.user.id;
-        const userRole = response.data.user.role;
-        const storeId = response.data.user.storeId;
+        const id = user.id;
+        const userRole = user.role;
+        const storeId = user.storeId;
         setUserId(id);
         setUserRole(userRole);
         setStoreId(storeId);
