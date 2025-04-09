@@ -1,122 +1,133 @@
 .mine-vakter-container {
-    padding: 2rem;
-    font-family: "Segoe UI", sans-serif;
-    background-color: #f9f9f9;
-    min-height: 100vh;
-  }
-  
-  .mine-vakter-title {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    color: #333;
-  }
-  
-  .mine-vakter-subtitle {
-    margin-bottom: 1.5rem;
-    color: #666;
-  }
-  
-  .mine-vakter-userid {
-    font-size: 1rem;
-    color: #777;
-    margin-bottom: 2rem;
-  }
-  
-  .mine-vakter-button-group {
-    margin-bottom: 2rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-  
-  .mine-vakter-create-button {
-    background-color: #4caf50;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-  }
-  
-  .mine-vakter-create-button:hover {
-    background-color: #45a049;
-  }
-  
-  .mine-vakter-back-link {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 500;
-  }
-  
-  .mine-vakter-back-link:hover {
-    text-decoration: underline;
-  }
-  
-  .mine-vakter-shift-list {
-    margin-top: 2rem;
-  }
-  
-  .mine-vakter-shift-list-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .mine-vakter-empty-message {
-    color: #999;
-    font-style: italic;
-  }
-  
-  .mine-vakter-shift-card {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  
-  .mine-vakter-shift-title {
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-    color: #333;
-  }
-  
-  .mine-vakter-shift-description {
-    color: #555;
-    margin-bottom: 0.5rem;
-  }
-  
-  .mine-vakter-shift-time {
-    font-size: 0.9rem;
-    color: #888;
-  }
-  
+  padding: 2rem;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
 
-  .mine-vakter-tabs {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+.mine-vakter-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.mine-vakter-subtitle {
+  margin-bottom: 1.5rem;
+  color: #666;
+}
+
+.mine-vakter-userid {
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 2rem;
+}
+
+.mine-vakter-button-group {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.mine-vakter-create-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.mine-vakter-create-button:hover {
+  background-color: #45a049;
+}
+
+.mine-vakter-back-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.mine-vakter-back-link:hover {
+  text-decoration: underline;
+}
+
+.mine-vakter-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.mine-vakter-tab {
+  padding: 0.5rem 1.2rem;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #333;
+  transition: background-color 0.2s ease;
+}
+
+.mine-vakter-tab:hover {
+  background-color: #d5d5d5;
+}
+
+.mine-vakter-tab.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.mine-vakter-shift-list {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 🔐 Strict 2-column layout */
+  gap: 3rem;
+  align-items: stretch; /* 🔐 Align heights */
+}
+
+@media (max-width: 768px) {
+  .mine-vakter-shift-list {
+    grid-template-columns: 1fr; /* 🔄 Stack on small screens */
   }
-  
-  .mine-vakter-tab {
-    padding: 0.5rem 1.2rem;
-    background-color: #e0e0e0;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    color: #333;
-    transition: background-color 0.2s ease;
-  }
-  
-  .mine-vakter-tab:hover {
-    background-color: #d5d5d5;
-  }
-  
-  .mine-vakter-tab.active {
-    background-color: #4caf50;
-    color: white;
-  }
-  
+}
+
+.mine-vakter-shift-list-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.mine-vakter-empty-message {
+  color: #999;
+  font-style: italic;
+}
+
+.mine-vakter-shift-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 🔐 Push delete button down */
+  height: 100%; /* 🔐 Force equal height cards */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.mine-vakter-shift-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.mine-vakter-shift-description {
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.mine-vakter-shift-time {
+  font-size: 0.9rem;
+  color: #888;
+}
