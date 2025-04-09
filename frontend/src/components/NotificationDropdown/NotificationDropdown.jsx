@@ -1,0 +1,127 @@
+import { useState, useEffect, useRef } from "react";
+import { FaBell, FaCheckCircle } from "react-icons/fa";
+import useAuth from "../../context/UseAuth";
+import axios from "../../api/axiosInstance"; // Ensure axiosInstance is correctly set up
+import { useNavigate } from "react-router-dom";
+import "./NotificationDropdown.css";
+
+export default function NotificationDropdown() {
+  const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [unopenedCount, setUnopenedCount] = useState(0);
+  const dropdownRef = useRef(null);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Fetch notifications on mount or user ID change
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchNotifications = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await axios.get(`/notifications/getNotificationByUserId`, {
+          params: { userId: user.id },
+        });
+        const sortedNotifications = res.data.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+        setNotifications(sortedNotifications);
+        setUnopenedCount(sortedNotifications.filter((notif) => notif.status === "unopened").length);
+      } catch (err) {
+        setError("Kunne ikke hente varsler.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotifications();
+  }, [user?.id]);
+
+  // Mark notification as opened when clicked
+  const handleNavigate = async (link, notificationId, notificationStatus) => {
+
+    // Only update if the status is "unopened"
+    if (notificationStatus === "unopened") {
+      // Optimistically update the status in the local state first
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notif) =>
+          notif.notification_id === notificationId
+            ? { ...notif, status: "opened" }
+            : notif
+        )
+      );
+      
+      // Update the unopened count
+      setUnopenedCount((prevCount) => prevCount - 1);
+
+      try {
+        // Perform the backend update without waiting for it
+        await axios.put("/notifications/updateNotificationStatus", {
+          notificationId,
+          userId: user.id,
+        });
+
+        // After the status update, navigate to the link
+        navigate(link);
+        setOpen(false);
+      } catch (error) {
+        console.error("Error updating notification status", error);
+        // Rollback the optimistic update in case of an error
+        setNotifications((prevNotifications) =>
+          prevNotifications.map((notif) =>
+            notif.notification_id === notificationId
+              ? { ...notif, status: "unopened" }
+              : notif
+          )
+        );
+        setUnopenedCount((prevCount) => prevCount + 1);
+      }
+    } else {
+      // Navigate without updating if the notification is already opened
+      navigate(link);
+      setOpen(false);
+    }
+  };
+
+  return (
+    <div className="notification-wrapper" ref={dropdownRef}>
+      <button className="notification-icon" onClick={() => setOpen(!open)}>
+        <FaBell size={24} />
+        {unopenedCount > 0 && <span className="notification-badge">{unopenedCount}</span>}
+      </button>
+
+      {open && (
+        <div className="notification-dropdown">
+          {loading ? (
+            <div className="loading">Laster varsler...</div>
+          ) : error ? (
+            <div className="error">{error}</div>
+          ) : notifications.length === 0 ? (
+            <div className="no-notifications">Ingen varsler</div>
+          ) : (
+            <ul className="notification-list">
+              {notifications.map((notif) => (
+                <li
+                  key={notif.notification_id}
+                  onClick={() => handleNavigate(notif.link, notif.notification_id, notif.status)}
+                  className={`notification-item ${notif.status === "unopened" ? "unopened" : ""}`}
+                >
+                  <div className="notification-title">
+                    {notif.title}
+                    {notif.status === "unopened" && <FaCheckCircle className="unopened-tick" size={16} />}
+                  </div>
+                  <div className="notification-message">{notif.message}</div>
+                  <div className="notification-time">{new Date(notif.created_at).toLocaleString("no-NO")}</div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

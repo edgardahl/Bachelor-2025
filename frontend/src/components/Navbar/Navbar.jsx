@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../../context/UseAuth";
 import { Link } from "react-router-dom";
 import { FaHamburger, FaTimes } from "react-icons/fa";
+import NotificationDropdown from "../../components/NotificationDropdown/NotificationDropdown";
 import "./Navbar.css";
 
 export default function Navbar() {
@@ -87,6 +88,7 @@ export default function Navbar() {
 
       {/* Profile + Logout (desktop only) */}
       <div className="nav-right">
+        <NotificationDropdown />
         <Link
           to={user?.role === "employee" ? "/ba/profil" : "/bs/profil"}
           className="profile-icon"

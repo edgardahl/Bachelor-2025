@@ -1,0 +1,109 @@
+.notification-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  padding: 10px;
+  color: #333;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 350px; /* Wider dropdown */
+  max-height: 450px; /* Increase height to show more notifications */
+  overflow-y: auto;
+  border-radius: 10px;
+  z-index: 1000;
+  padding: 15px;
+  font-family: Arial, sans-serif;
+}
+
+.notification-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notification-item {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.notification-item:hover {
+  background-color: #f4f4f4;
+}
+
+.unopened {
+  font-weight: bold;
+  background-color: #f9f9f9; /* Light background for unopened notifications */
+}
+
+.notification-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+  position: relative;
+}
+
+.unopened-tick {
+  position: absolute;
+  top: 0;
+  right: -25px; /* Position the tick to the right of the title */
+  color: red;
+}
+
+.notification-message {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #999;
+}
+
+.loading,
+.error,
+.no-notifications {
+  text-align: center;
+  padding: 20px;
+}
+
+.loading {
+  font-size: 14px;
+  color: #777;
+}
+
+.error {
+  font-size: 14px;
+  color: red;
+}
+
+.no-notifications {
+  font-size: 14px;
+  color: #777;
+}
