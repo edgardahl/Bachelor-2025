@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../api/axiosInstance";
+import Select from "react-select";
 import "./Register.css";
 import { sanitizeUserData } from "../../../../backend/utils/sanitizeInput";
 
@@ -18,6 +19,7 @@ const Register = () => {
   const [stores, setStores] = useState([]);
   const [qualifications, setQualifications] = useState([]);
   const [selectedQualifications, setSelectedQualifications] = useState([]);
+  const [selectedWorkMunicipalityOptions, setSelectedWorkMunicipalityOptions] = useState([]);
   const [fieldErrors, setFieldErrors] = useState({});
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,7 +33,12 @@ const Register = () => {
           axios.get("/qualifications"),
         ]);
 
-        setMunicipalities(municipalityRes.data);
+        const formattedMunicipalities = municipalityRes.data.map((m) => ({
+          label: m.municipality_name,
+          value: m.municipality_id,
+        }));
+
+        setMunicipalities(formattedMunicipalities);
         setStores(storeRes.data.sort((a, b) => a.name.localeCompare(b.name)));
         setQualifications(qualificationRes.data);
       } catch (error) {
@@ -41,6 +48,15 @@ const Register = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (municipalityId && municipalities.length > 0) {
+      const defaultOption = municipalities.find((m) => m.value === municipalityId);
+      if (defaultOption) {
+        setSelectedWorkMunicipalityOptions([defaultOption]);
+      }
+    }
+  }, [municipalityId, municipalities]);
 
   const handleQualificationChange = (qualificationId) => {
     setSelectedQualifications((prev) =>
@@ -67,6 +83,7 @@ const Register = () => {
       store_id: storeId,
       municipality_id: municipalityId,
       qualifications: selectedQualifications,
+      work_municipality_ids: selectedWorkMunicipalityOptions.map((m) => m.value),
     };
 
     try {
@@ -84,6 +101,7 @@ const Register = () => {
       setStoreId("");
       setMunicipalityId("");
       setSelectedQualifications([]);
+      setSelectedWorkMunicipalityOptions([]);
     } catch (error) {
       console.error("Registration error:", error.message);
       const errMsg = error.response?.data?.error || error.message;
@@ -122,67 +140,32 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
         <div className="register-form-group">
           <label className="register-label">First Name</label>
-          <input
-            type="text"
-            className="register-input"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
+          <input type="text" className="register-input" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
           {fieldErrors.first_name && <p className="register-error">{fieldErrors.first_name}</p>}
         </div>
         <div className="register-form-group">
           <label className="register-label">Last Name</label>
-          <input
-            type="text"
-            className="register-input"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
+          <input type="text" className="register-input" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
           {fieldErrors.last_name && <p className="register-error">{fieldErrors.last_name}</p>}
         </div>
         <div className="register-form-group">
           <label className="register-label">Email</label>
-          <input
-            type="email"
-            className="register-input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <input type="email" className="register-input" value={email} onChange={(e) => setEmail(e.target.value)} required />
           {fieldErrors.email && <p className="register-error">{fieldErrors.email}</p>}
         </div>
         <div className="register-form-group">
           <label className="register-label">Password</label>
-          <input
-            type="password"
-            className="register-input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <input type="password" className="register-input" value={password} onChange={(e) => setPassword(e.target.value)} required />
           {fieldErrors.password && <p className="register-error">{fieldErrors.password}</p>}
         </div>
         <div className="register-form-group">
           <label className="register-label">Phone Number</label>
-          <input
-            type="text"
-            className="register-input"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            required
-          />
+          <input type="text" className="register-input" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} required />
           {fieldErrors.phone_number && <p className="register-error">{fieldErrors.phone_number}</p>}
         </div>
         <div className="register-form-group">
           <label className="register-label">Availability</label>
-          <select
-            className="register-select"
-            value={availability}
-            onChange={(e) => setAvailability(e.target.value)}
-            required
-          >
+          <select className="register-select" value={availability} onChange={(e) => setAvailability(e.target.value)} required>
             <option value="">Select Availability</option>
             <option value="Fleksibel">Fleksibel</option>
             <option value="Ikke-fleksibel">Ikke-fleksibel</option>
@@ -190,12 +173,7 @@ const Register = () => {
         </div>
         <div className="register-form-group">
           <label className="register-label">Role</label>
-          <select
-            className="register-select"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            required
-          >
+          <select className="register-select" value={role} onChange={(e) => setRole(e.target.value)} required>
             <option value="employee">Employee</option>
             <option value="store_manager">Store Manager</option>
             <option value="admin">Admin</option>
@@ -203,35 +181,33 @@ const Register = () => {
         </div>
         <div className="register-form-group">
           <label className="register-label">Store</label>
-          <select
-            className="register-select"
-            value={storeId}
-            onChange={(e) => setStoreId(e.target.value)}
-            required
-          >
+          <select className="register-select" value={storeId} onChange={(e) => setStoreId(e.target.value)} required>
             <option value="">Select Store</option>
             {stores.map((store) => (
-              <option key={store.store_id} value={store.store_id}>
-                {store.name}
-              </option>
+              <option key={store.store_id} value={store.store_id}>{store.name}</option>
             ))}
           </select>
         </div>
         <div className="register-form-group">
           <label className="register-label">Municipality</label>
-          <select
-            className="register-select"
-            value={municipalityId}
-            onChange={(e) => setMunicipalityId(e.target.value)}
-            required
-          >
+          <select className="register-select" value={municipalityId} onChange={(e) => setMunicipalityId(e.target.value)} required>
             <option value="">Select Municipality</option>
             {municipalities.map((municipality) => (
-              <option key={municipality.municipality_id} value={municipality.municipality_id}>
-                {municipality.municipality_name}
-              </option>
+              <option key={municipality.value} value={municipality.value}>{municipality.label}</option>
             ))}
           </select>
+        </div>
+        <div className="register-form-group">
+          <label className="register-label">Ønsker å jobbe i kommune(r)</label>
+          <Select
+            classNamePrefix="select"
+            isMulti
+            isClearable={false}
+            options={municipalities}
+            value={selectedWorkMunicipalityOptions}
+            onChange={(selected) => setSelectedWorkMunicipalityOptions(selected || [])}
+            placeholder="Velg kommuner..."
+          />
         </div>
         <div className="register-form-group">
           <label className="register-label">Qualifications</label>
@@ -246,9 +222,7 @@ const Register = () => {
                   checked={selectedQualifications.includes(qualification.qualification_id)}
                   onChange={() => handleQualificationChange(qualification.qualification_id)}
                 />
-                <label htmlFor={`qualification-${qualification.qualification_id}`}>
-                  {qualification.name}
-                </label>
+                <label htmlFor={`qualification-${qualification.qualification_id}`}>{qualification.name}</label>
               </div>
             ))}
           </div>
@@ -259,16 +233,13 @@ const Register = () => {
         </button>
 
         {message && (
-          <p className={message.includes("failed") ? "register-error" : "register-success"}>
-            {message}
-          </p>
+          <p className={message.includes("failed") ? "register-error" : "register-success"}>{message}</p>
         )}
       </form>
 
       <div className="register-footer">
         <p>
-          Already have an account?{" "}
-          <Link to="/login" className="login-link">Log in</Link>
+          Already have an account? <Link to="/login" className="login-link">Log in</Link>
         </p>
       </div>
     </div>
