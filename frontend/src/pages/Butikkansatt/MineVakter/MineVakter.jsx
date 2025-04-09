@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../../api/axiosInstance";
-import "./MineVakter.css";
+import "./MineVakter.css"; // ✅ Shared style
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import useAuth from "../../../context/UseAuth";
 
@@ -57,27 +57,18 @@ const MineVakterAnsatt = () => {
     }
   };
 
-  const groupShiftsByDate = (shifts) => {
-    const sortedShifts = [...shifts].sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
-    );
+  // 👇 Group shifts by formatted date string
+  const groupedShifts = shifts.reduce((acc, shift) => {
+    const dateKey = new Date(shift.date).toLocaleDateString("no-NO", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    });
 
-    return sortedShifts.reduce((acc, shift) => {
-      const dateKey = new Date(shift.date).toLocaleDateString("no-NO", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-      });
-
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
-      acc[dateKey].push(shift);
-      return acc;
-    }, {});
-  };
-
-  const groupedShifts = groupShiftsByDate(shifts);
+    if (!acc[dateKey]) acc[dateKey] = [];
+    acc[dateKey].push(shift);
+    return acc;
+  }, {});
 
   return (
     <div className="mine-vakter-container">
@@ -98,17 +89,20 @@ const MineVakterAnsatt = () => {
         </button>
       </div>
 
-      <div className="mine-vakter-shift-list">
-        <h3 className="mine-vakter-shift-list-title">
-          {activeTab === "mine"
-            ? "Vakter du er kvalifisert for:"
-            : "Alle vakter i butikken:"}
-        </h3>
-        {Object.entries(groupedShifts).map(([date, dateShifts]) => (
+      <h3 className="mine-vakter-shift-list-title">
+        {activeTab === "mine"
+          ? "Vakter du er kvalifisert for:"
+          : "Alle vakter i butikken:"}
+      </h3>
+
+      {shifts.length === 0 ? (
+        <p className="mine-vakter-empty-message">Ingen vakter funnet.</p>
+      ) : (
+        Object.entries(groupedShifts).map(([date, shiftGroup]) => (
           <div key={date} className="shift-date-group">
             <h4 className="shift-date-heading">{date}</h4>
-            <div className="shift-card-wrapper">
-              {dateShifts.map((shift) => (
+            <div className="mine-vakter-shift-list">
+              {shiftGroup.map((shift) => (
                 <ShiftCard
                   key={shift.shift_id}
                   shiftId={shift.shift_id}
@@ -138,8 +132,8 @@ const MineVakterAnsatt = () => {
               ))}
             </div>
           </div>
-        ))}
-      </div>
+        ))
+      )}
     </div>
   );
 };

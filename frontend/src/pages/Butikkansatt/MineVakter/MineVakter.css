@@ -47,7 +47,7 @@
 .shift-card-wrapper {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  gap: 3rem;
   margin-top: 1rem;
   grid-auto-rows: minmax(250px, auto);
   max-height: calc(2 * 250px + 1rem); /* adjust as needed */

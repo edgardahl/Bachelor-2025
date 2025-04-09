@@ -6,14 +6,13 @@ import "./MineVakter.css";
 import useAuth from "../../../context/UseAuth";
 
 const MineVakter = () => {
-  const { user } = useAuth(); // Get the user from context
+  const { user } = useAuth();
   const [userId, setUserId] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [storeId, setStoreId] = useState(null);
   const [shifts, setShifts] = useState([]);
   const [activeTab, setActiveTab] = useState("mine");
-  const [loading, setLoading] = useState(true); // Loading state
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserAndShifts = async () => {
@@ -47,7 +46,7 @@ const MineVakter = () => {
     } catch (error) {
       console.error("Error fetching shifts:", error);
     } finally {
-      setLoading(false); // Set loading to false once data has been fetched
+      setLoading(false);
     }
   };
 
@@ -62,13 +61,11 @@ const MineVakter = () => {
     );
   };
 
-  // Show header and loading spinner when loading
   if (loading) {
     return (
       <div className="mine-vakter-container">
         <h1 className="mine-vakter-title">Vakter</h1>
-        <div className="spinner"></div>{" "}
-        {/* You can customize the spinner here */}
+        <div className="spinner"></div>
       </div>
     );
   }
@@ -79,9 +76,7 @@ const MineVakter = () => {
 
       <div className="mine-vakter-button-group">
         <Link to="/bs/vakter/lag-vakt">
-          <button className="mine-vakter-create-button">
-            ➕ Opprett ny vakt
-          </button>
+          <button className="mine-vakter-create-button">➕ Opprett ny vakt</button>
         </Link>
         <Link to="/bs/hjem" className="mine-vakter-back-link">
           ⬅️ Tilbake til Dashboard
@@ -103,39 +98,54 @@ const MineVakter = () => {
         </button>
       </div>
 
-        <h3 className="mine-vakter-shift-list-title">
-          {activeTab === "mine"
-            ? "Dine opprettede vakter:"
-            : "Alle vakter i butikken:"}
-        </h3>
-      <div className="mine-vakter-shift-list">
-        {shifts.length === 0 ? (
-          <p className="mine-vakter-empty-message">Ingen vakter funnet.</p>
-        ) : (
-          shifts.map((shift) => (
-            <ShiftCard
-              key={shift.shift_id}
-              shiftId={shift.shift_id}
-              title={shift.title}
-              description={shift.description}
-              date={shift.date}
-              startTime={shift.start_time}
-              endTime={shift.end_time}
-              qualifications={shift.qualifications}
-              storeName={shift.store_name}
-              postedBy={
-                shift.posted_by_first_name + " " + shift.posted_by_last_name
-              }
-              postedById={shift.posted_by_id} // Pass the postedById here
-              userId={userId} // Pass userId here
-              userRole={userRole} // Pass userRole here
-              usersstoreId={storeId} // Pass storeId here
-              shiftStoreId={shift.store_id} // Pass the storeId from the shift
-              deleteShift={deleteShift} // Pass the deleteShift function
-            />
-          ))
-        )}
-      </div>
+      <h3 className="mine-vakter-shift-list-title">
+        {activeTab === "mine"
+          ? "Dine opprettede vakter:"
+          : "Alle vakter i butikken:"}
+      </h3>
+
+      {shifts.length === 0 ? (
+        <p className="mine-vakter-empty-message">Ingen vakter funnet.</p>
+      ) : (
+        Object.entries(
+          shifts.reduce((acc, shift) => {
+            const dateKey = new Date(shift.date).toLocaleDateString("no-NO", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+            });
+            if (!acc[dateKey]) acc[dateKey] = [];
+            acc[dateKey].push(shift);
+            return acc;
+          }, {})
+        ).flatMap(([date, shiftGroup]) => [
+          <div key={`heading-${date}`} className="shift-date-heading-wrapper">
+            <h4 className="shift-date-heading">{date}</h4>
+          </div>,
+          <div key={`shifts-${date}`} className="mine-vakter-shift-list">
+            {shiftGroup.map((shift) => (
+              <ShiftCard
+                key={shift.shift_id}
+                shiftId={shift.shift_id}
+                title={shift.title}
+                description={shift.description}
+                date={shift.date}
+                startTime={shift.start_time}
+                endTime={shift.end_time}
+                qualifications={shift.qualifications}
+                storeName={shift.store_name}
+                postedBy={`${shift.posted_by_first_name} ${shift.posted_by_last_name}`}
+                postedById={shift.posted_by_id}
+                userId={userId}
+                userRole={userRole}
+                usersstoreId={storeId}
+                shiftStoreId={shift.store_id}
+                deleteShift={deleteShift}
+              />
+            ))}
+          </div>,
+        ])
+      )}
     </div>
   );
 };
