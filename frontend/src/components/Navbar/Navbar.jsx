@@ -28,10 +28,10 @@ export default function Navbar() {
   const employeeLinks = (
     <>
       <Link to="/ba/hjem" onClick={() => setMenuOpen(false)}>
-        Dashboard
+        Hjem
       </Link>
       <Link to="/ba/vakter" onClick={() => setMenuOpen(false)}>
-        Mine Vakter
+        Vakter
       </Link>
       <Link to="/ba/butikker" onClick={() => setMenuOpen(false)}>
         Butikker
@@ -43,10 +43,10 @@ export default function Navbar() {
   const storeManagerLinks = (
     <>
       <Link to="/bs/hjem" onClick={() => setMenuOpen(false)}>
-        Dashboard
+        Hjem
       </Link>
       <Link to="/bs/vakter" onClick={() => setMenuOpen(false)}>
-        Mine vakter
+        Vakter
       </Link>
       <Link to="/bs/ansatte/mine" onClick={() => setMenuOpen(false)}>
         Mine ansatte
@@ -55,7 +55,7 @@ export default function Navbar() {
         Ledige ansatte
       </Link>
       <Link to="/bs/butikker" onClick={() => setMenuOpen(false)}>
-        Alle butikker
+        Butikker
       </Link>
     </>
   );
