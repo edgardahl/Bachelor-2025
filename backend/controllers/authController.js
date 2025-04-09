@@ -39,11 +39,14 @@ export const loginUser = async (req, res) => {
       storeId: user.store_id,
     });
 
+    console.log("Generated access token 1:", accessToken);
+
     const refreshToken = generateRefreshToken({
       userId: user.user_id,
       role: user.role,
       storeId: user.store_id,
     });
+    console.log("Generated refresh token 1:", refreshToken);
 
     // Step 4: Set the refresh token in an HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {
@@ -59,17 +62,22 @@ export const loginUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // Refresh token expiration (7 days)
     });
 
-    // Step 5: Respond with the access token and user data
-    res.json({
+    const responsePayload = {
       accessToken,
       user: {
         id: user.user_id,
         email: user.email,
         name: user.first_name,
         role: user.role,
-        store_id: user.store_id
+        storeId: user.store_id,
       },
-    });
+    };
+    
+    console.log("Login response:", responsePayload); // 👈 Log before sending
+    
+    res.json(responsePayload);
+    
+    
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -83,6 +91,7 @@ export const refreshAccessToken = async (req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+    console.log("Decoded refresh token:", decoded);
     const user = await getUserBasicById(decoded.userId);
 
     if (!user) return res.status(401).json({ error: "Invalid token user" });
@@ -92,6 +101,7 @@ export const refreshAccessToken = async (req, res) => {
       role: decoded.role,
       storeId: decoded.storeId,
     });
+    console.log("Generated access token:", accessToken);
     res.json({ accessToken });
   } catch (error) {
     console.error("Refresh token error:", error);

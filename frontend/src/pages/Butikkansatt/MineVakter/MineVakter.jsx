@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "../../../api/axiosInstance";
 import "./MineVakter.css";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
+import useAuth from "../../../context/UseAuth";
 
 const MineVakterAnsatt = () => {
+  const { user } = useAuth(); // Get the user from context
   const [userId, setUserId] = useState(null);
   const [storeId, setStoreId] = useState(null);
   const [shifts, setShifts] = useState([]);
@@ -12,9 +14,8 @@ const MineVakterAnsatt = () => {
   useEffect(() => {
     const fetchUserAndShifts = async () => {
       try {
-        const response = await axios.get("/auth/me");
-        const id = response.data.user.id;
-        const storeId = response.data.user.storeId;
+        const id = user.id;
+        const storeId = user.storeId;
         setUserId(id);
         setStoreId(storeId);
 

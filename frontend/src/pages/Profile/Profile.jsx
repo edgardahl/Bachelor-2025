@@ -7,6 +7,7 @@ import "./Profile.css";
 
 const Profile = () => {
   const { user } = useAuth();
+  console.log("User in Profile:", user);
   const { id: profileId } = useParams();
   const [formData, setFormData] = useState(null);
   const [error, setError] = useState("");

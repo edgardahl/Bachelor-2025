@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import DashboardCard from "../../../components/Cards/DashboardCard/DashboardCard";
 import axios from "../../../api/axiosInstance";
 import "./Dashboard.css";
+import useAuth from "../../../context/UseAuth";
 
 const ButikksjefDashboard = () => {
+  const { user } = useAuth(); // Get the user from context
   const [employees, setEmployees] = useState([]);
   const [availableCount, setAvailableCount] = useState(0);
   const [storeStats, setStoreStats] = useState({ total: 0, needsHelp: 0 });
@@ -14,9 +16,7 @@ const ButikksjefDashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const { data: authData } = await axios.get("/auth/me");
-        const managerId = authData.user.id;
-
+        const managerId = user.id;
         const [availableRes, empRes, storeRes, shiftsRes] = await Promise.all([
           axios.get("/users/available-employees"),
           axios.get("/users/myemployees"),

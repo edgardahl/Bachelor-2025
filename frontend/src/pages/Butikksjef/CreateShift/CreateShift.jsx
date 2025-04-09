@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../api/axiosInstance"; // Assuming axiosInstance is set up properly
 import "./CreateShift.css"; // Add your CSS file here
+import useAuth from "../../../context/UseAuth";
 
 const CreateShift = () => {
+  const { user } = useAuth(); // Get the user from context
   // Step 1 - Shift time
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -28,11 +30,8 @@ const CreateShift = () => {
     useEffect(() => {
       const fetchUser = async () => {
         try {
-          const response = await axios.get("/auth/me"); // No need to manually attach the token
-          console.log("GET CURRENT USER", response.data);
-    
-          setUserId(response.data.user.id);
-          setStoreId(response.data.user.storeId);
+          setUserId(user.id);
+          setStoreId(user.storeId);
         } catch (error) {
           console.error("Error fetching user:", error);
         }
