@@ -5,6 +5,7 @@ import "./Dashboard.css";
 
 const ButikksjefDashboard = () => {
   const [employees, setEmployees] = useState([]);
+  const [availableEmployees, setAvailableEmployees] = useState([]);
   const [availableCount, setAvailableCount] = useState(0);
   const [storeStats, setStoreStats] = useState({ total: 0, needsHelp: 0 });
   const [shiftCount, setShiftCount] = useState(0);
@@ -16,6 +17,10 @@ const ButikksjefDashboard = () => {
         // Get logged-in manager's ID
         const authRes = await axios.get("/auth/me");
         const managerId = authRes.data.user.id;
+
+        // Fetch available employees in the manager's area
+        const availableRes = await axios.get("/users/available-employees");
+        setAvailableEmployees(availableRes.data);
 
         // Fetch employees
         const empRes = await axios.get("/users/myemployees");
@@ -88,7 +93,7 @@ const ButikksjefDashboard = () => {
             icon="💼"
             title="Ledige ansatte"
             description="Se en oversikt over alle tilgjengelige ansatte i området"
-            statValue="36"
+            statValue={availableEmployees.length.toString()}
             statText="Tilgjengelige i ditt område"
             linkText="Utforsk ansatte i området"
             linkTo="/dashboard/butikksjef/ledigeansatte"
