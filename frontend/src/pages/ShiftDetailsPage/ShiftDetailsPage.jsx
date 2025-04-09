@@ -4,6 +4,7 @@ import axios from "../../api/axiosInstance";
 import DeleteShiftPopup from "../../components/Popup/DeleteShiftPopup/DeleteShiftPopup";
 import ClaimShiftPopup from "../../components/Popup/ClaimShiftPopup/ClaimShiftPopup";
 import ErrorPopup from "../../components/Popup/ErrorPopup/ErrorPopup";
+import SuccessPopup from "../../components/Popup/SuccessPopup/SuccessPopup";
 import "./ShiftDetailsPage.css";
 import { set } from "lodash";
 import { Link } from "react-router-dom";
@@ -86,8 +87,6 @@ const ShiftDetailsPage = () => {
       });
 
       if (response.status === 200) {
-        alert("Shift successfully claimed!");
-
         // Update the shift details with the claimed user's information
         setShiftDetails((prevDetails) => ({
           ...prevDetails,
@@ -120,6 +119,10 @@ const ShiftDetailsPage = () => {
 
   const handleErrorPopupClose = () => {
     setShowErrorPopup(false); // Close the error popup
+  };
+
+  const handleCloseSuccessPopup = () => {
+    setSuccessMessage(null); // Clear the success message
   };
 
   if (!shiftDetails) {
@@ -178,8 +181,11 @@ const ShiftDetailsPage = () => {
         <p className="shift-info">
           <strong>Claimed By:</strong>{" "}
           {shiftDetails.claimed_by_first_name ? (
-            <Link to={`/dashboard/butikksjef/butikkansatt/${shiftDetails.claimed_by_id}`}>
-              {shiftDetails.claimed_by_first_name} {shiftDetails.claimed_by_last_name}
+            <Link
+              to={`/dashboard/butikksjef/butikkansatt/${shiftDetails.claimed_by_id}`}
+            >
+              {shiftDetails.claimed_by_first_name}{" "}
+              {shiftDetails.claimed_by_last_name}
             </Link>
           ) : (
             "Not yet claimed"
@@ -225,16 +231,13 @@ const ShiftDetailsPage = () => {
         />
       )}
 
-      {/* Render the error popup if there's an error */}
-      {error && (
-        <ErrorPopup
-          message={error}
-          onClose={() => setError(null)} // Clear the error when the popup is closed
+      {/* Render the success message if there's one */}
+      {successMessage && (
+        <SuccessPopup
+          message={successMessage}
+          onClose={handleCloseSuccessPopup}
         />
       )}
-
-      {/* Render the success message if there's one */}
-      {successMessage && <SuccessPopup onClose={handleCloseSuccessPopup} />}
 
       {/* Render the error popup if there's an error */}
       {error && <ErrorPopup message={error} onClose={handleErrorPopupClose} />}
