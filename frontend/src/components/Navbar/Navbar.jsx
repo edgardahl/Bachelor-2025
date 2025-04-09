@@ -27,13 +27,13 @@ export default function Navbar() {
   // Dummy links for employee role
   const employeeLinks = (
     <>
-      <Link to="/dashboard/butikkansatt" onClick={() => setMenuOpen(false)}>
+      <Link to="/ba/hjem" onClick={() => setMenuOpen(false)}>
         Dashboard
       </Link>
-      <Link to="/dashboard/butikkansatt/minevakter" onClick={() => setMenuOpen(false)}>
+      <Link to="/ba/vakter" onClick={() => setMenuOpen(false)}>
         Mine Vakter
       </Link>
-      <Link to="/dashboard/butikkansatt/butikker" onClick={() => setMenuOpen(false)}>
+      <Link to="/ba/butikker" onClick={() => setMenuOpen(false)}>
         Butikker
       </Link>
     </>
@@ -42,19 +42,19 @@ export default function Navbar() {
   // Links for store_manager role
   const storeManagerLinks = (
     <>
-      <Link to="/dashboard/butikksjef" onClick={() => setMenuOpen(false)}>
+      <Link to="/bs/hjem" onClick={() => setMenuOpen(false)}>
         Dashboard
       </Link>
-      <Link to="/dashboard/butikksjef/minevakter" onClick={() => setMenuOpen(false)}>
+      <Link to="/bs/vakter" onClick={() => setMenuOpen(false)}>
         Mine vakter
       </Link>
-      <Link to="/dashboard/butikksjef/mineansatte" onClick={() => setMenuOpen(false)}>
+      <Link to="/bs/ansatte/mine" onClick={() => setMenuOpen(false)}>
         Mine ansatte
       </Link>
-      <Link to="/dashboard/butikksjef/ledigeansatte" onClick={() => setMenuOpen(false)}>
+      <Link to="/bs/ansatte/ledige" onClick={() => setMenuOpen(false)}>
         Ledige ansatte
       </Link>
-      <Link to="/dashboard/butikksjef/butikker" onClick={() => setMenuOpen(false)}>
+      <Link to="/bs/butikker" onClick={() => setMenuOpen(false)}>
         Alle butikker
       </Link>
     </>
@@ -63,12 +63,15 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       {/* Desktop Home logo */}
-      <Link to="/dashboard/butikksjef" className="home-button desktop-only">
+      <Link to="/" className="home-button desktop-only">
         <img src="/icons/coop_logo_neg.png" alt="Home" />
       </Link>
 
       {/* Hamburger button (mobile only) */}
-      <button className="menu-button" onClick={() => setMenuOpen((prev) => !prev)}>
+      <button
+        className="menu-button"
+        onClick={() => setMenuOpen((prev) => !prev)}
+      >
         {menuOpen ? <FaTimes size={30} /> : <FaHamburger size={30} />}
       </button>
 
@@ -84,8 +87,10 @@ export default function Navbar() {
 
       {/* Profile + Logout (desktop only) */}
       <div className="nav-right">
-        <Link to={user?.role === "employee" ? "/dashboard/butikkansatt/minprofil" : "/dashboard/butikksjef/minprofil"} className="profile-icon">
-
+        <Link
+          to={user?.role === "employee" ? "/ba/profil" : "/bs/profil"}
+          className="profile-icon"
+        >
           <FaRegCircleUser size={50} />
         </Link>
 

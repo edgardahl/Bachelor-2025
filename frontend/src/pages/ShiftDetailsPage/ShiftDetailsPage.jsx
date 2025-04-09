@@ -179,8 +179,9 @@ const ShiftDetailsPage = () => {
         <p className="shift-info">
           <strong>Claimed By:</strong>{" "}
           {shiftDetails.claimed_by_first_name ? (
-            <Link to={`/dashboard/butikksjef/butikkansatt/${shiftDetails.claimed_by_id}`}>
-              {shiftDetails.claimed_by_first_name} {shiftDetails.claimed_by_last_name}
+            <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
+              {shiftDetails.claimed_by_first_name}{" "}
+              {shiftDetails.claimed_by_last_name}
             </Link>
           ) : (
             "Not yet claimed"

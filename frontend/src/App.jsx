@@ -24,6 +24,7 @@ function App() {
   const { user, loading } = useAuth();
   const location = useLocation();
 
+  // fikse tilbakeknapp !!
   const showBackButton =
     location.pathname.startsWith("/dashboard/butikksjef/") &&
     location.pathname.split("/").length > 4;
@@ -36,13 +37,10 @@ function App() {
         path="/"
         element={
           user ? (
-            user.role === "store_manager" ? (
-              <Navigate to="/dashboard/butikksjef" replace />
-            ) : user.role === "employee" ? (
-              <Navigate to="/dashboard/butikkansatt" replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            <Navigate
+              to={user.role === "store_manager" ? "/bs/hjem" : "/ba/hjem"}
+              replace
+            />
           ) : (
             <Navigate to="/login" replace />
           )
@@ -58,19 +56,9 @@ function App() {
         element={user ? <Navigate to="/" replace /> : <RegisterPage />}
       />
 
-      {/* General route shared by roles */}
-      <Route
-        path="/shift-details/:shiftId"
-        element={
-          <ProtectedRoute allowedRoles={["store_manager", "employee"]}>
-            <ShiftDetailsPage />
-          </ProtectedRoute>
-        }
-      />
-
       {/* Butikksjef routes */}
       <Route
-        path="/dashboard/butikksjef"
+        path="/bs/hjem"
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <ButikksjefDashboard />
@@ -78,7 +66,7 @@ function App() {
         }
       />
       <Route
-        path="/dashboard/butikksjef/minevakter"
+        path="/bs/vakter"
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <MineVakter />
@@ -86,7 +74,7 @@ function App() {
         }
       />
       <Route
-        path="/dashboard/butikksjef/butikker"
+        path="/bs/butikker"
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <ButikkOversikt />
@@ -94,7 +82,7 @@ function App() {
         }
       />
       <Route
-        path="/dashboard/butikksjef/mineansatte"
+        path="/bs/ansatte/mine"
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <MineAnsatte />
@@ -102,7 +90,7 @@ function App() {
         }
       />
       <Route
-        path="/dashboard/butikksjef/:store_chain/:name/:store_id"
+        path="/bs/butikker/:store_chain/:name/:store_id"
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <Butikk />
@@ -110,7 +98,7 @@ function App() {
         }
       />
       <Route
-        path="/dashboard/butikksjef/minprofil"
+        path="/bs/profil"
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <Profile />
@@ -118,7 +106,7 @@ function App() {
         }
       />
       <Route
-        path="/dashboard/butikksjef/butikkansatt/:id"
+        path="/bs/ansatte/profil/:id"
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <Profile />
@@ -126,7 +114,7 @@ function App() {
         }
       />
       <Route
-        path="/dashboard/butikksjef/createshift"
+        path="/bs/vakter/lag-vakt"
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <CreateShift />
@@ -135,7 +123,7 @@ function App() {
       />
 
       <Route
-        path="/dashboard/butikksjef/ledigeansatte"
+        path="/bs/ansatte/ledige"
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <LedigeAnsatte />
@@ -143,9 +131,18 @@ function App() {
         }
       />
 
+      <Route
+        path="/bs/vakter/detaljer/:shiftId"
+        element={
+          <ProtectedRoute allowedRoles={["store_manager"]}>
+            <ShiftDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+
       {/* Butikkansatt routes */}
       <Route
-        path="/dashboard/butikkansatt"
+        path="/ba/hjem"
         element={
           <ProtectedRoute allowedRoles={["employee"]}>
             <AnsattDashboard />
@@ -153,7 +150,7 @@ function App() {
         }
       />
       <Route
-        path="/dashboard/butikkansatt/minprofil"
+        path="/ba/profil"
         element={
           <ProtectedRoute allowedRoles={["employee"]}>
             <Profile />
@@ -162,10 +159,37 @@ function App() {
       />
 
       <Route
-        path="/dashboard/butikkansatt/minevakter"
+        path="/ba/vakter"
         element={
           <ProtectedRoute allowedRoles={["employee"]}>
             <MineVakterAnsatt />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/ba/butikker"
+        element={
+          <ProtectedRoute allowedRoles={["employee"]}>
+            <ButikkOversikt />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/ba/butikker/:store_chain/:name/:store_id"
+        element={
+          <ProtectedRoute allowedRoles={["employee"]}>
+            <Butikk />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/ba/vakter/detaljer/:shiftId"
+        element={
+          <ProtectedRoute allowedRoles={["employee"]}>
+            <ShiftDetailsPage />
           </ProtectedRoute>
         }
       />
