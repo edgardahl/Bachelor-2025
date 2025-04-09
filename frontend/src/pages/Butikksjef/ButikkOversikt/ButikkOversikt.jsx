@@ -12,7 +12,7 @@ const ButikkOversikt = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalStores, setTotalStores] = useState(0);
   const [filters, setFilters] = useState({});
-  const [loading, setLoading] = useState(true); // New state for loading
+  const [loading, setLoading] = useState(true); // loading for just the cards
 
   const fetchStores = async (filters = {}, page = 1, pageSize = 4) => {
     try {
@@ -52,36 +52,23 @@ const ButikkOversikt = () => {
     } catch (error) {
       console.error("Error fetching stores:", error);
     } finally {
-      setLoading(false); // Set loading to false after data has been fetched
+      setLoading(false);
     }
   };
 
-  // Fetch stores when the component mounts or when filters or page changes
   useEffect(() => {
-    setLoading(true); // Set loading to true before each fetch
+    setLoading(true);
     fetchStores(filters, currentPage);
   }, [filters, currentPage]);
-
-  // Show header and loading spinner when loading
-  if (loading) {
-    return (
-      <div className="dine-vakter">
-        <h1>Butikker</h1>
-        <div className="spinner"></div>{" "}
-        {/* You can customize the spinner here */}
-      </div>
-    );
-  }
 
   return (
     <div className="dine-vakter">
       <h1>Butikker</h1>
 
-      {/* Filter Component */}
       <ButikkFilter
         onFilter={(newFilters) => {
-          setFilters(newFilters); // Update filters
-          setCurrentPage(1); // Reset to the first page
+          setFilters(newFilters);
+          setCurrentPage(1);
         }}
       />
 
@@ -89,13 +76,19 @@ const ButikkOversikt = () => {
 
       {/* Store List */}
       <div className="butikk-liste">
-        {stores.map((store) => (
-          <ButikkCard
-            key={store.store_id}
-            store={store}
-            shiftsCount={shiftsCount[store.store_id] || 0}
-          />
-        ))}
+        {loading ? (
+          <div className="spinner" style={{ margin: "2rem auto" }}></div>
+        ) : stores.length === 0 ? (
+          <p>Ingen butikker funnet.</p>
+        ) : (
+          stores.map((store) => (
+            <ButikkCard
+              key={store.store_id}
+              store={store}
+              shiftsCount={shiftsCount[store.store_id] || 0}
+            />
+          ))
+        )}
       </div>
 
       {/* Pagination Controls */}
