@@ -5,54 +5,52 @@ import "./Dashboard.css";
 
 const ButikksjefDashboard = () => {
   const [employees, setEmployees] = useState([]);
-  const [availableEmployees, setAvailableEmployees] = useState([]);
   const [availableCount, setAvailableCount] = useState(0);
   const [storeStats, setStoreStats] = useState({ total: 0, needsHelp: 0 });
-  const [shiftCount, setShiftCount] = useState(0);
+  const [shiftCount, setShiftCount] = useState({ claimed: 0, total: 0 });
   const [loading, setLoading] = useState(true);
+  const [availableInArea, setAvailableInArea] = useState(0);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Get logged-in manager's ID
-        const authRes = await axios.get("/auth/me");
-        const managerId = authRes.data.user.id;
+        const { data: authData } = await axios.get("/auth/me");
+        const managerId = authData.user.id;
 
-        // Fetch available employees in the manager's area
-        const availableRes = await axios.get("/users/available-employees");
-        setAvailableEmployees(availableRes.data);
+        const [availableRes, empRes, storeRes, shiftsRes] = await Promise.all([
+          axios.get("/users/available-employees"),
+          axios.get("/users/myemployees"),
+          axios.get("/stores/stores-with-municipality?page=1&pageSize=1000"),
+          axios.get(`/shifts/posted_by/${managerId}`),
+        ]);
 
-        // Fetch employees
-        const empRes = await axios.get("/users/myemployees");
+        // Available in manager's area
+        setAvailableInArea(availableRes.data.length);
+
+        // Employees
         const employeeList = empRes.data;
         setEmployees(employeeList);
-        const available = employeeList.filter(
-          (emp) => emp.availability === "Fleksibel"
-        ).length;
+        const available = employeeList.filter(emp => emp.availability === "Fleksibel").length;
         setAvailableCount(available);
 
-        // Fetch all stores at once with municipality info (used for dashboard stats)
-        const storeRes = await axios.get(
-          "/stores/stores-with-municipality?page=1&pageSize=1000"
-        );
+        // Stores that need help
         const stores = storeRes.data.stores || [];
-
-        // Fetch shift data for all stores in parallel
-        const shiftResults = await Promise.all(
-          stores.map((store) =>
-            axios
-              .get(`/shifts/store/${store.store_id}`)
-              .then((res) => res.data.length > 0)
-              .catch(() => false)
+        const needsHelpCount = (
+          await Promise.all(
+            stores.map(store =>
+              axios
+                .get(`/shifts/store/${store.store_id}`)
+                .then(res => res.data.length > 0)
+                .catch(() => false)
+            )
           )
-        );
+        ).filter(Boolean).length;
+        setStoreStats({ total: stores.length, needsHelp: needsHelpCount });
 
-        const needsHelp = shiftResults.filter(Boolean).length;
-        setStoreStats({ total: stores.length, needsHelp });
-
-        // Fetch shifts posted by the manager (just total count for now)
-        const shiftsRes = await axios.get(`/shifts/posted_by/${managerId}`);
-        setShiftCount(shiftsRes.data.length || 0);
+        // Shifts posted by manager
+        const allShifts = shiftsRes.data || [];
+        const claimed = allShifts.filter(shift => !!shift.claimed_by_id);
+        setShiftCount({ total: allShifts.length, claimed: claimed.length });
       } catch (error) {
         console.error("Error loading dashboard data:", error);
       } finally {
@@ -75,8 +73,8 @@ const ButikksjefDashboard = () => {
             icon="💼"
             title="Mine vakter"
             description="Se statusen på alle dine publiserte vakter & utlys en ny vakt"
-            statValue={shiftCount.toString()}
-            statText="Publiserte vakter"
+            statValue={`${shiftCount.claimed}/${shiftCount.total}`}
+            statText="Vakter er tatt"
             linkText="Utforsk dine vakter"
             linkTo="/dashboard/butikksjef/minevakter"
           />
@@ -93,7 +91,7 @@ const ButikksjefDashboard = () => {
             icon="💼"
             title="Ledige ansatte"
             description="Se en oversikt over alle tilgjengelige ansatte i området"
-            statValue={availableEmployees.length.toString()}
+            statValue={availableInArea}
             statText="Tilgjengelige i ditt område"
             linkText="Utforsk ansatte i området"
             linkTo="/dashboard/butikksjef/ledigeansatte"
