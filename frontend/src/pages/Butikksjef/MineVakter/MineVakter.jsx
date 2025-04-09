@@ -103,12 +103,12 @@ const MineVakter = () => {
         </button>
       </div>
 
-      <div className="mine-vakter-shift-list">
         <h3 className="mine-vakter-shift-list-title">
           {activeTab === "mine"
             ? "Dine opprettede vakter:"
             : "Alle vakter i butikken:"}
         </h3>
+      <div className="mine-vakter-shift-list">
         {shifts.length === 0 ? (
           <p className="mine-vakter-empty-message">Ingen vakter funnet.</p>
         ) : (

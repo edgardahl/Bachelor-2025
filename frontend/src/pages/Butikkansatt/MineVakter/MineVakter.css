@@ -1,3 +1,37 @@
+.mine-vakter-container {
+  padding: 2rem;
+}
+
+.mine-vakter-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.mine-vakter-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.mine-vakter-tab {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #eee;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.mine-vakter-tab.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.mine-vakter-shift-list-title {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
 .shift-date-group {
   margin-bottom: 2rem;
 }
@@ -9,3 +43,14 @@
   border-bottom: 2px solid #ccc;
   padding-bottom: 0.2rem;
 }
+
+.shift-card-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+  grid-auto-rows: minmax(250px, auto);
+  max-height: calc(2 * 250px + 1rem); /* adjust as needed */
+  overflow: hidden;
+}
+
