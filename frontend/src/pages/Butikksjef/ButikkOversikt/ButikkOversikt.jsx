@@ -67,7 +67,8 @@ const ButikkOversikt = () => {
     return (
       <div className="dine-vakter">
         <h1>Butikker</h1>
-        <div className="spinner"></div> {/* You can customize the spinner here */}
+        <div className="spinner"></div>{" "}
+        {/* You can customize the spinner here */}
       </div>
     );
   }
@@ -124,7 +125,7 @@ const ButikkOversikt = () => {
         </button>
       </div>
 
-      <Link to="/dashboard/butikksjef">Tilbake til Dashboard</Link>
+      <Link to="/bs/hjem">Tilbake til Dashboard</Link>
     </div>
   );
 };

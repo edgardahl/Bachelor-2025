@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import DeleteShiftPopup from "../../Popup/DeleteShiftPopup/DeleteShiftPopup"; // Import the popup
 import axios from "../../../api/axiosInstance";
 import "./ShiftCard.css";
+import useAuth from "../../../context/UseAuth";
 
 const ShiftCard = ({
   shiftId,
@@ -18,14 +19,20 @@ const ShiftCard = ({
   userId,
   usersstoreId,
   shiftStoreId,
-  userRole, // New prop to check the user's role
   deleteShift, // Function to handle deletion
 }) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false); // State to manage the popup visibility
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleCardClick = () => {
-    navigate(`/shift-details/${shiftId}`);
+    if (user.role === "employee") {
+      navigate(`/ba/vakter/detaljer/${shiftId}`); // Employee-specific page
+    } else if (user.role === "store_manager") {
+      navigate(`/bs/vakter/detaljer/${shiftId}`); // Store manager-specific page
+    } else {
+      console.error("Unknown user role:", user.role); // Handle unexpected roles
+    }
   };
 
   const handleDeleteClick = (e) => {
@@ -63,7 +70,7 @@ const ShiftCard = ({
 
   // Check if the current user is a manager and belongs to the store associated with this shift
   const canDelete =
-    userRole === "store_manager" && shiftStoreId === usersstoreId;
+    user.role === "store_manager" && shiftStoreId === usersstoreId;
 
   return (
     <div className="shift-card-container" onClick={handleCardClick}>

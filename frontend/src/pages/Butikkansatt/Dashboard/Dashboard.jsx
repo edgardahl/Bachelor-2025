@@ -1,6 +1,6 @@
-import React from 'react';
-import DashboardCard from '../../../components/Cards/DashboardCard/DashboardCard'; // Adjust path as needed
-import './Dashboard.css';
+import React from "react";
+import DashboardCard from "../../../components/Cards/DashboardCard/DashboardCard"; // Adjust path as needed
+import "./Dashboard.css";
 
 const AnsattDashboard = () => {
   return (
@@ -14,7 +14,7 @@ const AnsattDashboard = () => {
           statValue="4"
           statText="Planlagte vakter"
           linkText="Utforsk mine vakter"
-          linkTo="/dashboard/butikkansatt/minevakter"
+          linkTo="/ba/vakter"
         />
         <DashboardCard
           icon="🏪"
@@ -23,7 +23,7 @@ const AnsattDashboard = () => {
           statValue="12"
           statText="Butikker tilgjengelig"
           linkText="Utforsk butikker"
-          linkTo="/dashboard/butikkansatt/butikker"
+          linkTo="/ba/butikker"
         />
       </div>
     </div>

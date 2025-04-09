@@ -65,7 +65,8 @@ const MineVakter = () => {
     return (
       <div className="mine-vakter-container">
         <h1 className="mine-vakter-title">Vakter</h1>
-        <div className="spinner"></div> {/* You can customize the spinner here */}
+        <div className="spinner"></div>{" "}
+        {/* You can customize the spinner here */}
       </div>
     );
   }
@@ -75,12 +76,12 @@ const MineVakter = () => {
       <h1 className="mine-vakter-title">Vakter</h1>
 
       <div className="mine-vakter-button-group">
-        <Link to="/dashboard/butikksjef/createshift">
+        <Link to="/bs/vakter/lag-vakt">
           <button className="mine-vakter-create-button">
             ➕ Opprett ny vakt
           </button>
         </Link>
-        <Link to="/dashboard/butikksjef" className="mine-vakter-back-link">
+        <Link to="/bs/hjem" className="mine-vakter-back-link">
           ⬅️ Tilbake til Dashboard
         </Link>
       </div>

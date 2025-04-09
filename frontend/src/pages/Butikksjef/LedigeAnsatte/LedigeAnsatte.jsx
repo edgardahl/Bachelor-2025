@@ -30,7 +30,8 @@ const LedigeAnsatte = () => {
     return (
       <div className="ledige-ansatte">
         <h1>Ledige Ansatte</h1>
-        <div className="spinner"></div> {/* You can customize the spinner here */}
+        <div className="spinner"></div>{" "}
+        {/* You can customize the spinner here */}
       </div>
     );
   }
@@ -53,14 +54,14 @@ const LedigeAnsatte = () => {
         {employees.map((employee) => (
           <Link
             key={employee.user_id}
-            to={`/dashboard/butikksjef/butikkansatt/${employee.user_id}`}
+            to={`/bs/ansatte/profil/${employee.user_id}`}
           >
             <ButikkansattCard employee={employee} show="store" />
           </Link>
         ))}
       </div>
 
-      <Link to="/dashboard/butikksjef">⬅️ Tilbake til Dashboard</Link>
+      <Link to="/bs/hjem">⬅️ Tilbake til Dashboard</Link>
     </div>
   );
 };

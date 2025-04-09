@@ -30,17 +30,19 @@ const ButikksjefDashboard = () => {
         // Employees
         const employeeList = empRes.data;
         setEmployees(employeeList);
-        const available = employeeList.filter(emp => emp.availability === "Fleksibel").length;
+        const available = employeeList.filter(
+          (emp) => emp.availability === "Fleksibel"
+        ).length;
         setAvailableCount(available);
 
         // Stores that need help
         const stores = storeRes.data.stores || [];
         const needsHelpCount = (
           await Promise.all(
-            stores.map(store =>
+            stores.map((store) =>
               axios
                 .get(`/shifts/store/${store.store_id}`)
-                .then(res => res.data.length > 0)
+                .then((res) => res.data.length > 0)
                 .catch(() => false)
             )
           )
@@ -49,7 +51,7 @@ const ButikksjefDashboard = () => {
 
         // Shifts posted by manager
         const allShifts = shiftsRes.data || [];
-        const claimed = allShifts.filter(shift => !!shift.claimed_by_id);
+        const claimed = allShifts.filter((shift) => !!shift.claimed_by_id);
         setShiftCount({ total: allShifts.length, claimed: claimed.length });
       } catch (error) {
         console.error("Error loading dashboard data:", error);
@@ -76,7 +78,7 @@ const ButikksjefDashboard = () => {
             statValue={`${shiftCount.claimed}/${shiftCount.total}`}
             statText="Vakter er tatt"
             linkText="Utforsk dine vakter"
-            linkTo="/dashboard/butikksjef/minevakter"
+            linkTo="/bs/vakter"
           />
           <DashboardCard
             icon="👤"
@@ -85,7 +87,7 @@ const ButikksjefDashboard = () => {
             statValue={`${availableCount}/${employees.length}`}
             statText="Er åpen for å ta vakter"
             linkText="Utforsk dine ansatte"
-            linkTo="/dashboard/butikksjef/mineansatte"
+            linkTo="/bs/ansatte/mine"
           />
           <DashboardCard
             icon="💼"
@@ -94,7 +96,7 @@ const ButikksjefDashboard = () => {
             statValue={availableInArea}
             statText="Tilgjengelige i ditt område"
             linkText="Utforsk ansatte i området"
-            linkTo="/dashboard/butikksjef/ledigeansatte"
+            linkTo="/bs/ansatte/ledige"
           />
           <DashboardCard
             icon="👤"
@@ -103,7 +105,7 @@ const ButikksjefDashboard = () => {
             statValue={`${storeStats.needsHelp}/${storeStats.total}`}
             statText="Butikker trenger hjelp"
             linkText="Utforsk andre butikker"
-            linkTo="/dashboard/butikksjef/butikker"
+            linkTo="/bs/butikker"
           />
         </div>
       )}
