@@ -65,15 +65,15 @@ const ButikksjefDashboard = () => {
 
   return (
     <div className="dashboard">
-      <h1 className="dashboard-title">Butikksjef Dashboard</h1>
+      <h1 className="dashboard-title">Halla sjef {user.name}</h1>
 
       {loading ? (
         <div className="spinner" />
       ) : (
         <div className="dashboard-cards">
           <DashboardCard
-            icon="💼"
-            title="Mine vakter"
+            icon="/icons/vakter.svg"
+            title="Vakter"
             description="Se statusen på alle dine publiserte vakter & utlys en ny vakt"
             statValue={`${shiftCount.claimed}/${shiftCount.total}`}
             statText="Vakter er tatt"
@@ -81,7 +81,7 @@ const ButikksjefDashboard = () => {
             linkTo="/bs/vakter"
           />
           <DashboardCard
-            icon="👤"
+            icon="/icons/mine_ansatte.svg"
             title="Mine ansatte"
             description="Få en oversikt over dine ansatte, deres arbeidsstatus og kompetanse"
             statValue={`${availableCount}/${employees.length}`}
@@ -90,7 +90,7 @@ const ButikksjefDashboard = () => {
             linkTo="/bs/ansatte/mine"
           />
           <DashboardCard
-            icon="💼"
+            icon="/icons/ledige_ansatte.svg"
             title="Ledige ansatte"
             description="Se en oversikt over alle tilgjengelige ansatte i området"
             statValue={availableInArea}
@@ -99,7 +99,7 @@ const ButikksjefDashboard = () => {
             linkTo="/bs/ansatte/ledige"
           />
           <DashboardCard
-            icon="👤"
+            icon={"/icons/store_icon.svg"}
             title="Butikker"
             description="Se en oversikt over butikkene i Coop Øst og nyttig informasjon om dem"
             statValue={`${storeStats.needsHelp}/${storeStats.total}`}
