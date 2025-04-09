@@ -189,7 +189,7 @@ const Register = () => {
           </select>
         </div>
         <div className="register-form-group">
-          <label className="register-label">Municipality</label>
+          <label className="register-label">Bostedskommune</label>
           <select className="register-select" value={municipalityId} onChange={(e) => setMunicipalityId(e.target.value)} required>
             <option value="">Select Municipality</option>
             {municipalities.map((municipality) => (
