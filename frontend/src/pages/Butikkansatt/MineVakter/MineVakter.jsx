@@ -1,70 +1,115 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../../api/axiosInstance";
-import "./MineVakter.css"; // ✅ Shared style
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import useAuth from "../../../context/UseAuth";
+import "./MineVakter.css";
 
 const MineVakterAnsatt = () => {
   const { user } = useAuth();
   const [userId, setUserId] = useState(null);
   const [storeId, setStoreId] = useState(null);
   const [shifts, setShifts] = useState([]);
-  const [activeTab, setActiveTab] = useState("mine");
+  const [municipalities, setMunicipalities] = useState([]);
+  const [preferredMunicipalityNames, setPreferredMunicipalityNames] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [selectedMunicipalityName, setSelectedMunicipalityName] = useState("");
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
 
   useEffect(() => {
-    const fetchUserAndShifts = async () => {
-      try {
-        const id = user.id;
-        const storeId = user.storeId;
-        setUserId(id);
-        setStoreId(storeId);
-        fetchShifts("mine", id, storeId);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
+    if (user) {
+      setUserId(user.id);
+      setStoreId(user.storeId);
+      fetchPreferredShifts();
+      fetchMunicipalities();
+      fetchUserProfile(); // 🟢 Fetch preferred municipalities
+    }
+  }, [user]);
 
-    fetchUserAndShifts();
-  }, []);
-
-  const fetchShifts = async (type, userId, storeId) => {
+  const fetchUserProfile = async () => {
     try {
-      let response;
-      if (type === "mine") {
-        response = await axios.get(`/shifts/user_is_qualified_for/${userId}`);
-      } else {
-        response = await axios.get(`/shifts/store/${storeId}`);
-      }
-      setShifts(response.data);
-    } catch (error) {
-      console.error("Error fetching shifts:", error);
+      const res = await axios.get(`/users/${user.id}`);
+      setPreferredMunicipalityNames(res.data.work_municipalities || []);
+    } catch (err) {
+      console.error("Error fetching user profile:", err);
     }
   };
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    fetchShifts(tab, userId, storeId);
+  const fetchPreferredShifts = async () => {
+    try {
+      const response = await axios.get("/shifts/qualified/preferred");
+      setShifts(response.data);
+    } catch (error) {
+      console.error("Error fetching preferred shifts:", error);
+    }
+  };
+
+  const fetchRequestedShifts = async (municipalityId) => {
+    try {
+      const response = await axios.get(`/shifts/qualified/requested/${municipalityId}`);
+      setShifts(response.data);
+    } catch (error) {
+      console.error("Error fetching requested shifts:", error);
+    }
+  };
+
+  const fetchMunicipalities = async () => {
+    try {
+      const response = await axios.get("/municipalities");
+      setMunicipalities(response.data);
+    } catch (error) {
+      console.error("Error fetching municipalities:", error);
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+
+    if (value === "") {
+      setFilteredSuggestions([]);
+      setSelectedMunicipalityName("");
+      fetchPreferredShifts();
+      return;
+    }
+
+    const filtered = municipalities.filter((m) =>
+      m.municipality_name.toLowerCase().startsWith(value.toLowerCase())
+    );
+
+    setFilteredSuggestions(filtered);
+  };
+
+  const handleSelectSuggestion = (municipality) => {
+    setSearchInput(municipality.municipality_name);
+    setSelectedMunicipalityName(municipality.municipality_name);
+    setFilteredSuggestions([]);
+    fetchRequestedShifts(municipality.municipality_id);
   };
 
   const claimShift = async (shiftId) => {
     try {
       await axios.post(`/shifts/claim/${shiftId}`, { user_id: userId });
       alert("Vakt er nå reservert!");
-      fetchShifts(activeTab, userId, storeId);
+      const selected = municipalities.find(
+        (m) => m.municipality_name === selectedMunicipalityName
+      );
+      if (selected) {
+        fetchRequestedShifts(selected.municipality_id);
+      } else {
+        fetchPreferredShifts();
+      }
     } catch (error) {
       console.error("Error claiming shift:", error);
       alert("Kunne ikke reservere vakt.");
     }
   };
 
-  // 👇 Group shifts by formatted date string
   const groupedShifts = shifts.reduce((acc, shift) => {
     const dateKey = new Date(shift.date).toLocaleDateString("no-NO", {
       weekday: "long",
       day: "numeric",
       month: "long",
     });
-
     if (!acc[dateKey]) acc[dateKey] = [];
     acc[dateKey].push(shift);
     return acc;
@@ -74,25 +119,48 @@ const MineVakterAnsatt = () => {
     <div className="mine-vakter-container">
       <h1 className="mine-vakter-title">Vakter</h1>
 
-      <div className="mine-vakter-tabs">
+      <div className="municipality-search">
+        <div className="municipality-search-input-wrapper">
+          <label htmlFor="municipality-search-input">Søk etter kommune</label>
+          <input
+            type="text"
+            id="municipality-search-input"
+            value={searchInput}
+            onChange={handleSearchChange}
+            placeholder="F.eks. Oslo"
+            autoComplete="off"
+          />
+          {filteredSuggestions.length > 0 && (
+            <ul className="suggestions-dropdown">
+              {filteredSuggestions.map((m) => (
+                <li
+                  key={m.municipality_id}
+                  onClick={() => handleSelectSuggestion(m)}
+                >
+                  {m.municipality_name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         <button
-          className={`mine-vakter-tab ${activeTab === "mine" ? "active" : ""}`}
-          onClick={() => handleTabChange("mine")}
+          className="reset-preferred-button"
+          onClick={() => {
+            setSelectedMunicipalityName("");
+            setSearchInput("");
+            setFilteredSuggestions([]);
+            fetchPreferredShifts();
+          }}
         >
-          Mine kvalifiserte vakter
-        </button>
-        <button
-          className={`mine-vakter-tab ${activeTab === "store" ? "active" : ""}`}
-          onClick={() => handleTabChange("store")}
-        >
-          Alle vakter i butikken
+          Vis foretrukne kommuner
         </button>
       </div>
 
       <h3 className="mine-vakter-shift-list-title">
-        {activeTab === "mine"
-          ? "Vakter du er kvalifisert for:"
-          : "Alle vakter i butikken:"}
+        {selectedMunicipalityName
+          ? `Vakter i ${selectedMunicipalityName}`
+          : `Vakter i dine foretrukne kommuner (${preferredMunicipalityNames.join(", ")})`}
       </h3>
 
       {shifts.length === 0 ? (
@@ -119,14 +187,12 @@ const MineVakterAnsatt = () => {
                   usersstoreId={storeId}
                   shiftStoreId={shift.store_id}
                   actions={
-                    activeTab === "mine" && (
-                      <button
-                        className="claim-shift-button"
-                        onClick={() => claimShift(shift.shift_id)}
-                      >
-                        Reserver vakt
-                      </button>
-                    )
+                    <button
+                      className="claim-shift-button"
+                      onClick={() => claimShift(shift.shift_id)}
+                    >
+                      Reserver vakt
+                    </button>
                   }
                 />
               ))}
