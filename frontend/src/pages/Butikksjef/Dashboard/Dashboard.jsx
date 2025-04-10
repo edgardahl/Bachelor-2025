@@ -65,7 +65,7 @@ const ButikksjefDashboard = () => {
 
   return (
     <div className="dashboard">
-      <h1 className="dashboard-title">Halla sjef {user.name}</h1>
+      <h1 className="dashboard-title">Velkommen {user.name}</h1>
 
       {loading ? (
         <div className="spinner" />

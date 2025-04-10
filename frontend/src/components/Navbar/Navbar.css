@@ -64,7 +64,7 @@
 }
 
 .profile-icon svg {
-  color: var(--Main-body-background);
+  color: var(--Body-background);
 }
 
 .profile-icon svg:hover {
@@ -72,14 +72,14 @@
 }
 
 .menu-button svg {
-  color: var(--Main-body-background);
+  color: var(--Body-background);
 }
 .menu-button svg:hover {
   color: var(--Main-light-color);
 }
 
 .logout-button {
-  background-color: var(--Main-body-background);
+  background-color: var(--Body-background);
   color: var(--Main-dark-color);
   border: none;
   padding: 8px 14px;
@@ -94,8 +94,7 @@
 
 /* Mobile styles */
 @media (max-width: 768px) {
-  
-  .nav-links{
+  .nav-links {
     justify-content: center;
     align-items: center;
     padding-left: 0;
@@ -103,18 +102,18 @@
     gap: 40px;
   }
 
-  .nav-links a{
+  .nav-links a {
     font-size: 1.3rem;
     font-weight: bold;
     width: 100%;
     text-align: center;
   }
 
-  .logout-button{
+  .logout-button {
     margin-top: 40px;
     width: 60%;
   }
-  
+
   .menu-button {
     display: block;
   }
@@ -126,8 +125,6 @@
   .mobile-only {
     display: block;
   }
-
-  
 }
 
 /* Desktop styles */

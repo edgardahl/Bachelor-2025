@@ -1,46 +1,39 @@
 import React, { useState, useEffect } from "react";
-import axios from "../../../api/axiosInstance"; // Assuming axiosInstance is set up properly
-import "./CreateShift.css"; // Add your CSS file here
+import axios from "../../../api/axiosInstance";
+import "./CreateShift.css";
 import useAuth from "../../../context/UseAuth";
 
 const CreateShift = () => {
-  const { user } = useAuth(); // Get the user from context
-  // Step 1 - Shift time
+  const { user } = useAuth();
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
-  // Step 2 - Qualifications
   const [qualifications, setQualifications] = useState([]);
   const [selectedQualifications, setSelectedQualifications] = useState([]);
 
-  // Step 3 - Description
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const [message, setMessage] = useState(""); // Error or success message
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-   //user INFO
-    const [UserId, setUserId] = useState("");
-    const [StoreId, setStoreId] = useState("");
+  const [UserId, setUserId] = useState("");
+  const [StoreId, setStoreId] = useState("");
 
- //Fetch user info
-    // Fetch user info using the access token from localStorage
-    useEffect(() => {
-      const fetchUser = async () => {
-        try {
-          setUserId(user.id);
-          setStoreId(user.storeId);
-        } catch (error) {
-          console.error("Error fetching user:", error);
-        }
-      };
-    
-      fetchUser();
-    }, []);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setUserId(user.id);
+        setStoreId(user.storeId);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
 
-  // Fetch qualifications (similar to Register component)
+    fetchUser();
+  }, []);
+
   useEffect(() => {
     const fetchQualifications = async () => {
       try {
@@ -54,7 +47,6 @@ const CreateShift = () => {
     fetchQualifications();
   }, []);
 
-  // Handle qualification selection
   const handleQualificationChange = (qualificationId) => {
     setSelectedQualifications((prevSelected) =>
       prevSelected.includes(qualificationId)
@@ -63,74 +55,74 @@ const CreateShift = () => {
     );
   };
 
-  // Handle form submission
-  // Handle form submission
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setMessage(""); // Reset message
-  setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    setLoading(true);
 
-  // Ensure times are in the correct format (HH:mm)
-  const shiftData = {
-    title,
-    description,
-    date, // already in YYYY-MM-DD format from <input type="date">
-    start_time: startTime, // HH:mm
-    end_time: endTime, // HH:mm
-    store_id: StoreId,
-    posted_by: UserId,
-    qualifications: selectedQualifications, // Send selected qualifications
+    const shiftData = {
+      title,
+      description,
+      date,
+      start_time: startTime,
+      end_time: endTime,
+      store_id: StoreId,
+      posted_by: UserId,
+      qualifications: selectedQualifications,
+    };
+
+    try {
+      console.log("Shift Data:", shiftData);
+      const response = await axios.post("/shifts", shiftData);
+      setMessage("Shift created successfully! 🎉");
+      console.log("Shift Created:", response.data);
+
+      // Reset form fields
+      setDate("");
+      setStartTime("");
+      setEndTime("");
+      setTitle("");
+      setDescription("");
+      setSelectedQualifications([]);
+    } catch (error) {
+      console.error(
+        "Error creating shift:",
+        error.response?.data || error.message
+      );
+      setMessage("Failed to create shift. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
-
-  try {
-    console.log("Shift Data:", shiftData);
-    const response = await axios.post("/shifts", shiftData);
-    setMessage("Shift created successfully! 🎉");
-    console.log("Shift Created:", response.data);
-
-    // Reset form fields
-    setDate("");
-    setStartTime("");
-    setEndTime("");
-    setTitle("");
-    setDescription("");
-    setSelectedQualifications([]);
-  } catch (error) {
-    console.error("Error creating shift:", error.response?.data || error.message);
-    setMessage("Failed to create shift. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-  
-  
-
-  
 
   return (
     <div className="create-shift-container">
-      <h2>Create a Shift</h2>
+      <h2>Ny vakt</h2>
       {message && (
         <p className={message.includes("failed") ? "error" : "success"}>
           {message}
         </p>
       )}
       <form onSubmit={handleSubmit}>
-        {/* Step 1: Hvor og når? */}
         <div className="form-step">
           <h3>Step 1: Hvor og når?</h3>
           <div>
-            <label>Date</label>
+            <label>Dato</label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
+              min={new Date().toISOString().split("T")[0]}
+              max={
+                new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                  .toISOString()
+                  .split("T")[0]
+              }
             />
           </div>
           <div>
-            <label>Start Time</label>
+            <label>Fra</label>
             <input
               type="time"
               value={startTime}
@@ -139,7 +131,7 @@ const handleSubmit = async (e) => {
             />
           </div>
           <div>
-            <label>End Time</label>
+            <label>Til</label>
             <input
               type="time"
               value={endTime}
@@ -149,7 +141,6 @@ const handleSubmit = async (e) => {
           </div>
         </div>
 
-        {/* Step 2: Kvalifikasjon */}
         <div className="form-step">
           <h3>Step 2: Kvalifikasjon</h3>
           <div>
@@ -166,7 +157,9 @@ const handleSubmit = async (e) => {
                     handleQualificationChange(qualification.qualification_id)
                   }
                 />
-                <label htmlFor={`qualification-${qualification.qualification_id}`}>
+                <label
+                  htmlFor={`qualification-${qualification.qualification_id}`}
+                >
                   {qualification.name}
                 </label>
               </div>
@@ -174,7 +167,6 @@ const handleSubmit = async (e) => {
           </div>
         </div>
 
-        {/* Step 3: Beskrivelse */}
         <div className="form-step">
           <h3>Step 3: Beskrivelse</h3>
           <div>

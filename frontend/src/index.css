@@ -1,7 +1,46 @@
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Commissioner";
+  src: url("/fonts/Commissioner-VariableFont_FLAR,VOLM,slnt,wght.ttf")
+    format("truetype");
+}
+
 :root {
   /* Colors */
-  --Main-body-background: #FFFFFF;
-  --Main-dark-color: #103463;
-  --Main-light-color: #E0F0F9;
-  --Text-color: #000000;
+  --White: #ffffff;
+  --Black: #000000;
+  --loading: #343538;
+  --Body-background: #fdf8f4;
+  --Main-dark-color: #106360;
+  --Main-light-color: #f9f5e0;
+  --Card-header-color: #3b5f90;
+
+  /* Text-colors */
+  --Text-color: #161616;
+  --Text-color-light: #4f4f4f;
+
+  /* Button colors */
+  --Error-delete-color: #ec5446;
+  --Success-color: #3c9350;
+  --Open-link-color: #156363;
+  --Create-new: #1cb066;
+
+  /* Tab colors */
+  --Open-tab-color: #115676;
+  --Closed-tab-color: #f4f4f4;
+  --Closed-tab-color-hover: #dcdcdc;
+
+  /* Font */
+  --Header-font: "Commissioner", sans-serif;
+  --Header-font-size: 20px;
+  --Text-font: "Inter", sans-serif;
+  --Text-font-size: 16px;
+
+  /* transition */
+  --Transition-button-simple: 0.2s ease;
+  --Transition-button-change-filter: 85%;
 }

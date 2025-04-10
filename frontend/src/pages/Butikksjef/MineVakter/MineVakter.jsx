@@ -75,11 +75,11 @@ const MineVakter = () => {
       <h1 className="mine-vakter-title">Vakter</h1>
 
       <div className="mine-vakter-button-group">
-        <Link to="/bs/vakter/lag-vakt">
-          <button className="mine-vakter-create-button">➕ Opprett ny vakt</button>
-        </Link>
-        <Link to="/bs/hjem" className="mine-vakter-back-link">
-          ⬅️ Tilbake til Dashboard
+        <Link to="/bs/vakter/lag-vakt" className="mine-vakter-create-link">
+          <button className="mine-vakter-create-button color-button">
+            <img src="/icons/add-icon-white.svg" alt="➕" />
+            Opprett ny vakt
+          </button>
         </Link>
       </div>
 
@@ -100,7 +100,7 @@ const MineVakter = () => {
 
       <h3 className="mine-vakter-shift-list-title">
         {activeTab === "mine"
-          ? "Dine opprettede vakter:"
+          ? "Mine opprettede vakter:"
           : "Alle vakter i butikken:"}
       </h3>
 

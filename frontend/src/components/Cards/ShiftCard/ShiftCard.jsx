@@ -92,7 +92,7 @@ const ShiftCard = ({
       {/* Conditionally render the delete icon */}
       {canDelete && (
         <button className="delete-button" onClick={handleDeleteClick}>
-          🗑️
+          <img src="/icons/delete-white.svg" alt="🗑️" />
         </button>
       )}
 
