@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { FaBell, FaCheckCircle } from "react-icons/fa";
 import useAuth from "../../context/UseAuth";
 import axios from "../../api/axiosInstance"; // Ensure axiosInstance is correctly set up
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./NotificationDropdown.css";
 
 export default function NotificationDropdown() {
@@ -14,6 +14,7 @@ export default function NotificationDropdown() {
   const dropdownRef = useRef(null);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation(); // To listen to location changes
 
   // Fetch notifications on mount or user ID change
   useEffect(() => {
@@ -26,11 +27,18 @@ export default function NotificationDropdown() {
         const res = await axios.get(`/notifications/getNotificationByUserId`, {
           params: { userId: user.id },
         });
-        const sortedNotifications = res.data.sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        );
-        setNotifications(sortedNotifications);
-        setUnopenedCount(sortedNotifications.filter((notif) => notif.status === "unopened").length);
+        
+        // Check if no notifications were found
+        if (res.data.message === "No notifications found.") {
+          setNotifications([]); // Set an empty array if no notifications
+          setUnopenedCount(0); // No unopened notifications
+        } else {
+          const sortedNotifications = res.data.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          );
+          setNotifications(sortedNotifications);
+          setUnopenedCount(sortedNotifications.filter((notif) => notif.status === "unopened").length);
+        }
       } catch (err) {
         setError("Kunne ikke hente varsler.");
       } finally {
@@ -39,13 +47,11 @@ export default function NotificationDropdown() {
     };
 
     fetchNotifications();
-  }, [user?.id]);
+  }, [user?.id, location]);
 
   // Mark notification as opened when clicked
   const handleNavigate = async (notificationId, notificationStatus, shiftId) => {
-    // Only update if the status is "unopened"
     if (notificationStatus === "unopened") {
-      // Optimistically update the status in the local state first
       setNotifications((prevNotifications) =>
         prevNotifications.map((notif) =>
           notif.notification_id === notificationId
@@ -53,29 +59,22 @@ export default function NotificationDropdown() {
             : notif
         )
       );
-  
-      // Update the unopened count
       setUnopenedCount((prevCount) => prevCount - 1);
-  
+
       try {
-        // Perform the backend update without waiting for it
         await axios.put("/notifications/updateNotificationStatus", {
           notificationId,
           userId: user.id,
         });
-  
-        // After the status update, navigate to the correct link based on user role and shift_id
+
         if (user.role === "employee") {
-          navigate(`/ba/vakter/detaljer/${shiftId}`); // Employee-specific page
+          navigate(`/ba/vakter/detaljer/${shiftId}`);
         } else if (user.role === "store_manager") {
-          navigate(`/bs/vakter/detaljer/${shiftId}`); // Store manager-specific page
-        } else {
-          console.error("Unknown user role:", user.role); // Handle unexpected roles
+          navigate(`/bs/vakter/detaljer/${shiftId}`);
         }
         setOpen(false);
       } catch (error) {
         console.error("Error updating notification status", error);
-        // Rollback the optimistic update in case of an error
         setNotifications((prevNotifications) =>
           prevNotifications.map((notif) =>
             notif.notification_id === notificationId
@@ -86,7 +85,6 @@ export default function NotificationDropdown() {
         setUnopenedCount((prevCount) => prevCount + 1);
       }
     } else {
-      // Navigate without updating if the notification is already opened
       if (user.role === "employee") {
         navigate(`/ba/vakter/detaljer/${shiftId}`);
       } else if (user.role === "store_manager") {
@@ -95,12 +93,12 @@ export default function NotificationDropdown() {
       setOpen(false);
     }
   };
-  
 
   return (
     <div className="notification-wrapper" ref={dropdownRef}>
       <button className="notification-icon" onClick={() => setOpen(!open)}>
         <FaBell size={24} />
+        {/* Hide the badge when there are no notifications */}
         {unopenedCount > 0 && <span className="notification-badge">{unopenedCount}</span>}
       </button>
 
@@ -111,24 +109,23 @@ export default function NotificationDropdown() {
           ) : error ? (
             <div className="error">{error}</div>
           ) : notifications.length === 0 ? (
-            <div className="no-notifications">Ingen varsler</div>
+            <div className="no-notifications">Du har ingen varsler</div> // Message when no notifications
           ) : (
             <ul className="notification-list">
               {notifications.map((notif) => (
-              <li
-                key={notif.notification_id}
-                onClick={() => handleNavigate(notif.notification_id, notif.status, notif.shift_id)} // Pass shift_id
-                className={`notification-item ${notif.status === "unopened" ? "unopened" : ""}`}
-              >
-                <div className="notification-title">
-                  {notif.title}
-                  {notif.status === "unopened" && <FaCheckCircle className="unopened-tick" size={16} />}
-                </div>
-                <div className="notification-message">{notif.message}</div>
-                <div className="notification-time">{new Date(notif.created_at).toLocaleString("no-NO")}</div>
-              </li>
-            ))}
-
+                <li
+                  key={notif.notification_id}
+                  onClick={() => handleNavigate(notif.notification_id, notif.status, notif.shift_id)}
+                  className={`notification-item ${notif.status === "unopened" ? "unopened" : ""}`}
+                >
+                  <div className="notification-title">
+                    {notif.title}
+                    {notif.status === "unopened" && <FaCheckCircle className="unopened-tick" size={16} />}
+                  </div>
+                  <div className="notification-message">{notif.message}</div>
+                  <div className="notification-time">{new Date(notif.created_at).toLocaleString("no-NO")}</div>
+                </li>
+              ))}
             </ul>
           )}
         </div>
