@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "../../../api/axiosInstance";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import useAuth from "../../../context/UseAuth";
+import Select from "react-select";
 import "./MineVakter.css";
 
 const MineVakterAnsatt = () => {
@@ -11,9 +12,8 @@ const MineVakterAnsatt = () => {
   const [shifts, setShifts] = useState([]);
   const [municipalities, setMunicipalities] = useState([]);
   const [preferredMunicipalityNames, setPreferredMunicipalityNames] = useState([]);
-  const [searchInput, setSearchInput] = useState("");
-  const [selectedMunicipalityName, setSelectedMunicipalityName] = useState("");
-  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+  const [selectedMunicipalityIds, setSelectedMunicipalityIds] = useState([]);
+  const [selectedMunicipalityNames, setSelectedMunicipalityNames] = useState([]);
 
   useEffect(() => {
     if (user) {
@@ -21,7 +21,7 @@ const MineVakterAnsatt = () => {
       setStoreId(user.storeId);
       fetchPreferredShifts();
       fetchMunicipalities();
-      fetchUserProfile(); // 🟢 Fetch preferred municipalities
+      fetchUserProfile();
     }
   }, [user]);
 
@@ -61,40 +61,13 @@ const MineVakterAnsatt = () => {
     }
   };
 
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchInput(value);
-
-    if (value === "") {
-      setFilteredSuggestions([]);
-      setSelectedMunicipalityName("");
-      fetchPreferredShifts();
-      return;
-    }
-
-    const filtered = municipalities.filter((m) =>
-      m.municipality_name.toLowerCase().startsWith(value.toLowerCase())
-    );
-
-    setFilteredSuggestions(filtered);
-  };
-
-  const handleSelectSuggestion = (municipality) => {
-    setSearchInput(municipality.municipality_name);
-    setSelectedMunicipalityName(municipality.municipality_name);
-    setFilteredSuggestions([]);
-    fetchRequestedShifts(municipality.municipality_id);
-  };
-
   const claimShift = async (shiftId) => {
     try {
       await axios.post(`/shifts/claim/${shiftId}`, { user_id: userId });
       alert("Vakt er nå reservert!");
-      const selected = municipalities.find(
-        (m) => m.municipality_name === selectedMunicipalityName
-      );
-      if (selected) {
-        fetchRequestedShifts(selected.municipality_id);
+      const lastSelected = selectedMunicipalityIds[selectedMunicipalityIds.length - 1];
+      if (lastSelected) {
+        fetchRequestedShifts(lastSelected);
       } else {
         fetchPreferredShifts();
       }
@@ -121,35 +94,41 @@ const MineVakterAnsatt = () => {
 
       <div className="municipality-search">
         <div className="municipality-search-input-wrapper">
-          <label htmlFor="municipality-search-input">Søk etter kommune</label>
-          <input
-            type="text"
-            id="municipality-search-input"
-            value={searchInput}
-            onChange={handleSearchChange}
-            placeholder="F.eks. Oslo"
-            autoComplete="off"
+          <label htmlFor="municipality-select">Velg kommune</label>
+          <Select
+            id="municipality-select"
+            options={municipalities.map((m) => ({
+              label: m.municipality_name,
+              value: m.municipality_id,
+            }))}
+            value={municipalities
+              .filter((m) => selectedMunicipalityIds.includes(m.municipality_id))
+              .map((m) => ({
+                label: m.municipality_name,
+                value: m.municipality_id,
+              }))}
+            onChange={(selectedOptions) => {
+              const selectedIds = selectedOptions.map((opt) => opt.value);
+              const selectedNames = selectedOptions.map((opt) => opt.label);
+              setSelectedMunicipalityIds(selectedIds);
+              setSelectedMunicipalityNames(selectedNames);
+              if (selectedIds.length === 0) {
+                fetchPreferredShifts();
+              } else {
+                fetchRequestedShifts(selectedIds[selectedIds.length - 1]);
+              }
+            }}
+            isMulti
+            isSearchable
+            placeholder="Velg kommune(r)..."
           />
-          {filteredSuggestions.length > 0 && (
-            <ul className="suggestions-dropdown">
-              {filteredSuggestions.map((m) => (
-                <li
-                  key={m.municipality_id}
-                  onClick={() => handleSelectSuggestion(m)}
-                >
-                  {m.municipality_name}
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
 
         <button
           className="reset-preferred-button"
           onClick={() => {
-            setSelectedMunicipalityName("");
-            setSearchInput("");
-            setFilteredSuggestions([]);
+            setSelectedMunicipalityIds([]);
+            setSelectedMunicipalityNames([]);
             fetchPreferredShifts();
           }}
         >
@@ -158,8 +137,8 @@ const MineVakterAnsatt = () => {
       </div>
 
       <h3 className="mine-vakter-shift-list-title">
-        {selectedMunicipalityName
-          ? `Vakter i ${selectedMunicipalityName}`
+        {selectedMunicipalityNames.length > 0
+          ? `Vakter i valgte kommuner (${selectedMunicipalityNames.join(", ")})`
           : `Vakter i dine foretrukne kommuner (${preferredMunicipalityNames.join(", ")})`}
       </h3>
 
