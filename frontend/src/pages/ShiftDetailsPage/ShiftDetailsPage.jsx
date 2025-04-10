@@ -71,7 +71,7 @@ const ShiftDetailsPage = () => {
       if (response.status === 200) {
         console.log("Shift deleted successfully:", response.data.message);
         setShowDeletePopup(false); // Close the popup after confirming
-        navigate("/dashboard/butikksjef/butikker"); // Redirect back to the store page or wherever you want
+        navigate("/bs/hjem"); // Redirect back to the store page or wherever you want
       } else {
         setError("Failed to delete the shift."); // Set error message
       }
@@ -211,7 +211,7 @@ const ShiftDetailsPage = () => {
           className="delete-button"
           onClick={() => setShowDeletePopup(true)}
         >
-          Slett vakt
+          <img src="/icons/delete-white.svg" alt="Slett" />
         </button>
       )}
 
