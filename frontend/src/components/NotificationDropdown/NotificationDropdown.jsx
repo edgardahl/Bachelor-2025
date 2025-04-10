@@ -49,6 +49,20 @@ export default function NotificationDropdown() {
     fetchNotifications();
   }, [user?.id, location]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  
+
   // Mark notification as opened when clicked
   const handleNavigate = async (notificationId, notificationStatus, shiftId) => {
     if (notificationStatus === "unopened") {
