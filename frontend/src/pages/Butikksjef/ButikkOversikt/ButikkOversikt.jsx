@@ -79,7 +79,7 @@ const ButikkOversikt = () => {
         {loading ? (
           <div className="spinner" style={{ margin: "2rem auto" }}></div>
         ) : stores.length === 0 ? (
-          <p>Ingen butikker funnet.</p>
+          <p>Ingen butikker funnet</p>
         ) : (
           stores.map((store) => (
             <ButikkCard
@@ -117,8 +117,6 @@ const ButikkOversikt = () => {
           <img src="/icons/chevron_right.svg" alt="Neste" />
         </button>
       </div>
-
-      <Link to="/bs/hjem">Tilbake til Dashboard</Link>
     </div>
   );
 };
