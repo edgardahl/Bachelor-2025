@@ -39,7 +39,14 @@ const ShiftDetailsPage = () => {
         setUserId(user.id);
         setStoreId(user.storeId);
         setUserRole(user.role);
-        console.log("User ID:", user.id, "Store ID:", user.storeId, "Role:", user.role);
+        console.log(
+          "User ID:",
+          user.id,
+          "Store ID:",
+          user.storeId,
+          "Role:",
+          user.role
+        );
       } catch (error) {
         console.error("Error fetching user details:", error);
         setError("Failed to fetch user details.");
@@ -64,7 +71,7 @@ const ShiftDetailsPage = () => {
       if (response.status === 200) {
         console.log("Shift deleted successfully:", response.data.message);
         setShowDeletePopup(false); // Close the popup after confirming
-        navigate("/dashboard/butikksjef/butikker"); // Redirect back to the store page or wherever you want
+        navigate("/bs/hjem"); // Redirect back to the store page or wherever you want
       } else {
         setError("Failed to delete the shift."); // Set error message
       }
@@ -152,32 +159,41 @@ const ShiftDetailsPage = () => {
       </div>
 
       <div className="shift-details">
+        <div className="general-shift-info">
+          {" "}
+          <p className="shift-info">
+            <strong>Butikk:</strong> {shiftDetails.store_name}
+          </p>{" "}
+          <p className="shift-info">
+            <strong>Butikkadresse: </strong> {shiftDetails.store_address}
+          </p>
+          <p className="shift-info">
+            <strong>Beskrivelse:</strong> {shiftDetails.description}
+          </p>
+        </div>
+        <div className="time-shift-info">
+          {" "}
+          <p className="shift-info">
+            <strong>Dato:</strong> {shiftDetails.date}
+          </p>
+          <p className="shift-info">
+            <strong>Fra:</strong> {shiftDetails.start_time}
+          </p>
+          <p className="shift-info">
+            <strong>Til:</strong> {shiftDetails.end_time}
+          </p>
+        </div>
+
         <p className="shift-info">
-          <strong>Store:</strong> {shiftDetails.store_name}
+          <strong>Kvalifikasjoner: </strong> {qualifications}
+        </p>
+
+        <p className="shift-info">
+          <strong>Lagt ut av:</strong> {shiftDetails.posted_by_first_name}{" "}
+          {shiftDetails.posted_by_last_name}
         </p>
         <p className="shift-info">
-          <strong>Description:</strong> {shiftDetails.description}
-        </p>
-        <p className="shift-info">
-          <strong>Date:</strong> {shiftDetails.date}
-        </p>
-        <p className="shift-info">
-          <strong>Start Time:</strong> {shiftDetails.start_time}
-        </p>
-        <p className="shift-info">
-          <strong>End Time:</strong> {shiftDetails.end_time}
-        </p>
-        <p className="shift-info">
-          <strong>Qualifications:</strong> {qualifications}
-        </p>
-        <p className="shift-info">
-          <strong>Store Address:</strong> {shiftDetails.store_address}
-        </p>
-        <p className="shift-info">
-          <strong>Posted By:</strong> {shiftDetails.posted_by_first_name}
-        </p>
-        <p className="shift-info">
-          <strong>Claimed By:</strong>{" "}
+          <strong>Reservert av: </strong>{" "}
           {shiftDetails.claimed_by_first_name ? (
             <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
               {shiftDetails.claimed_by_first_name}{" "}
@@ -195,7 +211,7 @@ const ShiftDetailsPage = () => {
           className="delete-button"
           onClick={() => setShowDeletePopup(true)}
         >
-          Slett vakt
+          <img src="/icons/delete-white.svg" alt="Slett" />
         </button>
       )}
 

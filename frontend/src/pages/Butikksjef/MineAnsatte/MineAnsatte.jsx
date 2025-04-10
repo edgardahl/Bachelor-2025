@@ -28,7 +28,7 @@ const MineAnsatte = () => {
     // Show only the header and the loading spinner when data is still being loaded
     return (
       <div className="mine-ansatte">
-        <h1>Mine Ansatte</h1>
+        <h1>Mine ansatte</h1>
         <div className="spinner"></div>
       </div>
     );
@@ -36,7 +36,7 @@ const MineAnsatte = () => {
 
   return (
     <div className="mine-ansatte">
-      <h1>Mine Ansatte</h1>
+      <h1>Mine ansatte</h1>
       <p className="mine-ansatte-text">
         Her kan du se mine ansatte som er tilknyttet min butikk.
       </p>
@@ -56,12 +56,12 @@ const MineAnsatte = () => {
             </Link>
           ))
         ) : (
-          <p>No employees found.</p>
+          <p>Ingen ansatte</p>
         )}
       </div>
 
       {/* Link to go back to Dashboard */}
-      <Link to="/dashboard/butikksjef">Tilbake til Dashboard</Link>
+      <Link to="/bs/hjem">Tilbake</Link>
     </div>
   );
 };

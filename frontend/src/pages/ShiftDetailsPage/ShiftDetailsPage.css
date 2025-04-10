@@ -10,31 +10,16 @@
 
 /* Header section */
 .shift-header {
-  background-color: #4CAF50;
+  background-color: var(--Main-dark-color);
   padding: 20px;
   border-radius: 8px 8px 0 0;
-  color: white;
+  color: var(--White);
   text-align: center;
 }
 
 .shift-title {
   margin: 0;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-/* Shift info sections */
-.shift-details {
-  margin-top: 20px;
-}
-
-.shift-info {
-  font-size: 16px;
-  line-height: 1.5;
-  margin-bottom: 15px;
-}
-
-.shift-info strong {
+  font-size: 1.8rem;
   font-weight: bold;
 }
 

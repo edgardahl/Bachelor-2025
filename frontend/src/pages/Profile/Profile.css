@@ -230,7 +230,8 @@ ul.municipality-list li {
   margin-top: 1rem;
   padding: 0.6rem 1.2rem;
   font-size: 0.95rem;
-  background-color: #555;
+  background-color: var(--Open-link-color);
+  transition: ease 0.1s;
   color: white;
   border: none;
   border-radius: 6px;
@@ -238,6 +239,5 @@ ul.municipality-list li {
 }
 
 .edit-qualifications-button:hover {
-  background-color: #333;
+  filter: brightness(var(--Transition-button-change-filter));
 }
-

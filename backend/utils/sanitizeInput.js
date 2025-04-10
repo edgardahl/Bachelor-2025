@@ -11,8 +11,6 @@ export const sanitizeShift = (shiftData) => {
     qualifications,
   } = shiftData;
 
-  console.log("Received shiftData:", shiftData);
-
   // Title: Ensure it's a non-empty string
   if (typeof title !== "string" || title.trim() === "") {
     throw new Error("Title is required and must be a non-empty string.");
@@ -85,17 +83,6 @@ export const sanitizeShift = (shiftData) => {
   const end_time_formatted = `${endTimeParts[0]}:${endTimeParts[1]}:00`; // Add seconds to make it HH:mm:ss
 
   // Return sanitized data
-  console.log(
-    "raturning data",
-    title.trim(),
-    description.trim(),
-    date,
-    start_time_formatted,
-    end_time_formatted,
-    store_id,
-    UserId,
-    qualifications
-  );
   return {
     title: title.trim(),
     description: description.trim(),
@@ -121,7 +108,6 @@ export const sanitizeUserData = (userData) => {
     municipality_id,
     qualifications,
   } = userData;
-  console.log("Received userData:", userData);
 
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/; // Supports accents, spaces, hyphens, apostrophes
 

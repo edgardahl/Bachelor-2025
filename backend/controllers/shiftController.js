@@ -11,6 +11,7 @@ import {
   getPreferredQualifiedShiftsModel,
   getRequestedQualifiedShiftsModel,
 } from "../models/shiftModel.js";
+import { newShiftPublishedNotificationModel, notifyStoreManagerOnShiftClaimedModel } from "../models/notificationModel.js";
 import { getUserByIdModel } from "../models/userModel.js";
 import { getShiftQualificationsModel } from "../models/qualificationModel.js";
 
@@ -112,9 +113,11 @@ export const claimShiftController = async (req, res) => {
       });
     }
 
- // Claim the shift using the model
- const claimedShift = await claimShiftModel(shift_id, userId);
+    // Claim the shift using the model
+    const claimedShift = await claimShiftModel(shift_id, userId);
 
+    // Step 2: Notify the store manager about the claimed shift
+    await notifyStoreManagerOnShiftClaimedModel(shift_id, userId); // Call the updated notification model
 
     return res.json({
       ...claimedShift,
@@ -134,7 +137,16 @@ export const claimShiftController = async (req, res) => {
 export const createShiftController = async (req, res) => {
   try {
     const shiftData = req.body;
+
+    // 1. Create the shift
     const newShift = await createShiftModel(shiftData);
+
+    // ✅ Merge back the qualifications from the original request
+    const fullShiftData = { ...newShift, qualifications: shiftData.qualifications };
+    console.log("Full Shift Data:", fullShiftData);
+
+    await newShiftPublishedNotificationModel(fullShiftData);
+
 
     return res.status(201).json(newShift);
   } catch (error) {
@@ -142,6 +154,7 @@ export const createShiftController = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Delete a shift
 export const deleteShiftController = async (req, res) => {

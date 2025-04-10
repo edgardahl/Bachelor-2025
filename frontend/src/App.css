@@ -1,0 +1,17 @@
+a,
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--Header-font), sans-serif;
+}
+
+p,
+label {
+  font-family: var(--Text-font), sans-serif;
+  font-size: var(--Text-font-size);
+}
+
+a {
+  text-decoration: none;
+}
