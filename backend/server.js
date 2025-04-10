@@ -13,6 +13,7 @@ import shiftRoutes from "./routes/shiftRoutes.js";
 import storeRoutes from "./routes/storeRoutes.js";
 import municipalityRoutes from "./routes/municipalityRoutes.js";
 import qualificationRoutes from "./routes/qualificationRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -56,6 +57,7 @@ app.use("/api/shifts", shiftRoutes);
 app.use("/api/stores", storeRoutes);
 app.use("/api/municipalities", municipalityRoutes);
 app.use("/api/qualifications", qualificationRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // Server setup
 if (!isProduction) {
