@@ -9,7 +9,10 @@ import {
   createShiftController,
   deleteShiftController,
   getShiftByPostedByController,
+  getPreferredQualifiedShiftsController,
+  getRequestedQualifiedShiftsController,
 } from "../controllers/shiftController.js";
+
 import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -22,6 +25,22 @@ router.get(
   "/user_is_qualified_for/:userId",
   verifyToken,
   getShiftsUserIsQualifiedForController
+);
+
+// ✅ Get shifts in the user's preferred municipalities
+router.get(
+  "/qualified/preferred",
+  verifyToken,
+  authorizeRoles("employee"),
+  getPreferredQualifiedShiftsController
+);
+
+// ✅ Get shifts in a user-requested municipality
+router.get(
+  "/qualified/requested/:municipality_id",
+  verifyToken,
+  authorizeRoles("employee"),
+  getRequestedQualifiedShiftsController
 );
 
 // Route to get claimed shifts by user ID

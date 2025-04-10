@@ -137,3 +137,28 @@ export const getShiftsUserIsQualifiedForModel = async (userId) => {
 
   return data;
 };
+
+export const getPreferredQualifiedShiftsModel = async (userId) => {
+  const { data, error } = await supabase.rpc(
+    "get_qualified_shifts_preferred_municipality",
+    { p_user_id: userId }
+  );
+
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+export const getRequestedQualifiedShiftsModel = async (userId, municipalityId) => {
+  const { data, error } = await supabase.rpc(
+    "get_qualified_shifts_requested_municipality",
+    {
+      p_user_id: userId,
+      p_municipality_id: municipalityId,
+    }
+  );
+
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+

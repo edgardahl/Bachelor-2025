@@ -8,11 +8,12 @@ import {
   deleteShiftModel,
   getShiftsUserIsQualifiedForModel,
   getShiftByPostedByModel,
+  getPreferredQualifiedShiftsModel,
+  getRequestedQualifiedShiftsModel,
 } from "../models/shiftModel.js";
 import { newShiftPublishedNotificationModel, notifyStoreManagerOnShiftClaimedModel } from "../models/notificationModel.js";
 import { getUserByIdModel } from "../models/userModel.js";
 import { getShiftQualificationsModel } from "../models/qualificationModel.js";
-import { getUserQualificationsModel } from "../models/userModel.js";
 
 // Get all shifts
 export const getAllShiftsController = async (req, res) => {
@@ -195,3 +196,34 @@ export const getShiftsUserIsQualifiedForController = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getPreferredQualifiedShiftsController = async (req, res) => {
+  const userId = req.user.userId;
+
+  try {
+    const shifts = await getPreferredQualifiedShiftsModel(userId);
+    return res.json(shifts);
+  } catch (error) {
+    console.error("Error fetching preferred shifts:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getRequestedQualifiedShiftsController = async (req, res) => {
+  const userId = req.user.userId;
+  const { municipality_id } = req.params;
+
+  if (!municipality_id) {
+    return res.status(400).json({ error: "Municipality ID is required." });
+  }
+
+  try {
+    const shifts = await getRequestedQualifiedShiftsModel(userId, municipality_id);
+    return res.json(shifts);
+  } catch (error) {
+    console.error("Error fetching requested municipality shifts:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+

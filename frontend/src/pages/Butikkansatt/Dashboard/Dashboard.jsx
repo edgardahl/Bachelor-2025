@@ -6,6 +6,7 @@ import "./Dashboard.css";
 
 const AnsattDashboard = () => {
   const { user } = useAuth();
+  console.log(user);
   const [qualifiedShifts, setQualifiedShifts] = useState(0); // State for qualified shifts
   const [storeStats, setStoreStats] = useState({ total: 0, needsHelp: 0 });
   const [loading, setLoading] = useState(true);
