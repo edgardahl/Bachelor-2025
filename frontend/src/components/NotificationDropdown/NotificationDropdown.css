@@ -9,7 +9,7 @@
   cursor: pointer;
   position: relative;
   padding: 10px;
-  color: #333;
+  color: var(--Main-body-background);
 }
 
 .notification-badge {

@@ -42,8 +42,7 @@ export default function NotificationDropdown() {
   }, [user?.id]);
 
   // Mark notification as opened when clicked
-  const handleNavigate = async (link, notificationId, notificationStatus) => {
-
+  const handleNavigate = async (notificationId, notificationStatus, shiftId) => {
     // Only update if the status is "unopened"
     if (notificationStatus === "unopened") {
       // Optimistically update the status in the local state first
@@ -54,19 +53,25 @@ export default function NotificationDropdown() {
             : notif
         )
       );
-      
+  
       // Update the unopened count
       setUnopenedCount((prevCount) => prevCount - 1);
-
+  
       try {
         // Perform the backend update without waiting for it
         await axios.put("/notifications/updateNotificationStatus", {
           notificationId,
           userId: user.id,
         });
-
-        // After the status update, navigate to the link
-        navigate(link);
+  
+        // After the status update, navigate to the correct link based on user role and shift_id
+        if (user.role === "employee") {
+          navigate(`/ba/vakter/detaljer/${shiftId}`); // Employee-specific page
+        } else if (user.role === "store_manager") {
+          navigate(`/bs/vakter/detaljer/${shiftId}`); // Store manager-specific page
+        } else {
+          console.error("Unknown user role:", user.role); // Handle unexpected roles
+        }
         setOpen(false);
       } catch (error) {
         console.error("Error updating notification status", error);
@@ -82,10 +87,15 @@ export default function NotificationDropdown() {
       }
     } else {
       // Navigate without updating if the notification is already opened
-      navigate(link);
+      if (user.role === "employee") {
+        navigate(`/ba/vakter/detaljer/${shiftId}`);
+      } else if (user.role === "store_manager") {
+        navigate(`/bs/vakter/detaljer/${shiftId}`);
+      }
       setOpen(false);
     }
   };
+  
 
   return (
     <div className="notification-wrapper" ref={dropdownRef}>
@@ -105,19 +115,20 @@ export default function NotificationDropdown() {
           ) : (
             <ul className="notification-list">
               {notifications.map((notif) => (
-                <li
-                  key={notif.notification_id}
-                  onClick={() => handleNavigate(notif.link, notif.notification_id, notif.status)}
-                  className={`notification-item ${notif.status === "unopened" ? "unopened" : ""}`}
-                >
-                  <div className="notification-title">
-                    {notif.title}
-                    {notif.status === "unopened" && <FaCheckCircle className="unopened-tick" size={16} />}
-                  </div>
-                  <div className="notification-message">{notif.message}</div>
-                  <div className="notification-time">{new Date(notif.created_at).toLocaleString("no-NO")}</div>
-                </li>
-              ))}
+              <li
+                key={notif.notification_id}
+                onClick={() => handleNavigate(notif.notification_id, notif.status, notif.shift_id)} // Pass shift_id
+                className={`notification-item ${notif.status === "unopened" ? "unopened" : ""}`}
+              >
+                <div className="notification-title">
+                  {notif.title}
+                  {notif.status === "unopened" && <FaCheckCircle className="unopened-tick" size={16} />}
+                </div>
+                <div className="notification-message">{notif.message}</div>
+                <div className="notification-time">{new Date(notif.created_at).toLocaleString("no-NO")}</div>
+              </li>
+            ))}
+
             </ul>
           )}
         </div>
