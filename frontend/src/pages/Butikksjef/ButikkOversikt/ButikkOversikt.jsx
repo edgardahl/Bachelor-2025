@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 import ButikkCard from "../../../components/Cards/ButikkCard/ButikkCard";
-import ButikkFilter from "../../../components/Filter/Butikkfilter/ButikkFilter";
+import KommuneFilter from "../../../components/Filter/kommuneFilter/kommuneFilter";
+
 import "./ButikkOversikt.css";
 
 const ButikkOversikt = () => {
@@ -18,9 +19,9 @@ const ButikkOversikt = () => {
     try {
       const queryParams = new URLSearchParams();
 
-      if (filters.county) queryParams.append("county", filters.county);
       if (filters.municipality)
-        queryParams.append("municipality", filters.municipality);
+      queryParams.append("municipality", filters.municipality);
+
 
       queryParams.append("page", page);
       queryParams.append("pageSize", pageSize);
@@ -64,13 +65,17 @@ const ButikkOversikt = () => {
   return (
     <div className="dine-vakter">
       <h1>Butikker</h1>
-
-      <ButikkFilter
-        onFilter={(newFilters) => {
-          setFilters(newFilters);
-          setCurrentPage(1);
-        }}
-      />
+      <div className="butikk-overview-filter-container">
+        <KommuneFilter
+          onChange={(selectedMunicipalityIds) => {
+            setFilters((prev) => ({
+              ...prev,
+              municipality: selectedMunicipalityIds.join(","), // assuming API supports comma-separated values
+            }));
+            setCurrentPage(1);
+          }}
+        />
+      </div>
 
       <p>{totalStores} butikker</p>
 

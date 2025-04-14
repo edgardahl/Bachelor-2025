@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
-import ButikkansattCard from "../../../components/Cards/ButikkansattCard/ButikkansattCard"; // Reusable employee card
+import ButikkansattCard from "../../../components/Cards/ButikkansattCard/ButikkansattCard";
+import KvalifikasjonerFilter from "../../../components/Filter/kvalifikasjonerFilter/kvalifikasjonerFilter";
 import "./LedigeAnsatte.css";
 
 const LedigeAnsatte = () => {
   const [employees, setEmployees] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const [selectedQualifications, setSelectedQualifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -14,6 +17,7 @@ const LedigeAnsatte = () => {
       try {
         const res = await axios.get("/users/available-employees");
         setEmployees(res.data);
+        setFilteredEmployees(res.data); // default vis alle
       } catch (err) {
         console.error("Failed to fetch available employees:", err);
         setError("Kunne ikke hente tilgjengelige ansatte.");
@@ -25,13 +29,28 @@ const LedigeAnsatte = () => {
     fetchAvailableEmployees();
   }, []);
 
-  // Show header and loading spinner when loading
+  // Hver gang filteret endres, filtrer ansatte
+  useEffect(() => {
+    if (selectedQualifications.length === 0) {
+      setFilteredEmployees(employees); // vis alle hvis ingenting er valgt
+      return;
+    }
+
+    const filtered = employees.filter((emp) => {
+      // Sjekk at alle valgte kvalifikasjoner finnes i employee.qualifications
+      return selectedQualifications.every((q) =>
+        emp.qualifications?.includes(q)
+      );
+    });
+
+    setFilteredEmployees(filtered);
+  }, [selectedQualifications, employees]);
+
   if (loading) {
     return (
       <div className="ledige-ansatte">
         <h1>Ledige Ansatte</h1>
-        <div className="spinner"></div>{" "}
-        {/* You can customize the spinner here */}
+        <div className="spinner"></div>
       </div>
     );
   }
@@ -39,16 +58,21 @@ const LedigeAnsatte = () => {
   return (
     <div className="ledige-ansatte">
       <h1>Ledige Ansatte</h1>
+
+      <div className="butikk-overview-filter-container">
+        <KvalifikasjonerFilter onChange={setSelectedQualifications} />
+      </div>
+
       <p>Her ser du ansatte som ønsker å jobbe i din kommune.</p>
 
       {error && <p className="ledige-error-message">{error}</p>}
 
-      {employees.length === 0 && !error && (
-        <p>Ingen ledige ansatte funnet i ditt område.</p>
+      {filteredEmployees.length === 0 && !error && (
+        <p>Ingen ledige ansatte funnet med de valgte kvalifikasjonene.</p>
       )}
 
       <div className="ledige-employee-list">
-        {employees.map((employee) => (
+        {filteredEmployees.map((employee) => (
           <Link
             key={employee.user_id}
             to={`/bs/ansatte/profil/${employee.user_id}`}

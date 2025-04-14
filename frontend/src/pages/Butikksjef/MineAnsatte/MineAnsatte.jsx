@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
-import ButikkansattCard from "../../../components/Cards/ButikkansattCard/ButikkansattCard"; // Import the reusable card component
-import "./MineAnsatte.css"; // Import CSS for styling
+import ButikkansattCard from "../../../components/Cards/ButikkansattCard/ButikkansattCard";
+import KvalifikasjonerFilter from "../../../components/Filter/kvalifikasjonerFilter/kvalifikasjonerFilter";
+import "./MineAnsatte.css";
 
 const MineAnsatte = () => {
   const [employees, setEmployees] = useState([]);
-  const [error, setError] = useState(""); // Store error message if there's any
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const [selectedQualifications, setSelectedQualifications] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get("/users/myemployees"); // Now it just calls the employees endpoint
-
-        // Directly set the employees data with qualifications
+        const response = await axios.get("/users/myemployees");
+        console.log(response.data);
         setEmployees(response.data);
+        setFilteredEmployees(response.data); // Init with full list
       } catch (err) {
         setError("Failed to load employee data.");
         console.error(err);
@@ -22,17 +25,32 @@ const MineAnsatte = () => {
     };
 
     fetchEmployees();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, []);
 
-  if (employees.length === 0 && !error) {
-    // Show only the header and the loading spinner when data is still being loaded
-    return (
-      <div className="mine-ansatte">
-        <h1>Mine ansatte</h1>
-        <div className="spinner"></div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    console.log("Filtering employees with qualifications:", selectedQualifications);
+    if (selectedQualifications.length === 0) {
+      setFilteredEmployees(employees);
+    } else {
+      const filtered = employees.filter((emp) => {
+        // Split qualifications into an array by comma and trim spaces
+        const kvalifikasjoner = emp.qualifications
+          ? emp.qualifications.split(",").map((q) => q.trim())
+          : [];
+        console.log("Employee qualifications:", kvalifikasjoner);
+  
+        // Check if employee has all the selected qualifications
+        return selectedQualifications.every((selectedQualification) =>
+          kvalifikasjoner.includes(selectedQualification)
+        );
+      });
+  
+      setFilteredEmployees(filtered);
+    }
+  }, [selectedQualifications, employees]);
+  
+  
+  
 
   return (
     <div className="mine-ansatte">
@@ -41,13 +59,16 @@ const MineAnsatte = () => {
         Her kan du se mine ansatte som er tilknyttet min butikk.
       </p>
 
-      {/* Show error message if there's any */}
+      {/* Filterkomponent */}
+      <div className="butikk-overview-filter-container">
+        <KvalifikasjonerFilter onChange={setSelectedQualifications} />
+      </div>
+
       {error && <p className="error-message">{error}</p>}
 
-      {/* Display list of employees using ButikkansattCard */}
       <div className="employee-list">
-        {employees.length > 0 ? (
-          employees.map((employee) => (
+        {filteredEmployees.length > 0 ? (
+          filteredEmployees.map((employee) => (
             <Link
               to={`/bs/ansatte/profil/${employee.user_id}`}
               key={employee.user_id}
@@ -60,7 +81,6 @@ const MineAnsatte = () => {
         )}
       </div>
 
-      {/* Link to go back to Dashboard */}
       <Link to="/bs/hjem">Tilbake</Link>
     </div>
   );
