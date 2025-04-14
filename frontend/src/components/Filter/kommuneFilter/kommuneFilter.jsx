@@ -20,24 +20,39 @@ const KommuneFilter = ({ onChange, defaultValue = [], userPreferredMunicipalitie
     fetchMunicipalities();
   }, []);
 
+  useEffect(() => {
+    // Only run if municipalities and preferred ones are available
+    if (municipalities.length > 0 && userPreferredMunicipalities.length > 0) {
+      const defaultSelected = municipalities
+        .filter(m => userPreferredMunicipalities.includes(m.municipality_name))
+        .map(m => ({
+          label: m.store_count ? `${m.municipality_name} (${m.store_count} butikker)` : m.municipality_name,
+          value: m.municipality_name,
+        }));
+  
+      setSelectedMunicipalities(defaultSelected);
+      onChange(defaultSelected.map(opt => opt.value));
+    }
+  }, [municipalities, userPreferredMunicipalities]);
+  
+
   const handleChange = (selectedOptions) => {
     setSelectedMunicipalities(selectedOptions);
     onChange(selectedOptions.map((opt) => opt.value));
   };
 
   const handleReset = () => {
-    // Reset to preferred municipalities
-    const defaultSelected = municipalities.filter(m => 
-      userPreferredMunicipalities.includes(m.municipality_name)
-    ).map(m => ({
-      label: m.store_count ? `${m.municipality_name} (${m.store_count} butikker)` : m.municipality_name,
-      value: m.municipality_name
-    }));
-
+    const defaultSelected = municipalities
+      .filter(m => userPreferredMunicipalities.includes(m.municipality_name))
+      .map(m => ({
+        label: m.store_count ? `${m.municipality_name} (${m.store_count} butikker)` : m.municipality_name,
+        value: m.municipality_name,
+      }));
+  
     setSelectedMunicipalities(defaultSelected);
-    console.log("Resetting to preferred municipalities:", defaultSelected);
-    onChange(defaultSelected.map((opt) => opt.value));
+    onChange(defaultSelected.map(opt => opt.value));
   };
+  
 
   const options = municipalities.map((m) => ({
     label: m.store_count
