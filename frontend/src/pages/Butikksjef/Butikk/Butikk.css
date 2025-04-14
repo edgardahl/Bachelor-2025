@@ -1,0 +1,63 @@
+.butikk-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Segoe UI', sans-serif;
+    color: #2c3e50;
+  }
+  
+  .butikk-header {
+    background-color: #f9f9f9;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .butikk-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .butikk-info p {
+    margin: 0.3rem 0;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .butikk-info a {
+    color: #3498db;
+    text-decoration: none;
+  }
+  
+  .butikk-info a:hover {
+    text-decoration: underline;
+  }
+  
+  .butikk-shift-heading {
+    font-size: 1.5rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .butikk-shift-list {
+    display: grid;
+    gap: 3.5rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  
+  .butikk-no-shifts {
+    font-style: italic;
+    color: #888;
+    padding: 1rem 0;
+  }
+  
+  .butikk-loading {
+    text-align: center;
+    font-style: italic;
+    color: #999;
+  }
+  

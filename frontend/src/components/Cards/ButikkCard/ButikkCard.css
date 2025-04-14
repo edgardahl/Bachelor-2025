@@ -4,33 +4,51 @@
 }
 
 .butikk-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 16px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #eee;
 }
 
 .butikk-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.butikk-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 .butikk-card h2 {
-  font-size: 1.5rem;
-  margin-bottom: 8px;
-  color: #333;
+  font-size: 1.25rem;
+  color: #2c3e50;
+  margin: 0;
 }
 
-.butikk-card p {
-  margin: 4px 0;
+.butikk-chip {
+  background-color: #4caf50;
+  color: white;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.butikk-address {
+  font-size: 0.95rem;
   color: #555;
-  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
 }
 
-.butikk-card p:last-child {
-  font-weight: bold;
-  color: #007bff;
+.butikk-contact p {
+  font-size: 0.85rem;
+  color: #444;
+  margin: 0.2rem 0;
 }

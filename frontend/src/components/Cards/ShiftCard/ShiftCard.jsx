@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DeleteShiftPopup from "../../Popup/DeleteShiftPopup/DeleteShiftPopup"; // Import the popup
+import DeleteShiftPopup from "../../Popup/DeleteShiftPopup/DeleteShiftPopup";
 import axios from "../../../api/axiosInstance";
 import "./ShiftCard.css";
 import useAuth from "../../../context/UseAuth";
@@ -19,56 +19,42 @@ const ShiftCard = ({
   userId,
   usersstoreId,
   shiftStoreId,
-  deleteShift, // Function to handle deletion
+  deleteShift,
 }) => {
-  const [showDeletePopup, setShowDeletePopup] = useState(false); // State to manage the popup visibility
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const handleCardClick = () => {
-    if (user.role === "employee") {
-      navigate(`/ba/vakter/detaljer/${shiftId}`); // Employee-specific page
-    } else if (user.role === "store_manager") {
-      navigate(`/bs/vakter/detaljer/${shiftId}`); // Store manager-specific page
-    } else {
-      console.error("Unknown user role:", user.role); // Handle unexpected roles
-    }
+    const rolePath = user.role === "employee" ? "ba" : "bs";
+    navigate(`/${rolePath}/vakter/detaljer/${shiftId}`);
   };
 
   const handleDeleteClick = (e) => {
-    e.stopPropagation(); // Prevent navigating when clicking on delete icon
-    setShowDeletePopup(true); // Show the delete confirmation popup
-  };
-
-  const handleCancel = () => {
-    setShowDeletePopup(false); // Close the popup
+    e.stopPropagation();
+    setShowDeletePopup(true);
   };
 
   const handleConfirmDelete = async () => {
     try {
-      // Sending the API request to delete the shift using axios
-      const response = await axios.delete("/shifts/deleteShiftById", {
+      const res = await axios.delete("/shifts/deleteShiftById", {
         data: {
-          shiftId: shiftId, // shiftId to be deleted
-          shiftStoreId: shiftStoreId, // store ID of the shift
+          shiftId,
+          shiftStoreId,
         },
       });
-
-      if (response.status === 200) {
-        console.log("Shift deleted successfully:", response.data.message);
-        deleteShift(shiftId); // Remove shift from state immediately
-        setShowDeletePopup(false); // Close the popup after confirming
+      if (res.status === 200) {
+        deleteShift(shiftId);
+        setShowDeletePopup(false);
       } else {
-        console.error("Error deleting shift:", response.data.error);
-        alert(response.data.error); // Show error message if deletion fails
+        alert(res.data.error || "Failed to delete shift.");
       }
-    } catch (error) {
-      console.error("Error during deletion:", error);
-      alert("Failed to delete shift.");
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Could not delete shift.");
     }
   };
 
-  // Check if the current user is a manager and belongs to the store associated with this shift
   const canDelete =
     user.role === "store_manager" && shiftStoreId === usersstoreId;
 
@@ -78,29 +64,31 @@ const ShiftCard = ({
         <h4 className="shift-card-title">{title}</h4>
       </div>
 
-      <div className="shift-card-details">
+      <div className="shift-card-body">
         <p className="shift-card-store">{storeName}</p>
         <p className="shift-card-time">
           {date} | {startTime} - {endTime}
         </p>
         <p className="shift-card-qualifications">
-          Qualifications: {qualifications.join(", ")}
+          <strong>Kvalifikasjoner:</strong>{" "}
+          {qualifications?.length ? qualifications.join(", ") : "Ingen"}
         </p>
-        <p>Posted by: {postedById === userId ? "YOU" : postedBy}</p>
+        <p className="shift-card-posted">
+          <strong>Publisert av:</strong>{" "}
+          {postedById === userId ? "Deg" : postedBy}
+        </p>
       </div>
 
-      {/* Conditionally render the delete icon */}
       {canDelete && (
-        <button className="delete-button" onClick={handleDeleteClick}>
-          <img src="/icons/delete-white.svg" alt="🗑️" />
+        <button className="delete-bottom-btn" onClick={handleDeleteClick}>
+          <img src="/icons/delete-white.svg" alt="Slett" />
         </button>
       )}
 
-      {/* Conditionally render the delete popup */}
       {showDeletePopup && (
         <DeleteShiftPopup
           shiftTitle={title}
-          onCancel={handleCancel}
+          onCancel={() => setShowDeletePopup(false)}
           onConfirm={handleConfirmDelete}
         />
       )}

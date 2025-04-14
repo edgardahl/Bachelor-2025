@@ -1,47 +1,121 @@
-/* Overall container for the shift details page */
+/* Container for the shift details page */
 .shift-details-container {
   width: 80%;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 2rem auto;
+  padding: 2rem;
   background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
 }
 
 /* Header section */
 .shift-header {
   background-color: var(--Main-dark-color);
-  padding: 20px;
-  border-radius: 8px 8px 0 0;
+  padding: 1.5rem;
+  border-radius: 12px 12px 0 0;
   color: var(--White);
   text-align: center;
 }
 
 .shift-title {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: bold;
 }
 
-/* Loading message */
-.loading-message {
-  text-align: center;
-  font-size: 20px;
-  margin-top: 50px;
-  color: #666;
+/* Shift detail sections */
+.shift-details {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* Responsive design for smaller screens */
+.general-shift-info,
+.time-shift-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.shift-info {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Buttons section */
+.shift-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Claim button */
+.claim-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #4caf50;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.25s ease, transform 0.1s ease;
+}
+
+.claim-button:hover {
+  background-color: #3a9142;
+  transform: translateY(-2px);
+}
+
+/* Delete button */
+.delete-button {
+  background-color: #e74c3c;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.1s ease;
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+}
+
+/* Loading */
+.loading-message {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+  margin-top: 4rem;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
   .shift-details-container {
     width: 95%;
-  }
-
-  .shift-info {
-    font-size: 14px;
+    padding: 1rem;
   }
 
   .shift-title {
-    font-size: 20px;
+    font-size: 1.5rem;
+  }
+
+  .shift-info {
+    font-size: 0.95rem;
+  }
+
+  .claim-button,
+  .delete-button {
+    width: 100%;
+    font-size: 1rem;
   }
 }
