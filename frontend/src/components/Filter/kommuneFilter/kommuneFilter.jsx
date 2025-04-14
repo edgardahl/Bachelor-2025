@@ -35,6 +35,7 @@ const KommuneFilter = ({ onChange, defaultValue = [], userPreferredMunicipalitie
     }));
 
     setSelectedMunicipalities(defaultSelected);
+    console.log("Resetting to preferred municipalities:", defaultSelected);
     onChange(defaultSelected.map((opt) => opt.value));
   };
 

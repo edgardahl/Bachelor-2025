@@ -22,7 +22,7 @@ router.get("/", getAllShiftsController);
 
 // Route to get all shifts a user is qualified for
 router.get(
-  "/user_is_qualified_for/:userId",
+  "/user_is_qualified_for",
   verifyToken,
   getShiftsUserIsQualifiedForController
 );

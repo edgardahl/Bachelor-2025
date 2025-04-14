@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "../../../api/axiosInstance";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import useAuth from "../../../context/UseAuth";
-import Select from "react-select";
+import KommuneFilter from "../../../components/Filter/kommuneFilter/kommuneFilter"; // Import the new component
 import "./MineVakter.css";
 
 const MineVakterAnsatt = () => {
@@ -19,40 +19,18 @@ const MineVakterAnsatt = () => {
     if (user) {
       setUserId(user.id);
       setStoreId(user.storeId);
-      fetchPreferredShifts();
+      fetchPreferredMunicipalities();
       fetchMunicipalities();
-      fetchUserProfile();
+      fetchShiftsUserIsQualifiedFor();
     }
   }, [user]);
 
-  const fetchUserProfile = async () => {
+  const fetchPreferredMunicipalities = async () => {
     try {
       const res = await axios.get(`/users/${user.id}`);
       setPreferredMunicipalityNames(res.data.work_municipalities || []);
     } catch (err) {
       console.error("Error fetching user profile:", err);
-    }
-  };
-
-  const fetchPreferredShifts = async () => {
-    try {
-      const response = await axios.get("/shifts/qualified/preferred");
-      setShifts(response.data);
-    } catch (error) {
-      console.error("Error fetching preferred shifts:", error);
-    }
-  };
-
-  const fetchRequestedShifts = async (municipalityIds) => {
-    try {
-      const response = await axios.post("/shifts/qualified/requested", {
-
-        p_municipality_ids: municipalityIds,
-        p_user_id: userId,
-      });
-      setShifts(response.data);
-    } catch (error) {
-      console.error("Error fetching requested shifts:", error);
     }
   };
 
@@ -65,6 +43,15 @@ const MineVakterAnsatt = () => {
     }
   };
 
+  const fetchShiftsUserIsQualifiedFor = async () => {
+    try {
+      const response = await axios.get("/shifts/user_is_qualified_for");
+      setShifts(response.data); // Set all shifts the user is qualified for
+    } catch (error) {
+      console.error("Error fetching shifts:", error);
+    }
+  };
+
   const claimShift = async (shiftId) => {
     try {
       await axios.post(`/shifts/claim/${shiftId}`, { user_id: userId });
@@ -72,7 +59,7 @@ const MineVakterAnsatt = () => {
       if (selectedMunicipalityIds.length > 0) {
         fetchRequestedShifts(selectedMunicipalityIds);
       } else {
-        fetchPreferredShifts();
+        fetchShiftsUserIsQualifiedFor(); // Reload all shifts
       }
     } catch (error) {
       console.error("Error claiming shift:", error);
@@ -80,64 +67,41 @@ const MineVakterAnsatt = () => {
     }
   };
 
-  const groupedShifts = shifts.reduce((acc, shift) => {
-    const dateKey = new Date(shift.date).toLocaleDateString("no-NO", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
+  const filterShiftsByMunicipality = (shifts, selectedMunicipalityNames) => {
+    return shifts.filter((shift) => {
+      return selectedMunicipalityIds.length === 0
+        ? preferredMunicipalityNames.includes(shift.municipality_name)
+        : selectedMunicipalityNames.includes(shift.municipality_name);
     });
-    if (!acc[dateKey]) acc[dateKey] = [];
-    acc[dateKey].push(shift);
-    return acc;
-  }, {});
+  };
+
+  const groupedShifts = filterShiftsByMunicipality(shifts, selectedMunicipalityNames).reduce(
+    (acc, shift) => {
+      const dateKey = new Date(shift.date).toLocaleDateString("no-NO", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      });
+      if (!acc[dateKey]) acc[dateKey] = [];
+      acc[dateKey].push(shift);
+      return acc;
+    },
+    {}
+  );
 
   return (
     <div className="mine-vakter-container">
       <h1 className="mine-vakter-title">Vakter</h1>
 
-      <div className="municipality-search">
-        <div className="municipality-search-input-wrapper">
-          <label htmlFor="municipality-select">Velg kommune</label>
-          <Select
-            id="municipality-select"
-            options={municipalities.map((m) => ({
-              label: m.municipality_name,
-              value: m.municipality_id,
-            }))}
-            value={municipalities
-              .filter((m) => selectedMunicipalityIds.includes(m.municipality_id))
-              .map((m) => ({
-                label: m.municipality_name,
-                value: m.municipality_id,
-              }))}
-            onChange={(selectedOptions) => {
-              const selectedIds = selectedOptions.map((opt) => opt.value);
-              const selectedNames = selectedOptions.map((opt) => opt.label);
-              setSelectedMunicipalityIds(selectedIds);
-              setSelectedMunicipalityNames(selectedNames);
-              if (selectedIds.length === 0) {
-                fetchPreferredShifts();
-              } else {
-                fetchRequestedShifts(selectedIds);
-              }
-            }}
-            isMulti
-            isSearchable
-            placeholder="Velg kommune(r)..."
-          />
-        </div>
-
-        <button
-          className="reset-preferred-button"
-          onClick={() => {
-            setSelectedMunicipalityIds([]);
-            setSelectedMunicipalityNames([]);
-            fetchPreferredShifts();
-          }}
-        >
-          Vis foretrukne kommuner
-        </button>
-      </div>
+      {/* Pass the preferred municipalities and selected municipalities state to the KommuneFilter component */}
+      <KommuneFilter 
+        onChange={(selectedIds) => {
+          setSelectedMunicipalityIds(selectedIds);
+          setSelectedMunicipalityNames(selectedIds);
+        }} 
+        defaultValue={selectedMunicipalityNames}
+        userPreferredMunicipalities={preferredMunicipalityNames} 
+      />
 
       <h3 className="mine-vakter-shift-list-title">
         {selectedMunicipalityNames.length > 0
