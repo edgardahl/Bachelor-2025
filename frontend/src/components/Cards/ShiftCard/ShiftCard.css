@@ -1,54 +1,76 @@
-/* Overall container for the shift card */
 .shift-card-container {
   width: 100%;
-  max-width: 400px;
-  margin: 20px auto;
-  padding: 20px;
+  max-width: 420px;
+  margin: 1rem auto;
+  padding: 1rem;
+  padding-bottom: 3rem; /* Extra padding for bottom button */
   background-color: var(--White);
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
 }
 
-/* Header section of the card */
+.shift-card-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
 .shift-card-header {
   background-color: var(--Card-header-color);
-  padding: 15px;
-  border-radius: 8px 8px 0 0;
   color: white;
-  text-align: center;
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
 }
 
 .shift-card-title {
+  font-size: 1.1rem;
   margin: 0;
-  font-size: 20px;
-  font-weight: bold;
 }
 
-/* Details section of the card */
-.shift-card-details {
-  margin-top: 20px;
+.shift-card-body {
+  padding: 1rem 0.75rem;
+}
+
+.shift-card-store {
+  font-weight: bold;
+  color: var(--Main-dark-color);
+  margin-bottom: 0.25rem;
 }
 
 .shift-card-time,
-.shift-card-qualifications {
+.shift-card-qualifications,
+.shift-card-posted {
   font-size: 0.9rem;
   color: var(--Text-color-light);
+  margin: 4px 0;
 }
 
-.delete-button {
+/* ✅ New Delete Button Style */
+.delete-bottom-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
   background-color: var(--Error-delete-color);
-  color: white;
-  padding: 10px 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
+  padding: 8px;
   cursor: pointer;
-  font-weight: bold;
-  transition: var(--Transition-button-simple);
-  width: 20%;
+  transition: filter 0.2s ease;
 }
 
-.delete-button:hover {
-  filter: brightness(var(--Transition-button-change-filter));
+.delete-bottom-btn:hover {
+  filter: brightness(0.9);
+}
+
+.delete-bottom-btn img {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 768px) {
+  .shift-card-container {
+    margin: 1rem 0.5rem;
+  }
 }

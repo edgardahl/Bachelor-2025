@@ -43,9 +43,13 @@ const MineVakterAnsatt = () => {
     }
   };
 
-  const fetchRequestedShifts = async (municipalityId) => {
+  const fetchRequestedShifts = async (municipalityIds) => {
     try {
-      const response = await axios.get(`/shifts/qualified/requested/${municipalityId}`);
+      const response = await axios.post("/shifts/qualified/requested", {
+
+        p_municipality_ids: municipalityIds,
+        p_user_id: userId,
+      });
       setShifts(response.data);
     } catch (error) {
       console.error("Error fetching requested shifts:", error);
@@ -65,9 +69,8 @@ const MineVakterAnsatt = () => {
     try {
       await axios.post(`/shifts/claim/${shiftId}`, { user_id: userId });
       alert("Vakt er nå reservert!");
-      const lastSelected = selectedMunicipalityIds[selectedMunicipalityIds.length - 1];
-      if (lastSelected) {
-        fetchRequestedShifts(lastSelected);
+      if (selectedMunicipalityIds.length > 0) {
+        fetchRequestedShifts(selectedMunicipalityIds);
       } else {
         fetchPreferredShifts();
       }
@@ -115,7 +118,7 @@ const MineVakterAnsatt = () => {
               if (selectedIds.length === 0) {
                 fetchPreferredShifts();
               } else {
-                fetchRequestedShifts(selectedIds[selectedIds.length - 1]);
+                fetchRequestedShifts(selectedIds);
               }
             }}
             isMulti
