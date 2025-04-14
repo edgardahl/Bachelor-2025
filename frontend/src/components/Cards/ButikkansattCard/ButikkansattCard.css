@@ -1,35 +1,71 @@
-/* Card styling for the employee */
 .butikkansatt-card {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 15px;
-    margin: 10px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    width: 100%;
-  }
-  
-  .butikkansatt-card:hover {
-    transform: scale(1.05); /* Scale effect on hover */
-  }
-  
-  /* Title styling inside each card */
-  .butikkansatt-card h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: #333;
-  }
-  
-  /* Paragraphs for the employee details */
-  .butikkansatt-card p {
-    color: #666;
-    margin: 5px 0;
-  }
-  
-  /* Styling for qualifications */
-  .butikkansatt-card .qualification-list {
-    font-style: italic;
-    color: #007bff; /* To make qualifications stand out */
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  max-width: 600px;
+  cursor: pointer;
+}
+
+.butikkansatt-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.icon-user {
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.card-content {
+  flex-grow: 1;
+}
+
+.card-content h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+/* 🛠️ THIS ensures text and icon align perfectly */
+.card-content p {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: #555;
+  margin: 4px 0;
+  line-height: 1.2;
+}
+
+.icon {
+  font-size: 1rem;
+  color: #007bff;
+  flex-shrink: 0;
+  position: relative;
+  top: 4px; 
+}
+
+.card-arrow {
+  font-size: 1.3rem;
+  color: #888;
+  flex-shrink: 0;
+}

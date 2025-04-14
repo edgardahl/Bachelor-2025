@@ -14,7 +14,6 @@ const ButikkansattCard = ({ employee, show = "availability" }) => {
       <div className="card-content">
         <h3>{employee.first_name} {employee.last_name}</h3>
 
-        {/* Show availability if we're on "Mine Ansatte" */}
         {show === "availability" && (
           <p className="availability">
             <FaClock className="icon" />
@@ -22,7 +21,6 @@ const ButikkansattCard = ({ employee, show = "availability" }) => {
           </p>
         )}
 
-        {/* Show store name if we're on "Ledige Ansatte" */}
         {show === "store" && (
           <p className="store-name">
             <FaMapMarkerAlt className="icon" />
@@ -49,10 +47,10 @@ ButikkansattCard.propTypes = {
     first_name: PropTypes.string.isRequired,
     last_name: PropTypes.string.isRequired,
     availability: PropTypes.string.isRequired,
-    store_name: PropTypes.string, // Store name for Ledige Ansatte
-    qualifications: PropTypes.string.isRequired, // Qualifications as string (comma-separated)
+    store_name: PropTypes.string,
+    qualifications: PropTypes.string.isRequired,
   }).isRequired,
-  show: PropTypes.oneOf(["availability", "store"]), // Control whether to show availability or store name
+  show: PropTypes.oneOf(["availability", "store"]),
 };
 
 export default ButikkansattCard;
