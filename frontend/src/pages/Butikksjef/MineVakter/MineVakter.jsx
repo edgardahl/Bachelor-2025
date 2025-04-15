@@ -43,6 +43,7 @@ const MineVakter = () => {
         console.log("Mine vakter response:", response.data);
       }
       setShifts(response.data);
+      console.log("Fetched shifts:", response.data);
     } catch (error) {
       console.error("Error fetching shifts:", error);
     } finally {
@@ -140,6 +141,12 @@ const MineVakter = () => {
                 userRole={userRole}
                 usersstoreId={storeId}
                 shiftStoreId={shift.store_id}
+                claimedByName={
+                  shift.claimed_by_first_name && shift.claimed_by_last_name
+                    ? `${shift.claimed_by_first_name} ${shift.claimed_by_last_name}`
+                    : ""
+                }                
+                claimedById={shift.claimed_by_id}
                 deleteShift={deleteShift}
               />
             ))}

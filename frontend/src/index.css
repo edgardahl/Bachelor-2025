@@ -12,12 +12,15 @@
 :root {
   /* Colors */
   --White: #ffffff;
+  --Card-color: #fff;
   --Black: #000000;
   --loading: #343538;
-  --Body-background: #fdf8f4;
-  --Main-dark-color: #f11cb5;
+  --Body-background: #F4F5F9;
+  --Main-dark-color: #313B45;
   --Main-light-color: #f9f5e0;
   --Card-header-color: #3b5f90;
+  --Card-icon-color: #A3A7B0;
+  --Text-highlight-color: #5D9F95;
 
   /* Text-colors */
   --Text-color: #161616;

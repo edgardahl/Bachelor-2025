@@ -4,6 +4,8 @@ import DeleteShiftPopup from "../../Popup/DeleteShiftPopup/DeleteShiftPopup";
 import axios from "../../../api/axiosInstance";
 import "./ShiftCard.css";
 import useAuth from "../../../context/UseAuth";
+import { FiClock, FiMapPin, FiAward } from "react-icons/fi";
+
 
 const ShiftCard = ({
   shiftId,
@@ -20,10 +22,17 @@ const ShiftCard = ({
   usersstoreId,
   shiftStoreId,
   deleteShift,
+  claimedByName,
+  claimedById
 }) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const shiftDate = new Date(date);
+  const day = shiftDate.getDate();
+  const month = shiftDate.toLocaleString("nb-NO", { month: "short" }); // e.g., "apr"
+  
+
 
   const handleCardClick = () => {
     const rolePath = user.role === "employee" ? "ba" : "bs";
@@ -34,6 +43,11 @@ const ShiftCard = ({
     e.stopPropagation();
     setShowDeletePopup(true);
   };
+
+  console.log("shiftcard", {
+    claimedById,
+    claimedByName,
+  });
 
   const handleConfirmDelete = async () => {
     try {
@@ -59,32 +73,10 @@ const ShiftCard = ({
     user.role === "store_manager" && shiftStoreId === usersstoreId;
 
   return (
-    <div className="shift-card-container" onClick={handleCardClick}>
-      <div className="shift-card-header">
-        <h4 className="shift-card-title">{title}</h4>
-      </div>
-
-      <div className="shift-card-body">
-        <p className="shift-card-store">{storeName}</p>
-        <p className="shift-card-time">
-          {date} | {startTime} - {endTime}
-        </p>
-        <p className="shift-card-qualifications">
-          <strong>Kvalifikasjoner:</strong>{" "}
-          {qualifications?.length ? qualifications.join(", ") : "Ingen"}
-        </p>
-        <p className="shift-card-posted">
-          <strong>Publisert av:</strong>{" "}
-          {postedById === userId ? "Deg" : postedBy}
-        </p>
-      </div>
-
-      {canDelete && (
-        <button className="delete-bottom-btn" onClick={handleDeleteClick}>
-          <img src="/icons/delete-white.svg" alt="Slett" />
-        </button>
-      )}
-
+    <div
+      className={`shift-card-container ${claimedById ? "claimed" : ""}`}
+      onClick={handleCardClick}
+    >
       {showDeletePopup && (
         <DeleteShiftPopup
           shiftTitle={title}
@@ -92,6 +84,64 @@ const ShiftCard = ({
           onConfirm={handleConfirmDelete}
         />
       )}
+
+      <div className="shift-card-header">
+        <h3>{title}</h3>
+      </div>
+
+      <div className="shift-card-info">
+        <div className="shift-card-info-left">
+        <div className="date-container">
+          <div className="day">{day}</div>
+          <div className="month">{month}</div>
+        </div>
+
+        </div>
+        <div className="shift-card-info-right">
+        <div className="shift-card-info-right">
+        <ul className="info-list">
+          <li className="info-list-item">
+            <FiClock className="info-icon" size={22} />
+            <p className="info-p-time">
+              {startTime.slice(0, 5)} - {endTime.slice(0, 5)}
+            </p>
+
+          </li>
+          <li className="info-list-item">
+            <FiMapPin className="info-icon" size={22} />
+            <p className="info-p-location">{storeName}</p>
+          </li>
+          <li className="info-list-item">
+            <FiAward className="info-icon" size={22} />
+            <p className="info-p-qualification">{qualifications.join(", ")}</p>
+
+          </li>
+        </ul>
+      </div>
+        </div>
+      </div>
+      <div className="shift-card-footer">
+      <div className="claimed-by-text">
+        {claimedById && claimedByName?.trim() ? (
+          <a
+            href={`/bs/ansatte/profil/${claimedById}`}
+            onClick={(e) => e.stopPropagation()}
+            className="claimed-link"
+          >
+            Tatt av: {claimedByName}
+          </a>
+        ) : (
+          <span>Tatt av: Ingen</span>
+        )}
+      </div>
+
+      {canDelete && (
+        <button className="delete-bottom-btn" onClick={handleDeleteClick}>
+          <img src="/icons/delete-white.svg" alt="Slett" />
+        </button>
+      )}
+      </div>
+
     </div>
   );
 };

@@ -2,7 +2,7 @@
 .kommune-filter {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 70%;
   }
   
   .kommune-filter__label {

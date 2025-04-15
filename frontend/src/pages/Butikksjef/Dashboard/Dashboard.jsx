@@ -2,6 +2,15 @@ import React, { useEffect, useState } from "react";
 import DashboardCard from "../../../components/Cards/DashboardCard/DashboardCard";
 import axios from "../../../api/axiosInstance";
 import "./Dashboard.css";
+import { MdOutlineStorefront} from "react-icons/md";
+import { FaRegUser } from "react-icons/fa";
+import { RiUserSearchLine } from "react-icons/ri";
+import { FiBriefcase } from "react-icons/fi";
+
+
+
+
+
 import useAuth from "../../../context/UseAuth";
 
 const ButikksjefDashboard = () => {
@@ -72,7 +81,7 @@ const ButikksjefDashboard = () => {
       ) : (
         <div className="dashboard-cards">
           <DashboardCard
-            icon="/icons/vakter.svg"
+            icon={<FiBriefcase size={52} />}
             title="Vakter"
             description="Se statusen på alle dine publiserte vakter & utlys en ny vakt"
             statValue={`${shiftCount.claimed}/${shiftCount.total}`}
@@ -81,7 +90,7 @@ const ButikksjefDashboard = () => {
             linkTo="/bs/vakter"
           />
           <DashboardCard
-            icon="/icons/mine_ansatte.svg"
+            icon={<FaRegUser size={52} />}
             title="Mine ansatte"
             description="Få en oversikt over dine ansatte, deres arbeidsstatus og kompetanse"
             statValue={`${availableCount}/${employees.length}`}
@@ -90,7 +99,7 @@ const ButikksjefDashboard = () => {
             linkTo="/bs/ansatte/mine"
           />
           <DashboardCard
-            icon="/icons/ledige_ansatte.svg"
+            icon={<RiUserSearchLine size={52} />}
             title="Ledige ansatte"
             description="Se en oversikt over alle tilgjengelige ansatte i området"
             statValue={availableInArea}
@@ -99,7 +108,7 @@ const ButikksjefDashboard = () => {
             linkTo="/bs/ansatte/ledige"
           />
           <DashboardCard
-            icon={"/icons/store_icon.svg"}
+            icon={<MdOutlineStorefront size={52} />}
             title="Butikker"
             description="Se en oversikt over butikkene i Coop Øst og nyttig informasjon om dem"
             statValue={`${storeStats.needsHelp}/${storeStats.total}`}

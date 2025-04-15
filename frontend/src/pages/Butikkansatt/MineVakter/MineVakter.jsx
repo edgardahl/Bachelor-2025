@@ -130,16 +130,15 @@ const MineVakterAnsatt = () => {
                   postedBy={`${shift.posted_by_first_name} ${shift.posted_by_last_name}`}
                   postedById={shift.posted_by_id}
                   userId={userId}
+                  
                   usersstoreId={storeId}
                   shiftStoreId={shift.store_id}
-                  actions={
-                    <button
-                      className="claim-shift-button"
-                      onClick={() => claimShift(shift.shift_id)}
-                    >
-                      Reserver vakt
-                    </button>
-                  }
+                  claimedByName={
+                    shift.claimed_by_first_name && shift.claimed_by_last_name
+                      ? `${shift.claimed_by_first_name} ${shift.claimed_by_last_name}`
+                      : ""
+                  }                
+                  claimedById={shift.claimed_by_id}
                 />
               ))}
             </div>

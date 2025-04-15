@@ -1,57 +1,123 @@
-.shift-card-container {
-  width: 100%;
-  max-width: 420px;
-  margin: 1rem auto;
-  padding: 1rem;
-  padding-bottom: 3rem; /* Extra padding for bottom button */
-  background-color: var(--White);
-  border-radius: 10px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  cursor: pointer;
+.shift-card-container{
   position: relative;
+  background-color: var(--White);
+  width: 400px;
+  min-width: 400px;
+  height: 300px;
+  font-family: sans-serif;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.05);
+  color: var(--loading);
 }
 
-.shift-card-container:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+.shift-card-container.claimed {
+  background-color: var(--Claimed-background-color, #d5fcda); /* Light gray as fallback */
 }
 
-.shift-card-header {
-  background-color: var(--Card-header-color);
+.shift-card-container.claimed .shift-card-info .date-container{
+
+}
+
+
+.shift-card-header{
+  width: 100%;
+  text-align: center;
+}
+
+.shift-card-header h3{
+  font-size: 1.4rem;
+}
+
+.shift-card-info{
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 50px;
+  width: 85%;
+  margin: 0 auto;
+}
+
+.shift-card-info-left{
+}
+
+.shift-card-info-right{
+}
+
+.shift-card-info .date-container{
+  display: flex;
+  flex-direction: column;
+  width: 90px;
+  height: 90px;
+  background-color: var(--Text-highlight-color);
+  border: solid 5px var(--Text-highlight-color);
   color: white;
-  padding: 12px 16px;
-  border-radius: 8px 8px 0 0;
+  align-items: center;
+  justify-content: center;
 }
 
-.shift-card-title {
-  font-size: 1.1rem;
-  margin: 0;
-}
-
-.shift-card-body {
-  padding: 1rem 0.75rem;
-}
-
-.shift-card-store {
+.shift-card-info .date-container .day{
+  font-size: 1.8rem;
   font-weight: bold;
-  color: var(--Main-dark-color);
-  margin-bottom: 0.25rem;
 }
 
-.shift-card-time,
-.shift-card-qualifications,
-.shift-card-posted {
-  font-size: 0.9rem;
-  color: var(--Text-color-light);
-  margin: 4px 0;
+.shift-card-info .date-container .month{
+  font-size: 1.5rem;
 }
+
+
+
+.info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+}
+
+.info-list-item {
+  display: flex;
+  align-items: center;
+}
+
+.info-icon {
+  color: var(--Text-highlight-color);
+  margin-right: 8px;
+  min-width: 22px;
+  min-height: 22px;
+}
+
+.claimed-by-text span{
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.claimed-link {
+  color: var(--loading);
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.claimed-link:hover {
+  text-decoration: none;
+}
+
+
+.shift-card-footer {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+
+
+
+
 
 /* ✅ New Delete Button Style */
 .delete-bottom-btn {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
   background-color: var(--Error-delete-color);
   border: none;
   border-radius: 6px;

@@ -1,87 +1,66 @@
-/* Container */
+/* Main container */
 .mine-vakter-container {
-  padding: 2rem;
-  background-color: var(--White);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 40px 20px;
+  background-color: var(--Body-background);
+  font-family: var(--Text-font);
+  color: var(--Text-color);
   min-height: 100vh;
-  margin: 3% 0;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-/* Headings */
+/* Title */
 .mine-vakter-title {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  color: #2c2c2c;
+  font-family: var(--Header-font);
+  font-size: 32px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--Main-dark-color);
+  margin-bottom: 20px;
 }
 
-.mine-vakter-subtitle,
-.mine-vakter-userid {
-  color: #666;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-}
-
-.mine-vakter-userid {
-  color: #777;
-  margin-bottom: 2rem;
-}
-
-/* Button Group */
+/* Create button section */
 .mine-vakter-button-group {
-  margin-bottom: 2rem;
-  gap: 1rem;
-  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 
-/* Create Button */
 .mine-vakter-create-button {
   background-color: var(--Create-new);
   color: white;
-  padding: 0.6rem 1.2rem;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 24px;
   border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: background-color var(--Transition-button-simple);
-}
-
-.mine-vakter-create-link {
-  width: 100%;
+  gap: 10px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
 }
 
 .mine-vakter-create-button:hover {
-  filter: brightness(var(--Transition-button-change-filter));
-}
-
-/* Back link */
-.mine-vakter-back-link {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.mine-vakter-back-link:hover {
-  text-decoration: underline;
+  background-color: #179c58;
 }
 
 /* Tabs */
 .mine-vakter-tabs {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0 30px 0;
 }
 
 .mine-vakter-tab {
-  padding: 0.5rem 1.2rem;
   background-color: var(--Closed-tab-color);
+  color: var(--Text-color-light);
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
   border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  color: #333;
+  text-transform: uppercase;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -92,83 +71,73 @@
 .mine-vakter-tab.active {
   background-color: var(--Open-tab-color);
   color: white;
+  font-weight: 600;
 }
 
-/* Shift Section */
+/* Section headers */
 .mine-vakter-shift-list-title {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #222;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-align: center;
+  color: var(--Text-color);
 }
 
-.mine-vakter-empty-message {
-  color: #999;
-  font-style: italic;
-  font-size: 1rem;
-}
-
-/* Shift Grouping */
-.shift-date-group {
-  margin-bottom: 2rem;
-}
-
+/* Date headings */
 .shift-date-heading-wrapper {
-  margin-bottom: 0.5rem;
+  padding: 10px 0 4px;
 }
 
 .shift-date-heading {
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-bottom: 2px solid #ccc;
-  padding-bottom: 0.2rem;
-  color: #444;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  text-transform: capitalize;
+  color: var(--Main-dark-color);
+  border-bottom: 2px solid var(--Main-dark-color);
+  display: inline-block;
 }
 
-/* Shift List */
+/* Shift list */
 .mine-vakter-shift-list {
-  margin-top: 1rem;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 3.5rem;
-  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
-@media (max-width: 768px) {
-  .mine-vakter-shift-list {
-    grid-template-columns: 1fr;
+/* Empty message */
+.mine-vakter-empty-message {
+  text-align: center;
+  color: var(--Text-color-light);
+  font-size: 16px;
+  padding: 40px 0;
+}
+
+/* Spinner placeholder */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--loading);
+  border-top: 4px solid var(--Create-new);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 50px auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-/* Shift Card */
-.mine-vakter-shift-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s ease;
-}
+@media (max-width: 1069px) {
+  .shift-date-heading-wrapper {
+    text-align: center;
+  }
 
-.mine-vakter-shift-card:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.mine-vakter-shift-title {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: #333;
-}
-
-.mine-vakter-shift-description {
-  color: #555;
-  margin-bottom: 0.5rem;
-}
-
-.mine-vakter-shift-time {
-  font-size: 0.9rem;
-  color: #888;
+  .mine-vakter-shift-list {
+    justify-content: center;
+  }
 }
