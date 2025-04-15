@@ -4,8 +4,10 @@ import axios from "../../../api/axiosInstance";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import "./Butikk.css";
 import useAuth from "../../../context/UseAuth";
+import { useNavigate } from "react-router-dom";
 
 const Butikk = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { store_id } = useParams();
   const [store, setStore] = useState(null);
@@ -57,6 +59,9 @@ const Butikk = () => {
 
   return (
     <div className="butikk-page">
+      <button className="tilbake-button" onClick={() => navigate(-1)}>
+        ← Tilbake
+      </button>
       <div className="butikk-header">
         <h1 className="butikk-title">
           {store.store_chain} {store.name}

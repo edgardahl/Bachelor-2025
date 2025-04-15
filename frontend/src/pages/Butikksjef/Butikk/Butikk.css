@@ -48,7 +48,10 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  
+  .butikk-page .tilbake-button {
+    right: 77vw;
+  }
+
   .butikk-no-shifts {
     font-style: italic;
     color: #888;

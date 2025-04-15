@@ -98,6 +98,26 @@
   margin-top: 4rem;
 }
 
+.tilbake-button {
+  margin-bottom: 1rem;
+  background-color: transparent;
+  color: #007bff;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  position: absolute;
+  right: 65vw;
+  margin-top: 2rem;
+}
+
+.tilbake-button:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+
 /* Responsive design */
 @media (max-width: 768px) {
   .shift-details-container {

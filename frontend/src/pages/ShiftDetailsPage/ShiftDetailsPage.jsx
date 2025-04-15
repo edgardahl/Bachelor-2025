@@ -105,100 +105,105 @@ const ShiftDetailsPage = () => {
     userRole === "employee" && !shiftDetails.claimed_by_first_name;
 
   return (
-    <div className="shift-details-container">
-      <div className="shift-header">
-        <h2 className="shift-title">{shiftDetails.title}</h2>
-      </div>
+    <>
+      <button className="tilbake-button" onClick={() => navigate(-1)}>
+        ← Tilbake
+      </button>
+      <div className="shift-details-container">
+        <div className="shift-header">
+          <h2 className="shift-title">{shiftDetails.title}</h2>
+        </div>
 
-      <div className="shift-details">
-        <div className="shift-detail-section">
-          <p>
-            <strong>Butikk:</strong> {shiftDetails.store_name}
-          </p>
-          <p>
-            <strong>Adresse:</strong> {shiftDetails.store_address}
-          </p>
-          <p>
-            <strong>Dato:</strong> {shiftDetails.date}
-          </p>
-          <p>
-            <strong>Tid:</strong> {shiftDetails.start_time} -{" "}
-            {shiftDetails.end_time}
-          </p>
-          <p>
-            <strong>Beskrivelse:</strong>{" "}
-            {shiftDetails.description?.trim()
-              ? shiftDetails.description
-              : "Ingen beskrivelse"}
-          </p>
-          <p>
-            <strong>Kvalifikasjoner:</strong> {qualifications}
-          </p>
-
-          <p>
-            <strong>Publisert av:</strong> {shiftDetails.posted_by_first_name}{" "}
-            {shiftDetails.posted_by_last_name}
-          </p>
-          {userRole === "store_manager" && (
+        <div className="shift-details">
+          <div className="shift-detail-section">
             <p>
-              <strong>Reservert av:</strong>{" "}
-              {shiftDetails.claimed_by_first_name ? (
-                <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
-                  {shiftDetails.claimed_by_first_name}{" "}
-                  {shiftDetails.claimed_by_last_name}
-                </Link>
-              ) : (
-                "Ingen"
-              )}
+              <strong>Butikk:</strong> {shiftDetails.store_name}
             </p>
-          )}
+            <p>
+              <strong>Adresse:</strong> {shiftDetails.store_address}
+            </p>
+            <p>
+              <strong>Dato:</strong> {shiftDetails.date}
+            </p>
+            <p>
+              <strong>Tid:</strong> {shiftDetails.start_time} -{" "}
+              {shiftDetails.end_time}
+            </p>
+            <p>
+              <strong>Beskrivelse:</strong>{" "}
+              {shiftDetails.description?.trim()
+                ? shiftDetails.description
+                : "Ingen beskrivelse"}
+            </p>
+            <p>
+              <strong>Kvalifikasjoner:</strong> {qualifications}
+            </p>
+
+            <p>
+              <strong>Publisert av:</strong> {shiftDetails.posted_by_first_name}{" "}
+              {shiftDetails.posted_by_last_name}
+            </p>
+            {userRole === "store_manager" && (
+              <p>
+                <strong>Reservert av:</strong>{" "}
+                {shiftDetails.claimed_by_first_name ? (
+                  <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
+                    {shiftDetails.claimed_by_first_name}{" "}
+                    {shiftDetails.claimed_by_last_name}
+                  </Link>
+                ) : (
+                  "Ingen"
+                )}
+              </p>
+            )}
+          </div>
+
+          <div className="shift-actions">
+            {canClaim && (
+              <button
+                className="claim-button"
+                onClick={() => setShowClaimPopup(true)}
+              >
+                Ta Vakt
+              </button>
+            )}
+
+            {canDelete && (
+              <button
+                className="delete-button"
+                onClick={() => setShowDeletePopup(true)}
+              >
+                <img src="/icons/delete-white.svg" alt="Slett" />
+              </button>
+            )}
+          </div>
         </div>
 
-        <div className="shift-actions">
-          {canClaim && (
-            <button
-              className="claim-button"
-              onClick={() => setShowClaimPopup(true)}
-            >
-              Ta Vakt
-            </button>
-          )}
+        {showDeletePopup && (
+          <DeleteShiftPopup
+            shiftTitle={shiftDetails.title}
+            onCancel={() => setShowDeletePopup(false)}
+            onConfirm={handleDeleteShift}
+          />
+        )}
 
-          {canDelete && (
-            <button
-              className="delete-button"
-              onClick={() => setShowDeletePopup(true)}
-            >
-              <img src="/icons/delete-white.svg" alt="Slett" />
-            </button>
-          )}
-        </div>
+        {showClaimPopup && (
+          <ClaimShiftPopup
+            shiftTitle={shiftDetails.title}
+            onCancel={() => setShowClaimPopup(false)}
+            onConfirm={handleClaimShift}
+          />
+        )}
+
+        {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
+        {successMessage && (
+          <SuccessPopup
+            message={successMessage}
+            onClose={() => setSuccessMessage(null)}
+          />
+        )}
       </div>
-
-      {showDeletePopup && (
-        <DeleteShiftPopup
-          shiftTitle={shiftDetails.title}
-          onCancel={() => setShowDeletePopup(false)}
-          onConfirm={handleDeleteShift}
-        />
-      )}
-
-      {showClaimPopup && (
-        <ClaimShiftPopup
-          shiftTitle={shiftDetails.title}
-          onCancel={() => setShowClaimPopup(false)}
-          onConfirm={handleClaimShift}
-        />
-      )}
-
-      {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
-      {successMessage && (
-        <SuccessPopup
-          message={successMessage}
-          onClose={() => setSuccessMessage(null)}
-        />
-      )}
-    </div>
+    </>
   );
 };
 

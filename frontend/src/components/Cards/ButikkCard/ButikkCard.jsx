@@ -13,16 +13,21 @@ const ButikkCard = ({ store, shiftsCount }) => {
       className="butikk-card-link"
     >
       <div className="butikk-card">
-        <div className="butikk-card-header">
-          <h2>{store.store_chain} {store.name}</h2>
-          <span className="butikk-chip">{shiftsCount} ledige vakter</span>
-        </div>
-        <p className="butikk-address">📍 {store.address}</p>
+        <div>
+          <div className="butikk-card-header">
+            <h2>{store.store_chain} {store.name}</h2>
+          </div>
 
-        <div className="butikk-contact">
-          <p><strong>📧</strong> {store.email}</p>
-          <p><strong>📞</strong> {store.phone_number}</p>
+          <p className="butikk-address">📍 {store.address}</p>
+          <span className="butikk-chip">{shiftsCount} ledige vakter</span>
+
+          <div className="butikk-contact">
+            <p><strong>📧</strong> {store.email}</p>
+            <p><strong>📞</strong> {store.phone_number}</p>
+          </div>
         </div>
+
+        <p className="butikk-more-info">Trykk for mer info →</p>
       </div>
     </Link>
   );

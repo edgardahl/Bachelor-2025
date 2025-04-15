@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 import ButikkCard from "../../../components/Cards/ButikkCard/ButikkCard";
 import KommuneFilter from "../../../components/Filter/kommuneFilter/kommuneFilter";
-
 import "./ButikkOversikt.css";
 
 const ButikkOversikt = () => {
@@ -13,18 +11,20 @@ const ButikkOversikt = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalStores, setTotalStores] = useState(0);
   const [filters, setFilters] = useState({});
-  const [loading, setLoading] = useState(true); // loading for just the cards
+  const [loading, setLoading] = useState(true);
 
-  const fetchStores = async (filters = {}, page = 1, pageSize = 4) => {
+  const PAGE_SIZE = 8;
+
+  const fetchStores = async (filters = {}, page = 1) => {
     try {
       const queryParams = new URLSearchParams();
 
-      if (filters.municipality)
-      queryParams.append("municipality", filters.municipality);
-
+      if (filters.municipality) {
+        queryParams.append("municipality", filters.municipality);
+      }
 
       queryParams.append("page", page);
-      queryParams.append("pageSize", pageSize);
+      queryParams.append("pageSize", PAGE_SIZE);
 
       const response = await axios.get(
         `/stores/stores-with-municipality?${queryParams.toString()}`
@@ -32,7 +32,7 @@ const ButikkOversikt = () => {
 
       setStores(response.data.stores);
       setTotalStores(response.data.total);
-      setTotalPages(Math.ceil(response.data.total / pageSize));
+      setTotalPages(Math.ceil(response.data.total / PAGE_SIZE));
 
       const shiftsData = {};
       for (const store of response.data.stores) {
@@ -41,17 +41,13 @@ const ButikkOversikt = () => {
             `/shifts/store/${store.store_id}`
           );
           shiftsData[store.store_id] = shiftsResponse.data.length;
-        } catch (error) {
-          console.error(
-            `Error fetching shifts for store ${store.store_id}:`,
-            error
-          );
+        } catch {
           shiftsData[store.store_id] = 0;
         }
       }
       setShiftsCount(shiftsData);
-    } catch (error) {
-      console.error("Error fetching stores:", error);
+    } catch (err) {
+      console.error("Error fetching stores:", err);
     } finally {
       setLoading(false);
     }
@@ -63,28 +59,25 @@ const ButikkOversikt = () => {
   }, [filters, currentPage]);
 
   return (
-    <div className="dine-vakter">
+    <div className="butikkoversikt-container">
       <h1>Butikker</h1>
-      <div className="butikk-overview-filter-container">
-        <KommuneFilter
-          onChange={(selectedMunicipalityIds) => {
-            setFilters((prev) => ({
-              ...prev,
-              municipality: selectedMunicipalityIds.join(","), // assuming API supports comma-separated values
-            }));
-            setCurrentPage(1);
-          }}
-        />
-      </div>
+
+      <KommuneFilter
+        onChange={(selectedMunicipalityIds) => {
+          setFilters({
+            municipality: selectedMunicipalityIds.join(","),
+          });
+          setCurrentPage(1);
+        }}
+      />
 
       <p>{totalStores} butikker</p>
 
-      {/* Store List */}
       <div className="butikk-liste">
         {loading ? (
-          <div className="spinner" style={{ margin: "2rem auto" }}></div>
+          <div className="spinner"></div>
         ) : stores.length === 0 ? (
-          <p>Ingen butikker funnet</p>
+          <p>Ingen butikker funnet.</p>
         ) : (
           stores.map((store) => (
             <ButikkCard
@@ -96,14 +89,9 @@ const ButikkOversikt = () => {
         )}
       </div>
 
-      {/* Pagination Controls */}
       <div className="pagination">
         <button
-          onClick={() => {
-            if (currentPage > 1) {
-              setCurrentPage((prev) => prev - 1);
-            }
-          }}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
         >
           <img src="/icons/chevron_left.svg" alt="Forrige" />
@@ -112,11 +100,9 @@ const ButikkOversikt = () => {
           {currentPage} av {totalPages}
         </span>
         <button
-          onClick={() => {
-            if (currentPage < totalPages) {
-              setCurrentPage((prev) => prev + 1);
-            }
-          }}
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
           disabled={currentPage === totalPages}
         >
           <img src="/icons/chevron_right.svg" alt="Neste" />
