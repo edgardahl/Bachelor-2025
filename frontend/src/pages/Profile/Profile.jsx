@@ -214,13 +214,6 @@ const Profile = () => {
           </div>
         ))}
 
-        {isOwnProfile && !isEditing && (
-          <div className="profile-field">
-            <label>Passord:</label>
-            <p>********</p>
-          </div>
-        )}
-
         <div className="profile-field">
           <label>Butikk:</label>
           <p>{formData.store_name || "Ingen tilknyttet butikk"}</p>
@@ -230,6 +223,13 @@ const Profile = () => {
           <label>Kommune:</label>
           <p>{formData.municipality_name || "Ikke registrert"}</p>
         </div>
+
+        {isOwnProfile && !isEditing && (
+          <div className="profile-field">
+            <label>Passord:</label>
+            <p>********</p>
+          </div>
+        )}
 
         {formData.role === "employee" && (
           <>
