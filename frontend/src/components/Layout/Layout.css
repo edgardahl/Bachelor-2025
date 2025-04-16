@@ -2,13 +2,16 @@
 body {
   padding: 0;
   margin: 0;
+  background: url("../../../public//icons//bakgrund.png");
+  background-size: cover;
+  background-attachment: fixed;
+
 }
 
 .layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--Body-background);
 }
 
 .layout-content {
