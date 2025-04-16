@@ -3,8 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
 import Select from "react-select";
+
 import { toast } from "react-toastify";
+
+import Loading from "../../components/Loading/Loading";
+
 import "./Profile.css";
+import BackButton from "../../components/BackButton/BackButton";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -179,10 +184,11 @@ const Profile = () => {
     formData?.role === "employee" || canEditQualifications;
 
   if (error) return <p>{error}</p>;
-  if (!user || !formData) return <p>Laster inn profildata...</p>;
+  if (!user || !formData) return <Loading />;
 
   return (
     <div className="profile-page">
+      <BackButton />
       <div className="profile-header">
         <h1>{isOwnProfile ? "Min profil" : "Ansattprofil"}</h1>
         {isOwnProfile && !isEditing && (

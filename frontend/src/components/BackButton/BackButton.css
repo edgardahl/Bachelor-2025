@@ -1,0 +1,32 @@
+.back-button {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 1.5rem;
+  padding: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  background-color: var(--White);
+}
+
+.back-text {
+  margin-left: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+.arrow {
+  width: 16px;
+  height: 16px;
+}
+
+@media screen and (max-width: 768px) {
+  .back-text {
+    display: none;
+  }
+
+  .back-button {
+    left: 1rem;
+    margin-top: 10px;
+  }
+}

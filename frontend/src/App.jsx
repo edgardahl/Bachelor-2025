@@ -18,7 +18,13 @@ import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
 import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 import Profile from "./pages/Profile/Profile";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
+
+
+import Loading from "./components/Loading/Loading";
+
+
 import NotFound from "./pages/NotFound/NotFound";
+import Landing from "./pages/Landing/Landing";
 
 // Toastify
 import { ToastContainer } from "react-toastify";
@@ -32,7 +38,12 @@ function App() {
     location.pathname.startsWith("/dashboard/butikksjef/") &&
     location.pathname.split("/").length > 4;
 
-  if (loading) return <p>Laster inn...</p>;
+  if (loading)
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
 
   const appContent = (
     <Routes>
@@ -40,12 +51,15 @@ function App() {
         path="/"
         element={
           user ? (
-            <Navigate
-              to={user.role === "store_manager" ? "/bs/hjem" : "/ba/hjem"}
-              replace
-            />
+            user.role === "store_manager" ? (
+              <Navigate to="/bs/hjem" replace />
+            ) : user.role === "employee" ? (
+              <Navigate to="/ba/hjem" replace />
+            ) : (
+              <Navigate to="/hjem" replace />
+            )
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/hjem" replace />
           )
         }
       />
@@ -58,7 +72,13 @@ function App() {
         element={user ? <Navigate to="/" replace /> : <RegisterPage />}
       />
 
+
       {/* Butikksjef */}
+
+      <Route path="/hjem" element={<Landing />} />
+
+      {/* Butikksjef routes */}
+
       <Route
         path="/bs/hjem"
         element={

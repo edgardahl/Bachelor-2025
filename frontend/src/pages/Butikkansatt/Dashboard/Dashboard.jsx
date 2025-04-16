@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import DashboardCard from "../../../components/Cards/DashboardCard/DashboardCard";
 import axios from "../../../api/axiosInstance";
 import useAuth from "../../../context/UseAuth";
+import Loading from "../../../components/Loading/Loading";
 import "./Dashboard.css";
 
 const AnsattDashboard = () => {
@@ -49,7 +50,7 @@ const AnsattDashboard = () => {
     <div className="dashboard">
       <h1 className="dashboard-title">Ansatt Dashboard</h1>
       {loading ? (
-        <div className="spinner" />
+        <Loading />
       ) : (
         <div className="dashboard-cards">
           <DashboardCard
