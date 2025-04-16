@@ -5,7 +5,8 @@
   font-family: var(--Text-font);
   color: var(--Text-color);
   min-height: 100vh;
-  max-width: 856px;
+  max-width: 1006px;
+  padding: 75px;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -141,7 +142,7 @@
 
 
 .shift-date-heading {
-  font-size: 18px;
+  font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 10px;
   text-transform: capitalize;
