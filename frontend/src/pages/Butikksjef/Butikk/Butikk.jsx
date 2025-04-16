@@ -97,6 +97,12 @@ const Butikk = () => {
               userRole={userRole}
               usersstoreId={storeId}
               shiftStoreId={shift.store_id}
+              claimedByName={
+                shift.claimed_by_first_name && shift.claimed_by_last_name
+                  ? `${shift.claimed_by_first_name} ${shift.claimed_by_last_name}`
+                  : ""
+              }                
+              claimedById={shift.claimed_by_id}
               deleteShift={deleteShift}
             />
           ))
