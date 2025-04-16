@@ -5,10 +5,10 @@ import useAuth from "../../context/UseAuth";
 import Select from "react-select";
 import Loading from "../../components/Loading/Loading";
 import "./Profile.css";
+import BackButton from "../../components/BackButton/BackButton";
 
 const Profile = () => {
   const { user } = useAuth();
-  console.log("User in Profile:", user);
   const { id: profileId } = useParams();
   const [formData, setFormData] = useState(null);
   const [error, setError] = useState("");
@@ -189,6 +189,7 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
+      <BackButton />
       <div className="profile-header">
         <h1>{isOwnProfile ? "Min profil" : "Ansattprofil"}</h1>
         {isOwnProfile && !isEditing && (

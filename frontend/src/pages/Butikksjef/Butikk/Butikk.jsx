@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
+import BackButton from "../../../components/BackButton/BackButton";
 import "./Butikk.css";
 import useAuth from "../../../context/UseAuth";
-import { useNavigate } from "react-router-dom";
 
 const Butikk = () => {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { store_id } = useParams();
   const [store, setStore] = useState(null);
@@ -59,9 +58,7 @@ const Butikk = () => {
 
   return (
     <div className="butikk-page">
-      <button className="tilbake-button" onClick={() => navigate(-1)}>
-        ← Tilbake
-      </button>
+      <BackButton />
       <div className="butikk-header">
         <h1 className="butikk-title">
           {store.store_chain} {store.name}
@@ -101,7 +98,7 @@ const Butikk = () => {
                 shift.claimed_by_first_name && shift.claimed_by_last_name
                   ? `${shift.claimed_by_first_name} ${shift.claimed_by_last_name}`
                   : ""
-              }                
+              }
               claimedById={shift.claimed_by_id}
               deleteShift={deleteShift}
             />
