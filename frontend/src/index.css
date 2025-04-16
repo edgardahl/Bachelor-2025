@@ -46,4 +46,31 @@
   /* transition */
   --Transition-button-simple: 0.2s ease;
   --Transition-button-change-filter: 85%;
+
+
+  /* THEME COLORS */
+  --Shifts-main: #2a72a5;
+  --Shifts-hover: #e6f7ff;
+  --Shifts-hover-dark: #1e4e72;
+  --Shifts-accent: #58a1dd;
+  --Shifts-text: #103b57;
+  --Shifts-button: #2a72a5;
+  --Shifts-button-hover: #20587d;
+  --Shifts-tab-open: #2a72a5;
+  --Shifts-tab-closed: #e6f7ff;
+  --Shifts-tab-hover: #d2eefd;
+  --Shifts-claimed-accent: #27ae60;
+
+
+  --Employees-main: #d6a029;
+  --Employees-hover: #fef6e6;
+  --Employees-hover-dark: #a07811;
+
+  --Available-main: #23a188;
+  --Available-hover: #e8fef8;
+  --Available-hover-dark: #177261;
+
+  --Stores-main: #d66565;
+  --Stores-hover: #fff2f2;
+  --Stores-hover-dark: #a13c3c;
 }

@@ -4,6 +4,8 @@ import axios from "../../../api/axiosInstance";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import Loading from "../../../components/Loading/Loading";
 import "./MineVakter.css";
+import { HiPlusSm } from "react-icons/hi";
+
 import useAuth from "../../../context/UseAuth";
 
 const MineVakter = () => {
@@ -65,32 +67,33 @@ const MineVakter = () => {
 
   return (
     <div className="mine-vakter-container">
-      <h1 className="mine-vakter-title">Vakter</h1>
+      <h1 className="mine-vakter-title">DINE UTLYSTE VAKTER</h1>
+      <div className="mine-vakter-beskrivelse">
+        <p>Her kan du se alle vaktene du har lagt ut, legge ut nye, sjekke hvilke som er tatt – og se vaktene andre i butikken din har delt.</p>
+      </div>
 
-      <div className="mine-vakter-button-group">
+      <div className="mine-vakter-tab-bar">
         <Link to="/bs/vakter/lag-vakt" className="mine-vakter-create-link">
-          <button className="mine-vakter-create-button color-button">
-            <img src="/icons/add-icon-white.svg" alt="➕" />
-            Opprett ny vakt
-          </button>
+          <div className="mine-vakter-create-round-button">
+            <HiPlusSm size={26} />
+          </div>
         </Link>
-      </div>
 
-      <div className="mine-vakter-tabs">
-        <button
-          className={`mine-vakter-tab ${activeTab === "mine" ? "active" : ""}`}
-          onClick={() => handleTabChange("mine")}
-        >
-          Mine vakter
-        </button>
-        <button
-          className={`mine-vakter-tab ${activeTab === "store" ? "active" : ""}`}
-          onClick={() => handleTabChange("store")}
-        >
-          Alle vakter i butikken
-        </button>
+        <div className="mine-vakter-tab-boxes">
+          <button
+            className={`mine-vakter-tab-box ${activeTab === "mine" ? "active" : ""}`}
+            onClick={() => handleTabChange("mine")}
+          >
+            Mine vakter
+          </button>
+          <button
+            className={`mine-vakter-tab-box ${activeTab === "store" ? "active" : ""}`}
+            onClick={() => handleTabChange("store")}
+          >
+            Alle i butikken
+          </button>
+        </div>
       </div>
-
       <h3 className="mine-vakter-shift-list-title">
         {activeTab === "mine"
           ? "Mine opprettede vakter:"
