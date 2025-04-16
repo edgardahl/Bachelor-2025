@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
 import Select from "react-select";
+import Loading from "../../components/Loading/Loading";
 import "./Profile.css";
 
 const Profile = () => {
@@ -74,7 +75,6 @@ const Profile = () => {
       }, {});
 
       setQualificationMap(qualificationMap);
-
     } catch (err) {
       console.error("Error fetching profile:", err);
       setError("Kunne ikke hente profildata");
@@ -185,7 +185,7 @@ const Profile = () => {
     formData?.role === "employee" || canEditQualifications;
 
   if (error) return <p>{error}</p>;
-  if (!user || !formData) return <p>Laster inn profildata...</p>;
+  if (!user || !formData) return <Loading />;
 
   return (
     <div className="profile-page">
@@ -321,11 +321,11 @@ const Profile = () => {
         )}
 
         {isOwnProfile && !isEditing && (
-                  <div className="profile-field">
-                    <label>Passord:</label>
-                    <p>********</p>
-                  </div>
-                )}
+          <div className="profile-field">
+            <label>Passord:</label>
+            <p>********</p>
+          </div>
+        )}
       </div>
 
       {isEditing && (
