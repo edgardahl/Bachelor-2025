@@ -5,6 +5,7 @@ import DeleteShiftPopup from "../../components/Popup/DeleteShiftPopup/DeleteShif
 import ClaimShiftPopup from "../../components/Popup/ClaimShiftPopup/ClaimShiftPopup";
 import ErrorPopup from "../../components/Popup/ErrorPopup/ErrorPopup";
 import SuccessPopup from "../../components/Popup/SuccessPopup/SuccessPopup";
+import BackButton from "../../components/BackButton/BackButton";
 import useAuth from "../../context/UseAuth";
 import "./ShiftDetailsPage.css";
 
@@ -106,9 +107,7 @@ const ShiftDetailsPage = () => {
 
   return (
     <>
-      <button className="tilbake-button" onClick={() => navigate(-1)}>
-        ← Tilbake
-      </button>
+      <BackButton />
       <div className="shift-details-container">
         <div className="shift-header">
           <h2 className="shift-title">{shiftDetails.title}</h2>

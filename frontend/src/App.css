@@ -7,7 +7,8 @@ h4 {
 }
 
 p,
-label {
+label,
+span {
   font-family: var(--Text-font), sans-serif;
   font-size: var(--Text-font-size);
 }
