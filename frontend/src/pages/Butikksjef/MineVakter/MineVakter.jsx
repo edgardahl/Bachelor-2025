@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
+import Loading from "../../../components/Loading/Loading";
 import "./MineVakter.css";
 import { HiPlusSm } from "react-icons/hi";
 
@@ -64,15 +65,6 @@ const MineVakter = () => {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="mine-vakter-container">
-        <h1 className="mine-vakter-title">Vakter</h1>
-        <div className="spinner"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="mine-vakter-container">
       <h1 className="mine-vakter-title">DINE UTLYSTE VAKTER</h1>
@@ -102,58 +94,70 @@ const MineVakter = () => {
           </button>
         </div>
       </div>
-
-
-
-      
-
-      {shifts.length === 0 ? (
-        <p className="mine-vakter-empty-message">Ingen vakter funnet.</p>
+      <h3 className="mine-vakter-shift-list-title">
+        {activeTab === "mine"
+          ? "Mine opprettede vakter:"
+          : "Alle vakter i butikken:"}
+      </h3>
+      {loading ? (
+        <Loading />
       ) : (
-        Object.entries(
-          shifts.reduce((acc, shift) => {
-            const dateKey = new Date(shift.date).toLocaleDateString("no-NO", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-            });
-            if (!acc[dateKey]) acc[dateKey] = [];
-            acc[dateKey].push(shift);
-            return acc;
-          }, {})
-        ).flatMap(([date, shiftGroup]) => [
-          <div key={`heading-${date}`} className="shift-date-heading-wrapper">
-            <h4 className="shift-date-heading">{date}</h4>
-          </div>,
-          <div key={`shifts-${date}`} className="mine-vakter-shift-list">
-            {shiftGroup.map((shift) => (
-              <ShiftCard
-                key={shift.shift_id}
-                shiftId={shift.shift_id}
-                title={shift.title}
-                description={shift.description}
-                date={shift.date}
-                startTime={shift.start_time}
-                endTime={shift.end_time}
-                qualifications={shift.qualifications}
-                storeName={shift.store_name}
-                postedBy={`${shift.posted_by_first_name} ${shift.posted_by_last_name}`}
-                postedById={shift.posted_by_id}
-                userId={userId}
-                userRole={userRole}
-                usersstoreId={storeId}
-                shiftStoreId={shift.store_id}
-                claimedByName={
-                  shift.claimed_by_first_name && shift.claimed_by_last_name
-                    ? `${shift.claimed_by_first_name} ${shift.claimed_by_last_name}`
-                    : ""
-                }                
-                claimedById={shift.claimed_by_id}
-                deleteShift={deleteShift}
-              />
-            ))}
-          </div>,
-        ])
+        <>
+          {shifts.length === 0 ? (
+            <p className="mine-vakter-empty-message">Ingen vakter funnet.</p>
+          ) : (
+            Object.entries(
+              shifts.reduce((acc, shift) => {
+                const dateKey = new Date(shift.date).toLocaleDateString(
+                  "no-NO",
+                  {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                  }
+                );
+                if (!acc[dateKey]) acc[dateKey] = [];
+                acc[dateKey].push(shift);
+                return acc;
+              }, {})
+            ).flatMap(([date, shiftGroup]) => [
+              <div
+                key={`heading-${date}`}
+                className="shift-date-heading-wrapper"
+              >
+                <h4 className="shift-date-heading">{date}</h4>
+              </div>,
+              <div key={`shifts-${date}`} className="mine-vakter-shift-list">
+                {shiftGroup.map((shift) => (
+                  <ShiftCard
+                    key={shift.shift_id}
+                    shiftId={shift.shift_id}
+                    title={shift.title}
+                    description={shift.description}
+                    date={shift.date}
+                    startTime={shift.start_time}
+                    endTime={shift.end_time}
+                    qualifications={shift.qualifications}
+                    storeName={shift.store_name}
+                    postedBy={`${shift.posted_by_first_name} ${shift.posted_by_last_name}`}
+                    postedById={shift.posted_by_id}
+                    userId={userId}
+                    userRole={userRole}
+                    usersstoreId={storeId}
+                    shiftStoreId={shift.store_id}
+                    claimedByName={
+                      shift.claimed_by_first_name && shift.claimed_by_last_name
+                        ? `${shift.claimed_by_first_name} ${shift.claimed_by_last_name}`
+                        : ""
+                    }
+                    claimedById={shift.claimed_by_id}
+                    deleteShift={deleteShift}
+                  />
+                ))}
+              </div>,
+            ])
+          )}
+        </>
       )}
     </div>
   );

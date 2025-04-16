@@ -167,23 +167,6 @@
   padding: 40px 0;
 }
 
-/* Spinner placeholder */
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--loading);
-  border-top: 4px solid var(--Create-new);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 50px auto;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @media (max-width: 1069px) {
   .shift-date-heading-wrapper {
     text-align: center;

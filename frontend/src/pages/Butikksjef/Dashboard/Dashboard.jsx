@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import DashboardCard from "../../../components/Cards/DashboardCard/DashboardCard";
+import Loading from "../../../components/Loading/Loading";
 import axios from "../../../api/axiosInstance";
 import "./Dashboard.css";
-import { MdOutlineStorefront} from "react-icons/md";
+import { MdOutlineStorefront } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { RiUserSearchLine } from "react-icons/ri";
 import { FiBriefcase } from "react-icons/fi";
-
-
-
-
 
 import useAuth from "../../../context/UseAuth";
 
@@ -77,7 +74,7 @@ const ButikksjefDashboard = () => {
       <h1 className="dashboard-title">Velkommen {user.name}</h1>
 
       {loading ? (
-        <div className="spinner" />
+        <Loading />
       ) : (
         <div className="dashboard-cards">
           <DashboardCard
