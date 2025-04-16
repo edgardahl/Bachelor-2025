@@ -4,6 +4,7 @@ import Layout from "./components/Layout/Layout";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import useAuth from "./context/UseAuth";
 
+// Pages
 import LoginPage from "./pages/Login/Login";
 import RegisterPage from "./pages/Register/Register";
 import ButikksjefDashboard from "./pages/Butikksjef/Dashboard/Dashboard";
@@ -17,14 +18,16 @@ import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
 import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 import Profile from "./pages/Profile/Profile";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
-
 import NotFound from "./pages/NotFound/NotFound";
+
+// Toastify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const { user, loading } = useAuth();
   const location = useLocation();
 
-  // fikse tilbakeknapp !!
   const showBackButton =
     location.pathname.startsWith("/dashboard/butikksjef/") &&
     location.pathname.split("/").length > 4;
@@ -46,7 +49,6 @@ function App() {
           )
         }
       />
-
       <Route
         path="/login"
         element={user ? <Navigate to="/" replace /> : <LoginPage />}
@@ -56,7 +58,7 @@ function App() {
         element={user ? <Navigate to="/" replace /> : <RegisterPage />}
       />
 
-      {/* Butikksjef routes */}
+      {/* Butikksjef */}
       <Route
         path="/bs/hjem"
         element={
@@ -121,7 +123,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/bs/ansatte/ledige"
         element={
@@ -130,7 +131,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/bs/vakter/detaljer/:shiftId"
         element={
@@ -140,7 +140,7 @@ function App() {
         }
       />
 
-      {/* Butikkansatt routes */}
+      {/* Butikkansatt */}
       <Route
         path="/ba/hjem"
         element={
@@ -157,7 +157,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/ba/vakter"
         element={
@@ -166,7 +165,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/ba/butikker"
         element={
@@ -175,7 +173,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/ba/butikker/:store_chain/:name/:store_id"
         element={
@@ -184,7 +181,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/ba/vakter/detaljer/:shiftId"
         element={
@@ -194,15 +190,25 @@ function App() {
         }
       />
 
-      {/* Not Found route */}
+      {/* 404 */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
 
-  return user ? (
-    <Layout showBackButton={showBackButton}>{appContent}</Layout>
-  ) : (
-    appContent
+  return (
+    <>
+      {user ? (
+        <Layout showBackButton={showBackButton}>{appContent}</Layout>
+      ) : (
+        appContent
+      )}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        pauseOnHover
+        theme="colored"
+      />
+    </>
   );
 }
 

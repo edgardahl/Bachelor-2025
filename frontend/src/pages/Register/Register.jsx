@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../api/axiosInstance";
 import Select from "react-select";
-import "./Register.css";
 import { sanitizeUserData } from "../../../../backend/utils/sanitizeInput";
+import "./AuthForm.css";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -19,7 +19,8 @@ const Register = () => {
   const [stores, setStores] = useState([]);
   const [qualifications, setQualifications] = useState([]);
   const [selectedQualifications, setSelectedQualifications] = useState([]);
-  const [selectedWorkMunicipalityOptions, setSelectedWorkMunicipalityOptions] = useState([]);
+  const [selectedWorkMunicipalityOptions, setSelectedWorkMunicipalityOptions] =
+    useState([]);
   const [fieldErrors, setFieldErrors] = useState({});
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,11 +28,13 @@ const Register = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [municipalityRes, storeRes, qualificationRes] = await Promise.all([
-          axios.get("/municipalities"),
-          axios.get("/stores"),
-          axios.get("/qualifications"),
-        ]);
+        const [municipalityRes, storeRes, qualificationRes] = await Promise.all(
+          [
+            axios.get("/municipalities"),
+            axios.get("/stores"),
+            axios.get("/qualifications"),
+          ]
+        );
 
         const formattedMunicipalities = municipalityRes.data.map((m) => ({
           label: m.municipality_name,
@@ -51,18 +54,18 @@ const Register = () => {
 
   useEffect(() => {
     if (municipalityId && municipalities.length > 0) {
-      const defaultOption = municipalities.find((m) => m.value === municipalityId);
+      const defaultOption = municipalities.find(
+        (m) => m.value === municipalityId
+      );
       if (defaultOption) {
         setSelectedWorkMunicipalityOptions([defaultOption]);
       }
     }
   }, [municipalityId, municipalities]);
 
-  const handleQualificationChange = (qualificationId) => {
+  const handleQualificationChange = (id) => {
     setSelectedQualifications((prev) =>
-      prev.includes(qualificationId)
-        ? prev.filter((id) => id !== qualificationId)
-        : [...prev, qualificationId]
+      prev.includes(id) ? prev.filter((q) => q !== id) : [...prev, id]
     );
   };
 
@@ -83,7 +86,9 @@ const Register = () => {
       store_id: storeId,
       municipality_id: municipalityId,
       qualifications: selectedQualifications,
-      work_municipality_ids: selectedWorkMunicipalityOptions.map((m) => m.value),
+      work_municipality_ids: selectedWorkMunicipalityOptions.map(
+        (m) => m.value
+      ),
     };
 
     try {
@@ -103,31 +108,20 @@ const Register = () => {
       setSelectedQualifications([]);
       setSelectedWorkMunicipalityOptions([]);
     } catch (error) {
-      console.error("Registration error:", error.message);
       const errMsg = error.response?.data?.error || error.message;
 
       if (errMsg === "Email is already in use") {
-        setFieldErrors((prev) => ({ ...prev, email: "This email is already registered" }));
+        setFieldErrors((prev) => ({
+          ...prev,
+          email: "Denne e-posten er allerede registrert.",
+        }));
       } else if (errMsg === "Phone number is already in use") {
-        setFieldErrors((prev) => ({ ...prev, phone_number: "This phone number is already in use" }));
+        setFieldErrors((prev) => ({
+          ...prev,
+          phone_number: "Telefonnummeret er allerede i bruk.",
+        }));
       } else {
-        const knownFields = [
-          "First name", "Last name", "email", "Password", "Phone number", "Availability", "role", "store", "municipality"
-        ];
-
-        let matched = false;
-        for (const field of knownFields) {
-          if (errMsg.includes(field)) {
-            const key = field.toLowerCase().replace(" ", "_");
-            setFieldErrors((prev) => ({ ...prev, [key]: errMsg }));
-            matched = true;
-            break;
-          }
-        }
-
-        if (!matched) {
-          setMessage("Registration failed. Please check your inputs and try again.");
-        }
+        setMessage("Registrering feilet. Prøv igjen.");
       }
     } finally {
       setLoading(false);
@@ -135,113 +129,194 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="register-form-group">
-          <label className="register-label">First Name</label>
-          <input type="text" className="register-input" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
-          {fieldErrors.first_name && <p className="register-error">{fieldErrors.first_name}</p>}
+    <div className="auth-wrapper">
+      <form onSubmit={handleSubmit} className="auth-form">
+        <h2 className="auth-title">Registrer</h2>
+
+        <div className="auth-field">
+          <label className="auth-label">Fornavn</label>
+          <input
+            className="auth-input"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+          />
+          {fieldErrors.first_name && (
+            <p className="auth-error">{fieldErrors.first_name}</p>
+          )}
         </div>
-        <div className="register-form-group">
-          <label className="register-label">Last Name</label>
-          <input type="text" className="register-input" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
-          {fieldErrors.last_name && <p className="register-error">{fieldErrors.last_name}</p>}
+
+        <div className="auth-field">
+          <label className="auth-label">Etternavn</label>
+          <input
+            className="auth-input"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+          {fieldErrors.last_name && (
+            <p className="auth-error">{fieldErrors.last_name}</p>
+          )}
         </div>
-        <div className="register-form-group">
-          <label className="register-label">Email</label>
-          <input type="email" className="register-input" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          {fieldErrors.email && <p className="register-error">{fieldErrors.email}</p>}
+
+        <div className="auth-field">
+          <label className="auth-label">E-post</label>
+          <input
+            className="auth-input"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          {fieldErrors.email && (
+            <p className="auth-error">{fieldErrors.email}</p>
+          )}
         </div>
-        <div className="register-form-group">
-          <label className="register-label">Password</label>
-          <input type="password" className="register-input" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          {fieldErrors.password && <p className="register-error">{fieldErrors.password}</p>}
+
+        <div className="auth-field">
+          <label className="auth-label">Passord</label>
+          <input
+            className="auth-input"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          {fieldErrors.password && (
+            <p className="auth-error">{fieldErrors.password}</p>
+          )}
         </div>
-        <div className="register-form-group">
-          <label className="register-label">Phone Number</label>
-          <input type="text" className="register-input" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} required />
-          {fieldErrors.phone_number && <p className="register-error">{fieldErrors.phone_number}</p>}
+
+        <div className="auth-field">
+          <label className="auth-label">Telefonnummer</label>
+          <input
+            className="auth-input"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            required
+          />
+          {fieldErrors.phone_number && (
+            <p className="auth-error">{fieldErrors.phone_number}</p>
+          )}
         </div>
-        <div className="register-form-group">
-          <label className="register-label">Availability</label>
-          <select className="register-select" value={availability} onChange={(e) => setAvailability(e.target.value)} required>
-            <option value="">Select Availability</option>
+
+        <div className="auth-field">
+          <label className="auth-label">Tilgjengelighet</label>
+          <select
+            className="auth-input"
+            value={availability}
+            onChange={(e) => setAvailability(e.target.value)}
+            required
+          >
+            <option value="">Velg tilgjengelighet</option>
             <option value="Fleksibel">Fleksibel</option>
             <option value="Ikke-fleksibel">Ikke-fleksibel</option>
           </select>
         </div>
-        <div className="register-form-group">
-          <label className="register-label">Role</label>
-          <select className="register-select" value={role} onChange={(e) => setRole(e.target.value)} required>
-            <option value="employee">Employee</option>
-            <option value="store_manager">Store Manager</option>
+
+        <div className="auth-field">
+          <label className="auth-label">Rolle</label>
+          <select
+            className="auth-input"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            required
+          >
+            <option value="employee">Ansatt</option>
+            <option value="store_manager">Butikksjef</option>
             <option value="admin">Admin</option>
           </select>
         </div>
-        <div className="register-form-group">
-          <label className="register-label">Store</label>
-          <select className="register-select" value={storeId} onChange={(e) => setStoreId(e.target.value)} required>
-            <option value="">Select Store</option>
+
+        <div className="auth-field">
+          <label className="auth-label">Butikk</label>
+          <select
+            className="auth-input"
+            value={storeId}
+            onChange={(e) => setStoreId(e.target.value)}
+            required
+          >
+            <option value="">Velg butikk</option>
             {stores.map((store) => (
-              <option key={store.store_id} value={store.store_id}>{store.name}</option>
+              <option key={store.store_id} value={store.store_id}>
+                {store.name}
+              </option>
             ))}
           </select>
         </div>
-        <div className="register-form-group">
-          <label className="register-label">Bostedskommune</label>
-          <select className="register-select" value={municipalityId} onChange={(e) => setMunicipalityId(e.target.value)} required>
-            <option value="">Select Municipality</option>
-            {municipalities.map((municipality) => (
-              <option key={municipality.value} value={municipality.value}>{municipality.label}</option>
+
+        <div className="auth-field">
+          <label className="auth-label">Bostedskommune</label>
+          <select
+            className="auth-input"
+            value={municipalityId}
+            onChange={(e) => setMunicipalityId(e.target.value)}
+            required
+          >
+            <option value="">Velg kommune</option>
+            {municipalities.map((m) => (
+              <option key={m.value} value={m.value}>
+                {m.label}
+              </option>
             ))}
           </select>
         </div>
-        <div className="register-form-group">
-          <label className="register-label">Ønsker å jobbe i kommune(r)</label>
+
+        <div className="auth-field">
+          <label className="auth-label">Ønskede kommuner å jobbe i</label>
           <Select
             classNamePrefix="select"
             isMulti
             isClearable={false}
             options={municipalities}
             value={selectedWorkMunicipalityOptions}
-            onChange={(selected) => setSelectedWorkMunicipalityOptions(selected || [])}
+            onChange={(selected) =>
+              setSelectedWorkMunicipalityOptions(selected || [])
+            }
             placeholder="Velg kommuner..."
           />
         </div>
-        <div className="register-form-group">
-          <label className="register-label">Qualifications</label>
+
+        <div className="auth-field">
+          <label className="auth-label">Kvalifikasjoner</label>
           <div>
-            {qualifications.map((qualification) => (
-              <div key={qualification.qualification_id}>
+            {qualifications.map((q) => (
+              <div key={q.qualification_id}>
                 <input
                   type="checkbox"
-                  className="register-checkbox"
-                  id={`qualification-${qualification.qualification_id}`}
-                  value={qualification.qualification_id}
-                  checked={selectedQualifications.includes(qualification.qualification_id)}
-                  onChange={() => handleQualificationChange(qualification.qualification_id)}
+                  className="auth-checkbox"
+                  id={`q-${q.qualification_id}`}
+                  checked={selectedQualifications.includes(q.qualification_id)}
+                  onChange={() => handleQualificationChange(q.qualification_id)}
                 />
-                <label htmlFor={`qualification-${qualification.qualification_id}`}>{qualification.name}</label>
+                <label htmlFor={`q-${q.qualification_id}`}>{q.name}</label>
               </div>
             ))}
           </div>
         </div>
 
-        <button type="submit" className="register-button" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
+        <button type="submit" className="auth-button" disabled={loading}>
+          {loading ? "Registrerer..." : "Registrer"}
         </button>
 
         {message && (
-          <p className={message.includes("failed") ? "register-error" : "register-success"}>{message}</p>
+          <p
+            className={
+              message.includes("feilet") ? "auth-error" : "auth-success"
+            }
+          >
+            {message}
+          </p>
         )}
+        <div className="auth-footer">
+          <p>
+            Har du allerede en bruker?{" "}
+            <Link to="/login" className="auth-link">
+              Logg inn
+            </Link>
+          </p>
+        </div>
       </form>
-
-      <div className="register-footer">
-        <p>
-          Already have an account? <Link to="/login" className="login-link">Log in</Link>
-        </p>
-      </div>
     </div>
   );
 };
