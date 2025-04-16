@@ -10,13 +10,10 @@
   }
 
   .dashboard-card:hover {
-    box-shadow: 2px 2px 18px -1px rgba(93,159,149,0.41);
     background-color: #f6fefc;
   }
 
-  .dashboard-card:hover .dashboard-cards-icon {
-    color: var(--Text-highlight-color);
-  }
+  
 
   .dashboard-card h2{
     color: black;
@@ -70,4 +67,58 @@
     text-decoration: underline;
   }
   
+  
+
+
+  .card-theme-shifts:hover {
+    background-color: var(--Shifts-hover);
+  }
+  .card-theme-shifts .dashboard-cards-icon {
+    color: var(--Shifts-main);
+  }
+  .card-theme-shifts .dashboard-link {
+    color: var(--Shifts-main);
+  }
+  .card-theme-shifts .dashboard-link:hover {
+    color: var(--Shifts-hover-dark);
+  }
+  
+  .card-theme-employees:hover {
+    background-color: var(--Employees-hover);
+  }
+  .card-theme-employees .dashboard-cards-icon {
+    color: var(--Employees-main);
+  }
+  .card-theme-employees .dashboard-link {
+    color: var(--Employees-main);
+  }
+  .card-theme-employees .dashboard-link:hover {
+    color: var(--Employees-hover-dark);
+  }
+  
+  .card-theme-available:hover {
+    background-color: var(--Available-hover);
+  }
+  .card-theme-available .dashboard-cards-icon {
+    color: var(--Available-main);
+  }
+  .card-theme-available .dashboard-link {
+    color: var(--Available-main);
+  }
+  .card-theme-available .dashboard-link:hover {
+    color: var(--Available-hover-dark);
+  }
+  
+  .card-theme-stores:hover {
+    background-color: var(--Stores-hover);
+  }
+  .card-theme-stores .dashboard-cards-icon {
+    color: var(--Stores-main);
+  }
+  .card-theme-stores .dashboard-link {
+    color: var(--Stores-main);
+  }
+  .card-theme-stores .dashboard-link:hover {
+    color: var(--Stores-hover-dark);
+  }
   

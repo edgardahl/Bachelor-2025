@@ -12,30 +12,24 @@ const DashboardCard = ({
   statValue,
   linkText,
   linkTo,
+  themeClass = "", // <-- new prop
 }) => {
   return (
-    <div className="dashboard-card">
+    <div className={`dashboard-card ${themeClass}`}>
       <Link to={linkTo}>
-        <div className="dashboard-cards-icon">
-          {typeof icon === "string" ? (
-            <img src={icon} alt={`${title} icon`} />
-          ) : (
-            icon
-          )}
-        </div>
+        <div className="dashboard-cards-icon">{icon}</div>
         <h2>{title}</h2>
         <p className="dashboard-card-description">{description}</p>
         <p className="dashboard-card-stat-text">
           <strong>{statValue}</strong> <br /> {statText}
         </p>
         <div className="dashboard-link-container">
-          <p to={linkTo} className="dashboard-link">
-            {linkText}
-          </p>
+          <p className="dashboard-link">{linkText}</p>
         </div>
       </Link>
     </div>
   );
 };
+
 
 export default DashboardCard;
