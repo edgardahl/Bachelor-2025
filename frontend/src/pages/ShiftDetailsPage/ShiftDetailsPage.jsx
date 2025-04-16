@@ -3,10 +3,14 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "../../api/axiosInstance";
 import DeleteShiftPopup from "../../components/Popup/DeleteShiftPopup/DeleteShiftPopup";
 import ClaimShiftPopup from "../../components/Popup/ClaimShiftPopup/ClaimShiftPopup";
+
 import ErrorPopup from "../../components/Popup/ErrorPopup/ErrorPopup";
 import SuccessPopup from "../../components/Popup/SuccessPopup/SuccessPopup";
 import BackButton from "../../components/BackButton/BackButton";
+
 import useAuth from "../../context/UseAuth";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./ShiftDetailsPage.css";
 
 const ShiftDetailsPage = () => {
@@ -17,8 +21,6 @@ const ShiftDetailsPage = () => {
   const [shiftDetails, setShiftDetails] = useState(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showClaimPopup, setShowClaimPopup] = useState(false);
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const userId = user?.id;
@@ -31,8 +33,8 @@ const ShiftDetailsPage = () => {
         const res = await axios.get(`/shifts/${shiftId}`);
         setShiftDetails(res.data[0]);
       } catch (err) {
-        console.error("Error fetching shift:", err);
-        setError("Kunne ikke hente vaktinformasjon.");
+        console.error("Feil ved henting av vakt:", err);
+        toast.error("Kunne ikke hente vaktinformasjon.");
       } finally {
         setIsLoading(false);
       }
@@ -50,13 +52,14 @@ const ShiftDetailsPage = () => {
 
       if (res.status === 200) {
         setShowDeletePopup(false);
+        toast.success("Vakten ble slettet.");
         navigate("/bs/hjem");
       } else {
-        setError("Kunne ikke slette vakten.");
+        toast.error("Kunne ikke slette vakten.");
       }
     } catch (err) {
-      console.error("Delete error:", err);
-      setError("En feil oppstod ved sletting.");
+      console.error("Feil ved sletting:", err);
+      toast.error("En feil oppstod ved sletting.");
     } finally {
       setIsLoading(false);
     }
@@ -78,14 +81,14 @@ const ShiftDetailsPage = () => {
           claimed_by_phone: res.data.claimed_by_phone,
           claimed_by_id: userId,
         }));
+        toast.success("Vakten ble reservert.");
         setShowClaimPopup(false);
-        setSuccessMessage("Vakten ble reservert.");
       } else {
-        setError("Kunne ikke reservere vakten.");
+        toast.error("Kunne ikke reservere vakten.");
       }
     } catch (err) {
-      console.error("Claim error:", err);
-      setError("En feil oppstod ved reservasjon.");
+      console.error("Feil ved reservasjon:", err);
+      toast.error("En feil oppstod ved reservasjon.");
     } finally {
       setIsLoading(false);
     }
@@ -115,63 +118,31 @@ const ShiftDetailsPage = () => {
 
         <div className="shift-details">
           <div className="shift-detail-section">
-            <p>
-              <strong>Butikk:</strong> {shiftDetails.store_name}
-            </p>
-            <p>
-              <strong>Adresse:</strong> {shiftDetails.store_address}
-            </p>
-            <p>
-              <strong>Dato:</strong> {shiftDetails.date}
-            </p>
-            <p>
-              <strong>Tid:</strong> {shiftDetails.start_time} -{" "}
-              {shiftDetails.end_time}
-            </p>
-            <p>
-              <strong>Beskrivelse:</strong>{" "}
-              {shiftDetails.description?.trim()
-                ? shiftDetails.description
-                : "Ingen beskrivelse"}
-            </p>
-            <p>
-              <strong>Kvalifikasjoner:</strong> {qualifications}
-            </p>
+            <p><strong>Butikk:</strong> {shiftDetails.store_name}</p>
+            <p><strong>Adresse:</strong> {shiftDetails.store_address}</p>
+            <p><strong>Dato:</strong> {shiftDetails.date}</p>
+            <p><strong>Tid:</strong> {shiftDetails.start_time} - {shiftDetails.end_time}</p>
+            <p><strong>Beskrivelse:</strong> {shiftDetails.description?.trim() || "Ingen beskrivelse"}</p>
+            <p><strong>Kvalifikasjoner:</strong> {qualifications}</p>
+            <p><strong>Publisert av:</strong> {shiftDetails.posted_by_first_name} {shiftDetails.posted_by_last_name}</p>
 
-            <p>
-              <strong>Publisert av:</strong> {shiftDetails.posted_by_first_name}{" "}
-              {shiftDetails.posted_by_last_name}
-            </p>
             {userRole === "store_manager" && (
-              <p>
-                <strong>Reservert av:</strong>{" "}
-                {shiftDetails.claimed_by_first_name ? (
-                  <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
-                    {shiftDetails.claimed_by_first_name}{" "}
-                    {shiftDetails.claimed_by_last_name}
-                  </Link>
-                ) : (
-                  "Ingen"
-                )}
-              </p>
+              <p><strong>Reservert av:</strong> {shiftDetails.claimed_by_first_name ? (
+                <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
+                  {shiftDetails.claimed_by_first_name} {shiftDetails.claimed_by_last_name}
+                </Link>
+              ) : "Ingen"}</p>
             )}
           </div>
 
           <div className="shift-actions">
             {canClaim && (
-              <button
-                className="claim-button"
-                onClick={() => setShowClaimPopup(true)}
-              >
+              <button className="claim-button" onClick={() => setShowClaimPopup(true)}>
                 Ta Vakt
               </button>
             )}
-
             {canDelete && (
-              <button
-                className="delete-button"
-                onClick={() => setShowDeletePopup(true)}
-              >
+              <button className="delete-button" onClick={() => setShowDeletePopup(true)}>
                 <img src="/icons/delete-white.svg" alt="Slett" />
               </button>
             )}
@@ -191,14 +162,6 @@ const ShiftDetailsPage = () => {
             shiftTitle={shiftDetails.title}
             onCancel={() => setShowClaimPopup(false)}
             onConfirm={handleClaimShift}
-          />
-        )}
-
-        {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
-        {successMessage && (
-          <SuccessPopup
-            message={successMessage}
-            onClose={() => setSuccessMessage(null)}
           />
         )}
       </div>

@@ -138,51 +138,50 @@ export const createShiftController = async (req, res) => {
   try {
     const shiftData = req.body;
 
-    // 1. Create the shift
     const newShift = await createShiftModel(shiftData);
 
-    // ✅ Merge back the qualifications from the original request
+    // Merge back qualifications so notification has full data
     const fullShiftData = { ...newShift, qualifications: shiftData.qualifications };
-    console.log("Full Shift Data:", fullShiftData);
-
     await newShiftPublishedNotificationModel(fullShiftData);
 
-
-    return res.status(201).json(newShift);
+    return res.status(201).json({
+      message: "Vakt opprettet!",
+      shift: newShift,
+    });
   } catch (error) {
-    console.error("Error creating shift:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    console.error("Feil ved oppretting av vakt:", error);
+    return res.status(500).json({
+      error: "Noe gikk galt under oppretting av vakten.",
+    });
   }
 };
+
 
 
 // Delete a shift
 export const deleteShiftController = async (req, res) => {
-  // Extract shift info from request body
   const { shiftId, shiftStoreId } = req.body;
 
-  // Check if the store ID in the request matches the store ID in the JWT
   if (shiftStoreId !== req.user.storeId) {
-    console.error("Store ID mismatch:", shiftStoreId, req.user.storeId);
-    return res
-      .status(403)
-      .json({ error: "You do not have permission to delete this shift." });
+    return res.status(403).json({
+      error: "Du har ikke tillatelse til å slette denne vakten.",
+    });
   }
 
   try {
-    // Call the delete model with the shift ID
     const deletedShift = await deleteShiftModel(shiftId);
-
-    // Return success response if the shift is deleted
     return res.json({
-      message: "Shift deleted successfully",
+      message: "Vakt slettet.",
       deletedShift,
     });
   } catch (error) {
-    console.error("Error deleting shift:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    console.error("Feil ved sletting av vakt:", error);
+    return res.status(500).json({
+      error: "Noe gikk galt under sletting av vakten.",
+    });
   }
 };
+
 
 // Get all shifts that a specific user is qualified for
 export const getShiftsUserIsQualifiedForController = async (req, res) => {

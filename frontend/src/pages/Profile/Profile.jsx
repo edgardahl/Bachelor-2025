@@ -3,7 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
 import Select from "react-select";
+
+import { toast } from "react-toastify";
+
 import Loading from "../../components/Loading/Loading";
+
 import "./Profile.css";
 import BackButton from "../../components/BackButton/BackButton";
 
@@ -37,10 +41,7 @@ const Profile = () => {
 
   const fetchQualifications = useCallback(async () => {
     const res = await axios.get("/qualifications");
-    return res.data.map((q) => ({
-      id: q.qualification_id,
-      name: q.name,
-    }));
+    return res.data.map((q) => ({ id: q.qualification_id, name: q.name }));
   }, []);
 
   const fetchProfile = useCallback(async () => {
@@ -117,9 +118,10 @@ const Profile = () => {
         });
         await fetchProfile();
         setIsEditing(false);
+        toast.success("Profil oppdatert.");
       } catch (err) {
         console.error("Error updating profile:", err);
-        alert("Noe gikk galt ved lagring av profilen.");
+        toast.error("Noe gikk galt ved lagring av profilen.");
       }
     } else {
       setIsEditing(true);
@@ -129,16 +131,16 @@ const Profile = () => {
   const handlePasswordChange = async () => {
     try {
       if (!passwords.currentPassword || !passwords.newPassword) {
-        alert("Begge feltene må fylles ut");
+        toast.warn("Begge feltene må fylles ut");
         return;
       }
 
       await axios.patch("/users/me/password", passwords);
-      alert("Passord oppdatert");
+      toast.success("Passord oppdatert");
       setPasswords({ currentPassword: "", newPassword: "" });
     } catch (err) {
       console.error("Error changing password:", err);
-      alert("Kunne ikke oppdatere passordet.");
+      toast.error("Kunne ikke oppdatere passordet.");
     }
   };
 
@@ -150,10 +152,7 @@ const Profile = () => {
       ? formData.qualifications.filter((q) => q.qualification_id !== id)
       : [
           ...formData.qualifications,
-          {
-            qualification_id: id,
-            qualification_name: qualificationMap[id],
-          },
+          { qualification_id: id, qualification_name: qualificationMap[id] },
         ];
     setFormData((prev) => ({ ...prev, qualifications: updated }));
   };
@@ -167,12 +166,12 @@ const Profile = () => {
         user_id: profileId,
         qualification_ids: selectedIds,
       });
-      alert("Kvalifikasjoner oppdatert");
+      toast.success("Kvalifikasjoner oppdatert.");
       setIsEditingQualifications(false);
       await fetchProfile();
     } catch (err) {
       console.error("Error updating qualifications:", err);
-      alert("Kunne ikke oppdatere kvalifikasjoner.");
+      toast.error("Kunne ikke oppdatere kvalifikasjoner.");
     }
   };
 
