@@ -135,11 +135,10 @@ const ShiftCard = ({
         )}
       </div>
 
-      {canDelete && (
-        <button className="delete-bottom-btn" onClick={handleDeleteClick}>
-          <img src="/icons/delete-white.svg" alt="Slett" />
-        </button>
-      )}
+      <div className="les-mer-text">
+        <span>Les mer →</span>
+      </div>
+
       </div>
 
     </div>

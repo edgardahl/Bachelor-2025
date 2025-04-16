@@ -18,6 +18,11 @@
     animation: spin 0.7s linear infinite;
     margin: 2rem auto;
   }
+
+
+  .vakt-card{
+    color: red;
+  }
   
   @keyframes spin {
     to {

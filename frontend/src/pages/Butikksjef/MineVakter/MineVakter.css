@@ -5,20 +5,30 @@
   font-family: var(--Text-font);
   color: var(--Text-color);
   min-height: 100vh;
-  max-width: 1000px;
+  max-width: 856px;
   margin: 0 auto;
   box-sizing: border-box;
 }
 
 /* Title */
 .mine-vakter-title {
-  font-family: var(--Header-font);
-  font-size: 32px;
+  color: var(--Shifts-text);
+  font-size: 4rem;
   font-weight: 600;
   text-align: center;
   color: var(--Main-dark-color);
   margin-bottom: 20px;
 }
+
+.mine-vakter-beskrivelse {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 100px auto;
+  color: var(--Text-color-light);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
 
 /* Create button section */
 .mine-vakter-button-group {
@@ -27,52 +37,92 @@
   margin-bottom: 30px;
 }
 
-.mine-vakter-create-button {
-  background-color: var(--Create-new);
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-  padding: 12px 24px;
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-transform: uppercase;
-  transition: background-color 0.3s ease;
-}
 
 .mine-vakter-create-button:hover {
-  background-color: #179c58;
+  background-color: var(--Shifts-button-hover);
 }
+
 
 /* Tabs */
-.mine-vakter-tabs {
-  display: flex;
+
+.mine-vakter-tab-bar{
+  margin-bottom: 50px;
+}
+
+.mine-vakter-tab-boxes {
+  display: grid;
+  grid-template-columns: 2fr 2fr; /* 3 equal columns */
   justify-content: center;
-  gap: 12px;
-  margin: 20px 0 30px 0;
+  margin: 20px 0 40px 0;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.mine-vakter-tab {
-  background-color: var(--Closed-tab-color);
+.mine-vakter-tab-box {
+  padding: 16px 12px;
+  background-color: transparent; /* No background */
   color: var(--Text-color-light);
-  padding: 10px 20px;
-  font-size: 16px;
+  text-align: center;
   font-weight: 500;
-  border: none;
+  font-size: 1.1rem;
   text-transform: uppercase;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  border: none;
+  border-bottom: 4px solid var(--Shifts-tab-hover); /* Default: no underline */
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
 }
 
-.mine-vakter-tab:hover {
-  background-color: var(--Closed-tab-color-hover);
+.mine-vakter-tab-box:hover {
+  color: var(--Text-color); /* Darker on hover */
+  border-bottom: 4px solid var(--Shifts-tab-hover);
 }
 
-.mine-vakter-tab.active {
-  background-color: var(--Open-tab-color);
+.mine-vakter-tab-box.active {
+  color: var(--Text-color); /* Or white if preferred */
+  border-bottom: 4px solid var(--Shifts-tab-open); /* Solid underline for active */
+  font-weight: 600;
+}
+
+.mine-vakter-tab-box.create {
   color: white;
   font-weight: 600;
 }
+
+
+/* Special style for the static blue "Create" box */
+.mine-vakter-create-link {
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.mine-vakter-create-round-button {
+  width: 60px;
+  height: 60px;
+  background-color: var(--Shifts-claimed-accent); /* Bright blue or whatever you use */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+}
+
+.mine-vakter-create-round-button:hover {
+  opacity: 0.85;
+}
+
+
 
 /* Section headers */
 .mine-vakter-shift-list-title {
@@ -85,16 +135,18 @@
 
 /* Date headings */
 .shift-date-heading-wrapper {
-  padding: 10px 0 4px;
+  padding-top: 40px;
+  margin-top: 40px;
 }
+
 
 .shift-date-heading {
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 10px;
   text-transform: capitalize;
-  color: var(--Main-dark-color);
-  border-bottom: 2px solid var(--Main-dark-color);
+  color: var(--Shifts-text);
+  border-bottom: 2px solid var(--Shifts-text);
   display: inline-block;
 }
 
@@ -104,7 +156,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 32px;
+  margin-bottom: 52px; /* Already there, keeps spacing below cards */
 }
 
 /* Empty message */

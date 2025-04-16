@@ -81,6 +81,7 @@ const ButikksjefDashboard = () => {
       ) : (
         <div className="dashboard-cards">
           <DashboardCard
+            themeClass="card-theme-shifts"
             icon={<FiBriefcase size={52} />}
             title="Vakter"
             description="Se statusen på alle dine publiserte vakter & utlys en ny vakt"
@@ -89,7 +90,9 @@ const ButikksjefDashboard = () => {
             linkText="Utforsk dine vakter"
             linkTo="/bs/vakter"
           />
+
           <DashboardCard
+            themeClass="card-theme-employees"
             icon={<FaRegUser size={52} />}
             title="Mine ansatte"
             description="Få en oversikt over dine ansatte, deres arbeidsstatus og kompetanse"
@@ -98,7 +101,9 @@ const ButikksjefDashboard = () => {
             linkText="Utforsk dine ansatte"
             linkTo="/bs/ansatte/mine"
           />
+
           <DashboardCard
+            themeClass="card-theme-available"
             icon={<RiUserSearchLine size={52} />}
             title="Ledige ansatte"
             description="Se en oversikt over alle tilgjengelige ansatte i området"
@@ -107,7 +112,9 @@ const ButikksjefDashboard = () => {
             linkText="Utforsk ansatte i området"
             linkTo="/bs/ansatte/ledige"
           />
+
           <DashboardCard
+            themeClass="card-theme-stores"
             icon={<MdOutlineStorefront size={52} />}
             title="Butikker"
             description="Se en oversikt over butikkene i Coop Øst og nyttig informasjon om dem"
@@ -116,6 +123,7 @@ const ButikksjefDashboard = () => {
             linkText="Utforsk andre butikker"
             linkTo="/bs/butikker"
           />
+
         </div>
       )}
     </div>
