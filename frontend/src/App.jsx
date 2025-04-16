@@ -21,6 +21,7 @@ import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
 import Loading from "./components/Loading/Loading";
 
 import NotFound from "./pages/NotFound/NotFound";
+import Landing from "./pages/Landing/Landing";
 
 function App() {
   const { user, loading } = useAuth();
@@ -44,12 +45,15 @@ function App() {
         path="/"
         element={
           user ? (
-            <Navigate
-              to={user.role === "store_manager" ? "/bs/hjem" : "/ba/hjem"}
-              replace
-            />
+            user.role === "store_manager" ? (
+              <Navigate to="/bs/hjem" replace />
+            ) : user.role === "employee" ? (
+              <Navigate to="/ba/hjem" replace />
+            ) : (
+              <Navigate to="/hjem" replace />
+            )
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/hjem" replace />
           )
         }
       />
@@ -62,6 +66,8 @@ function App() {
         path="/register"
         element={user ? <Navigate to="/" replace /> : <RegisterPage />}
       />
+
+      <Route path="/hjem" element={<Landing />} />
 
       {/* Butikksjef routes */}
       <Route

@@ -33,7 +33,7 @@ export default function LoginPage() {
   return (
     <div className="login-wrapper">
       <form onSubmit={handleSubmit} className="login-form">
-        <h2 className="login-title">Login</h2>
+        <h2 className="login-title">Logg inn</h2>
 
         {error && <p className="login-error">{error}</p>}
 
@@ -48,7 +48,7 @@ export default function LoginPage() {
         </div>
 
         <div className="login-field">
-          <label>Password</label>
+          <label>Passord</label>
           <input
             type="password"
             value={password}
@@ -58,7 +58,7 @@ export default function LoginPage() {
         </div>
 
         <button type="submit" className="login-button">
-          Log In
+          Logg inn
         </button>
 
         <button
@@ -66,7 +66,7 @@ export default function LoginPage() {
           className="register-button"
           onClick={() => navigate("/register")}
         >
-          Register
+          Registrer ny bruker
         </button>
       </form>
     </div>
