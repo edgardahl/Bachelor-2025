@@ -1,38 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../api/axiosInstance";
-import "./CreateShift.css";
 import useAuth from "../../../context/UseAuth";
+import { toast } from "react-toastify";
+import "./CreateShift.css";
 
 const CreateShift = () => {
   const { user } = useAuth();
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-
   const [qualifications, setQualifications] = useState([]);
   const [selectedQualifications, setSelectedQualifications] = useState([]);
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [UserId, setUserId] = useState("");
   const [StoreId, setStoreId] = useState("");
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        setUserId(user.id);
-        setStoreId(user.storeId);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
+    if (user) {
+      setUserId(user.id);
+      setStoreId(user.storeId);
+    }
+  }, [user]);
 
   useEffect(() => {
     const fetchQualifications = async () => {
@@ -40,24 +30,22 @@ const CreateShift = () => {
         const response = await axios.get("/qualifications");
         setQualifications(response.data);
       } catch (error) {
-        console.error("Error fetching qualifications:", error);
+        console.error("Feil ved henting av kvalifikasjoner:", error);
       }
     };
-
     fetchQualifications();
   }, []);
 
   const handleQualificationChange = (qualificationId) => {
-    setSelectedQualifications((prevSelected) =>
-      prevSelected.includes(qualificationId)
-        ? prevSelected.filter((id) => id !== qualificationId)
-        : [...prevSelected, qualificationId]
+    setSelectedQualifications((prev) =>
+      prev.includes(qualificationId)
+        ? prev.filter((id) => id !== qualificationId)
+        : [...prev, qualificationId]
     );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
     setLoading(true);
 
     const shiftData = {
@@ -72,12 +60,10 @@ const CreateShift = () => {
     };
 
     try {
-      console.log("Shift Data:", shiftData);
-      const response = await axios.post("/shifts", shiftData);
-      setMessage("Shift created successfully! 🎉");
-      console.log("Shift Created:", response.data);
+      await axios.post("/shifts", shiftData);
+      toast.success("Vakt opprettet");
 
-      // Reset form fields
+      // Reset form
       setDate("");
       setStartTime("");
       setEndTime("");
@@ -85,11 +71,8 @@ const CreateShift = () => {
       setDescription("");
       setSelectedQualifications([]);
     } catch (error) {
-      console.error(
-        "Error creating shift:",
-        error.response?.data || error.message
-      );
-      setMessage("Failed to create shift. Please try again.");
+      console.error("Feil ved oppretting av vakt:", error);
+      toast.error("Kunne ikke opprette vakt. Prøv igjen.");
     } finally {
       setLoading(false);
     }
@@ -98,14 +81,9 @@ const CreateShift = () => {
   return (
     <div className="create-shift-container">
       <h2>Ny vakt</h2>
-      {message && (
-        <p className={message.includes("failed") ? "error" : "success"}>
-          {message}
-        </p>
-      )}
       <form onSubmit={handleSubmit}>
         <div className="form-step">
-          <h3>Step 1: Hvor og når?</h3>
+          <h3>Steg 1: Hvor og når?</h3>
           <div>
             <label>Dato</label>
             <input
@@ -142,7 +120,7 @@ const CreateShift = () => {
         </div>
 
         <div className="form-step">
-          <h3>Step 2: Kvalifikasjon</h3>
+          <h3>Steg 2: Kvalifikasjoner</h3>
           <div>
             {qualifications.map((qualification) => (
               <div key={qualification.qualification_id}>
@@ -157,9 +135,7 @@ const CreateShift = () => {
                     handleQualificationChange(qualification.qualification_id)
                   }
                 />
-                <label
-                  htmlFor={`qualification-${qualification.qualification_id}`}
-                >
+                <label htmlFor={`qualification-${qualification.qualification_id}`}>
                   {qualification.name}
                 </label>
               </div>
@@ -168,9 +144,9 @@ const CreateShift = () => {
         </div>
 
         <div className="form-step">
-          <h3>Step 3: Beskrivelse</h3>
+          <h3>Steg 3: Beskrivelse</h3>
           <div>
-            <label>Title</label>
+            <label>Tittel</label>
             <input
               type="text"
               value={title}
@@ -179,7 +155,7 @@ const CreateShift = () => {
             />
           </div>
           <div>
-            <label>Description</label>
+            <label>Beskrivelse</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -189,7 +165,7 @@ const CreateShift = () => {
         </div>
 
         <button type="submit" disabled={loading}>
-          {loading ? "Creating Shift..." : "Create Shift"}
+          {loading ? "Oppretter..." : "Opprett vakt"}
         </button>
       </form>
     </div>
