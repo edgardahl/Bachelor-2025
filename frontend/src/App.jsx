@@ -18,6 +18,8 @@ import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 import Profile from "./pages/Profile/Profile";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
 
+import Loading from "./components/Loading/Loading";
+
 import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
@@ -29,7 +31,12 @@ function App() {
     location.pathname.startsWith("/dashboard/butikksjef/") &&
     location.pathname.split("/").length > 4;
 
-  if (loading) return <p>Laster inn...</p>;
+  if (loading)
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
 
   const appContent = (
     <Routes>

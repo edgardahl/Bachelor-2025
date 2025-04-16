@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "../../../api/axiosInstance";
 import ButikkCard from "../../../components/Cards/ButikkCard/ButikkCard";
 import KommuneFilter from "../../../components/Filter/kommuneFilter/kommuneFilter";
+import Loading from "../../../components/Loading/Loading";
 import "./ButikkOversikt.css";
 
 const ButikkOversikt = () => {
@@ -75,7 +76,7 @@ const ButikkOversikt = () => {
 
       <div className="butikk-liste">
         {loading ? (
-          <div className="spinner"></div>
+          <Loading />
         ) : stores.length === 0 ? (
           <p>Ingen butikker funnet.</p>
         ) : (
@@ -96,9 +97,9 @@ const ButikkOversikt = () => {
         >
           <img src="/icons/chevron_left.svg" alt="Forrige" />
         </button>
-        <span>
+        <p>
           {currentPage} av {totalPages}
-        </span>
+        </p>
         <button
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))

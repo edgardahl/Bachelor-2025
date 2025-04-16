@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 import ButikkansattCard from "../../../components/Cards/ButikkansattCard/ButikkansattCard";
 import KvalifikasjonerFilter from "../../../components/Filter/kvalifikasjonerFilter/kvalifikasjonerFilter";
+import Loading from "../../../components/Loading/Loading";
 import "./LedigeAnsatte.css";
 
 const LedigeAnsatte = () => {
@@ -46,43 +47,39 @@ const LedigeAnsatte = () => {
     setFilteredEmployees(filtered);
   }, [selectedQualifications, employees]);
 
-  if (loading) {
-    return (
-      <div className="ledige-ansatte">
-        <h1>Ledige Ansatte</h1>
-        <div className="spinner"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="ledige-ansatte">
       <h1>Ledige Ansatte</h1>
 
+      <p>Her ser du ansatte som ønsker å jobbe i din kommune.</p>
+
       <div className="butikk-overview-filter-container">
         <KvalifikasjonerFilter onChange={setSelectedQualifications} />
       </div>
-
-      <p>Her ser du ansatte som ønsker å jobbe i din kommune.</p>
 
       {error && <p className="ledige-error-message">{error}</p>}
 
       {filteredEmployees.length === 0 && !error && (
         <p>Ingen ledige ansatte funnet med de valgte kvalifikasjonene.</p>
       )}
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className="ledige-employee-list">
+            {filteredEmployees.map((employee) => (
+              <Link
+                key={employee.user_id}
+                to={`/bs/ansatte/profil/${employee.user_id}`}
+              >
+                <ButikkansattCard employee={employee} show="store" />
+              </Link>
+            ))}
+          </div>
 
-      <div className="ledige-employee-list">
-        {filteredEmployees.map((employee) => (
-          <Link
-            key={employee.user_id}
-            to={`/bs/ansatte/profil/${employee.user_id}`}
-          >
-            <ButikkansattCard employee={employee} show="store" />
-          </Link>
-        ))}
-      </div>
-
-      <Link to="/bs/hjem">⬅️ Tilbake til Dashboard</Link>
+          <Link to="/bs/hjem">⬅️ Tilbake til Dashboard</Link>
+        </>
+      )}
     </div>
   );
 };
