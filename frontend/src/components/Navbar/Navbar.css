@@ -26,16 +26,16 @@
 
 /* Links */
 .nav-links {
+  max-width: 100%;
+  width: 100%;
   display: none;
-  flex-direction: column;
-  align-items: flex-start;
-  position: absolute;
+  flex-direction: row;
+  justify-content: space-evenly;
   top: 80px;
   left: 0;
   right: 0;
   background-color: var(--Shifts-main);
-  padding: 10px 20px;
-  gap: 14px;
+  padding: 10px 0;
   z-index: 99;
 }
 
@@ -47,7 +47,7 @@
   color: var(--Shifts-main);
   text-decoration: none;
   font-weight: 500;
-  padding: 6px 10px;
+  padding: 6px;
   transition: background-color 0.2s ease, color 0.2s ease;
   font-size: 1.1rem;
 }
@@ -59,21 +59,16 @@
 
 /* Right side of nav */
 .nav-right {
+  max-width: 100%;
+  gap: 1rem;
   display: flex;
+  justify-content: space-evenly;
   align-items: center;
-  gap: 16px;
 }
 
-.profile-icon svg {
-  color: var(--Shifts-main);
-}
-
+.profile-icon svg,
 .menu-button svg {
   color: var(--Shifts-main);
-}
-
-.menu-button svg:hover {
-  color: var(--Main-light-color);
 }
 
 .logout-button {
@@ -98,24 +93,23 @@
   }
 
   .nav-links {
+    position: absolute;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 0.8rem;
   }
 
   .nav-links a {
-    max-width: 85%;
     color: var(--White);
     text-decoration: none;
     padding: 5px;
     border: 2px solid var(--White);
-    width: 80%;
+    min-width: 40%;
     text-align: center;
   }
 
   .logout-button {
-    margin-top: 40px;
-    width: 60%;
     border: none;
   }
 
@@ -138,7 +132,6 @@
     display: flex;
     position: static;
     flex-direction: row;
-    gap: 67px;
     background: none;
     padding: 0;
   }
