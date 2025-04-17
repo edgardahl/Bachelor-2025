@@ -122,3 +122,11 @@
     color: var(--Stores-hover-dark);
   }
   
+
+
+  /* Mobile view media query */
+  @media (max-width: 600px) {
+    .dashboard-card-description{
+      display: none;
+    }
+  }
