@@ -4,9 +4,9 @@ import "./ButikkansattCard.css";
 import { FaBriefcase, FaUser, FaClock, FaMapMarkerAlt } from "react-icons/fa";
 import { HiChevronRight } from "react-icons/hi";
 
-const ButikkansattCard = ({ employee, show = "availability" }) => {
+const ButikkansattCard = ({ employee, show = "availability", cardClass = "" }) => {
   return (
-    <div className="butikkansatt-card">
+    <div className={`butikkansatt-card ${cardClass}`}>
       <div className="card-left">
         <FaUser className="icon-user" />
       </div>
