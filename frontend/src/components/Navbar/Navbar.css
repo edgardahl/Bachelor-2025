@@ -67,6 +67,8 @@
 
 .profile-icon svg,
 .menu-button svg {
+  width: auto;
+  height: 100%;
   color: var(--Shifts-main);
   padding: 0.5rem;
 }
