@@ -1,29 +1,50 @@
 .butikkoversikt-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  color: var(--White);
+}
+
+.butikkoversikt-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--Body-background);
+  color: var(--Text-color);
+  max-width: calc(60% + 5rem);
+  padding: 3rem 5%;
+  margin: 0 auto;
+}
+
+.butikkoversikt-intro h1 {
+  color: var(--Shifts-text);
+  font-size: 4rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  color: var(--Main-dark-color);
+}
+
+.butikkoversikt-intro p {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 100px auto;
+  color: var(--Text-color-light);
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 .butikk-liste {
+  padding: 5%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columns */
-  gap: 5rem 2rem; /* Adjusted spacing between both rows and columns */
-  margin-top: 2rem;
-}
-
-@media (max-width: 1024px) {
-  .butikk-liste {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .butikk-liste {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 5em 2rem;
+  margin-top: 1rem;
 }
 
 .pagination {
+  display: flex;
+  align-items: center;
+  color: var(--White);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,8 +53,12 @@
 }
 
 .pagination button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: none;
-  border: none;
+  border: 2px solid var(--White);
+  border-radius: 8%;
   cursor: pointer;
   padding: 0.5rem;
 }
@@ -43,6 +68,7 @@
   height: 24px;
 }
 
-.pagination button:disabled img {
+.pagination button:disabled img,
+.pagination button:disabled {
   opacity: 0.4;
 }

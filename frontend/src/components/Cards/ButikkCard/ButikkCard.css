@@ -9,13 +9,17 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-width: fit-content;
   height: 100%;
   background: #fff;
-  border-radius: 12px;
-  padding: 1.4rem 1.7rem; /* Slightly more padding */
+  padding: 1.4rem 1.7rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   border: 1px solid #eee;
+}
+
+.butikk-card p {
+  max-width: 20ch;
 }
 
 .butikk-card:hover {
@@ -28,9 +32,15 @@
 }
 
 .butikk-card h2 {
-  font-size: 1.2rem; /* slightly increased */
+  font-size: 1.2rem;
   color: #2c3e50;
   margin: 0;
+}
+
+.butikk-general-info {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
 }
 
 .butikk-chip {
@@ -38,15 +48,15 @@
   margin: 0.6rem 0;
   background-color: #4caf50;
   color: white;
-  padding: 0.35rem 0.75rem; /* slightly increased */
-  font-size: 0.85rem; /* slightly increased */
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
   border-radius: 16px;
   font-weight: 600;
   white-space: nowrap;
 }
 
 .butikk-address {
-  font-size: 1rem; /* was 0.9rem */
+  font-size: 1rem;
   color: #555;
   margin-bottom: 0.6rem;
 }
@@ -56,14 +66,14 @@
 }
 
 .butikk-contact p {
-  font-size: 0.9rem; /* was 0.8rem */
+  font-size: 0.9rem;
   color: #444;
   margin: 0.2rem 0;
 }
 
 .butikk-more-info {
   margin-top: 1rem;
-  font-size: 0.85rem; /* slightly larger */
+  font-size: 0.85rem;
   color: #007bff;
   font-weight: 500;
   text-align: center;

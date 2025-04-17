@@ -15,13 +15,12 @@ body {
 
 .layout-content {
   flex: 1;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   box-sizing: border-box;
 }
 
-
 @media (max-width: 1265px) {
-  .layout-content{
-   padding: 0;
+  .layout-content {
+    padding: 0;
   }
 }
