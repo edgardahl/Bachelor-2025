@@ -62,9 +62,9 @@ const ButikkOversikt = () => {
   return (
     <div className="butikkoversikt-container">
       <div className="butikkoversikt-intro">
-        <h1>Butikker</h1>
+        <h1>BUTIKKER</h1>
         <p>
-          Få en oversikt over alle butikker i Coop Øst og vakter de har lagt ut
+          Få en oversikt over alle butikker i Coop Øst og vakter de har lagt ut.
         </p>
         <KommuneFilter
           onChange={(selectedMunicipalityIds) => {
@@ -74,7 +74,6 @@ const ButikkOversikt = () => {
             setCurrentPage(1);
           }}
         />
-        <p className="total-butikker">Totalt: {totalStores} butikker</p>
       </div>
 
       <div className="butikk-liste">
@@ -98,7 +97,7 @@ const ButikkOversikt = () => {
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
         >
-          <img src="/icons/chevron_left_hvit.svg" alt="Forrige" />
+          <img src="/icons/chevron_left.svg" alt="Forrige" />
         </button>
         <p>
           {currentPage} av {totalPages}
@@ -109,7 +108,7 @@ const ButikkOversikt = () => {
           }
           disabled={currentPage === totalPages}
         >
-          <img src="/icons/chevron_right_hvit.svg" alt="Neste" />
+          <img src="/icons/chevron_right.svg" alt="Neste" />
         </button>
       </div>
     </div>
