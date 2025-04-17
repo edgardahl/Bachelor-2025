@@ -1,27 +1,19 @@
 .butikkoversikt-container {
-  max-width: 100%;
-  margin: 0 auto;
-  color: var(--White);
-}
-
-.butikkoversikt-intro {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   background-color: var(--Body-background);
-  color: var(--Text-color);
-  max-width: calc(60% + 5rem);
-  padding: 3rem 5%;
+  padding: 24px;
+  width: 1006px;
   margin: 0 auto;
 }
 
 .butikkoversikt-intro h1 {
-  color: var(--Shifts-text);
+  color: var(--Stores-main);
   font-size: 4rem;
   font-weight: 600;
-  margin: 0;
   text-align: center;
-  color: var(--Main-dark-color);
+  max-width: 80%;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .butikkoversikt-intro p {

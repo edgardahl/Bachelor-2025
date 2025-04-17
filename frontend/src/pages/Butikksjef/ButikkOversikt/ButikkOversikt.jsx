@@ -62,7 +62,7 @@ const ButikkOversikt = () => {
   return (
     <div className="butikkoversikt-container">
       <div className="butikkoversikt-intro">
-        <h1>Butikker</h1>
+        <h1>BUTIKKER</h1>
         <p>
           Få en oversikt over alle butikker i Coop Øst og vakter de har lagt ut
         </p>
@@ -74,7 +74,6 @@ const ButikkOversikt = () => {
             setCurrentPage(1);
           }}
         />
-        <p className="total-butikker">Totalt: {totalStores} butikker</p>
       </div>
 
       <div className="butikk-liste">
