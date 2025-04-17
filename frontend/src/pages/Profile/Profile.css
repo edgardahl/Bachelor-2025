@@ -241,3 +241,57 @@ ul.municipality-list li {
 .edit-qualifications-button:hover {
   filter: brightness(var(--Transition-button-change-filter));
 }
+
+/* 📱 Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .profile-page {
+    margin: 1rem;
+    padding: 1rem;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    text-align: center;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-field {
+    width: 100%;
+  }
+
+  .profile-field input,
+  .profile-field select,
+  .change-password-section input,
+  .municipality-select {
+    width: 100% !important;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+
+  .edit-button,
+  .save-button,
+  .cancel-button,
+  .change-password-button,
+  .edit-qualifications-button,
+  .qualification-form + button,
+  .qualification-form + button + button {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
+
+  .change-password-section {
+    margin-top: 2rem;
+  }
+
+  ul.municipality-list {
+    padding-left: 1rem;
+  }
+}
