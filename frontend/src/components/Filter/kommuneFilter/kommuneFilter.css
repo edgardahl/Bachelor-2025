@@ -1,29 +1,28 @@
 /* Style for Select */
 .kommune-filter {
-    display: flex;
-    flex-direction: column;
-    width: 70%;
-  }
-  
-  .kommune-filter__label {
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-  
-  .reset-preferred-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    margin-top: 15px;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    text-align: center;
-    width: 100%;
-  }
-  
-  .reset-preferred-button:hover {
-    background-color: #45a049;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.kommune-filter__label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.reset-preferred-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  text-align: center;
+  width: 100%;
+}
+
+.reset-preferred-button:hover {
+  background-color: #45a049;
+}

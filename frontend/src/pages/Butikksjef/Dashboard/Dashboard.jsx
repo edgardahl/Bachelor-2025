@@ -82,7 +82,7 @@ const ButikksjefDashboard = () => {
             description="Se statusen på alle dine publiserte vakter & utlys en ny vakt"
             statValue={`${shiftCount.claimed}/${shiftCount.total}`}
             statText="Vakter er tatt"
-            linkText="Utforsk dine vakter"
+            linkText="Se dine vakter"
             linkTo="/bs/vakter"
           />
 
@@ -92,19 +92,19 @@ const ButikksjefDashboard = () => {
             title="Mine ansatte"
             description="Få en oversikt over dine ansatte, deres arbeidsstatus og kompetanse"
             statValue={`${availableCount}/${employees.length}`}
-            statText="Er åpen for å ta vakter"
-            linkText="Utforsk dine ansatte"
+            statText="Ansatte er åpne for å ta vakter"
+            linkText="Se dine ansatte"
             linkTo="/bs/ansatte/mine"
           />
 
           <DashboardCard
             themeClass="card-theme-available"
             icon={<RiUserSearchLine size={52} />}
-            title="Ledige ansatte"
-            description="Se en oversikt over alle tilgjengelige ansatte i området"
+            title="Alle ansatte"
+            description="Få en oversikt over alle ansatte og deres kontaktinformasjon"
             statValue={availableInArea}
-            statText="Tilgjengelige i ditt område"
-            linkText="Utforsk ansatte i området"
+            statText="Tilgjengelige ansatte"
+            linkText="Se alle ansatte"
             linkTo="/bs/ansatte/ledige"
           />
 
@@ -112,10 +112,10 @@ const ButikksjefDashboard = () => {
             themeClass="card-theme-stores"
             icon={<MdOutlineStorefront size={52} />}
             title="Butikker"
-            description="Se en oversikt over butikkene i Coop Øst og nyttig informasjon om dem"
+            description="Se en oversikt over butikkene i Coop Øst med kontaktinformasjon"
             statValue={`${storeStats.needsHelp}/${storeStats.total}`}
-            statText="Butikker trenger hjelp"
-            linkText="Utforsk andre butikker"
+            statText="Butikker søker ansatte"
+            linkText="Se alle butikker"
             linkTo="/bs/butikker"
           />
         </div>

@@ -1,3 +1,7 @@
+* {
+  font-family: var(--Text-font), sans-serif;
+}
+
 a,
 h1,
 h2,
@@ -9,7 +13,6 @@ h4 {
 p,
 label,
 span {
-  font-family: var(--Text-font), sans-serif;
   font-size: var(--Text-font-size);
 }
 
