@@ -76,8 +76,6 @@ const LedigeAnsatte = () => {
               </Link>
             ))}
           </div>
-
-          <Link to="/bs/hjem">⬅️ Tilbake til Dashboard</Link>
         </>
       )}
     </div>

@@ -71,8 +71,6 @@ const ButikksjefDashboard = () => {
 
   return (
     <div className="dashboard">
-      <h1 className="dashboard-title">Velkommen {user.name}</h1>
-
       {loading ? (
         <Loading />
       ) : (
@@ -120,7 +118,6 @@ const ButikksjefDashboard = () => {
             linkText="Utforsk andre butikker"
             linkTo="/bs/butikker"
           />
-
         </div>
       )}
     </div>

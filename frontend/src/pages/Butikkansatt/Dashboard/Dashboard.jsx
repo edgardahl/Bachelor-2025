@@ -48,7 +48,6 @@ const AnsattDashboard = () => {
 
   return (
     <div className="dashboard">
-      <h1 className="dashboard-title">Ansatt Dashboard</h1>
       {loading ? (
         <Loading />
       ) : (
