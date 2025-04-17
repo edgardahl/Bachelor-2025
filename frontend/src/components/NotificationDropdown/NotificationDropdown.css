@@ -9,6 +9,7 @@
   cursor: pointer;
   position: relative;
   padding: 10px;
+  margin-top: 3px;
   color: var(--Shifts-main);
 }
 
@@ -25,12 +26,12 @@
 
 .notification-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px);
   right: 0;
   background-color: var(--White);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   width: 350px;
-  max-height: fit-content;
+  max-height: 500px;
   overflow-y: auto;
   border-radius: 10px;
   z-index: 1000;
@@ -123,4 +124,32 @@
 
 .notification-close:hover {
   color: #444;
+}
+
+/* ✅ Mobile Fix */
+@media (max-width: 500px) {
+  .notification-dropdown {
+    left: 50%;
+    right: auto;
+    transform: translateX(-80%);
+    width: 90vw;
+    max-width: 320px;
+    padding: 16px;
+  }
+
+  .notification-title {
+    font-size: 15px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .notification-message {
+    font-size: 13.5px;
+    word-break: break-word;
+  }
+
+  .notification-time {
+    font-size: 12px;
+    margin-top: 2px;
+  }
 }

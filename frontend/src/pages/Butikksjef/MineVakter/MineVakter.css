@@ -208,3 +208,18 @@
     max-width: 100%;
   }
 }
+
+
+@media (max-width: 600px) {
+  .mine-vakter-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .shift-card-container{
+    width: 90%;
+    min-width: 300px;
+    height: 270px;
+    max-width: 400px;
+  }
+} 
