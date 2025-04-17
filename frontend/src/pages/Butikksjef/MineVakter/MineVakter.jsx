@@ -69,7 +69,10 @@ const MineVakter = () => {
     <div className="mine-vakter-container">
       <h1 className="mine-vakter-title">DINE UTLYSTE VAKTER</h1>
       <div className="mine-vakter-beskrivelse">
-        <p>Her kan du se alle vaktene du har lagt ut, legge ut nye, sjekke hvilke som er tatt – og se vaktene andre i butikken din har delt.</p>
+        <p>
+          Her kan du se alle vaktene du har lagt ut, legge ut nye, sjekke hvilke
+          som er tatt og se vaktene andre i butikken din har delt.
+        </p>
       </div>
 
       <div className="mine-vakter-tab-bar">
@@ -81,13 +84,17 @@ const MineVakter = () => {
 
         <div className="mine-vakter-tab-boxes">
           <button
-            className={`mine-vakter-tab-box ${activeTab === "mine" ? "active" : ""}`}
+            className={`mine-vakter-tab-box ${
+              activeTab === "mine" ? "active" : ""
+            }`}
             onClick={() => handleTabChange("mine")}
           >
             Mine vakter
           </button>
           <button
-            className={`mine-vakter-tab-box ${activeTab === "store" ? "active" : ""}`}
+            className={`mine-vakter-tab-box ${
+              activeTab === "store" ? "active" : ""
+            }`}
             onClick={() => handleTabChange("store")}
           >
             Alle i butikken

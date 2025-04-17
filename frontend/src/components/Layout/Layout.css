@@ -16,7 +16,6 @@ body {
 
 .layout-content {
   flex: 1;
-  width: 100vw;
   padding: 0 10vw;
   margin: 0 auto;
   box-sizing: border-box;
