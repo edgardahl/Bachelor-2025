@@ -66,7 +66,7 @@ export default function Navbar() {
     <nav className="navbar">
       {/* Desktop Home logo */}
       <Link to="/" className="home-button desktop-only">
-        <img src="/icons/coop-ansattdeling.svg" alt="Coop" />
+        <img src="/icons/coop-compis-logo-sort.svg" alt="Coop" />
       </Link>
 
       {/* Hamburger button (mobile only) */}
