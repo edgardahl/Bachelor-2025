@@ -168,12 +168,10 @@
   text-decoration: underline;
 }
 
-
-/* Responsive */
-@media (max-width: 768px) {
-  .shift-card-container {
-    margin: 1rem 0.5rem;
-    width: 90%;
-    min-width: unset;
-  }
+.kommune-filter-container{
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
+
+

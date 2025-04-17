@@ -1,19 +1,22 @@
 // routes/notificationRoutes.js
 
 import express from "express";
-import { verifyToken } from '../middleware/authMiddleware.js'; // Assuming you have auth middleware
+import { verifyToken } from '../middleware/authMiddleware.js';
 import { 
-    getNotificationByUserIdController, 
-    updateNotificationStatusController 
+  getNotificationByUserIdController, 
+  updateNotificationStatusController,
+  deleteNotificationController 
 } from "../controllers/notificationController.js";
 
 const router = express.Router();
 
-// Route to get all notifications for a specific user
+// Hent alle varsler for en bruker
 router.get("/getNotificationByUserId", verifyToken, getNotificationByUserIdController);
 
-// Route to update the status of a notification to 'opened'
+// Oppdater status på et varsel til 'åpnet'
 router.put("/updateNotificationStatus", verifyToken, updateNotificationStatusController);
 
+// ✅ Slett et varsel
+router.delete("/deleteNotification/:notificationId", verifyToken, deleteNotificationController);
 
 export default router;
