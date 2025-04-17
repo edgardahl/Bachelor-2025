@@ -49,11 +49,14 @@ const LedigeAnsatte = () => {
 
   return (
     <div className="ledige-ansatte">
-      <h1>Ledige Ansatte</h1>
 
-      <p>Her ser du ansatte som ønsker å jobbe i din kommune.</p>
-
-      <div className="butikk-overview-filter-container">
+      <h1 className="ledige-ansatte-title">LEDIGE ANSATTE</h1>
+      <div className="ledige-ansatte-beskrivelse">
+        <p>
+          Her kan du se alle tilgjengelige ansatte som kan jobbe i din butikk. 
+        </p>
+      </div>
+      <div className="kompetanse-filter-container">
         <KvalifikasjonerFilter onChange={setSelectedQualifications} />
       </div>
 
@@ -72,7 +75,7 @@ const LedigeAnsatte = () => {
                 key={employee.user_id}
                 to={`/bs/ansatte/profil/${employee.user_id}`}
               >
-                <ButikkansattCard employee={employee} show="store" />
+                <ButikkansattCard employee={employee} cardClass="available-theme" />
               </Link>
             ))}
           </div>

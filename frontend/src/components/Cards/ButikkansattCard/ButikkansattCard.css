@@ -1,38 +1,22 @@
 .butikkansatt-card {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.2rem 1.5rem;
-  margin: 1rem auto;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
+  background-color: white;
+  border: 2px solid currentColor;
+  border-radius: 5px;
+  padding: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  max-width: 600px;
-  cursor: pointer;
+  color: #333;
 }
 
 .butikkansatt-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .card-left {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f3f4f6;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  flex-shrink: 0;
-}
-
-.icon-user {
-  color: #333;
-  font-size: 1.5rem;
+  margin-right: 16px;
+  font-size: 2rem;
 }
 
 .card-content {
@@ -41,31 +25,60 @@
 
 .card-content h3 {
   margin: 0;
-  font-size: 1.1rem;
-  color: #2c3e50;
+  font-size: 1.2rem;
 }
 
-/* 🛠️ THIS ensures text and icon align perfectly */
 .card-content p {
+  margin: 4px 0;
+  font-size: 0.95rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.95rem;
   color: #555;
-  margin: 4px 0;
-  line-height: 1.2;
 }
 
 .icon {
-  font-size: 1rem;
-  color: #007bff;
-  flex-shrink: 0;
-  position: relative;
-  top: 4px; 
+  margin-right: 6px;
 }
 
 .card-arrow {
-  font-size: 1.3rem;
-  color: #888;
-  flex-shrink: 0;
+  font-size: 1.4rem;
+}
+
+/* --- EMPLOYEE THEME --- */
+.butikkansatt-card.employee-theme {
+  border-color: var(--Employees-main);
+}
+
+.butikkansatt-card.employee-theme:hover {
+  background-color: var(--Employees-hover);
+}
+
+.butikkansatt-card.employee-theme .icon,
+.butikkansatt-card.employee-theme .card-arrow,
+.butikkansatt-card.employee-theme .card-left {
+  color: var(--Employees-main);
+}
+
+.butikkansatt-card.employee-theme h3 {
+  color: var(--Employees-hover-dark);
+}
+
+
+/* --- AVAILABLE THEME --- */
+.butikkansatt-card.available-theme {
+  border-color: var(--Available-main);
+}
+
+.butikkansatt-card.available-theme:hover {
+  background-color: var(--Available-hover);
+}
+
+.butikkansatt-card.available-theme .icon,
+.butikkansatt-card.available-theme .card-arrow,
+.butikkansatt-card.available-theme .card-left {
+  color: var(--Available-main);
+}
+
+.butikkansatt-card.available-theme h3 {
+  color: var(--Available-hover-dark);
 }

@@ -1,3 +1,8 @@
+
+* {
+  box-sizing: border-box;
+}
+
 /* Main container */
 .mine-vakter-container {
   padding: 40px 20px;
@@ -13,11 +18,10 @@
 
 /* Title */
 .mine-vakter-title {
-  color: var(--Shifts-text);
+  color: var(--Shifts-main);
   font-size: 4rem;
   font-weight: 600;
   text-align: center;
-  color: var(--Main-dark-color);
   margin-bottom: 20px;
 }
 
@@ -201,10 +205,6 @@
 @media (max-width: 1006px) {
   .mine-vakter-container {
     width: 100%;
-    max-width: 100%;
-  }
-
-  .shift-date-group{
     max-width: 100%;
   }
 }

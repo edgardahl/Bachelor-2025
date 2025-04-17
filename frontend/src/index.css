@@ -65,10 +65,19 @@
   --Employees-main: #d6a029;
   --Employees-hover: #fef6e6;
   --Employees-hover-dark: #a07811;
+  --Employees-border: #f0e2be;
+  --Employees-text-light: #555;
+  --Employees-text-dark: #222;
+  --Employees-card-radius: 12px;
+
+
 
   --Available-main: #23a188;
   --Available-hover: #e8fef8;
   --Available-hover-dark: #177261;
+  --Available-text: #1c4a42;
+  --Available-light-text: #5c7974;
+  --Available-background: #f9fdfc;
 
   --Stores-main: #d66565;
   --Stores-hover: #fff2f2;

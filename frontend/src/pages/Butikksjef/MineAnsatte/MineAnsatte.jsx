@@ -59,13 +59,15 @@ const MineAnsatte = () => {
 
   return (
     <div className="mine-ansatte">
-      <h1>Mine ansatte</h1>
-      <p className="mine-ansatte-text">
-        Her kan du se alle ansatte som er tilknyttet din butikk.
-      </p>
+      <h1 className="mine-ansatte-title">DINE ANSATTE</h1>
+      <div className="mine-ansatte-beskrivelse">
+        <p>
+          Her kan du se en oversikt over alle ansatte i din butikk. Du kan se hvilken kompetanse de har og om de er ledige
+        </p>
+      </div>
 
       {/* Filterkomponent */}
-      <div className="butikk-overview-filter-container">
+      <div className="kompetanse-filter-container">
         <KvalifikasjonerFilter onChange={setSelectedQualifications} />
       </div>
 
@@ -81,7 +83,7 @@ const MineAnsatte = () => {
                   to={`/bs/ansatte/profil/${employee.user_id}`}
                   key={employee.user_id}
                 >
-                  <ButikkansattCard employee={employee} />
+                <ButikkansattCard employee={employee} cardClass="employee-theme" />
                 </Link>
               ))
             ) : (

@@ -1,17 +1,77 @@
-/* LedigeAnsatte.css */
+
+
+/* Main container */
 .ledige-ansatte {
-    padding: 2rem;
+  background-color: var(--Body-background);
+  padding: 24px;
+  width: 958px;
+  margin: 0 auto;
+}
+
+/* Title */
+.ledige-ansatte-title {
+  color: var(--Available-main);
+  font-size: 4rem;
+  font-weight: 600;
+  text-align: center;
+  max-width: 80%;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ledige-ansatte-beskrivelse {
+  text-align: center;
+  max-width: 80%;
+  margin: 0 auto 100px auto;
+  color: var(--Available-light-text);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.ledige-ansatte-text {
+  color: var(--Available-text);
+  margin-bottom: 24px;
+}
+
+.butikk-overview-filter-container {
+  margin-bottom: 24px;
+}
+
+.ledige-employee-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.kompetanse-filter-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 50px;
+}
+
+/* Responsive styles */
+@media (max-width: 1006px) {
+  .ledige-ansatte {
+    width: 100%;
+    max-width: 100%;
   }
-  
-  .ledige-ansatte .ledige-employee-list {
-    display: grid;
-    gap: 3rem; /* Increased gap to add more space between the cards */
-    margin: 2rem 0;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns for 2x2 grid */
+
+  .shift-date-group {
+    max-width: 100%;
   }
-  
-  .ledige-ansatte .ledige-error-message {
-    color: red;
-    margin-top: 1rem;
+}
+
+/* Mobile view */
+@media (max-width: 700px) {
+  .ledige-ansatte {
+    padding: 12px;
   }
-  
+
+  .ledige-employee-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
