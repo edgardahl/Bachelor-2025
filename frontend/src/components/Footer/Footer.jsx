@@ -4,7 +4,7 @@ import "./Footer.css";
 const Footer = () => {
   return (
     <div className="footer-container">
-      <p>Footer</p>
+      <p>Coop Øst SA - Ansattdeling</p>
     </div>
   );
 };

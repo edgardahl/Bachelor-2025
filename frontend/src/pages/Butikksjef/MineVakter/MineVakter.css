@@ -5,7 +5,7 @@
   font-family: var(--Text-font);
   color: var(--Text-color);
   min-height: 100vh;
-  max-width: 1006px;
+  width: 1006px;
   padding: 75px;
   margin: 0 auto;
   box-sizing: border-box;
@@ -138,6 +138,9 @@
 .shift-date-heading-wrapper {
   padding-top: 40px;
   margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 816px;
 }
 
 
@@ -157,8 +160,15 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 52px; /* Already there, keeps spacing below cards */
+  margin-bottom: 52px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 816px;
+
+  /* 👇 Dette gjør at kortene starter fra venstre, men hele containeren er sentrert */
+  justify-content: flex-start;
 }
+
 
 /* Empty message */
 .mine-vakter-empty-message {
@@ -168,12 +178,33 @@
   padding: 40px 0;
 }
 
-@media (max-width: 1069px) {
+@media (max-width: 965px) {
   .shift-date-heading-wrapper {
     text-align: center;
   }
 
   .mine-vakter-shift-list {
     justify-content: center;
+  }
+
+  .shift-date-group{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+
+
+
+/* media query max 1006px*/
+@media (max-width: 1006px) {
+  .mine-vakter-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .shift-date-group{
+    max-width: 100%;
   }
 }

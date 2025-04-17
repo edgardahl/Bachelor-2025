@@ -3,6 +3,8 @@
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  background-color: var(--Main-dark-color);
-  color: var(--White);
+  background-color: var(--White);
+  border-top: 5px solid var(--Shifts-main);
+  color: var(--Black);
+  margin-top: 5rem;
 }

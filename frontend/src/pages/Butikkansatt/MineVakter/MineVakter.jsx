@@ -87,14 +87,16 @@ const MineVakterAnsatt = () => {
     <div className="mine-vakter-container">
       <h1 className="mine-vakter-title">Vakter</h1>
 
-      <KommuneFilter
-        onChange={(selectedIds) => {
-          setSelectedMunicipalityIds(selectedIds);
-          setSelectedMunicipalityNames(selectedIds);
-        }}
-        defaultValue={selectedMunicipalityNames}
-        userPreferredMunicipalities={preferredMunicipalityNames}
-      />
+      <div className="kommune-filter-container">
+        <KommuneFilter
+          onChange={(selectedIds) => {
+            setSelectedMunicipalityIds(selectedIds);
+            setSelectedMunicipalityNames(selectedIds);
+          }}
+          defaultValue={selectedMunicipalityNames}
+          userPreferredMunicipalities={preferredMunicipalityNames}
+          />
+        </div>
 
       <h3 className="mine-vakter-shift-list-title">
         {selectedMunicipalityNames.length > 0
@@ -112,7 +114,12 @@ const MineVakterAnsatt = () => {
           ) : (
             Object.entries(groupedShifts).map(([date, shiftGroup]) => (
               <div key={date} className="shift-date-group">
+                <div
+                key={`heading-${date}`}
+                className="shift-date-heading-wrapper"
+              >
                 <h4 className="shift-date-heading">{date}</h4>
+              </div>
                 <div className="mine-vakter-shift-list">
                   {shiftGroup.map((shift) => (
                     <ShiftCard
