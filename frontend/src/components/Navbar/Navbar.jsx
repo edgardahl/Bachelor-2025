@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../context/UseAuth";
 import { Link } from "react-router-dom";
-import { FaTimes, FaUser } from "react-icons/fa";
+import { FaTimes, FaRegUserCircle } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import NotificationDropdown from "../../components/NotificationDropdown/NotificationDropdown";
 import "./Navbar.css";
@@ -98,7 +98,7 @@ export default function Navbar() {
           to={user?.role === "employee" ? "/ba/profil" : "/bs/profil"}
           className="profile-icon"
         >
-          <FaUser size={30} />
+          <FaRegUserCircle size={40} />
         </Link>
 
         <button className="logout-button desktop-only" onClick={handleLogout}>
