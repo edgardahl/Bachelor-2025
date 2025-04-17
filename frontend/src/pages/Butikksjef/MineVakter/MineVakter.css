@@ -138,6 +138,9 @@
 .shift-date-heading-wrapper {
   padding-top: 40px;
   margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 816px;
 }
 
 
@@ -157,8 +160,15 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 52px; /* Already there, keeps spacing below cards */
+  margin-bottom: 52px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 816px;
+
+  /* 👇 Dette gjør at kortene starter fra venstre, men hele containeren er sentrert */
+  justify-content: flex-start;
 }
+
 
 /* Empty message */
 .mine-vakter-empty-message {
