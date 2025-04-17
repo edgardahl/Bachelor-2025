@@ -188,3 +188,21 @@ export const notifyStoreManagerOnShiftClaimedModel = async (shift_id, claimedByU
     }
   };
   
+  // Delete a notification by ID
+export const deleteNotificationByIdModel = async (notificationId) => {
+  try {
+    const { error } = await supabase
+      .from("notifications")
+      .delete()
+      .eq("notification_id", notificationId);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return true;
+  } catch (err) {
+    console.error("Error deleting notification:", err);
+    throw new Error("Kunne ikke slette varselet.");
+  }
+};

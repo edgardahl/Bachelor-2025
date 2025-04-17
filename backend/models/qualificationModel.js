@@ -26,3 +26,16 @@ export const getShiftQualificationsModel = async (shiftId) => {
 
   return data; // Return the qualifications for the shift
 };
+
+export const deleteNotificationByIdModel = async (notificationId) => {
+  const { error } = await supabase
+    .from("notifications")
+    .delete()
+    .eq("notification_id", notificationId);
+
+  if (error) {
+    throw new Error("Kunne ikke slette varsel.");
+  }
+
+  return true;
+};
