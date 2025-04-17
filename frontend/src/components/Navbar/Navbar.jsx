@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../context/UseAuth";
 import { Link } from "react-router-dom";
-import { FaHamburger, FaTimes } from "react-icons/fa";
+import { FaTimes, FaUser } from "react-icons/fa";
+import { GiHamburgerMenu } from "react-icons/gi";
 import NotificationDropdown from "../../components/NotificationDropdown/NotificationDropdown";
 import "./Navbar.css";
 
@@ -65,7 +66,7 @@ export default function Navbar() {
     <nav className="navbar">
       {/* Desktop Home logo */}
       <Link to="/" className="home-button desktop-only">
-        <img src="/icons/coop-ansattdeling-hvit.svg" alt="Coop" />
+        <img src="/icons/coop-ansattdeling.svg" alt="Coop" />
       </Link>
 
       {/* Hamburger button (mobile only) */}
@@ -73,7 +74,11 @@ export default function Navbar() {
         className="menu-button"
         onClick={() => setMenuOpen((prev) => !prev)}
       >
-        {menuOpen ? <FaTimes size={30} /> : <FaHamburger size={30} />}
+        {menuOpen ? (
+          <FaTimes className="burgermenu" size={30} />
+        ) : (
+          <GiHamburgerMenu className="burgermenu" size={30} />
+        )}
       </button>
 
       {/* Dropdown menu */}
@@ -93,7 +98,7 @@ export default function Navbar() {
           to={user?.role === "employee" ? "/ba/profil" : "/bs/profil"}
           className="profile-icon"
         >
-          <FaRegCircleUser size={50} />
+          <FaUser size={30} />
         </Link>
 
         <button className="logout-button desktop-only" onClick={handleLogout}>

@@ -27,7 +27,7 @@ export default function NotificationDropdown() {
         const res = await axios.get(`/notifications/getNotificationByUserId`, {
           params: { userId: user.id },
         });
-        
+
         // Check if no notifications were found
         if (res.data.message === "No notifications found.") {
           setNotifications([]); // Set an empty array if no notifications
@@ -37,7 +37,10 @@ export default function NotificationDropdown() {
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
           );
           setNotifications(sortedNotifications);
-          setUnopenedCount(sortedNotifications.filter((notif) => notif.status === "unopened").length);
+          setUnopenedCount(
+            sortedNotifications.filter((notif) => notif.status === "unopened")
+              .length
+          );
         }
       } catch (err) {
         setError("Kunne ikke hente varsler.");
@@ -55,16 +58,19 @@ export default function NotificationDropdown() {
         setOpen(false);
       }
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
 
   // Mark notification as opened when clicked
-  const handleNavigate = async (notificationId, notificationStatus, shiftId) => {
+  const handleNavigate = async (
+    notificationId,
+    notificationStatus,
+    shiftId
+  ) => {
     if (notificationStatus === "unopened") {
       setNotifications((prevNotifications) =>
         prevNotifications.map((notif) =>
@@ -111,9 +117,10 @@ export default function NotificationDropdown() {
   return (
     <div className="notification-wrapper" ref={dropdownRef}>
       <button className="notification-icon" onClick={() => setOpen(!open)}>
-        <FaBell size={24} />
-        {/* Hide the badge when there are no notifications */}
-        {unopenedCount > 0 && <span className="notification-badge">{unopenedCount}</span>}
+        <FaBell size={30} />
+        {unopenedCount > 0 && (
+          <span className="notification-badge">{unopenedCount}</span>
+        )}
       </button>
 
       {open && (
@@ -129,15 +136,27 @@ export default function NotificationDropdown() {
               {notifications.map((notif) => (
                 <li
                   key={notif.notification_id}
-                  onClick={() => handleNavigate(notif.notification_id, notif.status, notif.shift_id)}
-                  className={`notification-item ${notif.status === "unopened" ? "unopened" : ""}`}
+                  onClick={() =>
+                    handleNavigate(
+                      notif.notification_id,
+                      notif.status,
+                      notif.shift_id
+                    )
+                  }
+                  className={`notification-item ${
+                    notif.status === "unopened" ? "unopened" : ""
+                  }`}
                 >
                   <div className="notification-title">
                     {notif.title}
-                    {notif.status === "unopened" && <FaCheckCircle className="unopened-tick" size={16} />}
+                    {notif.status === "unopened" && (
+                      <FaCheckCircle className="unopened-tick" size={16} />
+                    )}
                   </div>
                   <div className="notification-message">{notif.message}</div>
-                  <div className="notification-time">{new Date(notif.created_at).toLocaleString("no-NO")}</div>
+                  <div className="notification-time">
+                    {new Date(notif.created_at).toLocaleString("no-NO")}
+                  </div>
                 </li>
               ))}
             </ul>

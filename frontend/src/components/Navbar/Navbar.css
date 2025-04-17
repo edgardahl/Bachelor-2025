@@ -1,12 +1,14 @@
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background-color: var(--Main-dark-color);
+  justify-content: space-around;
+  margin-bottom: 2rem;
+  background-color: var(--White);
   padding: 15px 20px;
   position: relative;
   z-index: 100;
   font-family: sans-serif;
+  border-bottom: 5px solid var(--Shifts-main);
 }
 
 /* Home logo (desktop only) */
@@ -31,7 +33,7 @@
   top: 80px;
   left: 0;
   right: 0;
-  background-color: var(--Main-dark-color);
+  background-color: var(--Shifts-main);
   padding: 10px 20px;
   gap: 14px;
   z-index: 99;
@@ -42,18 +44,17 @@
 }
 
 .nav-links a {
-  color: white;
+  color: var(--Shifts-main);
   text-decoration: none;
   font-weight: 500;
   padding: 6px 10px;
-  border-radius: 4px;
   transition: background-color 0.2s ease, color 0.2s ease;
   font-size: 1.1rem;
 }
 
 .nav-links a:hover {
-  background-color: var(--Main-light-color);
-  color: var(--Main-dark-color);
+  background-color: var(--Shifts-main);
+  color: var(--White);
 }
 
 /* Right side of nav */
@@ -64,24 +65,21 @@
 }
 
 .profile-icon svg {
-  color: var(--Body-background);
-}
-
-.profile-icon svg:hover {
-  color: var(--Main-light-color);
+  color: var(--Shifts-main);
 }
 
 .menu-button svg {
-  color: var(--Body-background);
+  color: var(--Shifts-main);
 }
+
 .menu-button svg:hover {
   color: var(--Main-light-color);
 }
 
 .logout-button {
-  background-color: var(--Body-background);
-  color: var(--Main-dark-color);
-  border: none;
+  background-color: var(--White);
+  color: var(--Shifts-main);
+  border: 2px solid var(--Shifts-main);
   padding: 8px 14px;
   cursor: pointer;
   font-weight: bold;
@@ -89,29 +87,36 @@
 }
 
 .logout-button:hover {
-  background-color: var(--Main-light-color);
+  background-color: var(--Shifts-main);
+  color: var(--White);
 }
 
 /* Mobile styles */
 @media (max-width: 768px) {
+  .navbar {
+    justify-content: space-between;
+  }
+
   .nav-links {
     justify-content: center;
     align-items: center;
-    padding-left: 0;
-    padding-right: 0;
-    gap: 40px;
+    gap: 0.8rem;
   }
 
   .nav-links a {
-    font-size: 1.3rem;
-    font-weight: bold;
-    width: 100%;
+    max-width: 85%;
+    color: var(--White);
+    text-decoration: none;
+    padding: 5px;
+    border: 2px solid var(--White);
+    width: 80%;
     text-align: center;
   }
 
   .logout-button {
     margin-top: 40px;
     width: 60%;
+    border: none;
   }
 
   .menu-button {
