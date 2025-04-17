@@ -74,9 +74,8 @@ const ButikkOversikt = () => {
             setCurrentPage(1);
           }}
         />
+        <p className="total-butikker">Totalt: {totalStores} butikker</p>
       </div>
-
-      <p>{totalStores} butikker</p>
 
       <div className="butikk-liste">
         {loading ? (

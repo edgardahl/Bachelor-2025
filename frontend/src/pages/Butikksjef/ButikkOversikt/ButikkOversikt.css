@@ -33,6 +33,10 @@
   line-height: 1.6;
 }
 
+.total-butikker {
+  font-weight: 500;
+}
+
 .butikk-liste {
   padding: 5%;
   display: grid;
