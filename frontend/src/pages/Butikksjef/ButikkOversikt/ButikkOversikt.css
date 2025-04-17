@@ -40,7 +40,7 @@
 .pagination {
   display: flex;
   align-items: center;
-  color: var(--White);
+  color: var(--Black);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,8 +53,7 @@
   justify-content: center;
   align-items: center;
   background: none;
-  border: 2px solid var(--White);
-  border-radius: 8%;
+  border: none;
   cursor: pointer;
   padding: 0.5rem;
 }
