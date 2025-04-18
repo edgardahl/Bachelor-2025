@@ -13,7 +13,6 @@ import {
   getUserByPhoneNumber,
   insertUserMunicipalitiesModel,
 } from "../models/authModel.js";
-import { insertDefaultWorkMunicipality } from "../models/userModel.js";
 
 // 🟢 Login User
 export const loginUser = async (req, res) => {
