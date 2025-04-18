@@ -32,11 +32,35 @@
     "email": "kallerud.extra@coop.no"
   },
   {
-    "name": "Coop",
-    "store_chain": "Coop",
-    "municipality_id": "Coop",
-    "address": "Coop",
-    "phone_number": "Coop",
-    "email": "Coop"
+    "name": "Kallerud",
+    "store_chain": "Obs BYGG",
+    "municipality_id": "42e36663-17a3-42f4-a3d0-002a6b8a64c9",
+    "address": "Stampevegen 13, 2827 Hunndalen",
+    "phone_number": "41 57 98 00",
+    "email": "kallerud.obsbygg@coop.no"
+  },
+  {
+    "name": "Raufoss",
+    "store_chain": "Extra",
+    "municipality_id": "23ea658b-06c5-4afe-a3dc-ba9c4a70dfab",
+    "address": "Storgata 49, 2830 Raufoss",
+    "phone_number": "61 19 46 80",
+    "email": "raufoss.extra@coop.no"
+  },
+  {
+    "name": "Fåvang",
+    "store_chain": "Extra",
+    "municipality_id": "23ea658b-06c5-4afe-a3dc-ba9c4a70dfab",
+    "address": "Stasjonsvegen 9, 2634 Fåvang",
+    "phone_number": "61 28 21 02",
+    "email": "faavang.extra@coop.no"
+  },
+  {
+    "name": "Otta",
+    "store_chain": "Extra",
+    "municipality_id": "23ea658b-06c5-4afe-a3dc-ba9c4a70dfab",
+    "address": "Johan Nygårds Gate 12, 2670 Otta",
+    "phone_number": "61 28 21 00",
+    "email": ""
   }
 ]

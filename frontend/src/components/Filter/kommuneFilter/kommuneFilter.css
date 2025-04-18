@@ -1,4 +1,3 @@
-/* Style for Select */
 .kommune-filter {
   display: flex;
   flex-direction: column;
@@ -17,12 +16,13 @@
   padding: 10px 20px;
   border: none;
   cursor: pointer;
+  margin-top: 15px;
   font-size: 1rem;
   transition: background-color 0.3s ease;
   text-align: center;
-  width: 50%;
+  width: 100%;
   border-radius: 6px;
-  height: 45px; /* Fixed height */
+  height: 45px;
   visibility: visible;
   opacity: 1;
   transition: opacity 0.2s ease;
@@ -36,10 +36,25 @@
   pointer-events: none;
 }
 
-
-
-.kommune-filter-container{
+.kommune-filter-container {
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+/* ✅ Responsive tweaks for small screens */
+@media (max-width: 700px) {
+  .kommune-filter {
+    width: 90%;
+  }
+
+  .reset-preferred-button {
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    height: 40px;
+  }
+
+  .kommune-filter__label {
+    font-size: 1rem;
+  }
 }
