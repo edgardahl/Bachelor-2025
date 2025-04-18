@@ -119,7 +119,6 @@
     background-color: var(--White);
     color: var(--Shifts-main);
     border: 2px solid var(--White);
-    padding: 10px 0;
     font-weight: 600;
     font-size: 1rem;
     text-align: center;
@@ -127,12 +126,10 @@
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease;
   }
-  
-  /* Disable hover effect on mobile */
+
   .logout-button.mobile-only:hover {
     text-decoration: underline;
   }
-  
 
   .menu-button {
     display: block;
