@@ -7,15 +7,19 @@
   color: var(--Text-color-light);
 }
 
+.butikk-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .butikk-title {
   color: var(--Stores-main);
   font-size: 4rem;
   font-weight: 600;
   text-align: center;
   max-width: 80%;
-  margin-bottom: 20px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 20px;
   text-transform: uppercase;
 }
 
