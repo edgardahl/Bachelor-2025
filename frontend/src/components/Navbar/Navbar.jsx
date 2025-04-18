@@ -1,10 +1,8 @@
-import { FaRegCircleUser } from "react-icons/fa6";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import useAuth from "../../context/UseAuth";
-import { Link } from "react-router-dom";
-import { FaTimes, FaRegUserCircle } from "react-icons/fa";
+import { FaRegUserCircle, FaTimes } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import useAuth from "../../context/UseAuth";
 import NotificationDropdown from "../../components/NotificationDropdown/NotificationDropdown";
 import "./Navbar.css";
 
@@ -13,7 +11,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const { user } = useAuth();
-  console.log("User in Navbar:", user.role);
+  const menuRef = useRef(null);
 
   const handleLogout = async () => {
     try {
@@ -26,7 +24,7 @@ export default function Navbar() {
     }
   };
 
-  // Dummy links for employee role
+  // Links for roles
   const employeeLinks = (
     <>
       <Link to="/ba/hjem" onClick={() => setMenuOpen(false)}>
@@ -41,7 +39,6 @@ export default function Navbar() {
     </>
   );
 
-  // Links for store_manager role
   const storeManagerLinks = (
     <>
       <Link to="/bs/hjem" onClick={() => setMenuOpen(false)}>
@@ -62,49 +59,58 @@ export default function Navbar() {
     </>
   );
 
+  // Close menu if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuOpen && menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
+
   return (
-    <nav className="navbar">
-      {/* Desktop Home logo */}
-      <Link to="/" className="home-button desktop-only">
-        <img src="/icons/coop-compis-logo-sort.svg" alt="Coop" />
-      </Link>
+    <>
+      {menuOpen && <div className="nav-overlay"></div>}
 
-      {/* Hamburger button (mobile only) */}
-      <button
-        className="menu-button"
-        onClick={() => setMenuOpen((prev) => !prev)}
-      >
-        {menuOpen ? (
-          <FaTimes className="burgermenu" size={30} />
-        ) : (
-          <GiHamburgerMenu className="burgermenu" size={30} />
-        )}
-      </button>
-
-      {/* Dropdown menu */}
-      <div className={`nav-links ${menuOpen ? "open" : ""}`}>
-        {user?.role === "employee" ? employeeLinks : storeManagerLinks}
-
-        {/* Logout (mobile only) */}
-        <button className="logout-button mobile-only" onClick={handleLogout}>
-          Logg ut
-        </button>
-      </div>
-
-      {/* Profile + Logout (desktop only) */}
-      <div className="nav-right">
-        <NotificationDropdown />
-        <Link
-          to={user?.role === "employee" ? "/ba/profil" : "/bs/profil"}
-          className="profile-icon"
-        >
-          <FaRegUserCircle size={40} />
+      <nav className="navbar">
+        <Link to="/" className="home-button desktop-only">
+          <img src="/icons/coop-compis-logo-sort.svg" alt="Coop" />
         </Link>
 
-        <button className="logout-button desktop-only" onClick={handleLogout}>
-          Logg ut
+        <button
+          className="menu-button"
+          onClick={() => setMenuOpen((prev) => !prev)}
+        >
+          {menuOpen ? (
+            <FaTimes className="burgermenu" size={30} />
+          ) : (
+            <GiHamburgerMenu className="burgermenu" size={30} />
+          )}
         </button>
-      </div>
-    </nav>
+
+        <div className={`nav-links ${menuOpen ? "open" : ""}`} ref={menuRef}>
+          {user?.role === "employee" ? employeeLinks : storeManagerLinks}
+          <button className="logout-button mobile-only" onClick={handleLogout}>
+            Logg ut
+          </button>
+        </div>
+
+        <div className="nav-right">
+          <NotificationDropdown />
+          <Link
+            to={user?.role === "employee" ? "/ba/profil" : "/bs/profil"}
+            className="profile-icon"
+          >
+            <FaRegUserCircle size={40} />
+          </Link>
+          <button className="logout-button desktop-only" onClick={handleLogout}>
+            Logg ut
+          </button>
+        </div>
+      </nav>
+    </>
   );
 }
