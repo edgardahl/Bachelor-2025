@@ -35,7 +35,7 @@
   right: 0;
   background-color: var(--Shifts-main);
   padding: 10px 0;
-  z-index: 99;
+  z-index: 101;
 }
 
 .nav-links.open {
@@ -47,8 +47,8 @@
   text-decoration: none;
   font-weight: 500;
   padding: 6px;
-  transition: background-color 0.2s ease, color 0.2s ease;
   font-size: 1.1rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .nav-links a:hover {
@@ -66,14 +66,12 @@
 
 .profile-icon svg,
 .menu-button svg {
-  width: auto;
-  height: 100%;
   color: var(--Shifts-main);
-  padding: 0.5rem;
+  margin: 0; /* Reverted to prevent shrinking the icons */
 }
 
+/* Logout Button */
 .logout-button {
-  min-width: fit-content;
   background-color: var(--White);
   color: var(--Shifts-main);
   border: 2px solid var(--Shifts-main);
@@ -96,16 +94,17 @@
 
   .nav-links {
     position: absolute;
+    top: 100%;
+    left: 0;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     gap: 0.8rem;
+    padding: 20px;
+    background-color: var(--Shifts-main);
   }
 
   .nav-links a {
     color: var(--White);
-    text-decoration: none;
-    padding: 5px;
     border: 2px solid var(--White);
     min-width: 40%;
     text-align: center;
@@ -125,6 +124,17 @@
 
   .mobile-only {
     display: block;
+  }
+
+  /* Shadow overlay when menu is open */
+  .nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 99;
   }
 }
 

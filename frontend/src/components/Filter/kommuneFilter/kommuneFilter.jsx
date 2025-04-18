@@ -3,9 +3,14 @@ import Select from "react-select";
 import axios from "../../../api/axiosInstance";
 import "./kommuneFilter.css";
 
-const KommuneFilter = ({ onChange, defaultValue = [], userPreferredMunicipalities = [] }) => {
+const KommuneFilter = ({
+  onChange,
+  defaultValue = [],
+  userPreferredMunicipalities = [],
+}) => {
   const [municipalities, setMunicipalities] = useState([]);
-  const [selectedMunicipalities, setSelectedMunicipalities] = useState(defaultValue);
+  const [selectedMunicipalities, setSelectedMunicipalities] =
+    useState(defaultValue);
 
   useEffect(() => {
     const fetchMunicipalities = async () => {
@@ -24,17 +29,20 @@ const KommuneFilter = ({ onChange, defaultValue = [], userPreferredMunicipalitie
     // Only run if municipalities and preferred ones are available
     if (municipalities.length > 0 && userPreferredMunicipalities.length > 0) {
       const defaultSelected = municipalities
-        .filter(m => userPreferredMunicipalities.includes(m.municipality_name))
-        .map(m => ({
-          label: m.store_count ? `${m.municipality_name} (${m.store_count} butikker)` : m.municipality_name,
+        .filter((m) =>
+          userPreferredMunicipalities.includes(m.municipality_name)
+        )
+        .map((m) => ({
+          label: m.store_count
+            ? `${m.municipality_name} (${m.store_count} butikker)`
+            : m.municipality_name,
           value: m.municipality_name,
         }));
-  
+
       setSelectedMunicipalities(defaultSelected);
-      onChange(defaultSelected.map(opt => opt.value));
+      onChange(defaultSelected.map((opt) => opt.value));
     }
   }, [municipalities, userPreferredMunicipalities]);
-  
 
   const handleChange = (selectedOptions) => {
     setSelectedMunicipalities(selectedOptions);
@@ -43,16 +51,17 @@ const KommuneFilter = ({ onChange, defaultValue = [], userPreferredMunicipalitie
 
   const handleReset = () => {
     const defaultSelected = municipalities
-      .filter(m => userPreferredMunicipalities.includes(m.municipality_name))
-      .map(m => ({
-        label: m.store_count ? `${m.municipality_name} (${m.store_count} butikker)` : m.municipality_name,
+      .filter((m) => userPreferredMunicipalities.includes(m.municipality_name))
+      .map((m) => ({
+        label: m.store_count
+          ? `${m.municipality_name} (${m.store_count} butikker)`
+          : m.municipality_name,
         value: m.municipality_name,
       }));
-  
+
     setSelectedMunicipalities(defaultSelected);
-    onChange(defaultSelected.map(opt => opt.value));
+    onChange(defaultSelected.map((opt) => opt.value));
   };
-  
 
   const options = municipalities.map((m) => ({
     label: m.store_count
@@ -77,42 +86,50 @@ const KommuneFilter = ({ onChange, defaultValue = [], userPreferredMunicipalitie
         styles={{
           control: (baseStyles, state) => ({
             ...baseStyles,
-            borderColor: state.isFocused ? '#4CAF50' : '#ddd',
-            backgroundColor: '#fff',
-            borderRadius: 0,  // Removed border-radius
+            borderColor: state.isFocused ? "#4CAF50" : "#ddd",
+            backgroundColor: "#fff",
+            borderRadius: 0, // Removed border-radius
             minHeight: 50,
-            fontSize: '1rem',
-            boxShadow: state.isFocused ? '0 0 5px rgba(76, 175, 80, 0.5)' : 'none',
-            transition: 'all 0.2s ease',
-            padding: '0 12px',
-            width: '100%',
-            border: '1px solid #ddd', // Adding border instead of border-radius
+            fontSize: "1rem",
+            boxShadow: state.isFocused
+              ? "0 0 5px rgba(76, 175, 80, 0.5)"
+              : "none",
+            transition: "all 0.2s ease",
+            padding: "0 12px",
+            width: "100%",
+            border: "1px solid #ddd", // Adding border instead of border-radius
           }),
           menu: (baseStyles) => ({
             ...baseStyles,
             maxHeight: 250,
-            overflowY: 'auto',
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',            
-            marginTop: '5px',
+            overflowY: "auto",
+            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+            marginTop: "5px",
           }),
           option: (baseStyles, state) => ({
             ...baseStyles,
-            backgroundColor: state.isSelected ? '#4CAF50' : state.isFocused ? '#e8f5e9' : 'transparent',
-            color: state.isSelected ? '#fff' : '#333',
-            padding: '12px 16px',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s ease',
-            border: 'none', // Remove borders from options
+            backgroundColor: state.isSelected
+              ? "#4CAF50"
+              : state.isFocused
+              ? "#e8f5e9"
+              : "transparent",
+            color: state.isSelected ? "#fff" : "#333",
+            padding: "12px 16px",
+            cursor: "pointer",
+            transition: "background-color 0.2s ease",
+            border: "none", // Remove borders from options
           }),
           placeholder: (baseStyles) => ({
             ...baseStyles,
-            color: '#aaa',
+            color: "#aaa",
           }),
         }}
       />
-      
-      <button 
-        className="reset-preferred-button" 
+
+      <button
+        className={`reset-preferred-button ${
+          selectedMunicipalities.length === 0 ? "hidden" : ""
+        }`}
         onClick={handleReset}
       >
         Tilbakestill til foretrukne kommuner

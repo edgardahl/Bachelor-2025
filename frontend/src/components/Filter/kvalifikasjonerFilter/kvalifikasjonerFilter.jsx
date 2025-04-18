@@ -5,7 +5,8 @@ import "./kvalifikasjonerFilter.css";
 
 const KvalifikasjonerFilter = ({ onChange, defaultValue = [] }) => {
   const [qualifications, setQualifications] = useState([]);
-  const [selectedQualifications, setSelectedQualifications] = useState(defaultValue);
+  const [selectedQualifications, setSelectedQualifications] =
+    useState(defaultValue);
 
   useEffect(() => {
     const fetchQualifications = async () => {
@@ -53,45 +54,55 @@ const KvalifikasjonerFilter = ({ onChange, defaultValue = [] }) => {
         styles={{
           control: (baseStyles, state) => ({
             ...baseStyles,
-            borderColor: state.isFocused ? '#4CAF50' : '#ddd',
-            backgroundColor: '#fff',
+            borderColor: state.isFocused ? "#4CAF50" : "#ddd",
+            backgroundColor: "#fff",
             borderRadius: 0,
             minHeight: 50,
-            fontSize: '1rem',
-            boxShadow: state.isFocused ? '0 0 5px rgba(76, 175, 80, 0.5)' : 'none',
-            transition: 'all 0.2s ease',
-            padding: '0 12px',
-            width: '100%',
-            border: '1px solid #ddd',
+            fontSize: "1rem",
+            boxShadow: state.isFocused
+              ? "0 0 5px rgba(76, 175, 80, 0.5)"
+              : "none",
+            transition: "all 0.2s ease",
+            padding: "0 12px",
+            width: "100%",
+            border: "1px solid #ddd",
           }),
           menu: (baseStyles) => ({
             ...baseStyles,
             maxHeight: 250,
-            overflowY: 'auto',
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-            marginTop: '5px',
+            overflowY: "auto",
+            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+            marginTop: "5px",
           }),
           option: (baseStyles, state) => ({
             ...baseStyles,
             backgroundColor: state.isSelected
-              ? '#4CAF50'
+              ? "#4CAF50"
               : state.isFocused
-              ? '#e8f5e9'
-              : 'transparent',
-            color: state.isSelected ? '#fff' : '#333',
-            padding: '12px 16px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
+              ? "#e8f5e9"
+              : "transparent",
+            color: state.isSelected ? "#fff" : "#333",
+            padding: "12px 16px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
           }),
           placeholder: (baseStyles) => ({
             ...baseStyles,
-            color: '#aaa',
+            color: "#aaa",
           }),
         }}
         components={{
           Option: ({ data, innerRef, innerProps, isSelected }) => (
-            <div ref={innerRef} {...innerProps} style={{ display: "flex", alignItems: "center", padding: "8px 12px" }}>
+            <div
+              ref={innerRef}
+              {...innerProps}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                padding: "8px 12px",
+              }}
+            >
               <input
                 type="checkbox"
                 checked={isSelected}
@@ -104,7 +115,12 @@ const KvalifikasjonerFilter = ({ onChange, defaultValue = [] }) => {
         }}
       />
 
-      <button className="reset-preferred-button" onClick={handleReset}>
+      <button
+        className={`reset-preferred-button ${
+          selectedQualifications.length === 0 ? "hidden" : ""
+        }`}
+        onClick={handleReset}
+      >
         Tilbakestill filter
       </button>
     </div>
