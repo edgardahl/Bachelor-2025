@@ -58,7 +58,7 @@
 
 /* Right side of nav */
 .nav-right {
-  gap: 0.5rem;
+  gap: 1rem;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -79,6 +79,7 @@
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.2s ease;
+  width: 70px;
 }
 
 .logout-button:hover {
@@ -110,8 +111,24 @@
     text-align: center;
   }
 
-  .logout-button {
-    border: none;
+  .nav-links a:hover {
+    text-decoration: underline;
+  }
+
+  .logout-button.mobile-only {
+    background-color: var(--White);
+    color: var(--Shifts-main);
+    border: 2px solid var(--White);
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    min-width: 30%;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .logout-button.mobile-only:hover {
+    text-decoration: underline;
   }
 
   .menu-button {
