@@ -1,19 +1,75 @@
-/* General layout styling */
 body {
   padding: 0;
   margin: 0;
-  background: url("../../../public//icons//bakgrund.png");
+  /* background: url("../../../public//icons//bakgrund.png");
   background-size: cover;
-  background-attachment: fixed;
+  background-attachment: fixed; */
 }
 
 .layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
+}
+
+.blob-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background: #0a3d62;
+  overflow: hidden;
 }
 
 .layout-content {
-  flex: 1;
+  position: relative;
+  z-index: 1;
   box-sizing: border-box;
+  flex: 1;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  filter: blur(60px);
+  opacity: 0.5;
+  animation: float 20s infinite ease-in-out;
+}
+
+.blob:nth-child(1) {
+  width: 250px;
+  height: 250px;
+  top: 10%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.blob:nth-child(2) {
+  width: 400px;
+  height: 400px;
+  top: 50%;
+  left: 60%;
+  animation-delay: 5s;
+}
+
+.blob:nth-child(3) {
+  width: 150px;
+  height: 150px;
+  top: 70%;
+  left: 30%;
+  animation-delay: 10s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(150px, -50px) scale(1.4);
+  }
 }

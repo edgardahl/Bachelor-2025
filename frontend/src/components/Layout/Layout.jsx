@@ -4,23 +4,16 @@ import "./Layout.css";
 import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
 
-const Layout = ({ children, showBackButton = false }) => {
-  const navigate = useNavigate();
-
+const Layout = ({ children }) => {
   return (
     <div className="layout">
       <Navbar />
 
-      {showBackButton && (
-        <button className="back-button" onClick={() => navigate(-1)}>
-          <img
-            src="/icons/back-arrow.svg"
-            alt="Tilbake"
-            width="24"
-            height="24"
-          />
-        </button>
-      )}
+      <div className="blob-container">
+        <div className="blob"></div>
+        <div className="blob"></div>
+        <div className="blob"></div>
+      </div>
 
       <main className="layout-content">{children}</main>
 

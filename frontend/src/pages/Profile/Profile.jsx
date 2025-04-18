@@ -188,7 +188,7 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-      <BackButton />
+      {/* <BackButton /> */}
       <div className="profile-header">
         <h1>{isOwnProfile ? "Min profil" : "Ansattprofil"}</h1>
         {isOwnProfile && !isEditing && (

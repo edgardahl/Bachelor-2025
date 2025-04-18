@@ -7,6 +7,7 @@
   box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
   color: var(--Black);
   margin-top: 5rem;
+  z-index: 100;
 }
 
 /* Mobile view */
