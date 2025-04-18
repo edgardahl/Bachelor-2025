@@ -35,3 +35,11 @@
   opacity: 0;
   pointer-events: none;
 }
+
+
+
+.kommune-filter-container{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

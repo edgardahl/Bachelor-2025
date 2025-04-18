@@ -67,9 +67,7 @@ const MineAnsatte = () => {
       </div>
 
       {/* Filterkomponent */}
-      <div className="kompetanse-filter-container">
         <KvalifikasjonerFilter onChange={setSelectedQualifications} />
-      </div>
 
       {error && <p className="error-message">{error}</p>}
       {loading ? (

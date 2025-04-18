@@ -71,69 +71,71 @@ const KommuneFilter = ({
   }));
 
   return (
-    <div className="kommune-filter">
-      <label htmlFor="municipality-select" className="kommune-filter__label">
-        Filtrer på kommune
-      </label>
-      <Select
-        id="municipality-select"
-        options={options}
-        value={selectedMunicipalities}
-        onChange={handleChange}
-        isMulti
-        isSearchable
-        placeholder="Velg kommune(r)"
-        styles={{
-          control: (baseStyles, state) => ({
-            ...baseStyles,
-            borderColor: state.isFocused ? "#4CAF50" : "#ddd",
-            backgroundColor: "#fff",
-            borderRadius: 0, // Removed border-radius
-            minHeight: 50,
-            fontSize: "1rem",
-            boxShadow: state.isFocused
-              ? "0 0 5px rgba(76, 175, 80, 0.5)"
-              : "none",
-            transition: "all 0.2s ease",
-            padding: "0 12px",
-            width: "100%",
-            border: "1px solid #ddd", // Adding border instead of border-radius
-          }),
-          menu: (baseStyles) => ({
-            ...baseStyles,
-            maxHeight: 250,
-            overflowY: "auto",
-            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-            marginTop: "5px",
-          }),
-          option: (baseStyles, state) => ({
-            ...baseStyles,
-            backgroundColor: state.isSelected
-              ? "#4CAF50"
-              : state.isFocused
-              ? "#e8f5e9"
-              : "transparent",
-            color: state.isSelected ? "#fff" : "#333",
-            padding: "12px 16px",
-            cursor: "pointer",
-            transition: "background-color 0.2s ease",
-            border: "none", // Remove borders from options
-          }),
-          placeholder: (baseStyles) => ({
-            ...baseStyles,
-            color: "#aaa",
-          }),
-        }}
-      />
+    <div className="kommune-filter-container">
+      <div className="kommune-filter">
+        <label htmlFor="municipality-select" className="kommune-filter__label">
+          Filtrer på kommune
+        </label>
+        <Select
+          id="municipality-select"
+          options={options}
+          value={selectedMunicipalities}
+          onChange={handleChange}
+          isMulti
+          isSearchable
+          placeholder="Velg kommune(r)"
+          styles={{
+            control: (baseStyles, state) => ({
+              ...baseStyles,
+              borderColor: state.isFocused ? "#4CAF50" : "#ddd",
+              backgroundColor: "#fff",
+              borderRadius: 0, // Removed border-radius
+              minHeight: 50,
+              fontSize: "1rem",
+              boxShadow: state.isFocused
+                ? "0 0 5px rgba(76, 175, 80, 0.5)"
+                : "none",
+              transition: "all 0.2s ease",
+              padding: "0 12px",
+              width: "100%",
+              border: "1px solid #ddd", // Adding border instead of border-radius
+            }),
+            menu: (baseStyles) => ({
+              ...baseStyles,
+              maxHeight: 250,
+              overflowY: "auto",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+              marginTop: "5px",
+            }),
+            option: (baseStyles, state) => ({
+              ...baseStyles,
+              backgroundColor: state.isSelected
+                ? "#4CAF50"
+                : state.isFocused
+                ? "#e8f5e9"
+                : "transparent",
+              color: state.isSelected ? "#fff" : "#333",
+              padding: "12px 16px",
+              cursor: "pointer",
+              transition: "background-color 0.2s ease",
+              border: "none", // Remove borders from options
+            }),
+            placeholder: (baseStyles) => ({
+              ...baseStyles,
+              color: "#aaa",
+            }),
+          }}
+        />
 
-      <button
-        className={`reset-preferred-button ${
-          selectedMunicipalities.length === 0 ? "hidden" : ""
-        }`}
-        onClick={handleReset}
-      >
-        Tilbakestill til foretrukne kommuner
-      </button>
+        <button
+          className={`reset-preferred-button ${
+            selectedMunicipalities.length === 0 ? "hidden" : ""
+          }`}
+          onClick={handleReset}
+        >
+          Tilbakestill til foretrukne kommuner
+        </button>
+      </div>
     </div>
   );
 };
