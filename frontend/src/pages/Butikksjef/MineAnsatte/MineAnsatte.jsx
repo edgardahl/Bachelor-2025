@@ -59,7 +59,7 @@ const MineAnsatte = () => {
 
   return (
     <div className="mine-ansatte">
-      <h1 className="mine-ansatte-title">DINE ANSATTE</h1>
+      <h1 className="mine-ansatte-title">MINE ANSATTE</h1>
       <div className="mine-ansatte-beskrivelse">
         <p>
           Her kan du se en oversikt over alle ansatte i din butikk. Du kan se hvilken kompetanse de har og om de er ledige

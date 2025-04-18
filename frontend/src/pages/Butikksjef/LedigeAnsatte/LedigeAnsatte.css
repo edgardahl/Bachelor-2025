@@ -74,4 +74,8 @@
     grid-template-columns: 1fr;
     gap: 16px;
   }
+
+  .ledige-ansatte-title {
+    font-size: 2.2rem;
+  }
 }

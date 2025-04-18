@@ -10,6 +10,7 @@
   margin-bottom: 8px;
 }
 
+/* Reset Button (always takes space, visibility toggled via class) */
 .reset-preferred-button {
   background-color: #4caf50;
   color: white;
@@ -21,8 +22,16 @@
   transition: background-color 0.3s ease;
   text-align: center;
   width: 100%;
+  border-radius: 6px;
+  height: 45px; /* Fixed height */
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.2s ease;
 }
 
-.reset-preferred-button:hover {
-  background-color: #45a049;
+/* Hidden version: takes up space but is transparent and not interactive */
+.reset-preferred-button.hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
