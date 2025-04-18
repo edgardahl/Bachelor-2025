@@ -3,6 +3,7 @@ import DashboardCard from "../../../components/Cards/DashboardCard/DashboardCard
 import axios from "../../../api/axiosInstance";
 import useAuth from "../../../context/UseAuth";
 import Loading from "../../../components/Loading/Loading";
+import CoopMap from "../../../components/mapbox/OsloCoopMap"; // Import CoopMap
 import "./Dashboard.css";
 
 const AnsattDashboard = () => {
@@ -51,26 +52,29 @@ const AnsattDashboard = () => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="dashboard-cards">
-          <DashboardCard
-            icon="/icons/vakter.svg"
-            title="Vakter"
-            description="Finn og reserver vakter i andre butikker"
-            statValue={qualifiedShifts}
-            statText="vakter"
-            linkText="Utforsk vakter"
-            linkTo="/ba/vakter"
-          />
-          <DashboardCard
-            icon="/icons/store_icon.svg"
-            title="Butikker"
-            description="Se andre butikker i ditt område og relevant info"
-            statValue={storeStats.total}
-            statText="Butikker"
-            linkText="Utforsk butikker"
-            linkTo="/ba/butikker"
-          />
-        </div>
+        <>
+          <div className="dashboard-cards">
+            <DashboardCard
+              icon="/icons/vakter.svg"
+              title="Vakter"
+              description="Finn og reserver vakter i andre butikker"
+              statValue={qualifiedShifts}
+              statText="vakter"
+              linkText="Utforsk vakter"
+              linkTo="/ba/vakter"
+            />
+            <DashboardCard
+              icon="/icons/store_icon.svg"
+              title="Butikker"
+              description="Se andre butikker i ditt område og relevant info"
+              statValue={storeStats.total}
+              statText="Butikker"
+              linkText="Utforsk butikker"
+              linkTo="/ba/butikker"
+            />
+          </div>
+          <CoopMap /> {/* Add CoopMap here */}
+        </>
       )}
     </div>
   );

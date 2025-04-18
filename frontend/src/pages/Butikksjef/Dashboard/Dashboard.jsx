@@ -7,6 +7,7 @@ import { MdOutlineStorefront } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { RiUserSearchLine } from "react-icons/ri";
 import { FiBriefcase } from "react-icons/fi";
+import CoopMap from "../../../components/mapbox/OsloCoopMap";
 
 import useAuth from "../../../context/UseAuth";
 
@@ -74,51 +75,54 @@ const ButikksjefDashboard = () => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="dashboard-cards">
-          <DashboardCard
-            themeClass="card-theme-shifts"
-            icon={<FiBriefcase size={52} />}
-            title="Vakter"
-            description="Se statusen på alle dine publiserte vakter & utlys en ny vakt"
-            statValue={`${shiftCount.claimed}/${shiftCount.total}`}
-            statText="Vakter er tatt"
-            linkText="Se dine vakter"
-            linkTo="/bs/vakter"
-          />
+        <>
+          <div className="dashboard-cards">
+            <DashboardCard
+              themeClass="card-theme-shifts"
+              icon={<FiBriefcase size={52} />}
+              title="Vakter"
+              description="Se statusen på alle dine publiserte vakter & utlys en ny vakt"
+              statValue={`${shiftCount.claimed}/${shiftCount.total}`}
+              statText="Vakter er tatt"
+              linkText="Se dine vakter"
+              linkTo="/bs/vakter"
+            />
 
-          <DashboardCard
-            themeClass="card-theme-employees"
-            icon={<FaRegUser size={52} />}
-            title="Mine ansatte"
-            description="Få en oversikt over dine ansatte, deres arbeidsstatus og kompetanse"
-            statValue={`${availableCount}/${employees.length}`}
-            statText="Ansatte er åpne for å ta vakter"
-            linkText="Se dine ansatte"
-            linkTo="/bs/ansatte/mine"
-          />
+            <DashboardCard
+              themeClass="card-theme-employees"
+              icon={<FaRegUser size={52} />}
+              title="Mine ansatte"
+              description="Få en oversikt over dine ansatte, deres arbeidsstatus og kompetanse"
+              statValue={`${availableCount}/${employees.length}`}
+              statText="Ansatte er åpne for å ta vakter"
+              linkText="Se dine ansatte"
+              linkTo="/bs/ansatte/mine"
+            />
 
-          <DashboardCard
-            themeClass="card-theme-available"
-            icon={<RiUserSearchLine size={52} />}
-            title="Alle ansatte"
-            description="Få en oversikt over alle ansatte og deres kontaktinformasjon"
-            statValue={availableInArea}
-            statText="Tilgjengelige ansatte"
-            linkText="Se alle ansatte"
-            linkTo="/bs/ansatte/ledige"
-          />
+            <DashboardCard
+              themeClass="card-theme-available"
+              icon={<RiUserSearchLine size={52} />}
+              title="Alle ansatte"
+              description="Få en oversikt over alle ansatte og deres kontaktinformasjon"
+              statValue={availableInArea}
+              statText="Tilgjengelige ansatte"
+              linkText="Se alle ansatte"
+              linkTo="/bs/ansatte/ledige"
+            />
 
-          <DashboardCard
-            themeClass="card-theme-stores"
-            icon={<MdOutlineStorefront size={52} />}
-            title="Butikker"
-            description="Se en oversikt over butikkene i Coop Øst med kontaktinformasjon"
-            statValue={`${storeStats.needsHelp}/${storeStats.total}`}
-            statText="Butikker søker ansatte"
-            linkText="Se alle butikker"
-            linkTo="/bs/butikker"
-          />
-        </div>
+            <DashboardCard
+              themeClass="card-theme-stores"
+              icon={<MdOutlineStorefront size={52} />}
+              title="Butikker"
+              description="Se en oversikt over butikkene i Coop Øst med kontaktinformasjon"
+              statValue={`${storeStats.needsHelp}/${storeStats.total}`}
+              statText="Butikker søker ansatte"
+              linkText="Se alle butikker"
+              linkTo="/bs/butikker"
+            />
+          </div>
+          <CoopMap />
+        </>
       )}
     </div>
   );
