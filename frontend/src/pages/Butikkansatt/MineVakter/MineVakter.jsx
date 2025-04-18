@@ -87,7 +87,6 @@ const MineVakterAnsatt = () => {
     <div className="mine-vakter-container">
       <h1 className="mine-vakter-title">Vakter</h1>
 
-      <div className="kommune-filter-container">
         <KommuneFilter
           onChange={(selectedIds) => {
             setSelectedMunicipalityIds(selectedIds);
@@ -96,7 +95,6 @@ const MineVakterAnsatt = () => {
           defaultValue={selectedMunicipalityNames}
           userPreferredMunicipalities={preferredMunicipalityNames}
           />
-        </div>
 
       <h3 className="mine-vakter-shift-list-title">
         {selectedMunicipalityNames.length > 0

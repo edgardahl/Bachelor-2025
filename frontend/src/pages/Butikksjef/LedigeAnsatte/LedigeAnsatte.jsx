@@ -56,9 +56,7 @@ const LedigeAnsatte = () => {
           Her kan du se alle tilgjengelige ansatte som kan jobbe i din butikk. 
         </p>
       </div>
-      <div className="kompetanse-filter-container">
         <KvalifikasjonerFilter onChange={setSelectedQualifications} />
-      </div>
 
       {error && <p className="ledige-error-message">{error}</p>}
 
