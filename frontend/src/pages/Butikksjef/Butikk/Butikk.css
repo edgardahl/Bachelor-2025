@@ -1,7 +1,7 @@
 .butikk-page {
   max-width: 1006px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 24px;
   font-family: "Segoe UI", sans-serif;
   background-color: var(--Body-background);
   color: var(--Text-color-light);
