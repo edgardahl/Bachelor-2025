@@ -1,85 +1,88 @@
+/* Style for the card container */
 .butikk-card-link {
   text-decoration: none;
-  color: inherit;
-  display: block;
-  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .butikk-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-width: fit-content;
-  height: 100%;
-  background: #fff;
-  padding: 1.4rem 1.7rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 1px solid #eee;
-}
-
-.butikk-card p {
-  max-width: 20ch;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  overflow: hidden;
+  padding: 16px;
+  margin: 16px;
+  transition: transform 0.2s ease-in-out;
 }
 
 .butikk-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
 }
 
+/* Header with the image */
 .butikk-card-header {
-  margin-bottom: 0.6rem;
-}
-
-.butikk-card h2 {
-  font-size: 1.2rem;
-  color: #2c3e50;
-  margin: 0;
-}
-
-.butikk-general-info {
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
+.image-container {
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+h2 {
+  font-size: 16px;
+  text-align: center;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+}
+
+/* The chip for available shifts */
 .butikk-chip {
-  display: inline-block;
-  margin: 0.6rem 0;
   background-color: #4caf50;
   color: white;
-  padding: 0.35rem 0.75rem;
-  font-size: 0.85rem;
-  border-radius: 16px;
-  font-weight: 600;
-  white-space: nowrap;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+/* General info and contact details */
+.butikk-general-info {
+  margin-bottom: 16px;
 }
 
 .butikk-address {
-  font-size: 1rem;
+  font-size: 14px;
   color: #555;
-  margin-bottom: 0.6rem;
-}
-
-.butikk-contact {
-  margin-top: 0.4rem;
+  margin-bottom: 8px;
 }
 
 .butikk-contact p {
-  font-size: 0.9rem;
-  color: #444;
-  margin: 0.2rem 0;
+  font-size: 14px;
+  color: #777;
+  margin: 4px 0;
 }
 
+/* The "More info" text at the bottom */
 .butikk-more-info {
-  margin-top: 1rem;
-  font-size: 0.85rem;
   color: #007bff;
-  font-weight: 500;
+  font-size: 14px;
   text-align: center;
-  transition: color 0.2s ease;
-}
-
-.butikk-card:hover .butikk-more-info {
-  color: #0056b3;
+  margin-top: 16px;
+  cursor: pointer;
 }

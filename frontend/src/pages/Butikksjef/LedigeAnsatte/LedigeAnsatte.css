@@ -45,13 +45,6 @@
   margin-bottom: 20px;
 }
 
-.kompetanse-filter-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 50px;
-}
-
 /* Responsive styles */
 @media (max-width: 1006px) {
   .ledige-ansatte {
