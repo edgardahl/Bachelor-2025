@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, use } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
 import {
@@ -26,7 +26,6 @@ const redStoreIcon = new L.Icon({
   shadowAnchor: [12, 41],
 });
 
-
 // Component to go to user's location
 const GoToMyLocation = ({ setUserPosition }) => {
   const map = useMap();
@@ -47,8 +46,8 @@ const GoToMyLocation = ({ setUserPosition }) => {
       onClick={handleClick}
       style={{
         position: "absolute",
-        top: 10,
-        right: 10,
+        bottom: "10px",  // Move to the bottom
+        left: "10px",   // Stay on the right
         zIndex: 1000,
         background: "#fff",
         border: "1px solid #ccc",
@@ -90,7 +89,7 @@ const LocationSearch = () => {
       style={{
         position: "absolute",
         top: 10,
-        left: 10,
+        right: 10,
         zIndex: 1000,
         background: "#fff",
         padding: "6px",
@@ -151,9 +150,8 @@ const CoopMap = () => {
     const fetchStores = async () => {
       try {
         const response = await axios.get("/stores/getAllStoresWithInfo");
-        console.log(response.data);
         const formattedStores = response.data
-          .filter(store => store.latitude && store.longitude)
+          .filter((store) => store.latitude && store.longitude)
           .map((store) => ({
             ...store,
             position: [store.latitude, store.longitude],
@@ -169,17 +167,21 @@ const CoopMap = () => {
 
   return (
     <div style={{ position: "relative", height: "500px", marginTop: "2rem" }}>
-
       <MapContainer
-        center={userPosition || [59.9139, 10.7522]}  // If userPosition is not available, fallback to Oslo
+        center={userPosition || [59.9139, 10.7522]} // If userPosition is not available, fallback to Oslo
         zoom={12}
         style={{ height: "100%", width: "100%", borderRadius: "12px" }}
       >
+        {/* Custom Zoom behavior for CMD/CTRL key */}
+        <MapControlZoom />
+
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+          attribution="&copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a>"
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
-        
+
+
+
         <LocationSearch />
         <GoToMyLocation setUserPosition={setUserPosition} />
 
@@ -203,7 +205,11 @@ const CoopMap = () => {
                 </>
               )}
               <button
-                onClick={() => navigate(`/${user?.role === "store_manager" ? "bs" : "ba"}/butikker/${store.store_chain}/${store.name}/${store.store_id}`)}
+                onClick={() =>
+                  navigate(
+                    `/${user?.role === "store_manager" ? "bs" : "ba"}/butikker/${store.store_chain}/${store.name}/${store.store_id}`
+                  )
+                }
                 style={{
                   marginTop: "8px",
                   backgroundColor: "#ff5050",
@@ -228,5 +234,26 @@ const CoopMap = () => {
   );
 };
 
+// Custom zoom control component with conditional zoom behavior
+const MapControlZoom = () => {
+  const map = useMap();
+
+  useEffect(() => {
+    const handleWheel = (e) => {
+      if (!e.ctrlKey) {
+        e.preventDefault();
+      }
+    };
+
+    // Attach the wheel event to the map to allow zoom only with CMD/CTRL
+    map.getContainer().addEventListener("wheel", handleWheel);
+
+    return () => {
+      map.getContainer().removeEventListener("wheel", handleWheel);
+    };
+  }, [map]);
+
+  return null;
+};
 
 export default CoopMap;
