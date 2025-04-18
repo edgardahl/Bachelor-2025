@@ -45,7 +45,6 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin-top: 4rem;
 }
 
 .pagination button {
@@ -66,4 +65,29 @@
 .pagination button:disabled img,
 .pagination button:disabled {
   opacity: 0.4;
+}
+
+/* Responsive styles */
+@media (max-width: 1006px) {
+  .butikkoversikt-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .butikkoversikt-intro h1 {
+    width: 100%;
+    font-size: 3rem;
+  }
+}
+
+/* Mobile view */
+@media (max-width: 700px) {
+  .butikkoversikt-container {
+    padding: 12px;
+  }
+
+  .butikk-liste {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
