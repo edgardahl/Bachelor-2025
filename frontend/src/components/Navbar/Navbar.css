@@ -88,7 +88,7 @@
 }
 
 /* Mobile styles */
-@media (max-width: 768px) {
+@media (max-width: 780px) {
   .navbar {
     justify-content: space-between;
   }
@@ -156,7 +156,7 @@
 }
 
 /* Desktop styles */
-@media (min-width: 769px) {
+@media (min-width: 781px) {
   .nav-links {
     display: flex;
     position: static;
