@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Tranberg",
+    "store_chain": "Prix",
+    "municipality_id": "42e36663-17a3-42f4-a3d0-002a6b8a64c9",
+    "address": "Prost Bloms gate 28, 2819 Gjøvik",
+    "phone_number": "61 17 03 20",
+    "email": "tranberg.prix@coop.no"
+  },
+  {
+    "name": "Hunndalen",
+    "store_chain": "Extra",
+    "municipality_id": "42e36663-17a3-42f4-a3d0-002a6b8a64c9",
+    "address": "Raufossveien 223, 2827 Hunndalen",
+    "phone_number": "61 17 90 23",
+    "email": "hunndalen.extra@coop.no"
+  },
+  {
+    "name": "Kirkeby",
+    "store_chain": "Extra",
+    "municipality_id": "42e36663-17a3-42f4-a3d0-002a6b8a64c9",
+    "address": "Valdresvegen 6, 2816 Gjøvik",
+    "phone_number": "61 13 81 88",
+    "email": "kirkeby.extra@coop.no"
+  },
+  {
+    "name": "Kallerud",
+    "store_chain": "Extra",
+    "municipality_id": "42e36663-17a3-42f4-a3d0-002a6b8a64c9",
+    "address": "Stampevegen 13, 2827 Gjøvik",
+    "phone_number": "41 84 98 00",
+    "email": "kallerud.extra@coop.no"
+  },
+  {
+    "name": "Coop",
+    "store_chain": "Coop",
+    "municipality_id": "Coop",
+    "address": "Coop",
+    "phone_number": "Coop",
+    "email": "Coop"
+  }
+]
