@@ -7,6 +7,7 @@ import ClaimShiftPopup from "../../components/Popup/ClaimShiftPopup/ClaimShiftPo
 import ErrorPopup from "../../components/Popup/ErrorPopup/ErrorPopup";
 import SuccessPopup from "../../components/Popup/SuccessPopup/SuccessPopup";
 import BackButton from "../../components/BackButton/BackButton";
+import Loading from "../../components/Loading/Loading";
 
 import useAuth from "../../context/UseAuth";
 import { toast } from "react-toastify";
@@ -95,7 +96,7 @@ const ShiftDetailsPage = () => {
   };
 
   if (isLoading || !shiftDetails) {
-    return <div className="loading-message">Laster vaktinformasjon...</div>;
+    return <Loading />;
   }
 
   const qualifications = Array.isArray(shiftDetails.qualifications)
@@ -118,31 +119,60 @@ const ShiftDetailsPage = () => {
 
         <div className="shift-details">
           <div className="shift-detail-section">
-            <p><strong>Butikk:</strong> {shiftDetails.store_name}</p>
-            <p><strong>Adresse:</strong> {shiftDetails.store_address}</p>
-            <p><strong>Dato:</strong> {shiftDetails.date}</p>
-            <p><strong>Tid:</strong> {shiftDetails.start_time} - {shiftDetails.end_time}</p>
-            <p><strong>Beskrivelse:</strong> {shiftDetails.description?.trim() || "Ingen beskrivelse"}</p>
-            <p><strong>Kvalifikasjoner:</strong> {qualifications}</p>
-            <p><strong>Publisert av:</strong> {shiftDetails.posted_by_first_name} {shiftDetails.posted_by_last_name}</p>
+            <p>
+              <strong>Butikk:</strong> {shiftDetails.store_name}
+            </p>
+            <p>
+              <strong>Adresse:</strong> {shiftDetails.store_address}
+            </p>
+            <p>
+              <strong>Dato:</strong> {shiftDetails.date}
+            </p>
+            <p>
+              <strong>Tid:</strong> {shiftDetails.start_time} -{" "}
+              {shiftDetails.end_time}
+            </p>
+            <p>
+              <strong>Beskrivelse:</strong>{" "}
+              {shiftDetails.description?.trim() || "Ingen beskrivelse"}
+            </p>
+            <p>
+              <strong>Kvalifikasjoner:</strong> {qualifications}
+            </p>
+            <p>
+              <strong>Publisert av:</strong> {shiftDetails.posted_by_first_name}{" "}
+              {shiftDetails.posted_by_last_name}
+            </p>
 
             {userRole === "store_manager" && (
-              <p><strong>Reservert av:</strong> {shiftDetails.claimed_by_first_name ? (
-                <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
-                  {shiftDetails.claimed_by_first_name} {shiftDetails.claimed_by_last_name}
-                </Link>
-              ) : "Ingen"}</p>
+              <p>
+                <strong>Reservert av:</strong>{" "}
+                {shiftDetails.claimed_by_first_name ? (
+                  <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
+                    {shiftDetails.claimed_by_first_name}{" "}
+                    {shiftDetails.claimed_by_last_name}
+                  </Link>
+                ) : (
+                  "Ingen"
+                )}
+              </p>
             )}
           </div>
 
           <div className="shift-actions">
             {canClaim && (
-              <button className="claim-button" onClick={() => setShowClaimPopup(true)}>
+              <button
+                className="claim-button"
+                onClick={() => setShowClaimPopup(true)}
+              >
                 Ta Vakt
               </button>
             )}
             {canDelete && (
-              <button className="delete-button" onClick={() => setShowDeletePopup(true)}>
+              <button
+                className="delete-button"
+                onClick={() => setShowDeletePopup(true)}
+              >
                 <img src="/icons/delete-white.svg" alt="Slett" />
               </button>
             )}
