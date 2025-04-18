@@ -65,12 +65,12 @@ const Butikk = () => {
         </h1>
         <div className="butikk-info">
           <p>
-            📧 <a href={`mailto:${store.email}`}>{store.email}</a>
+            <a href={`mailto:${store.email}`}>{store.email}</a>
           </p>
           <p>
-            📞 <a href={`tel:${store.phone_number}`}>{store.phone_number}</a>
+            <a href={`tel:${store.phone_number}`}>{store.phone_number}</a>
           </p>
-          <p>📍 {store.address}</p>
+          <p>{store.address}</p>
         </div>
       </div>
 

@@ -4,7 +4,14 @@
   align-items: center;
   padding: 1rem;
   background-color: var(--White);
-  border-top: 5px solid var(--Shifts-main);
+  box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
   color: var(--Black);
   margin-top: 5rem;
+}
+
+/* Mobile view */
+@media (max-width: 700px) {
+  .footer-container {
+    margin: 0;
+  }
 }
