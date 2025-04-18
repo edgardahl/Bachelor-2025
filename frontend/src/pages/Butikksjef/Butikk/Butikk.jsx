@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import BackButton from "../../../components/BackButton/BackButton";
+import { MdPlace, MdEmail } from "react-icons/md";
+import { FaPhoneAlt } from "react-icons/fa";
 import "./Butikk.css";
 import useAuth from "../../../context/UseAuth";
 
@@ -65,12 +67,21 @@ const Butikk = () => {
         </h1>
         <div className="butikk-info">
           <p>
-            <a href={`mailto:${store.email}`}>{store.email}</a>
+            <a href={`mailto:${store.email}`}>
+              <MdEmail />
+              {store.email}
+            </a>
           </p>
           <p>
-            <a href={`tel:${store.phone_number}`}>{store.phone_number}</a>
+            <a href={`tel:${store.phone_number}`}>
+              <FaPhoneAlt />
+              {store.phone_number}
+            </a>
           </p>
-          <p>{store.address}</p>
+          <p>
+            <MdPlace />
+            {store.address}
+          </p>
         </div>
       </div>
 
