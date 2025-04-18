@@ -1,4 +1,4 @@
-.dashboard{
+.dashboard {
   padding: 40px;
 }
 
@@ -11,4 +11,15 @@
 
 .dashboard-title {
   text-align: center;
+}
+
+/* 📱 Mobile view: slightly wider cards (still 2 columns) */
+@media (max-width: 600px) {
+  .dashboard {
+    padding: 20px 10px; /* reduce side padding to make cards appear wider */
+  }
+
+  .dashboard-cards {
+    gap: 6px; /* reduce space between cards */
+  }
 }

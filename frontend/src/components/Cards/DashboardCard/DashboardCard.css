@@ -129,4 +129,8 @@
     .dashboard-card-description{
       display: none;
     }
+
+    .dashboard-card-stat-text {
+      margin: 0 5px;
+    }
   }
