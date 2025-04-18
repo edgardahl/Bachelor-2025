@@ -2,7 +2,7 @@
 .kommune-filter {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 50%;
 }
 
 .kommune-filter__label {
@@ -17,16 +17,16 @@
   padding: 10px 20px;
   border: none;
   cursor: pointer;
-  margin-top: 15px;
   font-size: 1rem;
   transition: background-color 0.3s ease;
   text-align: center;
-  width: 100%;
+  width: 50%;
   border-radius: 6px;
   height: 45px; /* Fixed height */
   visibility: visible;
   opacity: 1;
   transition: opacity 0.2s ease;
+  margin: 15px auto;
 }
 
 /* Hidden version: takes up space but is transparent and not interactive */
