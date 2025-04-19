@@ -114,7 +114,7 @@ export default function NotificationDropdown() {
   return (
     <div className="notification-wrapper" ref={dropdownRef}>
       <button className="notification-icon" onClick={() => setOpen(!open)}>
-        <FaBell size={30} />
+        <FaBell size={35} />
         {unopenedCount > 0 && (
           <span className="notification-badge">{unopenedCount}</span>
         )}
