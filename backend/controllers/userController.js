@@ -10,6 +10,8 @@ import {
   updateUserQualificationsModel,
 } from "../models/userModel.js";
 
+import { getStoreByIdModel } from "../models/storeModel.js"; // assuming you have this
+
 import bcrypt from "bcryptjs";
 
 // Get all users
@@ -155,14 +157,26 @@ export const getEmployeesQualificationsController = async (req, res) => {
 };
 
 export const getAvailableEmployeesController = async (req, res) => {
+  console.log("Fetching available employees...");
+
   try {
+    // Step 1: Get user (manager)
     const manager = await getUserByIdModel(req.user.userId);
 
-    if (!manager || !manager.municipality_id) {
-      return res.status(400).json({ error: "Manager does not have a municipality set." });
+    if (!manager || !manager.store_id) {
+      return res.status(400).json({ error: "Manager does not have a store set." });
     }
 
-    const matchingEmployees = await getAvailableEmployeesInMunicipality(manager.municipality_id);
+    // Step 2: Get store
+    const store = await getStoreByIdModel(manager.store_id);
+    console.log("Store data:", store);
+
+    if (!store || !store.municipality_id) {
+      return res.status(400).json({ error: "Store does not have a municipality set." });
+    }
+
+    // Step 3: Get available employees in that municipality
+    const matchingEmployees = await getAvailableEmployeesInMunicipality(store.municipality_id);
 
     res.json(matchingEmployees);
   } catch (error) {
@@ -170,6 +184,7 @@ export const getAvailableEmployeesController = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Update employee qualifications
 export const updateEmployeeQualificationsController = async (req, res) => {

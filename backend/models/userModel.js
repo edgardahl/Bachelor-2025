@@ -84,7 +84,7 @@ export const getAvailableEmployeesInMunicipality = async (municipalityId) => {
     console.error("Error fetching available employees:", error);
     throw new Error(error.message);
   }
-
+  console.log("Available employees data:", data);
   return data;
 };
 

@@ -26,6 +26,7 @@ const LedigeAnsatte = () => {
       try {
         const res = await axios.get("/users/available-employees");
         setEmployees(res.data);
+        console.log("Available employees:", res.data);
         setFilteredEmployees(res.data);
       } catch (err) {
         console.error("Failed to fetch available employees:", err);
