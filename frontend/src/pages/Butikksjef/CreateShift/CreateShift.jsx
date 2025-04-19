@@ -3,6 +3,8 @@ import axios from "../../../api/axiosInstance";
 import useAuth from "../../../context/UseAuth";
 import BackButton from "../../../components/BackButton/BackButton";
 import { toast } from "react-toastify";
+import CreateShiftConfirmModal from "../../../components/createShiftConfirmModal/createShiftConfirmModal"; // juster path ved behov
+
 import "./CreateShift.css";
 
 const CreateShift = () => {
@@ -17,6 +19,9 @@ const CreateShift = () => {
   const [loading, setLoading] = useState(false);
   const [UserId, setUserId] = useState("");
   const [StoreId, setStoreId] = useState("");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingShiftData, setPendingShiftData] = useState(null);
+
 
   useEffect(() => {
     if (user) {
@@ -57,26 +62,36 @@ const CreateShift = () => {
     return options;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-
+  
     const shiftData = {
       title,
       description,
       date,
       start_time: startTime,
       end_time: endTime,
+      qualifications: qualifications
+        .filter((q) => selectedQualifications.includes(q.qualification_id))
+        .map((q) => q.name),
       store_id: StoreId,
       posted_by: UserId,
-      qualifications: selectedQualifications,
     };
+  
+    setPendingShiftData(shiftData);
+    setShowConfirmModal(true);
+  };
 
+  const confirmCreateShift = async () => {
+    if (!pendingShiftData) return;
+  
+    setLoading(true);
     try {
-      await axios.post("/shifts", shiftData);
+      await axios.post("/shifts", {
+        ...pendingShiftData,
+        qualifications: selectedQualifications,
+      });
       toast.success("Vakt opprettet");
-
-      // Reset form
       setDate("");
       setStartTime("");
       setEndTime("");
@@ -88,8 +103,12 @@ const CreateShift = () => {
       toast.error("Kunne ikke opprette vakt. Prøv igjen.");
     } finally {
       setLoading(false);
+      setShowConfirmModal(false);
+      setPendingShiftData(null);
     }
   };
+  
+  
 
   return (
     <div className="create-shift-container">
@@ -98,7 +117,9 @@ const CreateShift = () => {
       <form onSubmit={handleSubmit}>
         <div className="create-shift-form">
           <div className="form-step when-where">
-            <h3>Steg 1: Hvor og når?</h3>
+          <h3>Hvor og når?</h3>
+          <p className="step-description">Velg dato og klokkeslett for vakten.</p>
+
             <div>
               <label>Dato</label>
               <input
@@ -153,36 +174,33 @@ const CreateShift = () => {
           </div>
 
           <div className="form-step">
-            <h3>Steg 2: Kvalifikasjoner</h3>
-            <div className="kvalifikasjoner">
-              {qualifications.map((qualification) => (
-                <div
-                  className="kvalifikasjon-input"
-                  key={qualification.qualification_id}
-                >
-                  <input
-                    type="checkbox"
-                    id={`qualification-${qualification.qualification_id}`}
-                    value={qualification.qualification_id}
-                    checked={selectedQualifications.includes(
-                      qualification.qualification_id
-                    )}
-                    onChange={() =>
-                      handleQualificationChange(qualification.qualification_id)
-                    }
-                  />
-                  <label
-                    htmlFor={`qualification-${qualification.qualification_id}`}
+            <h3>Kvalifikasjoner</h3>
+            <p className="step-description">Velg hvilke kvalifikasjoner som kreves for vakten.</p>
+
+            <div className="qualification-cards">
+              {qualifications.map((qualification) => {
+                const isSelected = selectedQualifications.includes(qualification.qualification_id);
+
+                return (
+                  <div
+                    key={qualification.qualification_id}
+                    className={`qualification-card ${isSelected ? "selected" : ""}`}
+                    onClick={() => handleQualificationChange(qualification.qualification_id)}
                   >
-                    {qualification.name}
-                  </label>
-                </div>
-              ))}
+                    <h4>{qualification.name}</h4>
+                    {isSelected && <span className="checkmark">✔</span>}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
+
+
           <div className="form-step beskrivelse">
-            <h3>Steg 3: Beskrivelse</h3>
+            <h3>Beskrivelse</h3>
+            <p className="step-description">Gi vakten en tittel og beskriv hva den går ut på.</p>
+
             <div>
               <label>Tittel</label>
               <input
@@ -207,6 +225,14 @@ const CreateShift = () => {
           {loading ? "Oppretter..." : "Opprett vakt"}
         </button>
       </form>
+      {showConfirmModal && (
+  <CreateShiftConfirmModal
+    shiftData={pendingShiftData}
+    onCancel={() => setShowConfirmModal(false)}
+    onConfirm={confirmCreateShift}
+  />
+)}
+
     </div>
   );
 };
