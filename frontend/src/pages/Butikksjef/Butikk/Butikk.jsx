@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 import ShiftCard from "../../../components/Cards/ShiftCard/ShiftCard";
 import BackButton from "../../../components/BackButton/BackButton";
+import Loading from "../../../components/Loading/Loading";
 import { MdPlace, MdEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import "./Butikk.css";
@@ -56,7 +57,7 @@ const Butikk = () => {
     setShifts((prev) => prev.filter((shift) => shift.shift_id !== shiftId));
   };
 
-  if (!store) return <p className="butikk-loading">Laster butikkdata...</p>;
+  if (!store) return <Loading />;
 
   return (
     <div className="butikk-page">
