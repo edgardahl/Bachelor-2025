@@ -50,7 +50,7 @@
 
 .show-more-button {
   padding: 0.75rem 1.5rem;
-  background-color: #0077cc;
+  background-color: var(--Card-header-color);
   color: white;
   border: none;
   border-radius: 5px;
