@@ -15,30 +15,6 @@
   cursor: pointer;
 }
 
-/* IF CLAIMED STYLES */
-.shift-card-container.claimed {
-  background-color: #e8fce9;
-}
-
-.shift-card-container.claimed .date-container,
-.shift-card-container.claimed .shift-card-header {
-  background-color: var(--Shifts-claimed-accent);
-}
-
-.shift-card-container.claimed .info-icon,
-.shift-card-container.claimed .les-mer-text {
-  color: var(--Shifts-claimed-accent);
-}
-
-.shift-card-container.claimed .claimed-by-text span,
-.shift-card-container.claimed .claimed-link {
-  color: var(--Shifts-claimed-accent);
-}
-
-.shift-card-container.claimed .claimed-link:hover {
-  color: #219150;
-}
-
 .shift-card-header {
   width: 100%;
   text-align: center;
@@ -111,6 +87,12 @@
   margin: 0;
 }
 
+.claimed-by-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .claimed-by-text span,
 .claimed-link {
   font-weight: bold;
@@ -129,6 +111,11 @@
   color: var(--Shifts-main);
 }
 
+.claimed-check-icon {
+  color: #28a745;
+  font-size: 1rem;
+}
+
 .shift-card-footer {
   position: absolute;
   bottom: 12px;
@@ -139,7 +126,6 @@
   align-items: center;
 }
 
-/* Delete Button */
 .delete-bottom-btn {
   background-color: #d9534f;
   border: none;
