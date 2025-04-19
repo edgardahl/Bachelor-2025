@@ -6,12 +6,20 @@ import KvalifikasjonerFilter from "../../../components/Filter/kvalifikasjonerFil
 import Loading from "../../../components/Loading/Loading";
 import "./MineAnsatte.css";
 
+const PAGE_SIZE = 12;
+
 const MineAnsatte = () => {
   const [employees, setEmployees] = useState([]);
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [selectedQualifications, setSelectedQualifications] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const paginatedEmployees = filteredEmployees.slice(
+    0,
+    currentPage * PAGE_SIZE
+  );
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -41,13 +49,11 @@ const MineAnsatte = () => {
       setFilteredEmployees(employees);
     } else {
       const filtered = employees.filter((emp) => {
-        // Split qualifications into an array by comma and trim spaces
         const kvalifikasjoner = emp.qualifications
           ? emp.qualifications.split(",").map((q) => q.trim())
           : [];
         console.log("Employee qualifications:", kvalifikasjoner);
 
-        // Check if employee has all the selected qualifications
         return selectedQualifications.every((selectedQualification) =>
           kvalifikasjoner.includes(selectedQualification)
         );
@@ -55,39 +61,56 @@ const MineAnsatte = () => {
 
       setFilteredEmployees(filtered);
     }
+    setCurrentPage(1); // Reset pagination when filters change
   }, [selectedQualifications, employees]);
+
+  const handleShowMore = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
 
   return (
     <div className="mine-ansatte">
       <h1 className="mine-ansatte-title">MINE ANSATTE</h1>
       <div className="mine-ansatte-beskrivelse">
         <p>
-          Her kan du se en oversikt over alle ansatte i din butikk. Du kan se hvilken kompetanse de har og om de er ledige
+          Her kan du se en oversikt over alle ansatte i din butikk. Du kan se
+          hvilken kompetanse de har og om de er ledige
         </p>
       </div>
 
-      {/* Filterkomponent */}
-        <KvalifikasjonerFilter onChange={setSelectedQualifications} />
+      <KvalifikasjonerFilter onChange={setSelectedQualifications} />
 
       {error && <p className="error-message">{error}</p>}
+
       {loading ? (
         <Loading />
       ) : (
         <>
           <div className="employee-list">
-            {filteredEmployees.length > 0 ? (
-              filteredEmployees.map((employee) => (
+            {paginatedEmployees.length > 0 ? (
+              paginatedEmployees.map((employee) => (
                 <Link
                   to={`/bs/ansatte/profil/${employee.user_id}`}
                   key={employee.user_id}
                 >
-                <ButikkansattCard employee={employee} cardClass="employee-theme" />
+                  <ButikkansattCard
+                    employee={employee}
+                    cardClass="employee-theme"
+                  />
                 </Link>
               ))
             ) : (
               <p>Ingen ansatte</p>
             )}
           </div>
+
+          {paginatedEmployees.length < filteredEmployees.length && (
+            <div className="show-more-container">
+              <button className="show-more-button" onClick={handleShowMore}>
+                Vis mer
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>
