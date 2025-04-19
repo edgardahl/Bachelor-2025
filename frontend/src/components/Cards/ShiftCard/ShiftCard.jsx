@@ -65,7 +65,10 @@ const ShiftCard = ({
     user.role === "store_manager" && shiftStoreId === usersstoreId;
 
   return (
-    <div className="shift-card-container" onClick={handleCardClick}>
+    <div
+      className={`shift-card-container ${claimedById ? "claimed" : ""}`}
+      onClick={handleCardClick}
+    >
       {showDeletePopup && (
         <DeleteShiftPopup
           shiftTitle={title}
@@ -73,6 +76,8 @@ const ShiftCard = ({
           onConfirm={handleConfirmDelete}
         />
       )}
+
+      {claimedById && <div className="claimed-ribbon" />}
 
       <div className="shift-card-header">
         <h3>{title}</h3>
