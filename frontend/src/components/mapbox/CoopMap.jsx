@@ -46,8 +46,8 @@ const GoToMyLocation = ({ setUserPosition }) => {
       onClick={handleClick}
       style={{
         position: "absolute",
-        bottom: "10px",  // Move to the bottom
-        left: "10px",   // Stay on the right
+        bottom: "10px", // Move to the bottom
+        left: "10px", // Stay on the right
         zIndex: 1000,
         background: "#fff",
         border: "1px solid #ccc",
@@ -180,34 +180,31 @@ const CoopMap = () => {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
 
-
-
         <LocationSearch />
         <GoToMyLocation setUserPosition={setUserPosition} />
 
         {stores.map((store, idx) => (
           <Marker key={idx} position={store.position} icon={redStoreIcon}>
             <Popup>
-              <strong>{store.store_chain} {store.name}</strong>
+              <strong>
+                {store.store_chain} {store.name}
+              </strong>
               <br />
               {user?.role === "store_manager" && (
-                <>
-                  Fleksible ansatte: {store.flexible_employees}
-                  <br />
-                  Ledige vakter: {store.open_shifts}
-                  <br />
-                </>
+                <>Fleksible ansatte: {store.flexible_employees}</>
               )}
               {user?.role === "employee" && (
-                <>
-                  Ledige vakter: {store.open_shifts}
-                  <br />
-                </>
+                <>Ledige vakter: {store.open_shifts}</>
               )}
+              <br />
               <button
                 onClick={() =>
                   navigate(
-                    `/${user?.role === "store_manager" ? "bs" : "ba"}/butikker/${store.store_chain}/${store.name}/${store.store_id}`
+                    `/${
+                      user?.role === "store_manager" ? "bs" : "ba"
+                    }/butikker/${store.store_chain}/${store.name}/${
+                      store.store_id
+                    }`
                   )
                 }
                 style={{
