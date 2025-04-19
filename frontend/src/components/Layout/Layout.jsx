@@ -13,6 +13,8 @@ const Layout = ({ children }) => {
         <div className="blob"></div>
         <div className="blob"></div>
         <div className="blob"></div>
+        <div className="blob"></div>
+        <div className="blob"></div>
       </div>
 
       <main className="layout-content">{children}</main>
