@@ -1,34 +1,121 @@
 .create-shift-container {
+  padding: 24px;
+  background-color: var(--Body-background);
+  font-family: var(--Text-font);
+  color: var(--Text-color);
+  min-height: 100vh;
+  width: 1006px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.create-shift-container h1 {
+  color: var(--Shifts-main);
+  text-transform: uppercase;
+  font-size: 4rem;
+  font-weight: 600;
+  text-align: center;
+  max-width: 80%;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.create-shift-container h3 {
+  margin-top: 5px;
+}
+
+.create-shift-form {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.time-input {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.create-shift-form .kvalifikasjoner {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 2rem;
+}
+
+.create-shift-form .kvalifikasjoner .kvalifikasjon-input {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  justify-items: center;
+  border-bottom: var(--Card-icon-color) 1px solid;
+}
+
+.create-shift-form .beskrivelse {
+  grid-column: span 2;
+}
+
+.create-shift-form .beskrivelse div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.form-step {
+  width: 100%;
+  padding: 5%;
+  border: var(--Card-icon-color) 2px solid;
+  border-radius: 10px;
+}
+
+.create-shift-form input,
+.create-shift-form select,
+.create-shift-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.create-shift-container button {
+  justify-self: center;
+  margin: 2% auto;
+  width: fit-content;
+  height: auto;
+  padding: 10px 20px;
+  background-color: var(--Shifts-claimed-accent);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--White);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.create-shift-container button:hover {
+  opacity: 0.85;
+}
+
+/* Responsive styles */
+@media (max-width: 1006px) {
+  .create-shift-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .create-shift-container {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
   }
-  
-  .create-shift-form label {
-    display: block;
-    margin-bottom: 10px;
+
+  .create-shift-container h1 {
+    max-width: 100%;
+    font-size: 2rem;
   }
-  
-  .create-shift-form input,
-  .create-shift-form select,
-  .create-shift-form button {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .create-shift-form button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .create-shift-form button:hover {
-    background-color: #45a049;
-  }
-  
+}

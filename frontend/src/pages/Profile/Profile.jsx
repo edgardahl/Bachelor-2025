@@ -347,30 +347,37 @@ const Profile = () => {
           </div>
 
           {isOwnProfile && (
-            <div className="change-password-section">
-              <h3>Endre passord</h3>
-              <label>Nåværende passord:</label>
-              <input
-                type="password"
-                name="currentPassword"
-                value={passwords.currentPassword}
-                onChange={handleChange}
-              />
-              <label>Nytt passord:</label>
-              <input
-                type="password"
-                name="newPassword"
-                value={passwords.newPassword}
-                onChange={handleChange}
-              />
-              <button
-                className="change-password-button"
-                onClick={handlePasswordChange}
-              >
-                Oppdater passord
-              </button>
-            </div>
-          )}
+  <div className="change-password-section">
+    <h3>Endre passord</h3>
+    <div className="password-grid">
+      <div className="password-field">
+        <label>Nåværende passord:</label>
+        <input
+          type="password"
+          name="currentPassword"
+          value={passwords.currentPassword}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="password-field">
+        <label>Nytt passord:</label>
+        <input
+          type="password"
+          name="newPassword"
+          value={passwords.newPassword}
+          onChange={handleChange}
+        />
+      </div>
+    </div>
+    <button
+      className="change-password-button"
+      onClick={handlePasswordChange}
+    >
+      Oppdater passord
+    </button>
+  </div>
+)}
+
         </>
       )}
     </div>

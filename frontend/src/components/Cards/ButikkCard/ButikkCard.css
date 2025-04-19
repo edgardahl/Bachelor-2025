@@ -4,6 +4,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  /* Remove pointer cursor from the full link area */
+  cursor: default;
 }
 
 .butikk-card {
@@ -15,6 +17,7 @@
   overflow: hidden;
   margin: 16px;
   transition: transform 0.2s ease-in-out;
+  cursor: pointer; /* Cursor only appears when hovering over card */
 }
 
 .butikk-card:hover {
@@ -93,8 +96,14 @@ h2 {
   color: var(--Card-header-color);
   font-size: 14px;
   text-align: center;
-  margin-top: 20px;
-  cursor: pointer;
+  margin-top: 16px;
+  text-decoration: none;
+  transition: text-decoration 0.2s ease;
+}
+
+/* Underline "Mer info" when card is hovered */
+.butikk-card:hover .butikk-more-info {
+  text-decoration: underline;
 }
 
 

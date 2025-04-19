@@ -7,7 +7,6 @@
   font-family: sans-serif;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.05);
   color: var(--Shifts-text);
-  
   transition: transform 0.4s ease;
 }
 
@@ -17,17 +16,17 @@
 }
 
 /* IF CLAIMED STYLES */
-
 .shift-card-container.claimed {
   background-color: #e8fce9;
-
 }
 
-.shift-card-container.claimed .date-container, .shift-card-container.claimed .shift-card-header {
+.shift-card-container.claimed .date-container,
+.shift-card-container.claimed .shift-card-header {
   background-color: var(--Shifts-claimed-accent);
 }
 
-.shift-card-container.claimed .info-icon, .shift-card-container.claimed .les-mer-text {
+.shift-card-container.claimed .info-icon,
+.shift-card-container.claimed .les-mer-text {
   color: var(--Shifts-claimed-accent);
 }
 
@@ -39,7 +38,6 @@
 .shift-card-container.claimed .claimed-link:hover {
   color: #219150;
 }
-
 
 .shift-card-header {
   width: 100%;
@@ -69,7 +67,6 @@
   width: 90px;
   height: 90px;
   background-color: var(--Shifts-main);
-  
   color: white;
   align-items: center;
   justify-content: center;
@@ -122,11 +119,13 @@
 }
 
 .claimed-link {
-  text-decoration: underline;
-  cursor: pointer;
-}
-.claimed-link:hover {
   text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.claimed-link:hover {
+  text-decoration: underline;
   color: var(--Shifts-main);
 }
 
@@ -149,9 +148,11 @@
   cursor: pointer;
   transition: filter 0.2s ease;
 }
+
 .delete-bottom-btn:hover {
   filter: brightness(0.9);
 }
+
 .delete-bottom-btn img {
   width: 18px;
   height: 18px;
@@ -167,6 +168,3 @@
 .shift-card-container:hover .les-mer-text span {
   text-decoration: underline;
 }
-
-
-
