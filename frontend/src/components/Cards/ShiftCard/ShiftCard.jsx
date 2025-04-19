@@ -113,26 +113,26 @@ const ShiftCard = ({
       </div>
 
       <div className="shift-card-footer">
-        <div className="claimed-by-text">
-          {claimedById && claimedByName?.trim() ? (
-            <>
-              <FiCheckCircle className="claimed-check-icon" />
-              <a
-                href={`/bs/ansatte/profil/${claimedById}`}
-                onClick={(e) => e.stopPropagation()}
-                className="claimed-link"
-              >
-                Tatt av: {claimedByName}
-              </a>
-            </>
-          ) : (
-            <span>Tatt av: Ingen</span>
-          )}
-        </div>
-        <div className="les-mer-text">
-          <span>Les mer →</span>
-        </div>
-      </div>
+  <div
+    className="claimed-by-text"
+    style={{
+      visibility: claimedById && claimedByName?.trim() ? "visible" : "hidden",
+    }}
+  >
+    <FiCheckCircle className="claimed-check-icon" />
+    <a
+      href={`/bs/ansatte/profil/${claimedById}`}
+      onClick={(e) => e.stopPropagation()}
+      className="claimed-link"
+    >
+      Tatt av: {claimedByName}
+    </a>
+  </div>
+  <div className="les-mer-text">
+    <span>Les mer →</span>
+  </div>
+</div>
+
     </div>
   );
 };
