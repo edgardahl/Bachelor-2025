@@ -3,7 +3,7 @@ import DashboardCard from "../../../components/Cards/DashboardCard/DashboardCard
 import axios from "../../../api/axiosInstance";
 import useAuth from "../../../context/UseAuth";
 import Loading from "../../../components/Loading/Loading";
-import CoopMap from "../../../components/mapbox/OsloCoopMap"; // Import CoopMap
+import CoopMap from "../../../components/mapbox/CoopMap"; // Import CoopMap
 import "./Dashboard.css";
 
 const AnsattDashboard = () => {
