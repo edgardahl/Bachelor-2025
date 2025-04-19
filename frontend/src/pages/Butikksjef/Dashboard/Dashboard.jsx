@@ -7,7 +7,7 @@ import { MdOutlineStorefront } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { RiUserSearchLine } from "react-icons/ri";
 import { FiBriefcase } from "react-icons/fi";
-import CoopMap from "../../../components/mapbox/OsloCoopMap";
+import CoopMap from "../../../components/mapbox/CoopMap";
 
 import useAuth from "../../../context/UseAuth";
 
