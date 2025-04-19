@@ -11,13 +11,14 @@ const ButikkOversikt = () => {
   const [stores, setStores] = useState([]);
   const [shiftsCount, setShiftsCount] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalStores, setTotalStores] = useState(0);
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false); // Separate state for "Show More" loading
 
-  const PAGE_SIZE = 8;
+  const PAGE_SIZE = 12;
 
-  const fetchStores = async (filters = {}, page = 1) => {
+  const fetchStores = async (filters = {}, page = 1, append = false) => {
     try {
       const queryParams = new URLSearchParams();
 
@@ -32,8 +33,13 @@ const ButikkOversikt = () => {
         `/stores/stores-with-municipality?${queryParams.toString()}`
       );
 
-      setStores(response.data.stores);
-      setTotalPages(Math.ceil(response.data.total / PAGE_SIZE));
+      if (append) {
+        setStores((prevStores) => [...prevStores, ...response.data.stores]);
+      } else {
+        setStores(response.data.stores);
+      }
+
+      setTotalStores(response.data.total);
 
       const shiftsData = {};
       for (const store of response.data.stores) {
@@ -46,18 +52,29 @@ const ButikkOversikt = () => {
           shiftsData[store.store_id] = 0;
         }
       }
-      setShiftsCount(shiftsData);
+      setShiftsCount((prevShiftsCount) => ({
+        ...prevShiftsCount,
+        ...shiftsData,
+      }));
     } catch (err) {
       console.error("Error fetching stores:", err);
     } finally {
       setLoading(false);
+      setLoadingMore(false); // Stop "Show More" loading
     }
   };
 
   useEffect(() => {
     setLoading(true);
-    fetchStores(filters, currentPage);
-  }, [filters, currentPage]);
+    fetchStores(filters, 1);
+  }, [filters]);
+
+  const handleShowMore = () => {
+    setLoadingMore(true);
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    fetchStores(filters, nextPage, true); // Append new data
+  };
 
   const filteredStores = selectedChains.length
     ? stores.filter((store) => selectedChains.includes(store.store_chain))
@@ -103,25 +120,17 @@ const ButikkOversikt = () => {
         )}
       </div>
 
-      <div className="pagination">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          <img src="/icons/chevron_left.svg" alt="Forrige" />
-        </button>
-        <p>
-          {currentPage} av {totalPages}
-        </p>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-        >
-          <img src="/icons/chevron_right.svg" alt="Neste" />
-        </button>
-      </div>
+      {!loading && stores.length < totalStores && (
+        <div className="show-more-container">
+          <button
+            className="show-more-button"
+            onClick={handleShowMore}
+            disabled={loadingMore}
+          >
+            {loadingMore ? "Laster..." : "Vis mer"}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
