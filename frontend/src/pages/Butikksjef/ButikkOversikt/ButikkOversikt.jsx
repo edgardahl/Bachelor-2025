@@ -6,15 +6,12 @@ import Loading from "../../../components/Loading/Loading";
 import "./ButikkOversikt.css";
 import StoreChainFilter from "../../../components/Filter/ButikkKjedeFilter/ButikkKjedeFilter";
 
-
-
 const ButikkOversikt = () => {
   const [selectedChains, setSelectedChains] = useState([]);
   const [stores, setStores] = useState([]);
   const [shiftsCount, setShiftsCount] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalStores, setTotalStores] = useState(0);
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -35,9 +32,7 @@ const ButikkOversikt = () => {
         `/stores/stores-with-municipality?${queryParams.toString()}`
       );
 
-
       setStores(response.data.stores);
-      setTotalStores(response.data.total);
       setTotalPages(Math.ceil(response.data.total / PAGE_SIZE));
 
       const shiftsData = {};
@@ -65,8 +60,9 @@ const ButikkOversikt = () => {
   }, [filters, currentPage]);
 
   const filteredStores = selectedChains.length
-  ? stores.filter((store) => selectedChains.includes(store.store_chain))
-  : stores;
+    ? stores.filter((store) => selectedChains.includes(store.store_chain))
+    : stores;
+
   return (
     <div className="butikkoversikt-container">
       <div className="butikkoversikt-intro">
@@ -83,29 +79,28 @@ const ButikkOversikt = () => {
           }}
         />
         <StoreChainFilter
-  selectedChains={selectedChains}
-  onChange={(chains) => {
-    setSelectedChains(chains);
-    setCurrentPage(1);
-  }}
-/>
+          selectedChains={selectedChains}
+          onChange={(chains) => {
+            setSelectedChains(chains);
+            setCurrentPage(1);
+          }}
+        />
       </div>
 
       <div className="butikk-liste">
-      {loading ? (
-  <Loading />
-) : filteredStores.length === 0 ? (
-  <p>Ingen butikker funnet.</p>
-) : (
-  filteredStores.map((store) => (
-    <ButikkCard
-      key={store.store_id}
-      store={store}
-      shiftsCount={shiftsCount[store.store_id] || 0}
-    />
-  ))
-)}
-
+        {loading ? (
+          <Loading />
+        ) : filteredStores.length === 0 ? (
+          <p>Ingen butikker funnet.</p>
+        ) : (
+          filteredStores.map((store) => (
+            <ButikkCard
+              key={store.store_id}
+              store={store}
+              shiftsCount={shiftsCount[store.store_id] || 0}
+            />
+          ))
+        )}
       </div>
 
       <div className="pagination">

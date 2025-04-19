@@ -9,16 +9,11 @@ import { FiClock, FiMapPin, FiAward, FiCheckCircle } from "react-icons/fi";
 const ShiftCard = ({
   shiftId,
   title,
-  description,
   date,
   startTime,
   endTime,
   qualifications,
   storeName,
-  postedBy,
-  postedById,
-  userId,
-  usersstoreId,
   shiftStoreId,
   deleteShift,
   claimedByName,
@@ -34,11 +29,6 @@ const ShiftCard = ({
   const handleCardClick = () => {
     const rolePath = user.role === "employee" ? "ba" : "bs";
     navigate(`/${rolePath}/vakter/detaljer/${shiftId}`);
-  };
-
-  const handleDeleteClick = (e) => {
-    e.stopPropagation();
-    setShowDeletePopup(true);
   };
 
   const handleConfirmDelete = async () => {
@@ -60,9 +50,6 @@ const ShiftCard = ({
       alert("Could not delete shift.");
     }
   };
-
-  const canDelete =
-    user.role === "store_manager" && shiftStoreId === usersstoreId;
 
   return (
     <div
@@ -113,26 +100,26 @@ const ShiftCard = ({
       </div>
 
       <div className="shift-card-footer">
-  <div
-    className="claimed-by-text"
-    style={{
-      visibility: claimedById && claimedByName?.trim() ? "visible" : "hidden",
-    }}
-  >
-    <FiCheckCircle className="claimed-check-icon" />
-    <a
-      href={`/bs/ansatte/profil/${claimedById}`}
-      onClick={(e) => e.stopPropagation()}
-      className="claimed-link"
-    >
-      Tatt av: {claimedByName}
-    </a>
-  </div>
-  <div className="les-mer-text">
-    <span>Les mer →</span>
-  </div>
-</div>
-
+        <div
+          className="claimed-by-text"
+          style={{
+            visibility:
+              claimedById && claimedByName?.trim() ? "visible" : "hidden",
+          }}
+        >
+          <FiCheckCircle className="claimed-check-icon" />
+          <a
+            href={`/bs/ansatte/profil/${claimedById}`}
+            onClick={(e) => e.stopPropagation()}
+            className="claimed-link"
+          >
+            Tatt av: {claimedByName}
+          </a>
+        </div>
+        <div className="les-mer-text">
+          <span>Les mer →</span>
+        </div>
+      </div>
     </div>
   );
 };
