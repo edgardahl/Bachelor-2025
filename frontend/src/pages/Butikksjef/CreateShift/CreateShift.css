@@ -43,6 +43,8 @@
   font-weight: bold;
 }
 
+
+
 .create-shift-form {
   counter-reset: step;
 }
@@ -64,6 +66,19 @@ textarea,
   margin-bottom: 1rem;
   font-size: 1rem;
 }
+
+.time-range-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.time-input-group {
+  flex: 1;
+  min-width: 140px;
+}
+
 
 textarea {
   resize: vertical;
