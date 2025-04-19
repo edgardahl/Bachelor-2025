@@ -116,26 +116,28 @@ const CreateShift = () => {
       <h1>Ny vakt</h1>
       <form onSubmit={handleSubmit}>
         <div className="create-shift-form">
-          <div className="form-step when-where">
+        <div className="form-step when-where">
           <h3>Hvor og når?</h3>
           <p className="step-description">Velg dato og klokkeslett for vakten.</p>
 
-            <div>
-              <label>Dato</label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
-                min={new Date().toISOString().split("T")[0]}
-                max={
-                  new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-                    .toISOString()
-                    .split("T")[0]
-                }
-              />
-            </div>
-            <div>
+          <div>
+            <label>Dato</label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+              min={new Date().toISOString().split("T")[0]}
+              max={
+                new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                  .toISOString()
+                  .split("T")[0]
+              }
+            />
+          </div>
+
+          <div className="time-range-group">
+            <div className="time-input-group">
               <label>Fra</label>
               <input
                 type="time"
@@ -147,7 +149,7 @@ const CreateShift = () => {
               />
             </div>
 
-            <div>
+            <div className="time-input-group">
               <label>Til</label>
               <input
                 type="time"
@@ -158,20 +160,19 @@ const CreateShift = () => {
                 required
               />
             </div>
-
-            <datalist id="quarter-hour-options">
-              {Array.from({ length: 24 * 4 }, (_, i) => {
-                const hours = String(Math.floor(i / 4)).padStart(2, "0");
-                const minutes = String((i % 4) * 15).padStart(2, "0");
-                return (
-                  <option
-                    key={`${hours}:${minutes}`}
-                    value={`${hours}:${minutes}`}
-                  />
-                );
-              })}
-            </datalist>
           </div>
+
+          <datalist id="quarter-hour-options">
+            {Array.from({ length: 24 * 4 }, (_, i) => {
+              const hours = String(Math.floor(i / 4)).padStart(2, "0");
+              const minutes = String((i % 4) * 15).padStart(2, "0");
+              return (
+                <option key={`${hours}:${minutes}`} value={`${hours}:${minutes}`} />
+              );
+            })}
+          </datalist>
+        </div>
+
 
           <div className="form-step">
             <h3>Kvalifikasjoner</h3>
