@@ -7,12 +7,12 @@
 }
 
 .butikk-card {
+  color: var(--Card-header-color);
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 300px;
   overflow: hidden;
-  padding: 16px;
   margin: 16px;
   transition: transform 0.2s ease-in-out;
 }
@@ -42,33 +42,43 @@
   object-fit: cover;
 }
 
+
 h2 {
-  font-size: 16px;
+  font-size: 1rem;
   text-align: center;
   font-weight: bold;
   margin: 0;
-  color: #333;
+  width: 80%;
+  height: 50px;
+}
+
+.butikk-card-info{
+  padding: 0 16px;
 }
 
 /* The chip for available shifts */
 .butikk-chip {
-  background-color: #4caf50;
+  background-color: var(--Card-header-color);
   color: white;
   padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  display: inline-block;
-  margin-bottom: 16px;
+  text-align: center;
+  font-size: 1rem;
+  display: block; /* Changed from inline-block */
+  border-radius: 10px;
+  margin: 26px auto 0 auto; /* <-- Centered horizontally */
+  width: 80%;
 }
+
 
 /* General info and contact details */
 .butikk-general-info {
+  color: var(--Text-color);
   margin-bottom: 16px;
 }
 
 .butikk-address {
-  font-size: 14px;
-  color: #555;
+  font-size: 0.9rem;
+  font-weight: 500;
   margin-bottom: 8px;
 }
 
@@ -80,9 +90,11 @@ h2 {
 
 /* The "More info" text at the bottom */
 .butikk-more-info {
-  color: #007bff;
+  color: var(--Card-header-color);
   font-size: 14px;
   text-align: center;
-  margin-top: 16px;
+  margin-top: 20px;
   cursor: pointer;
 }
+
+

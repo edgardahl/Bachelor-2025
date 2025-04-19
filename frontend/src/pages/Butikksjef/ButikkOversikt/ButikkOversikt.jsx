@@ -4,8 +4,12 @@ import ButikkCard from "../../../components/Cards/ButikkCard/ButikkCard";
 import KommuneFilter from "../../../components/Filter/kommuneFilter/kommuneFilter";
 import Loading from "../../../components/Loading/Loading";
 import "./ButikkOversikt.css";
+import StoreChainFilter from "../../../components/Filter/ButikkKjedeFilter/ButikkKjedeFilter";
+
+
 
 const ButikkOversikt = () => {
+  const [selectedChains, setSelectedChains] = useState([]);
   const [stores, setStores] = useState([]);
   const [shiftsCount, setShiftsCount] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,6 +34,7 @@ const ButikkOversikt = () => {
       const response = await axios.get(
         `/stores/stores-with-municipality?${queryParams.toString()}`
       );
+
 
       setStores(response.data.stores);
       setTotalStores(response.data.total);
@@ -59,6 +64,9 @@ const ButikkOversikt = () => {
     fetchStores(filters, currentPage);
   }, [filters, currentPage]);
 
+  const filteredStores = selectedChains.length
+  ? stores.filter((store) => selectedChains.includes(store.store_chain))
+  : stores;
   return (
     <div className="butikkoversikt-container">
       <div className="butikkoversikt-intro">
@@ -74,22 +82,30 @@ const ButikkOversikt = () => {
             setCurrentPage(1);
           }}
         />
+        <StoreChainFilter
+  selectedChains={selectedChains}
+  onChange={(chains) => {
+    setSelectedChains(chains);
+    setCurrentPage(1);
+  }}
+/>
       </div>
 
       <div className="butikk-liste">
-        {loading ? (
-          <Loading />
-        ) : stores.length === 0 ? (
-          <p>Ingen butikker funnet.</p>
-        ) : (
-          stores.map((store) => (
-            <ButikkCard
-              key={store.store_id}
-              store={store}
-              shiftsCount={shiftsCount[store.store_id] || 0}
-            />
-          ))
-        )}
+      {loading ? (
+  <Loading />
+) : filteredStores.length === 0 ? (
+  <p>Ingen butikker funnet.</p>
+) : (
+  filteredStores.map((store) => (
+    <ButikkCard
+      key={store.store_id}
+      store={store}
+      shiftsCount={shiftsCount[store.store_id] || 0}
+    />
+  ))
+)}
+
       </div>
 
       <div className="pagination">
