@@ -112,8 +112,10 @@
 }
 
 .claimed-check-icon {
-  color: #28a745;
-  font-size: 1rem;
+  font-size: 1.6rem; /* Increase the size */
+  color: var(--Shifts-claimed-accent); /* Ensure it's visible */
+  margin-left: 8px;
+  vertical-align: middle;
 }
 
 .shift-card-footer {
