@@ -16,13 +16,12 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setInlineError("");
-
+  
     try {
       const res = await axios.post("/auth/login", { email, password });
       localStorage.setItem("accessToken", res.data.accessToken);
       setUser(res.data.user);
-      toast.success("Innlogging vellykket!");
-      navigate("/", { replace: true });
+      navigate("/", { replace: true }); // ✅ Removed toast
     } catch (err) {
       const msg = err.response?.data?.error;
       if (msg === "Feil e-post eller passord.") {
@@ -32,6 +31,7 @@ export default function LoginPage() {
       }
     }
   };
+  
 
   return (
     <div className="auth-wrapper">

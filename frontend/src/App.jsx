@@ -227,6 +227,7 @@ function App() {
         autoClose={3000}
         pauseOnHover
         theme="colored"
+        style={{ marginTop: "70px" }}
       />
     </>
   );
