@@ -116,8 +116,32 @@ const CreateShift = () => {
       <h1>Ny vakt</h1>
       <form onSubmit={handleSubmit}>
         <div className="create-shift-form">
+        <div className="form-step beskrivelse">
+            <h3>Beskrivelse</h3>
+            <p className="step-description">Gi vakten en tittel og beskriv hva den går ut på.</p>
+
+            <div>
+              <label>Tittel</label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Beskrivelse</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+
         <div className="form-step when-where">
-          <h3>Hvor og når?</h3>
+          <h3>Når er vakten?</h3>
           <p className="step-description">Velg dato og klokkeslett for vakten.</p>
 
           <div>
@@ -196,30 +220,6 @@ const CreateShift = () => {
             </div>
           </div>
 
-
-
-          <div className="form-step beskrivelse">
-            <h3>Beskrivelse</h3>
-            <p className="step-description">Gi vakten en tittel og beskriv hva den går ut på.</p>
-
-            <div>
-              <label>Tittel</label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label>Beskrivelse</label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              />
-            </div>
-          </div>
         </div>
 
         <button type="submit" disabled={loading}>
