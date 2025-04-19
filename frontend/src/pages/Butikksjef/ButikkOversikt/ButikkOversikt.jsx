@@ -14,7 +14,7 @@ const ButikkOversikt = () => {
   const [totalStores, setTotalStores] = useState(0);
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false); // Separate state for "Show More" loading
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const PAGE_SIZE = 12;
 
@@ -22,12 +22,23 @@ const ButikkOversikt = () => {
     try {
       const queryParams = new URLSearchParams();
 
-      if (filters.municipality) {
+      if (filters.municipality && filters.municipality.length > 0) {
         queryParams.append("municipality", filters.municipality);
       }
 
-      queryParams.append("page", page);
-      queryParams.append("pageSize", PAGE_SIZE);
+      if (filters.store_chain && filters.store_chain.length > 0) {
+        queryParams.append("store_chain", filters.store_chain);
+      }
+
+      if (
+        (filters.municipality && filters.municipality.length > 0) ||
+        (filters.store_chain && filters.store_chain.length > 0)
+      ) {
+        queryParams.append("pageSize", 1000);
+      } else {
+        queryParams.append("page", page);
+        queryParams.append("pageSize", PAGE_SIZE);
+      }
 
       const response = await axios.get(
         `/stores/stores-with-municipality?${queryParams.toString()}`
@@ -52,6 +63,7 @@ const ButikkOversikt = () => {
           shiftsData[store.store_id] = 0;
         }
       }
+
       setShiftsCount((prevShiftsCount) => ({
         ...prevShiftsCount,
         ...shiftsData,
@@ -60,7 +72,7 @@ const ButikkOversikt = () => {
       console.error("Error fetching stores:", err);
     } finally {
       setLoading(false);
-      setLoadingMore(false); // Stop "Show More" loading
+      setLoadingMore(false);
     }
   };
 
@@ -99,6 +111,10 @@ const ButikkOversikt = () => {
           selectedChains={selectedChains}
           onChange={(chains) => {
             setSelectedChains(chains);
+            setFilters((prev) => ({
+              ...prev,
+              store_chain: chains.join(","),
+            }));
             setCurrentPage(1);
           }}
         />

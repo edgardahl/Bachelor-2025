@@ -46,43 +46,87 @@ const endpoint = "https://localhost:5001/api/auth/register";
 
 // Butikker
 const stores = [
-  "c9b8fc79-c9a2-460e-8eeb-aa9a6917872d",
-  "3b13abba-8be7-4845-9dac-7abcb01d1b23",
-  "2214d00e-95e0-47fe-aa50-3ea13e8ecf7f",
-  "bbf88f66-dffc-4441-ad81-7f573cc02dce",
-  "fa61dd1d-e0bd-42bc-b804-756898c92962",
+  "7b9ef107-565d-4449-9a33-53badeb9221d",  
+  "107428b3-4816-4716-989a-b988f48b64ee",  
+  "23868563-f305-4c86-a57d-ceecc2fba6d7",  
+  "afcce2ec-7c51-43a3-beee-d2039110364a",  
+  "67a23719-20db-49b9-ae58-abd3f1f11d15",  
+  "21c68474-74c4-46c6-ac7f-e96e2f634087",  
+  "b863791a-1044-4d63-a051-a53aabf4c81e",  
+  "08c43ca9-bbb2-4653-a116-97e245b5c1f9",  
+  "01c2c6cf-34a2-4335-97a7-b526f08510b7",  
+  "bf022b52-1444-4341-8f06-073842584d83",  
+  "4c885945-c81a-4c6a-b60c-b5417860c581",  
+  "3c167b2d-0eb4-4dd1-bdde-3dbfa46cf4dc",  
+  "eb884739-091b-41b7-91b6-21f15dbbf24a",  
+  "a1c184ec-871e-4600-b955-fcbc9eb0aabe",  
+  "1a8873b5-a3c5-4d36-a75d-441909974cad",  
+  "81cff0a3-b0b8-4f0c-8963-df335e432f02",  
+  "cededcc1-6370-4268-a861-a459caffff98",  
+  "9d4a817a-bbd1-42e0-9fff-2b97c4eb81bc",  
+  "1b923739-ef98-4814-a72d-50dc957fe966",  
+  "c2e2995c-39fe-4979-9bca-25f299b7806d",  
+  "7ec4229c-ef91-4f17-9968-5e6acb01f975",  
+  "772d56fd-817c-4e38-9d02-0d67800bf6df",  
+  "7745f68c-63ac-430c-8e39-4fdc15e53128",  
+  "e065d9cc-b09b-44e3-9d8d-114e787e25d8",  
+  "714b2043-77af-4074-a684-026efac9b69a",  
+  "701ff0a8-994b-48dc-94cd-c21a21bca151",  
+  "d68209ee-c2a4-4cca-afb6-aded2b5e51f2"
 ];
 
 // Kvalifikasjoner
 const qualifications = [
-  "1c387c4b-5f0c-460b-8835-fdaf99021773",
-  "27b781ba-39b5-485f-a0d5-06af0369dff2",
-  "2a14071d-56a2-4670-9ccb-6b83ce47d5ba",
-  "7e480201-80dc-4f3f-9163-d63a122d00d7",
-  "5a038141-f9b7-4ff2-a39b-86256f28187c",
-  "6ffd6457-6c8d-485d-8431-202ce027c19a",
-  "9c75e29f-390c-4f14-af6c-de7d27900ec4",
-  "d10bd744-55f6-479c-b8fd-e1b182a350d5",
-  "caff4929-7b5c-40dd-b2c3-84ef6fec5158",
+  "1c387c4b-5f0c-460b-8835-fdaf99021773",  
+  "27b781ba-39b5-485f-a0d5-06af0369dff2",  
+  "2a14071d-56a2-4670-9ccb-6b83ce47d5ba",  
+  "7e480201-80dc-4f3f-9163-d63a122d00d7",  
+  "5a038141-f9b7-4ff2-a39b-86256f28187c",  
+  "6ffd6457-6c8d-485d-8431-202ce027c19a",  
+  "9c75e29f-390c-4f14-af6c-de7d27900ec4",  
+  "d10bd744-55f6-479c-b8fd-e1b182a350d5",  
+  "caff4929-7b5c-40dd-b2c3-84ef6fec5158"
 ];
 
 // Kommuner (kun IDer)
 const municipalities = [
-  "09281dcf-7a0f-4246-bd1c-32b7ba226c86", // Oslo
-  "15ab914f-da77-4a94-9228-b52e3b805ae5", // Bergen
-  "3b8e6881-0651-4f1f-a2f2-9fa04079a3b0", // Stavanger
-  "72af6db6-6da4-46b7-9999-9b6524929337", // Drammen
-  "1117ee63-64a6-4fa2-9f06-9728489d89f0", // Fredrikstad
-  "d3cec2b0-9ff8-4aae-a4bc-4d3fadada93c", // Sogndal
-  "2bbd1abf-3c99-402f-b118-152e584410cd", // Asker
-  "8831b53a-be61-4b58-ac05-4e3f6008b76d", // Aurskog-Høland
-  "579a8e26-daa7-4642-a0ee-974a25770e09", // Bærum
-  "3ff97125-1729-4002-bf75-446e7f0aac4e", // Eidsvoll
+  "1754e6ce-4b00-464c-b5dc-2801f30561bf",
+  "287bd5ac-67a6-4ccc-b856-2b0df00a983d",
+  "9c0fbb40-d188-4491-9176-585650e6e457",
+  "ca0c889d-80f3-4524-a420-6a20b2c31470",
+  "b4a6c1d9-83b7-4974-acdc-5aed6c8b1a2d",
+  "24c5c55c-ff88-4519-aebc-c8029713cff7",
+  "1a4ba0b0-244c-4945-bcd4-ee0743ad8c90",
+  "3d428b00-7445-4611-857b-cb6df80f1830",
+  "5addc887-8fd2-4ce6-9139-d00e54f4e57a",
+  "42e36663-17a3-42f4-a3d0-002a6b8a64c9",
+  "28047a2c-09ba-4778-b56c-ac08598c3680",
+  "c13e20bb-2260-4045-ba78-388b6797e7d1",
+  "23ea658b-06c5-4afe-a3dc-ba9c4a70dfab",
+  "8bbf1879-bfe7-4ae0-bf67-4269ad55588a",
+  "efcaf166-bf17-4a58-8f55-49c793af0d49",
+  "31c69a86-2930-41ea-8c78-ceb0440da569",
+  "32e6d1d2-96c7-48db-ab54-0d57f675fc27",
+  "bec5b636-caaa-420e-a6d2-958629772cd4",
+  "5c3804a4-0ab5-450e-aee9-fd4e623c01be",
+  "37fad55a-bd04-431c-92d6-5caa31d765e3"
 ];
 
 // Navn
-const firstNames = ["Emma", "Ola", "Nora", "Jonas", "Maja", "Henrik", "Selma", "Levi"];
-const lastNames = ["Hansen", "Larsen", "Nilsen", "Johansen", "Karlsen", "Andersen"];
+const firstNames = [
+  "Emma", "Ola", "Nora", "Jonas", "Maja", "Henrik", "Selma", "Levi",
+  "Isak", "Linnea", "Jakob", "Thea", "Aksel", "Ingrid", "Emil", "Sofie",
+  "Elias", "Tiril", "Noah", "Amalie", "Filip", "Aurora", "Tobias", "Hedda",
+  "Ludvig", "Victoria", "Sander", "Ida", "Mathias", "Frida", "Reidar", "Sondre", "Petter"
+];
+
+const lastNames = [
+  "Hansen", "Larsen", "Nilsen", "Johansen", "Karlsen", "Andersen",
+  "Berg", "Olsen", "Solberg", "Kristiansen", "Lie", "Halvorsen",
+  "Moe", "Nguyen", "Eriksen", "Strand", "Fredriksen", "Svendsen",
+  "Paulsen", "Myhre", "Andreassen", "Haugen", "Eliassen", "Bakke", "Ranheim", "Brandt", "Furuli"
+];
+
 
 // Hjelpefunksjoner
 const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -143,4 +187,4 @@ const seedAllStores = async (employeesPerStore = 10) => {
 };
 
 // Call the function to seed all stores with a specific number of employees
-seedAllStores(5); // 5 employees per store
+seedAllStores(6); // 5 employees per store

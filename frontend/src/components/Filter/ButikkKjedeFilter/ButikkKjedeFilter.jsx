@@ -2,15 +2,13 @@ import React from "react";
 import "./ButikkKjedeFilter.css";
 
 const storeChains = [
-    "Coop Mega",
-    "Coop Prix",
-    "Coop Marked",
-    "Extra",
-    "Obs",
-    "Obs BYGG",
-    "Coop Byggmix",
-    "Prix",
-    "Mega"
+  "Coop Mega",
+  "Coop Prix",
+  "Coop Marked",
+  "Extra",
+  "Obs",
+  "Obs BYGG",
+  "Coop Byggmix",
   ];
   
 

@@ -153,7 +153,7 @@
   },
   {
     "name": "Kallerud",
-    "store_chain": "Obs Bygg",
+    "store_chain": "Obs BYGG",
     "municipality_id": "42e36663-17a3-42f4-a3d0-002a6b8a64c9",
     "address": "Stampeveien 13, 2827 Hunndalen",
     "phone_number": "41579800",
@@ -161,7 +161,7 @@
   },
   {
     "name": "Rudshøgda",
-    "store_chain": "Obs Bygg",
+    "store_chain": "Obs BYGG",
     "municipality_id": "bec5b636-caaa-420e-a6d2-958629772cd4",
     "address": "Kinnlimarka 20, 2360 Rudshøgda",
     "phone_number": "91399800",
@@ -169,7 +169,7 @@
   },
   {
     "name": "Olrud",
-    "store_chain": "Obs Bygg",
+    "store_chain": "Obs BYGG",
     "municipality_id": "bec5b636-caaa-420e-a6d2-958629772cd4",
     "address": "Kårtorpvegen 1, 2320 Furnes",
     "phone_number": "48198000",

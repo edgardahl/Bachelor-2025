@@ -74,6 +74,22 @@ body {
   animation-delay: 10s;
 }
 
+.blob:nth-child(4) {
+  width: 300px;
+  height: 300px;
+  top: 80%;
+  left: 80%;
+  animation-delay: 15s;
+}
+
+.blob:nth-child(5) {
+  width: 350px;
+  height: 350px;
+  top: 20%;
+  left: 40%;
+  animation-delay: 20s;
+}
+
 @keyframes float {
   0%, 100% {
     transform: translate(0, 0) scale(1);
