@@ -4,7 +4,7 @@ import DeleteShiftPopup from "../../Popup/DeleteShiftPopup/DeleteShiftPopup";
 import axios from "../../../api/axiosInstance";
 import "./ShiftCard.css";
 import useAuth from "../../../context/UseAuth";
-import { FiClock, FiMapPin, FiAward } from "react-icons/fi";
+import { FiClock, FiMapPin, FiAward, FiCheckCircle } from "react-icons/fi";
 
 const ShiftCard = ({
   shiftId,
@@ -29,7 +29,7 @@ const ShiftCard = ({
   const { user } = useAuth();
   const shiftDate = new Date(date);
   const day = shiftDate.getDate();
-  const month = shiftDate.toLocaleString("nb-NO", { month: "short" }); // e.g., "apr"
+  const month = shiftDate.toLocaleString("nb-NO", { month: "short" });
 
   const handleCardClick = () => {
     const rolePath = user.role === "employee" ? "ba" : "bs";
@@ -77,6 +77,8 @@ const ShiftCard = ({
         />
       )}
 
+      {claimedById && <div className="claimed-ribbon" />}
+
       <div className="shift-card-header">
         <h3>{title}</h3>
       </div>
@@ -89,46 +91,48 @@ const ShiftCard = ({
           </div>
         </div>
         <div className="shift-card-info-right">
-          <div className="shift-card-info-right">
-            <ul className="info-list">
-              <li className="info-list-item">
-                <FiClock className="info-icon" size={22} />
-                <p className="info-p-time">
-                  {startTime.slice(0, 5)} - {endTime.slice(0, 5)}
-                </p>
-              </li>
-              <li className="info-list-item">
-                <FiMapPin className="info-icon" size={22} />
-                <p className="info-p-location">{storeName}</p>
-              </li>
-              <li className="info-list-item">
-                <FiAward className="info-icon" size={22} />
-                <p className="info-p-qualification">
-                  {qualifications.join(", ")}
-                </p>
-              </li>
-            </ul>
-          </div>
+          <ul className="info-list">
+            <li className="info-list-item">
+              <FiClock className="info-icon" size={22} />
+              <p className="info-p-time">
+                {startTime.slice(0, 5)} - {endTime.slice(0, 5)}
+              </p>
+            </li>
+            <li className="info-list-item">
+              <FiMapPin className="info-icon" size={22} />
+              <p className="info-p-location">{storeName}</p>
+            </li>
+            <li className="info-list-item">
+              <FiAward className="info-icon" size={22} />
+              <p className="info-p-qualification">
+                {qualifications.join(", ")}
+              </p>
+            </li>
+          </ul>
         </div>
       </div>
+
       <div className="shift-card-footer">
-        <div className="claimed-by-text">
-          {claimedById && claimedByName?.trim() ? (
-            <a
-              href={`/bs/ansatte/profil/${claimedById}`}
-              onClick={(e) => e.stopPropagation()}
-              className="claimed-link"
-            >
-              Tatt av: {claimedByName}
-            </a>
-          ) : (
-            <span>Tatt av: Ingen</span>
-          )}
-        </div>
-      <div className="les-mer-text">
-        <span>Les mer →</span>
-      </div>
-      </div>
+  <div
+    className="claimed-by-text"
+    style={{
+      visibility: claimedById && claimedByName?.trim() ? "visible" : "hidden",
+    }}
+  >
+    <FiCheckCircle className="claimed-check-icon" />
+    <a
+      href={`/bs/ansatte/profil/${claimedById}`}
+      onClick={(e) => e.stopPropagation()}
+      className="claimed-link"
+    >
+      Tatt av: {claimedByName}
+    </a>
+  </div>
+  <div className="les-mer-text">
+    <span>Les mer →</span>
+  </div>
+</div>
+
     </div>
   );
 };

@@ -15,28 +15,11 @@
   cursor: pointer;
 }
 
-/* IF CLAIMED STYLES */
+/* Claimed shift styling */
 .shift-card-container.claimed {
   background-color: #e8fce9;
-}
-
-.shift-card-container.claimed .date-container,
-.shift-card-container.claimed .shift-card-header {
-  background-color: var(--Shifts-claimed-accent);
-}
-
-.shift-card-container.claimed .info-icon,
-.shift-card-container.claimed .les-mer-text {
-  color: var(--Shifts-claimed-accent);
-}
-
-.shift-card-container.claimed .claimed-by-text span,
-.shift-card-container.claimed .claimed-link {
-  color: var(--Shifts-claimed-accent);
-}
-
-.shift-card-container.claimed .claimed-link:hover {
-  color: #219150;
+  border: 2px solid var(--Shifts-claimed-accent);
+  position: relative;
 }
 
 .shift-card-header {
@@ -111,6 +94,12 @@
   margin: 0;
 }
 
+.claimed-by-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .claimed-by-text span,
 .claimed-link {
   font-weight: bold;
@@ -129,6 +118,13 @@
   color: var(--Shifts-main);
 }
 
+.claimed-check-icon {
+  font-size: 1.8rem;
+  color: var(--Shifts-claimed-accent);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
 .shift-card-footer {
   position: absolute;
   bottom: 12px;
@@ -139,7 +135,6 @@
   align-items: center;
 }
 
-/* Delete Button */
 .delete-bottom-btn {
   background-color: #d9534f;
   border: none;
@@ -167,4 +162,32 @@
 
 .shift-card-container:hover .les-mer-text span {
   text-decoration: underline;
+}
+
+/* Claimed ribbon for top-right corner */
+.claimed-ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 90px;
+  height: 90px;
+  overflow: hidden;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.claimed-ribbon::before {
+  content: "TATT";
+  position: absolute;
+  right: -28px;
+  top: 14px;
+  width: 140px;
+  text-align: center;
+  background-color: var(--Shifts-claimed-accent);
+  color: white;
+  font-weight: bold;
+  font-size: 0.8rem;
+  transform: rotate(45deg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  padding: 4px 0;
 }
