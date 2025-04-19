@@ -15,6 +15,27 @@
   cursor: pointer;
 }
 
+/* Claimed shift styling */
+.shift-card-container.claimed {
+  background-color: #e8fce9;
+  border: 2px solid var(--Shifts-claimed-accent);
+  position: relative;
+}
+
+.claimed-banner {
+  position: absolute;
+  top: 12px;
+  right: -36px;
+  background-color: var(--Shifts-claimed-accent);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  transform: rotate(45deg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
 .shift-card-header {
   width: 100%;
   text-align: center;
@@ -112,9 +133,9 @@
 }
 
 .claimed-check-icon {
-  font-size: 1.6rem; /* Increase the size */
-  color: var(--Shifts-claimed-accent); /* Ensure it's visible */
-  margin-left: 8px;
+  font-size: 1.8rem;
+  color: var(--Shifts-claimed-accent);
+  margin-left: 6px;
   vertical-align: middle;
 }
 
@@ -155,4 +176,32 @@
 
 .shift-card-container:hover .les-mer-text span {
   text-decoration: underline;
+}
+
+/* Claimed ribbon for top-right corner */
+.claimed-ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 90px;
+  height: 90px;
+  overflow: hidden;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.claimed-ribbon::before {
+  content: "TATT";
+  position: absolute;
+  right: -28px;
+  top: 14px;
+  width: 140px;
+  text-align: center;
+  background-color: var(--Shifts-claimed-accent);
+  color: white;
+  font-weight: bold;
+  font-size: 0.8rem;
+  transform: rotate(45deg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  padding: 4px 0;
 }
