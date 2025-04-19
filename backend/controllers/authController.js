@@ -11,8 +11,8 @@ import {
   getUserById,
   getUserBasicById,
   getUserByPhoneNumber,
+  insertUserMunicipalitiesModel,
 } from "../models/authModel.js";
-import { insertDefaultWorkMunicipality } from "../models/userModel.js";
 
 // 🟢 Login User
 export const loginUser = async (req, res) => {
@@ -139,6 +139,7 @@ export const registerUser = async (req, res) => {
       store_id,
       municipality_id,
       qualifications,
+      work_municipality_ids,
     } = req.body;
 
     const existingUser = await getUserByEmail(email);
@@ -176,9 +177,24 @@ export const registerUser = async (req, res) => {
       }
     }
 
-    if (role === "employee" && municipality_id) {
-      await insertDefaultWorkMunicipality(newUser.user_id, municipality_id);
+    if (role === "employee") {
+      const municipalitiesToInsert = new Set([
+        municipality_id, // bosted
+        ...(work_municipality_ids || []), // ønskede
+      ]);
+
+      console.log("Municipalities to insert:", municipalitiesToInsert);
+    
+      const success = await insertUserMunicipalitiesModel(
+        newUser.user_id,
+        Array.from(municipalitiesToInsert)
+      );
+    
+      if (!success) {
+        return res.status(400).json({ error: "Kunne ikke lagre ønskede kommuner." });
+      }
     }
+    
 
     return res.status(201).json({
       message: "Bruker registrert.",

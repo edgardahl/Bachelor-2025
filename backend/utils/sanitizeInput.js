@@ -107,6 +107,7 @@ export const sanitizeUserData = (userData) => {
     store_id,
     municipality_id,
     qualifications,
+    work_municipality_ids,
   } = userData;
 
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/; // Supports accents, spaces, hyphens, apostrophes
@@ -178,6 +179,19 @@ export const sanitizeUserData = (userData) => {
     });
   }
 
+  // Add check for work_municipality_ids if present
+  if (work_municipality_ids && !Array.isArray(work_municipality_ids)) {
+    throw new Error("work_municipality_ids must be an array.");
+  }
+
+  if (work_municipality_ids?.length) {
+    work_municipality_ids.forEach((id) => {
+      if (!isUUID(id)) {
+        throw new Error(`Invalid Municipality ID: ${id}`);
+      }
+    });
+  }
+  // Log sanitized data
   console.log("Data is sanitized:", {
     first_name: first_name.trim(),
     last_name: last_name.trim(),
@@ -188,9 +202,11 @@ export const sanitizeUserData = (userData) => {
     role,
     store_id,
     municipality_id,
+    work_municipality_ids, // Log work_municipality_ids here
     qualifications: qualifications ?? [],
   });
-  // Return sanitized data
+
+  // Return sanitized data with work_municipality_ids included
   return {
     first_name: first_name.trim(),
     last_name: last_name.trim(),
@@ -201,6 +217,7 @@ export const sanitizeUserData = (userData) => {
     role,
     store_id,
     municipality_id,
+    work_municipality_ids, // Include in returned sanitized data
     qualifications: qualifications ?? [],
   };
 };

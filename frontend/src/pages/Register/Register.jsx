@@ -90,6 +90,7 @@ const Register = () => {
         (m) => m.value
       ),
     };
+    console.log("userdata before sanitization", userData); // Legg til logg
 
     try {
       const sanitizedData = sanitizeUserData(userData);
@@ -270,11 +271,13 @@ const Register = () => {
             isClearable={false}
             options={municipalities}
             value={selectedWorkMunicipalityOptions}
-            onChange={(selected) =>
-              setSelectedWorkMunicipalityOptions(selected || [])
-            }
+            onChange={(selected) => {
+              setSelectedWorkMunicipalityOptions(selected || []);
+              console.log("Selected work municipalities:", selected); // Legg til logg
+            }}
             placeholder="Velg kommuner..."
           />
+
         </div>
 
         <div className="auth-field">
