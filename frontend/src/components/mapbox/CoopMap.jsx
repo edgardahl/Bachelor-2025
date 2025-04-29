@@ -1,14 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
-import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Tooltip,
+  useMap,
+} from "react-leaflet";
 import L from "leaflet";
+import { toast } from "react-toastify";
 import "leaflet/dist/leaflet.css";
-import "./CoopMap.css"; // import the new CSS file
+import "./CoopMap.css";
 import redStoreIconUrl from "../../../public/icons/red_store.png";
 import { useNavigate } from "react-router-dom";
 
-// Custom icon for stores
 const redStoreIcon = new L.Icon({
   iconUrl: redStoreIconUrl,
   iconSize: [40, 40],
@@ -19,7 +26,6 @@ const redStoreIcon = new L.Icon({
   shadowAnchor: [12, 41],
 });
 
-// Component to go to user's location
 const GoToMyLocation = ({ setUserPosition }) => {
   const map = useMap();
 
@@ -30,7 +36,7 @@ const GoToMyLocation = ({ setUserPosition }) => {
         setUserPosition([latitude, longitude]);
         map.flyTo([latitude, longitude], 13, { animate: true });
       },
-      () => alert("Kunne ikke hente posisjon.")
+      () => toast.error("Kunne ikke hente posisjon.")
     );
   };
 
@@ -41,7 +47,6 @@ const GoToMyLocation = ({ setUserPosition }) => {
   );
 };
 
-// Component to search and fly to location
 const LocationSearch = () => {
   const map = useMap();
   const inputRef = useRef();
@@ -50,15 +55,21 @@ const LocationSearch = () => {
     const query = inputRef.current.value;
     if (!query) return;
 
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
-    );
-    const data = await response.json();
-    if (data && data.length > 0) {
-      const { lat, lon } = data[0];
-      map.flyTo([parseFloat(lat), parseFloat(lon)], 13, { animate: true });
-    } else {
-      alert("Fant ikke stedet 😢");
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          query
+        )}`
+      );
+      const data = await response.json();
+      if (data && data.length > 0) {
+        const { lat, lon } = data[0];
+        map.flyTo([parseFloat(lat), parseFloat(lon)], 13, { animate: true });
+      } else {
+        toast.warn("Fant ikke stedet 😢");
+      }
+    } catch (err) {
+      toast.error("Feil under søk.");
     }
   };
 
@@ -90,7 +101,7 @@ const CoopMap = () => {
         setUserPosition([latitude, longitude]);
       },
       () => {
-        setUserPosition([59.9139, 10.7522]); // fallback Oslo
+        setUserPosition([59.9139, 10.7522]);
       }
     );
 
@@ -132,7 +143,7 @@ const CoopMap = () => {
             <Popup>
               <strong>
                 {store.store_chain} {store.name}
-              </strong >
+              </strong>
               {user?.role === "store_manager" && (
                 <>Tilgjengelige ansatte: {store.flexible_employees}</>
               )}
@@ -144,9 +155,9 @@ const CoopMap = () => {
                 className="store-button"
                 onClick={() =>
                   navigate(
-                    `/${
-                      user?.role === "store_manager" ? "bs" : "ba"
-                    }/butikker/${store.store_chain}/${store.name}/${store.store_id}`
+                    `/$
+                      {user?.role === "store_manager" ? "bs" : "ba"}
+                    /butikker/${store.store_chain}/${store.name}/${store.store_id}`
                   )
                 }
               >
@@ -164,7 +175,6 @@ const CoopMap = () => {
   );
 };
 
-// Custom zoom control component with conditional zoom behavior
 const MapControlZoom = () => {
   const map = useMap();
 
