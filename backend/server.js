@@ -18,9 +18,7 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
-const FRONTEND_PORT = process.env.FRONTEND_PORT || 5173;
-const FRONTEND_URL =
-  process.env.FRONTEND_URL || `https://localhost:${FRONTEND_PORT}`;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 const isProduction = process.env.NODE_ENV === "production";
 
 // Enable secure cookies in production
