@@ -4,7 +4,7 @@ import https from "https";
 import path from "path";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import helmetMiddleware from './middleware/helmetMiddleware.js';
+import helmetMiddleware from "./middleware/helmetMiddleware.js";
 import dotenv from "dotenv";
 
 import authRoutes from "./routes/authRoutes.js";
@@ -18,6 +18,7 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
+const FRONTEND_PORT = process.env.FRONTEND_PORT || 5173;
 const isProduction = process.env.NODE_ENV === "production";
 
 // Enable secure cookies in production
@@ -30,7 +31,7 @@ app.use(
   cors({
     origin: isProduction
       ? "https://your-frontend-domain.com"
-      : "https://localhost:5173", // Change to the actual frontend URL in production
+      : `https://localhost:${FRONTEND_PORT}`, // Change to the actual frontend URL in production
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })

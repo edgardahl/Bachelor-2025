@@ -5,6 +5,8 @@ import useAuth from "../../../context/UseAuth";
 import Loading from "../../../components/Loading/Loading";
 import CoopMap from "../../../components/mapbox/CoopMap"; // Import CoopMap
 import "./Dashboard.css";
+import { FiBriefcase } from "react-icons/fi";
+import { MdOutlineStorefront } from "react-icons/md";
 
 const AnsattDashboard = () => {
   const { user } = useAuth();
@@ -55,7 +57,7 @@ const AnsattDashboard = () => {
         <>
           <div className="dashboard-cards">
             <DashboardCard
-              icon="/icons/vakter.svg"
+              icon={<FiBriefcase size={52} />}
               title="Vakter"
               description="Finn og reserver vakter i andre butikker"
               statValue={qualifiedShifts}
@@ -64,7 +66,7 @@ const AnsattDashboard = () => {
               linkTo="/ba/vakter"
             />
             <DashboardCard
-              icon="/icons/store_icon.svg"
+              icon={<MdOutlineStorefront size={52} />}
               title="Butikker"
               description="Se andre butikker i ditt område og relevant info"
               statValue={storeStats.total}

@@ -1,17 +1,17 @@
-import axios from 'axios';
+import axios from "axios";
 
-const isDev = window.location.hostname === 'localhost';
+const isDev = window.location.hostname === "localhost";
 
 const instance = axios.create({
   baseURL: isDev
-    ? 'https://localhost:5001/api'
-    : 'https://your-production-backend-url.com/api', // Replace with real domain
-  withCredentials: true, // Allow cookies (needed for refresh token)
+    ? import.meta.env.VITE_API_URL
+    : "https://your-production-backend-url.com/api", // Replace with your production URL
+  withCredentials: true,
 });
 
 // Request interceptor to attach access token to requests
 instance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
+  const token = localStorage.getItem("accessToken");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -34,12 +34,16 @@ const processQueue = (error, token = null) => {
 };
 
 instance.interceptors.response.use(
-  (response) => response, // Normal response, pass it through
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
     // If the error is due to token expiration or other 401 errors that are not related to login failure
-    if (error.response?.status === 401 && !originalRequest._retry && error.response?.data?.error !== "Invalid credentials") {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      error.response?.data?.error !== "Invalid credentials"
+    ) {
       originalRequest._retry = true;
 
       if (isRefreshing) {
@@ -58,10 +62,10 @@ instance.interceptors.response.use(
 
       try {
         // Attempt to refresh the access token
-        const res = await instance.post('/auth/refresh-token');
+        const res = await instance.post("/auth/refresh-token");
         const newAccessToken = res.data.accessToken;
 
-        localStorage.setItem('accessToken', newAccessToken);
+        localStorage.setItem("accessToken", newAccessToken);
         instance.defaults.headers.Authorization = `Bearer ${newAccessToken}`;
         processQueue(null, newAccessToken);
 
@@ -81,7 +85,7 @@ instance.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    return Promise.reject(error); // Default rejection
+    return Promise.reject(error);
   }
 );
 
