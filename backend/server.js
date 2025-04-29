@@ -69,7 +69,7 @@ if (!isProduction) {
   });
 } else {
   // Production: Ensure HTTPS is enabled for secure connections
-  app.listen(PORT, () => {
+  app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 Production backend running on port ${PORT}`);
   });
 }
