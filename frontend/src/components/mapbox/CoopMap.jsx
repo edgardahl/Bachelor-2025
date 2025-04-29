@@ -12,7 +12,7 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import redStoreIconUrl from "../../../public/icons/red_store.png";
+import redStoreIconUrl from "/icons/red_store.png";
 import { useNavigate } from "react-router-dom";
 
 // Custom icon for stores
