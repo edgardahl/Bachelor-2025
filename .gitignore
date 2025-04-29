@@ -44,3 +44,6 @@ Thumbs.db
 /backend/node_modules
 /backend/build
 /backend/logs
+
+# Package files
+package-lock.json
