@@ -6,7 +6,6 @@ import useAuth from "./context/UseAuth";
 
 // Pages
 import LoginPage from "./pages/Login/Login";
-import RegisterPage from "./pages/Register/Register";
 import ButikksjefDashboard from "./pages/Butikksjef/Dashboard/Dashboard";
 import AnsattDashboard from "./pages/Butikkansatt/Dashboard/Dashboard";
 import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter";
@@ -19,9 +18,7 @@ import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 import Profile from "./pages/Profile/Profile";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
 
-
 import Loading from "./components/Loading/Loading";
-
 
 import NotFound from "./pages/NotFound/NotFound";
 import Landing from "./pages/Landing/Landing";
@@ -67,11 +64,6 @@ function App() {
         path="/login"
         element={user ? <Navigate to="/" replace /> : <LoginPage />}
       />
-      <Route
-        path="/register"
-        element={user ? <Navigate to="/" replace /> : <RegisterPage />}
-      />
-
 
       {/* Butikksjef */}
 
