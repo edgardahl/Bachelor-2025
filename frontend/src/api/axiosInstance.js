@@ -2,10 +2,13 @@ import axios from "axios";
 
 const isDev = window.location.hostname === "localhost";
 
+const baseURL =
+  window.location.hostname === "localhost"
+    ? "https://localhost:5001/api"
+    : "/api";
+
 const instance = axios.create({
-  baseURL: isDev
-    ? import.meta.env.VITE_API_URL
-    : "https://your-production-backend-url.com/api", // Replace with your production URL
+  baseURL,
   withCredentials: true,
 });
 
