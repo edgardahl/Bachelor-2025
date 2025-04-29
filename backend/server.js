@@ -29,7 +29,17 @@ if (isProduction) {
 // CORS Setup: Allow only trusted origins in production
 app.use(
   cors({
-    origin: isProduction ? FRONTEND_URL : `https://localhost:5173`, // Use environment variable for production
+    origin: (origin, callback) => {
+      const allowed = [
+        "https://localhost:5173",
+        process.env.FRONTEND_URL, // railway frontend
+      ];
+      if (!origin || allowed.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
