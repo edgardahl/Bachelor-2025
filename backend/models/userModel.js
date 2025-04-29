@@ -76,27 +76,31 @@ export const updateUserByIdModel = async (
 };
 
 export const getAvailableEmployeesInMunicipality = async (municipalityId) => {
-  const { data, error } = await supabase.rpc("get_available_employees_in_municipality", {
-    municipality_input: municipalityId,
-  });
+  const { data, error } = await supabase.rpc(
+    "get_available_employees_in_municipality",
+    {
+      municipality_input: municipalityId,
+    }
+  );
 
   if (error) {
     console.error("Error fetching available employees:", error);
     throw new Error(error.message);
   }
-  console.log("Available employees data:", data);
+
   return data;
 };
 
-
 // Get employees by store ID
 export const getEmployeesByStoreIdModel = async (storeId) => {
-  const { data, error } = await supabase
-    .rpc('get_employees_in_store_with_qualifications', { store_id: storeId });
+  const { data, error } = await supabase.rpc(
+    "get_employees_in_store_with_qualifications",
+    { store_id: storeId }
+  );
 
   if (error) {
     console.error("Error fetching employees with qualifications:", error);
-    return null;  // If error occurs, return null
+    return null; // If error occurs, return null
   }
 
   return data; // Return the data which contains employees and their qualifications
@@ -187,7 +191,10 @@ export const updateUserPasswordById = async (userId, hashedPassword) => {
 };
 
 // ➕ Insert default preferred municipality (same as residence)
-export const insertDefaultWorkMunicipality = async (user_id, municipality_id) => {
+export const insertDefaultWorkMunicipality = async (
+  user_id,
+  municipality_id
+) => {
   const { error } = await supabase
     .from("user_municipality")
     .insert([{ user_id, municipality_id }], { ignoreDuplicates: true }); // This avoids inserting duplicates
