@@ -75,6 +75,23 @@ export const updateUserByIdModel = async (
   return userData;
 };
 
+export const findUserByEmailOrPhone = async (email, phone_number) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("user_id, email, phone_number") // <- important!
+    .or(`email.eq.${email},phone_number.eq.${phone_number}`)
+    .neq("deleted", true);
+
+  if (error) {
+    console.error("Error checking email/phone duplication:", error);
+    throw new Error(error.message);
+  }
+
+  return data?.[0] || null;
+};
+
+
+
 export const getAvailableEmployeesInMunicipality = async (municipalityId) => {
   const { data, error } = await supabase.rpc(
     "get_available_employees_in_municipality",
