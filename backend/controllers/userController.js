@@ -8,11 +8,13 @@ import {
   updateUserPasswordById,
   updateUserByIdModel,
   updateUserQualificationsModel,
+  findUserByEmailOrPhone,
 } from "../models/userModel.js";
 
 import { getStoreByIdModel } from "../models/storeModel.js"; // assuming you have this
 
 import bcrypt from "bcryptjs";
+import { supabase } from "../config/supabaseClient.js"
 
 // Get all users
 export const getAllUsersController = async (req, res) => {
@@ -44,38 +46,66 @@ export const getUserByIdController = async (req, res) => {
 // Update user by ID
 export const updateUserByIdController = async (req, res) => {
   const userId = req.user.userId;
-  const {
-    first_name,
-    last_name,
-    email,
-    phone_number,
-    availability,
-    work_municipality_ids, // ✅ renamed to match frontend
-  } = req.body;
+  const { first_name, last_name, email, phone_number, availability, work_municipality_ids, municipality_id } = req.body;
 
   try {
+    const currentUser = await getUserByIdModel(userId);
+
+    // Check if email changed
+    if (email && email !== currentUser.email) {
+      const { data: emailUsers, error: emailError } = await supabase
+        .from("users")
+        .select("user_id")
+        .eq("email", email)
+        .neq("user_id", userId);
+
+      if (emailError) {
+        console.error("Error checking email duplication:", emailError);
+        return res.status(500).json({ error: "Intern serverfeil ved sjekk av e-post." });
+      }
+
+      if (emailUsers.length > 0) {
+        return res.status(400).json({ error: "E-postadressen er allerede i bruk." });
+      }
+    }
+
+    // Check if phone changed
+    if (phone_number && phone_number !== currentUser.phone_number) {
+      const { data: phoneUsers, error: phoneError } = await supabase
+        .from("users")
+        .select("user_id")
+        .eq("phone_number", phone_number)
+        .neq("user_id", userId);
+
+      if (phoneError) {
+        console.error("Error checking phone duplication:", phoneError);
+        return res.status(500).json({ error: "Intern serverfeil ved sjekk av telefonnummer." });
+      }
+
+      if (phoneUsers.length > 0) {
+        return res.status(400).json({ error: "Telefonnummeret er allerede i bruk." });
+      }
+    }
+
+    // Update user
     const updatedUser = await updateUserByIdModel(
       userId,
-      {
-        first_name,
-        last_name,
-        email,
-        phone_number,
-        availability,
-      },
-      work_municipality_ids // ✅ pass to model
+      { first_name, last_name, email, phone_number, availability, municipality_id },
+      work_municipality_ids
     );
 
     if (!updatedUser) {
-      return res.status(400).json({ error: "Failed to update user" });
+      return res.status(400).json({ error: "Oppdatering av bruker feilet." });
     }
 
     return res.json(updatedUser);
   } catch (error) {
     console.error("Error updating user:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Intern serverfeil." });
   }
 };
+
+
 
 // Change user password
 export const changePassword = async (req, res) => {
