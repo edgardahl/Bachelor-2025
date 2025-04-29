@@ -89,8 +89,8 @@
 }
 
 .loading,
-.error,
-.no-notifications {
+.notification-dropdown .error,
+.notification-dropdown .no-notifications {
   text-align: center;
   padding: 20px;
 }

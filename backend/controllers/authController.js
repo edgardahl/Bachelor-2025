@@ -13,6 +13,7 @@ import {
   getUserByPhoneNumber,
   insertUserMunicipalitiesModel,
 } from "../models/authModel.js";
+import { sanitizeUserData } from '../utils/sanitizeInput.js';
 
 // 🟢 Login User
 export const loginUser = async (req, res) => {
@@ -203,5 +204,120 @@ export const registerUser = async (req, res) => {
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ error: "Intern serverfeil" });
+  }
+};
+
+
+export const registerNewEmployeeController = async (req, res) => {
+  try {
+    const storeManager = req.user;
+
+    const sanitizedData = {
+      ...req.body,
+      role: "employee",
+      availability: "Ikke-fleksibel",
+      store_id: storeManager.storeId,
+    };
+
+    console.log("Sanitize data before");
+    // Sanitize user input
+    let sanitizedUserData;
+    try {
+      sanitizedUserData = sanitizeUserData(sanitizedData);
+    } catch (sanitizeError) {
+      // Return the error message in the expected format
+      return res.status(400).json({ error: { general: sanitizeError.message } });
+    }
+
+    console.log("Sanitize data after", sanitizedUserData);
+
+    // ✅ If there are validation errors from sanitization, return them immediately
+    if (sanitizedUserData.errors) {
+      return res.status(400).json({ error: sanitizedUserData.errors });
+    }
+
+    const {
+      first_name,
+      last_name,
+      email,
+      password,
+      phone_number,
+      availability,
+      role,
+      store_id,
+      municipality_id,
+      qualifications,
+    } = sanitizedUserData;
+
+    // Check for store manager authorization
+    if (storeManager.role !== "store_manager") {
+      return res.status(403).json({ error: "Ikke autorisert." });
+    }
+
+    if (!storeManager.storeId) {
+      return res.status(403).json({ error: "Ingen tilknyttede butikker." });
+    }
+
+    // Check if email exists AFTER sanitization
+    const existingUser = await getUserByEmail(email);
+    console.log("Existing user:", existingUser);
+    if (existingUser) {
+      return res.status(400).json({ error: { email: "E-postadressen er allerede i bruk." } });
+    }
+
+    // Check if phone number exists
+    const existingPhone = await getUserByPhoneNumber(phone_number);
+    if (existingPhone) {
+      return res.status(400).json({ error: { phone_number: "Telefonnummeret er allerede i bruk." } });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Register the user in the database
+    const newUser = await registerUserInDB({
+      first_name,
+      last_name,
+      email,
+      password: hashedPassword,
+      phone_number,
+      availability,
+      role,
+      store_id,
+      municipality_id,
+    });
+
+    if (!newUser) {
+      return res.status(400).json({ error: { general: "Kunne ikke registrere bruker." } });
+    }
+
+    // Insert qualifications if provided
+    if (qualifications?.length > 0) {
+      const inserted = await insertUserQualifications(newUser.user_id, qualifications);
+      if (!inserted) {
+        return res.status(400).json({ error: { general: "Kunne ikke lagre kvalifikasjoner." } });
+      }
+    }
+
+    return res.status(201).json({
+      message: "Ansatt registrert.",
+      user: newUser,
+    });
+  } catch (error) {
+    console.error("Register new employee error:", error);
+
+    // Send the validation error messages for each field
+    if (error.message) {
+      return res.status(400).json({ error: { general: error.message } });
+    }
+
+    // Fallback error message with hardcoded field errors if other error
+    return res.status(400).json({
+      error: {
+        first_name: "First name must only contain letters and cannot be empty.",
+        email: "Email format is incorrect.",
+        password: "Password must be at least 6 characters long.",
+        phone_number: "Phone number is invalid.",
+      }
+    });
   }
 };
