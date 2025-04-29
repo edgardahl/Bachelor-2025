@@ -102,11 +102,6 @@
     padding: 12px;
   }
 
-  .butikk-liste {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
   .butikk-info {
     flex-direction: column;
     gap: 0;

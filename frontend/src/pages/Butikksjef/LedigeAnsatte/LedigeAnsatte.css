@@ -43,31 +43,6 @@
   margin-bottom: 20px;
 }
 
-.show-more-container {
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.show-more-button {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--Card-header-color);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.show-more-button:hover {
-  background-color: #005fa3;
-}
-
-.show-more-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
 /* Responsive styles */
 @media (max-width: 1006px) {
   .ledige-ansatte {
