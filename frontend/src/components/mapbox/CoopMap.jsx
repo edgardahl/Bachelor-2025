@@ -66,7 +66,7 @@ const LocationSearch = () => {
         const { lat, lon } = data[0];
         map.flyTo([parseFloat(lat), parseFloat(lon)], 13, { animate: true });
       } else {
-        toast.warn("Fant ikke stedet 😢");
+        toast.error("Fant ikke gyldig sted");
       }
     } catch (err) {
       toast.error("Feil under søk.");
