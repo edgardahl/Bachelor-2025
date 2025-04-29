@@ -9,3 +9,6 @@ package-lock.json
 
 # Ignore all .pem files
 *.pem
+
+# environemt variables
+.env
