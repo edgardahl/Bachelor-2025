@@ -10,6 +10,8 @@ export default defineConfig({
   plugins: [react(), mkcert()],
   server: {
     https: true,
-    port: process.env.PORT || 5175,
+    proxy: {
+      "/api": "https://localhost:5001",
+    },
   },
 });

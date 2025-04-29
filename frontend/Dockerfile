@@ -1,27 +1,13 @@
-# Use Node.js as the base image
-FROM node:23-slim
-
-# Set the working directory
+# Build step
+FROM node:23-slim AS build
 WORKDIR /app
-
-# Copy package.json and package-lock.json
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy the rest of the application code
 COPY . .
-
-# Build the frontend
 RUN npm run build
 
-# Use a lightweight web server to serve the built files
+# Serve step
 FROM nginx:alpine
-COPY --from=0 /app/dist /usr/share/nginx/html
-
-# Expose the frontend port
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
-
-# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
