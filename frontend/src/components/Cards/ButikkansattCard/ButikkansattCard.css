@@ -8,6 +8,7 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   color: #333;
+  min-height: 100%;
 }
 
 .butikkansatt-card:hover {
@@ -82,3 +83,42 @@
 .butikkansatt-card.available-theme h3 {
   color: var(--Available-hover-dark);
 }
+
+
+
+
+
+
+.butikkansatt-card.empty-card {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  border: 2px dashed var(--Employees-main);
+  background-color: #f9f9f9;
+  color: var(--Employees-main);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.butikkansatt-card.empty-card:hover {
+  background-color: var(--Employees-hover);
+  transform: translateY(-2px);
+}
+
+.empty-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-card-content p{
+  margin: 0
+}
+
+.plus-icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+

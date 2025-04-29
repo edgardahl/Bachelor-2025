@@ -87,6 +87,10 @@ const MineAnsatte = () => {
       ) : (
         <>
           <div className="employee-list">
+          <Link to="/bs/ansatte/mine/nyAnsatt">
+            <ButikkansattCard isEmptyCard={true} cardClass="employee-theme" />
+          </Link>
+
             {paginatedEmployees.length > 0 ? (
               paginatedEmployees.map((employee) => (
                 <Link
