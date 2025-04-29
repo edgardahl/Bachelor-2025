@@ -5,6 +5,7 @@ import axios from "../../../api/axiosInstance";
 import "./ShiftCard.css";
 import useAuth from "../../../context/UseAuth";
 import { FiClock, FiMapPin, FiAward, FiCheckCircle } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 const ShiftCard = ({
   shiftId,
@@ -42,12 +43,13 @@ const ShiftCard = ({
       if (res.status === 200) {
         deleteShift(shiftId);
         setShowDeletePopup(false);
+        toast.success("Vakt slettet.");
       } else {
-        alert(res.data.error || "Failed to delete shift.");
+        toast.error(res.data.error || "Kunne ikke slette vakt.");
       }
     } catch (err) {
       console.error("Delete error:", err);
-      alert("Could not delete shift.");
+      toast.error("Noe gikk galt ved sletting av vakt.");
     }
   };
 

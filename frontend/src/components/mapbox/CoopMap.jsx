@@ -4,9 +4,10 @@ import useAuth from "../../context/UseAuth";
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import "./CoopMap.css"; // import the new CSS file
+import "./CoopMap.css";
 import redStoreIconUrl from "../../../public/icons/red_store.png";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // Custom icon for stores
 const redStoreIcon = new L.Icon({
@@ -30,7 +31,7 @@ const GoToMyLocation = ({ setUserPosition }) => {
         setUserPosition([latitude, longitude]);
         map.flyTo([latitude, longitude], 13, { animate: true });
       },
-      () => alert("Kunne ikke hente posisjon.")
+      () => toast.error("Kunne ikke hente posisjon.")
     );
   };
 
@@ -58,7 +59,7 @@ const LocationSearch = () => {
       const { lat, lon } = data[0];
       map.flyTo([parseFloat(lat), parseFloat(lon)], 13, { animate: true });
     } else {
-      alert("Fant ikke stedet 😢");
+      toast.error("Ugyldig sted. Vennligst prøv igjen.");
     }
   };
 
@@ -132,7 +133,7 @@ const CoopMap = () => {
             <Popup>
               <strong>
                 {store.store_chain} {store.name}
-              </strong >
+              </strong>
               {user?.role === "store_manager" && (
                 <>Tilgjengelige ansatte: {store.flexible_employees}</>
               )}
