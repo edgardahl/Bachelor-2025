@@ -37,6 +37,13 @@
   max-width: 100%;
 }
 
+.butikk-liste p {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  margin-top: 20px;
+}
+
 .show-more-container {
   text-align: center;
   margin-bottom: 40px;

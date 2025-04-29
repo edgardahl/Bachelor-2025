@@ -5,8 +5,10 @@ import KommuneFilter from "../../../components/Filter/kommuneFilter/kommuneFilte
 import Loading from "../../../components/Loading/Loading";
 import "./ButikkOversikt.css";
 import StoreChainFilter from "../../../components/Filter/ButikkKjedeFilter/ButikkKjedeFilter";
+import useAuth from "../../../context/UseAuth";
 
 const ButikkOversikt = () => {
+  const { user } = useAuth();
   const [selectedChains, setSelectedChains] = useState([]);
   const [stores, setStores] = useState([]);
   const [shiftsCount, setShiftsCount] = useState({});
@@ -15,6 +17,7 @@ const ButikkOversikt = () => {
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [preferredMunicipalityNames, setPreferredMunicipalityNames] = useState([]);
 
   const PAGE_SIZE = 12;
 
@@ -77,6 +80,22 @@ const ButikkOversikt = () => {
   };
 
   useEffect(() => {
+    const fetchPreferredMunicipalities = async () => {
+      try {
+        if (!user) return;
+        const res = await axios.get(`/users/${user.id}`);
+        setPreferredMunicipalityNames(res.data.work_municipalities || []);
+      } catch (err) {
+        console.error("Error fetching user preferred municipalities:", err);
+      }
+    };
+
+    if (user) {
+      fetchPreferredMunicipalities();
+    }
+  }, [user]);
+
+  useEffect(() => {
     setLoading(true);
     fetchStores(filters, 1);
   }, [filters]);
@@ -85,7 +104,7 @@ const ButikkOversikt = () => {
     setLoadingMore(true);
     const nextPage = currentPage + 1;
     setCurrentPage(nextPage);
-    fetchStores(filters, nextPage, true); // Append new data
+    fetchStores(filters, nextPage, true);
   };
 
   const filteredStores = selectedChains.length
@@ -99,6 +118,7 @@ const ButikkOversikt = () => {
         <p>
           Få en oversikt over alle butikker i Coop Øst og vakter de har lagt ut.
         </p>
+
         <KommuneFilter
           onChange={(selectedMunicipalityIds) => {
             setFilters({
@@ -106,7 +126,9 @@ const ButikkOversikt = () => {
             });
             setCurrentPage(1);
           }}
+          userPreferredMunicipalities={preferredMunicipalityNames}
         />
+
         <StoreChainFilter
           selectedChains={selectedChains}
           onChange={(chains) => {
