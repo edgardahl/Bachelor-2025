@@ -9,8 +9,8 @@ const KommuneFilter = ({
   userPreferredMunicipalities = [],
 }) => {
   const [municipalities, setMunicipalities] = useState([]);
-  const [selectedMunicipalities, setSelectedMunicipalities] =
-    useState(defaultValue);
+  const [selectedMunicipalities, setSelectedMunicipalities] = useState(defaultValue);
+  const [defaultSelected, setDefaultSelected] = useState([]);
 
   useEffect(() => {
     const fetchMunicipalities = async () => {
@@ -26,12 +26,9 @@ const KommuneFilter = ({
   }, []);
 
   useEffect(() => {
-    // Only run if municipalities and preferred ones are available
     if (municipalities.length > 0 && userPreferredMunicipalities.length > 0) {
-      const defaultSelected = municipalities
-        .filter((m) =>
-          userPreferredMunicipalities.includes(m.municipality_name)
-        )
+      const preferred = municipalities
+        .filter((m) => userPreferredMunicipalities.includes(m.municipality_name))
         .map((m) => ({
           label: m.store_count
             ? `${m.municipality_name} (${m.store_count} butikker)`
@@ -39,26 +36,18 @@ const KommuneFilter = ({
           value: m.municipality_name,
         }));
 
-      setSelectedMunicipalities(defaultSelected);
-      onChange(defaultSelected.map((opt) => opt.value));
+      setSelectedMunicipalities(preferred);
+      setDefaultSelected(preferred);
+      onChange(preferred.map((opt) => opt.value));
     }
   }, [municipalities, userPreferredMunicipalities]);
 
   const handleChange = (selectedOptions) => {
-    setSelectedMunicipalities(selectedOptions);
-    onChange(selectedOptions.map((opt) => opt.value));
+    setSelectedMunicipalities(selectedOptions || []);
+    onChange((selectedOptions || []).map((opt) => opt.value));
   };
 
   const handleReset = () => {
-    const defaultSelected = municipalities
-      .filter((m) => userPreferredMunicipalities.includes(m.municipality_name))
-      .map((m) => ({
-        label: m.store_count
-          ? `${m.municipality_name} (${m.store_count} butikker)`
-          : m.municipality_name,
-        value: m.municipality_name,
-      }));
-
     setSelectedMunicipalities(defaultSelected);
     onChange(defaultSelected.map((opt) => opt.value));
   };
@@ -69,6 +58,13 @@ const KommuneFilter = ({
       : m.municipality_name,
     value: m.municipality_name,
   }));
+
+  // Determine if changes have been made
+  const hasChanges =
+    selectedMunicipalities.length !== defaultSelected.length ||
+    selectedMunicipalities.some(
+      (sel) => !defaultSelected.find((def) => def.value === sel.value)
+    );
 
   return (
     <div className="kommune-filter-container">
@@ -89,7 +85,7 @@ const KommuneFilter = ({
               ...baseStyles,
               borderColor: state.isFocused ? "#4CAF50" : "#ddd",
               backgroundColor: "#fff",
-              borderRadius: 0, // Removed border-radius
+              borderRadius: 0,
               minHeight: 50,
               fontSize: "1rem",
               boxShadow: state.isFocused
@@ -98,7 +94,7 @@ const KommuneFilter = ({
               transition: "all 0.2s ease",
               padding: "0 12px",
               width: "100%",
-              border: "1px solid #ddd", // Adding border instead of border-radius
+              border: "1px solid #ddd",
             }),
             menu: (baseStyles) => ({
               ...baseStyles,
@@ -118,7 +114,7 @@ const KommuneFilter = ({
               padding: "12px 16px",
               cursor: "pointer",
               transition: "background-color 0.2s ease",
-              border: "none", // Remove borders from options
+              border: "none",
             }),
             placeholder: (baseStyles) => ({
               ...baseStyles,
@@ -128,9 +124,7 @@ const KommuneFilter = ({
         />
 
         <button
-          className={`reset-preferred-button ${
-            selectedMunicipalities.length === 0 ? "hidden" : ""
-          }`}
+          className={`reset-preferred-button ${!hasChanges ? "hidden" : ""}`}
           onClick={handleReset}
         >
           Tilbakestill til foretrukne kommuner

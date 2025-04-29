@@ -1,10 +1,27 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./ButikkansattCard.css";
-import { FaBriefcase, FaUser, FaClock, FaMapMarkerAlt } from "react-icons/fa";
+import { FaBriefcase, FaUser, FaClock, FaMapMarkerAlt, FaPlus } from "react-icons/fa";
 import { HiChevronRight } from "react-icons/hi";
 
-const ButikkansattCard = ({ employee, show = "availability", cardClass = "" }) => {
+const ButikkansattCard = ({
+  employee,
+  show = "availability",
+  cardClass = "",
+  isEmptyCard = false
+}) => {
+  if (isEmptyCard) {
+    return (
+      <div className={`butikkansatt-card ${cardClass} empty-card`}>
+        <div className="empty-card-content">
+          <FaPlus className="plus-icon" />
+          <p>Registrer en ny ansatt</p>
+        </div>
+      </div>
+    );
+  }
+  
+
   return (
     <div className={`butikkansatt-card ${cardClass}`}>
       <div className="card-left">
@@ -41,16 +58,5 @@ const ButikkansattCard = ({ employee, show = "availability", cardClass = "" }) =
   );
 };
 
-ButikkansattCard.propTypes = {
-  employee: PropTypes.shape({
-    user_id: PropTypes.string.isRequired,
-    first_name: PropTypes.string.isRequired,
-    last_name: PropTypes.string.isRequired,
-    availability: PropTypes.string.isRequired,
-    store_name: PropTypes.string,
-    qualifications: PropTypes.string.isRequired,
-  }).isRequired,
-  show: PropTypes.oneOf(["availability", "store"]),
-};
 
 export default ButikkansattCard;

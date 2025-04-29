@@ -95,6 +95,15 @@ export const sanitizeShift = (shiftData) => {
   };
 };
 
+
+
+
+
+
+
+
+
+
 export const sanitizeUserData = (userData) => {
   const {
     first_name,
@@ -110,103 +119,93 @@ export const sanitizeUserData = (userData) => {
     work_municipality_ids,
   } = userData;
 
+  const errors = {}; // To store field-specific error messages
+
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/; // Supports accents, spaces, hyphens, apostrophes
 
-  if (
-    typeof first_name !== "string" ||
-    first_name.trim() === "" ||
-    !nameRegex.test(first_name)
-  ) {
-    throw new Error(
-      "First name must only contain letters and cannot be empty."
-    );
+  // First name validation
+  if (typeof first_name !== "string" || first_name.trim() === "" || !nameRegex.test(first_name)) {
+    errors.first_name = "First name must only contain letters and cannot be empty.";
   }
 
-  if (
-    typeof last_name !== "string" ||
-    last_name.trim() === "" ||
-    !nameRegex.test(last_name)
-  ) {
-    throw new Error("Last name must only contain letters and cannot be empty.");
+  // Last name validation
+  if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(last_name)) {
+    errors.last_name = "Last name must only contain letters and cannot be empty.";
   }
 
-  // Basic email regex check
+  // Email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email || !emailRegex.test(email)) {
-    throw new Error("Invalid email format.");
+    errors.email = "Invalid email format.";
   }
 
+  // Password validation
   if (typeof password !== "string" || password.length < 6) {
-    throw new Error("Password must be at least 6 characters long.");
+    errors.password = "Password must be at least 6 characters long.";
   }
-
-  // Phone number: simple numeric string check (customize as needed)
+  
+  // Phone number validation
   const phoneRegex = /^[0-9+\- ]{6,20}$/;
   if (!phoneRegex.test(phone_number)) {
-    throw new Error("Phone number is invalid.");
+    errors.phone_number = "Telefonnummeret er ugyldig.";
   }
-
-  // Availability check (you can refine values if enum is known)
+  
+  // Availability validation
   const validAvailability = ["Fleksibel", "Ikke-fleksibel"];
   if (!validAvailability.includes(availability)) {
-    throw new Error("Availability must be 'available' or 'unavailable'.");
+    errors.availability = "Availability must be 'Fleksibel' or 'Ikke-fleksibel'.";
   }
-
-  // Role check (same here)
+  
+  // Role validation
   const validRoles = ["employee", "store_manager", "admin"];
   if (!validRoles.includes(role)) {
-    throw new Error(`Role must be one of: ${validRoles.join(", ")}`);
+    errors.role = `Role must be one of: ${validRoles.join(", ")}`;
   }
-
-  // UUID checks (optional fields can be null or valid UUIDs)
+  
+  // UUID validation for store_id and municipality_id
   if (store_id && !isUUID(store_id)) {
-    throw new Error("Store ID must be a valid UUID.");
+    errors.store_id = "Store ID must be a valid UUID.";
   }
-
+  
   if (municipality_id && !isUUID(municipality_id)) {
-    throw new Error("Municipality ID must be a valid UUID.");
+    errors.municipality_id = "Municipality ID must be a valid UUID.";
   }
-
+  
+  // Qualifications validation
   if (qualifications && !Array.isArray(qualifications)) {
-    throw new Error("Qualifications must be an array.");
+    errors.qualifications = "Qualifications must be an array.";
   }
-
+  
   if (qualifications?.length) {
     qualifications.forEach((q) => {
       if (!isUUID(q)) {
-        throw new Error(`Invalid qualification ID: ${q}`);
+        errors.qualifications = `Invalid qualification ID: ${q}`;
       }
     });
   }
 
-  // Add check for work_municipality_ids if present
+  // work_municipality_ids validation
   if (work_municipality_ids && !Array.isArray(work_municipality_ids)) {
-    throw new Error("work_municipality_ids must be an array.");
+    errors.work_municipality_ids = "Work municipality IDs must be an array.";
   }
 
   if (work_municipality_ids?.length) {
     work_municipality_ids.forEach((id) => {
       if (!isUUID(id)) {
-        throw new Error(`Invalid Municipality ID: ${id}`);
+        errors.work_municipality_ids = `Invalid Municipality ID: ${id}`;
       }
     });
   }
-  // Log sanitized data
-  console.log("Data is sanitized:", {
-    first_name: first_name.trim(),
-    last_name: last_name.trim(),
-    email: email.toLowerCase().trim(),
-    password: password.trim(),
-    phone_number: phone_number.trim(),
-    availability,
-    role,
-    store_id,
-    municipality_id,
-    work_municipality_ids, // Log work_municipality_ids here
-    qualifications: qualifications ?? [],
-  });
+  console.log("!!!!!!!!!!!!!!!!!!!")
 
-  // Return sanitized data with work_municipality_ids included
+  console.log("Errors:", errors);
+
+  // If errors exist, return them
+  if (Object.keys(errors).length > 0) {
+    return { errors };
+  }
+
+  // Return sanitized data if no errors
   return {
     first_name: first_name.trim(),
     last_name: last_name.trim(),

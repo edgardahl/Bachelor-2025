@@ -17,6 +17,7 @@ import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
 import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 import Profile from "./pages/Profile/Profile";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
+import NewEmployeePage from "./pages/Butikksjef/NewEmployeeForm/NewEmployeeForm";
 
 import Loading from "./components/Loading/Loading";
 
@@ -148,6 +149,14 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["store_manager"]}>
             <ShiftDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/bs/ansatte/mine/nyAnsatt"
+        element={
+          <ProtectedRoute allowedRoles={["store_manager"]}>
+            <NewEmployeePage />
           </ProtectedRoute>
         }
       />
