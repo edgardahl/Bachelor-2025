@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const isDev = window.location.hostname === "localhost";
-
 const baseURL =
   window.location.hostname === "localhost"
-    ? "https://localhost:5001/api"
+    ? import.meta.env.VITE_API_URL || "https://localhost:5001/api"
     : "/api";
 
 const instance = axios.create({
