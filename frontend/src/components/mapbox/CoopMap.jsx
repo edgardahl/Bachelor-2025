@@ -1,18 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  Tooltip,
-  useMap,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-
-import redStoreIconUrl from "/icons/red_store.png";
+import "./CoopMap.css"; // import the new CSS file
+import redStoreIconUrl from "../../../public/icons/red_store.png";
 import { useNavigate } from "react-router-dom";
 
 // Custom icon for stores
@@ -42,20 +35,7 @@ const GoToMyLocation = ({ setUserPosition }) => {
   };
 
   return (
-    <button
-      onClick={handleClick}
-      style={{
-        position: "absolute",
-        bottom: "10px", // Move to the bottom
-        left: "10px", // Stay on the right
-        zIndex: 1000,
-        background: "#fff",
-        border: "1px solid #ccc",
-        padding: "8px 12px",
-        borderRadius: "6px",
-        cursor: "pointer",
-      }}
-    >
+    <button className="my-location-button" onClick={handleClick}>
       📍 Min posisjon
     </button>
   );
@@ -71,9 +51,7 @@ const LocationSearch = () => {
     if (!query) return;
 
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        query
-      )}`
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
     );
     const data = await response.json();
     if (data && data.length > 0) {
@@ -85,42 +63,14 @@ const LocationSearch = () => {
   };
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: 10,
-        right: 10,
-        zIndex: 1000,
-        background: "#fff",
-        padding: "6px",
-        borderRadius: "8px",
-        display: "flex",
-        gap: "6px",
-        boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-      }}
-    >
+    <div className="location-search">
       <input
         ref={inputRef}
         type="text"
         placeholder="Søk etter sted..."
-        style={{
-          padding: "6px 8px",
-          borderRadius: "6px",
-          border: "1px solid #ccc",
-          width: "200px",
-        }}
+        className="search-input"
       />
-      <button
-        onClick={handleSearch}
-        style={{
-          padding: "6px 10px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-        }}
-      >
+      <button onClick={handleSearch} className="search-button">
         Søk
       </button>
     </div>
@@ -134,19 +84,16 @@ const CoopMap = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Attempt to get the user's position on load
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
         setUserPosition([latitude, longitude]);
       },
       () => {
-        // In case of failure, fallback to Oslo
-        setUserPosition([59.9139, 10.7522]);
+        setUserPosition([59.9139, 10.7522]); // fallback Oslo
       }
     );
 
-    // Fetch stores from the API
     const fetchStores = async () => {
       try {
         const response = await axios.get("/stores/getAllStoresWithInfo");
@@ -166,20 +113,17 @@ const CoopMap = () => {
   }, []);
 
   return (
-    <div style={{ position: "relative", height: "500px", marginTop: "2rem" }}>
+    <div className="coop-map-wrapper">
       <MapContainer
-        center={userPosition || [59.9139, 10.7522]} // If userPosition is not available, fallback to Oslo
+        center={userPosition || [59.9139, 10.7522]}
         zoom={12}
-        style={{ height: "100%", width: "100%", borderRadius: "12px" }}
+        className="map-container"
       >
-        {/* Custom Zoom behavior for CMD/CTRL key */}
         <MapControlZoom />
-
         <TileLayer
           attribution="&copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a>"
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
-
         <LocationSearch />
         <GoToMyLocation setUserPosition={setUserPosition} />
 
@@ -188,34 +132,23 @@ const CoopMap = () => {
             <Popup>
               <strong>
                 {store.store_chain} {store.name}
-              </strong>
-              <br />
+              </strong >
               {user?.role === "store_manager" && (
-                <>Fleksible ansatte: {store.flexible_employees}</>
+                <>Tilgjengelige ansatte: {store.flexible_employees}</>
               )}
               {user?.role === "employee" && (
                 <>Ledige vakter: {store.open_shifts}</>
               )}
               <br />
               <button
+                className="store-button"
                 onClick={() =>
                   navigate(
                     `/${
                       user?.role === "store_manager" ? "bs" : "ba"
-                    }/butikker/${store.store_chain}/${store.name}/${
-                      store.store_id
-                    }`
+                    }/butikker/${store.store_chain}/${store.name}/${store.store_id}`
                   )
                 }
-                style={{
-                  marginTop: "8px",
-                  backgroundColor: "#ff5050",
-                  border: "none",
-                  color: "white",
-                  padding: "5px 10px",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                }}
               >
                 Gå til butikk
               </button>
@@ -242,7 +175,6 @@ const MapControlZoom = () => {
       }
     };
 
-    // Attach the wheel event to the map to allow zoom only with CMD/CTRL
     map.getContainer().addEventListener("wheel", handleWheel);
 
     return () => {
