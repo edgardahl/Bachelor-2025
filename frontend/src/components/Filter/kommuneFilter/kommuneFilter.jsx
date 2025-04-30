@@ -7,6 +7,7 @@ const KommuneFilter = ({
   onChange,
   defaultValue = [],
   userPreferredMunicipalities = [],
+  userRole = "", // 👈 new prop
 }) => {
   const [municipalities, setMunicipalities] = useState([]);
   const [selectedMunicipalities, setSelectedMunicipalities] = useState(defaultValue);
@@ -59,7 +60,6 @@ const KommuneFilter = ({
     value: m.municipality_name,
   }));
 
-  // Determine if changes have been made
   const hasChanges =
     selectedMunicipalities.length !== defaultSelected.length ||
     selectedMunicipalities.some(
@@ -123,12 +123,14 @@ const KommuneFilter = ({
           }}
         />
 
-        <button
-          className={`reset-preferred-button ${!hasChanges ? "hidden" : ""}`}
-          onClick={handleReset}
-        >
-          Tilbakestill til foretrukne kommuner
-        </button>
+        {userRole === "employee" && (
+          <button
+            className={`reset-preferred-button ${!hasChanges ? "hidden" : ""}`}
+            onClick={handleReset}
+          >
+            Tilbakestill til foretrukne kommuner
+          </button>
+        )}
       </div>
     </div>
   );

@@ -6,7 +6,6 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading/Loading";
 import "./Profile.css";
-import BackButton from "../../components/BackButton/BackButton";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -92,7 +91,7 @@ const Profile = () => {
   const toggleEdit = async () => {
     if (isEditing && isOwnProfile) {
       try {
-        await axios.put(`/users/updateCurrentUser`, {
+        const rawData = {
           first_name: formData.first_name,
           last_name: formData.last_name,
           email: formData.email,
@@ -100,22 +99,16 @@ const Profile = () => {
           availability: formData.availability,
           municipality_id: selectedResidenceMunicipality?.value || null,
           work_municipality_ids: selectedMunicipalityOptions.map((opt) => opt.value),
-        });
-
+        };
+  
+        await axios.put(`/users/updateCurrentUser`, rawData);
         await fetchProfile();
         setIsEditing(false);
         toast.success("Profil oppdatert.");
       } catch (err) {
         console.error("Error updating profile:", err);
         if (err.response?.status === 400 && err.response.data?.error) {
-          const errorMessage = err.response.data.error;
-          if (errorMessage.includes("email")) {
-            toast.error("E-postadressen er allerede i bruk.");
-          } else if (errorMessage.includes("phone") || errorMessage.includes("telefon")) {
-            toast.error("Telefonnummeret er allerede i bruk.");
-          } else {
-            toast.error(errorMessage);
-          }
+          toast.error(err.response.data.error);
         } else {
           toast.error("Noe gikk galt ved lagring av profilen.");
         }
@@ -124,6 +117,7 @@ const Profile = () => {
       setIsEditing(true);
     }
   };
+  
 
   const handlePasswordChange = async () => {
     try {
