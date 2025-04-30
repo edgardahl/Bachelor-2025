@@ -5,6 +5,8 @@ const baseURL =
     ? "https://localhost:5001/api"
     : import.meta.env.VITE_API_URL;
 
+//   const baseURL = __API_BASE__; TESTE DENNE
+
 const instance = axios.create({
   baseURL,
   withCredentials: true,
