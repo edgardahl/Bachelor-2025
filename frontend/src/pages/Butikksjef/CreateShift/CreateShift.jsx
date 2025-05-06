@@ -4,10 +4,12 @@ import useAuth from "../../../context/UseAuth";
 import BackButton from "../../../components/BackButton/BackButton";
 import { toast } from "react-toastify";
 import CreateShiftConfirmModal from "../../../components/createShiftConfirmModal/createShiftConfirmModal";
+import { useNavigate } from "react-router-dom"; // ✅ Added
 import "./CreateShift.css";
 
 const CreateShift = () => {
   const { user } = useAuth();
+  const navigate = useNavigate(); // ✅ Added
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -93,6 +95,7 @@ const CreateShift = () => {
       setTitle("");
       setDescription("");
       setSelectedQualifications([]);
+      navigate("/bs/vakter"); // ✅ Redirect after successful creation
     } catch (error) {
       const backendErrors = error.response?.data?.error;
 
