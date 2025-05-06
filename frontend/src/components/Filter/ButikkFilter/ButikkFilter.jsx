@@ -35,7 +35,7 @@ const ButikkFilter = ({ onFilter }) => {
           Object.fromEntries(
             Object.entries(municipalitiesByCounty).map(([key, value]) => [
               key,
-              [...value],
+              [...value].sort(),
             ])
           )
         );
