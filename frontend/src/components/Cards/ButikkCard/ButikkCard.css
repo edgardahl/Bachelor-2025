@@ -11,7 +11,7 @@
 .butikk-card {
   color: var(--Card-header-color);
   background-color: white;
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 300px;
   overflow: hidden;
@@ -67,7 +67,7 @@
   text-align: center;
   font-size: 1rem;
   display: block; /* Changed from inline-block */
-  border-radius: 10px;
+  border-radius: 4px;
   margin: 26px auto 0 auto; /* <-- Centered horizontally */
   width: 80%;
 }

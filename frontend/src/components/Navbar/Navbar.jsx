@@ -1,7 +1,7 @@
 import { FaRegUserCircle, FaTimes } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom"; // CHANGED
 import useAuth from "../../context/UseAuth";
 import NotificationDropdown from "../../components/NotificationDropdown/NotificationDropdown";
 import "./Navbar.css";
@@ -24,42 +24,40 @@ export default function Navbar() {
     }
   };
 
-  // Links for roles
   const employeeLinks = (
     <>
-      <Link to="/ba/hjem" onClick={() => setMenuOpen(false)}>
+      <NavLink to="/ba/hjem" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
         Hjem
-      </Link>
-      <Link to="/ba/vakter" onClick={() => setMenuOpen(false)}>
+      </NavLink>
+      <NavLink to="/ba/vakter" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
         Vakter
-      </Link>
-      <Link to="/ba/butikker" onClick={() => setMenuOpen(false)}>
+      </NavLink>
+      <NavLink to="/ba/butikker" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
         Butikker
-      </Link>
+      </NavLink>
     </>
   );
 
   const storeManagerLinks = (
     <>
-      <Link to="/bs/hjem" onClick={() => setMenuOpen(false)}>
+      <NavLink to="/bs/hjem" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
         Hjem
-      </Link>
-      <Link to="/bs/vakter" onClick={() => setMenuOpen(false)}>
+      </NavLink>
+      <NavLink to="/bs/vakter" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
         Vakter
-      </Link>
-      <Link to="/bs/ansatte/mine" onClick={() => setMenuOpen(false)}>
+      </NavLink>
+      <NavLink to="/bs/ansatte/mine" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
         Mine ansatte
-      </Link>
-      <Link to="/bs/ansatte/ledige" onClick={() => setMenuOpen(false)}>
+      </NavLink>
+      <NavLink to="/bs/ansatte/ledige" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
         Ledige ansatte
-      </Link>
-      <Link to="/bs/butikker" onClick={() => setMenuOpen(false)}>
+      </NavLink>
+      <NavLink to="/bs/butikker" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
         Butikker
-      </Link>
+      </NavLink>
     </>
   );
 
-  // Close menu if clicked outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuOpen && menuRef.current && !menuRef.current.contains(e.target)) {
@@ -76,9 +74,9 @@ export default function Navbar() {
       {menuOpen && <div className="nav-overlay"></div>}
 
       <nav className="navbar">
-        <Link to="/" className="home-button desktop-only">
+        <NavLink to="/" className="home-button desktop-only">
           <img src="/icons/coop-compis-logo-sort.svg" alt="Coop" />
-        </Link>
+        </NavLink>
 
         <button
           className="menu-button"
@@ -100,12 +98,12 @@ export default function Navbar() {
 
         <div className="nav-right">
           <NotificationDropdown />
-          <Link
+          <NavLink
             to={user?.role === "employee" ? "/ba/profil" : "/bs/profil"}
             className="profile-icon"
           >
             <FaRegUserCircle size={40} />
-          </Link>
+          </NavLink>
           <button className="logout-button desktop-only" onClick={handleLogout}>
             Logg ut
           </button>

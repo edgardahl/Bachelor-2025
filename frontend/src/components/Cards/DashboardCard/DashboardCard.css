@@ -7,13 +7,12 @@
     width: 100%;
     height: auto;
     margin: 0 auto;
+    border-radius: 4px;
   }
 
   .dashboard-card:hover {
     background-color: #f6fefc;
   }
-
-  
 
   .dashboard-card h2{
     color: black;
