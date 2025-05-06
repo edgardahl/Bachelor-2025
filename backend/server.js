@@ -51,13 +51,6 @@ app.use(helmetMiddleware);
 app.use(express.json());
 app.use(cookieParser());
 
-app.use((req, res, next) => {
-  if (req.headers["x-forwarded-proto"] === "https") {
-    req.secure = true;
-  }
-  next();
-});
-
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
@@ -78,7 +71,6 @@ if (!isProduction) {
     console.log(`🔐 Dev HTTPS running at https://localhost:${PORT}/api`);
   });
 } else {
-  // Production: Ensure HTTPS is enabled for secure connections
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 Production backend running on port ${PORT}`);
   });
