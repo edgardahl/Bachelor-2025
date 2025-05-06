@@ -36,7 +36,6 @@ export default defineConfig({
           cert: "../pem/localhost.pem",
         }
       : false,
-    port: 5002,
     proxy: {
       "/api": {
         target: "https://localhost:5001",

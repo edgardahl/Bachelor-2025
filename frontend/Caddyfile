@@ -1,0 +1,3 @@
+fastoff.no {
+	root * /srv/dist file_server encode gzip
+}
