@@ -42,7 +42,7 @@
 .butikk-liste p {
   text-align: center;
   font-size: 1.2rem;
-  color: #555;
+  color: var(--Text-color-light);;
   margin-top: 20px;
 }
 

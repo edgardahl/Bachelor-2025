@@ -114,7 +114,7 @@ const MineVakter = () => {
       ) : (
         <>
           {shifts.length === 0 ? (
-            <p className="mine-vakter-empty-message">Ingen vakter funnet.</p>
+            <p className="mine-vakter-empty-message">Du har ikke publisert noen vakter enda</p>
           ) : (
             Object.entries(
               shifts.reduce((acc, shift) => {
