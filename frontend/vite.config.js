@@ -10,6 +10,7 @@ let mkcert;
 let useHttps = false;
 
 if (isDev) {
+  console.log("dev mode", isDev, process.env.NODE_ENV);
   try {
     mkcert = require("vite-plugin-mkcert").default;
     require("child_process").execSync("mkcert -version", {
@@ -28,6 +29,22 @@ if (isDev) {
 }
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@": "/src",
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/styles/variables.scss";`,
+      },
+    },
+  },
+  optimizeDeps: {
+    include: ["react", "react-dom"],
+  },
+
   plugins: [react(), ...(isDev && mkcert ? [mkcert()] : [])],
   server: {
     https: isDev
@@ -36,6 +53,7 @@ export default defineConfig({
           cert: "../pem/localhost.pem",
         }
       : false,
+    port: 5002,
     proxy: {
       "/api": {
         target: "https://localhost:5001",
@@ -46,6 +64,7 @@ export default defineConfig({
   },
   build: {
     outDir: "dist",
+    sourcemap: true,
   },
   define: {
     __API_BASE__: JSON.stringify(isDev ? "/api" : process.env.VITE_API_URL),
