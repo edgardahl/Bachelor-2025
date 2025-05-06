@@ -3,6 +3,7 @@
   padding: 24px;
   width: 1006px;
   margin: 0 auto;
+  max-width: 100vw;
 }
 
 .butikkoversikt-intro h1 {
@@ -70,7 +71,7 @@
 }
 
 /* Responsive styles */
-@media (max-width: 1006px) {
+@media (max-width: 1030px) {
   .butikkoversikt-container {
     width: 100%;
     max-width: 100%;
