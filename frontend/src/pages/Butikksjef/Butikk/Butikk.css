@@ -98,10 +98,6 @@
 
 /* Mobile view */
 @media (max-width: 700px) {
-  .butikkoversikt-container {
-    padding: 12px;
-  }
-
   .butikk-info {
     flex-direction: column;
     gap: 0;
