@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Added
 import axios from "../../../api/axiosInstance";
 import useAuth from "../../../context/UseAuth";
 import BackButton from "../../../components/BackButton/BackButton";
 import { toast } from "react-toastify";
-import CreateShiftConfirmModal from "../../../components/createShiftConfirmModal/createShiftConfirmModal"; // juster path ved behov
+import CreateShiftConfirmModal from "../../../components/createShiftConfirmModal/createShiftConfirmModal";
 
 import "./CreateShift.css";
 
 const CreateShift = () => {
   const { user } = useAuth();
+  const navigate = useNavigate(); // ✅ Added
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -21,7 +23,6 @@ const CreateShift = () => {
   const [StoreId, setStoreId] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingShiftData, setPendingShiftData] = useState(null);
-
 
   useEffect(() => {
     if (user) {
@@ -52,7 +53,7 @@ const CreateShift = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     const shiftData = {
       title,
       description,
@@ -65,14 +66,14 @@ const CreateShift = () => {
       store_id: StoreId,
       posted_by: UserId,
     };
-  
+
     setPendingShiftData(shiftData);
     setShowConfirmModal(true);
   };
 
   const confirmCreateShift = async () => {
     if (!pendingShiftData) return;
-  
+
     setLoading(true);
     try {
       await axios.post("/shifts", {
@@ -86,6 +87,7 @@ const CreateShift = () => {
       setTitle("");
       setDescription("");
       setSelectedQualifications([]);
+      navigate("/bs/vakter"); // ✅ Redirect after successful creation
     } catch (error) {
       console.error("Feil ved oppretting av vakt:", error);
       toast.error("Kunne ikke opprette vakt. Prøv igjen.");
@@ -95,8 +97,6 @@ const CreateShift = () => {
       setPendingShiftData(null);
     }
   };
-  
-  
 
   return (
     <div className="create-shift-container">
@@ -104,10 +104,9 @@ const CreateShift = () => {
       <h1>Ny vakt</h1>
       <form onSubmit={handleSubmit}>
         <div className="create-shift-form">
-        <div className="form-step beskrivelse">
+          <div className="form-step beskrivelse">
             <h3>Beskrivelse</h3>
             <p className="step-description">Gi vakten en tittel og beskriv hva den går ut på.</p>
-
             <div>
               <label>Tittel</label>
               <input
@@ -127,64 +126,62 @@ const CreateShift = () => {
             </div>
           </div>
 
+          <div className="form-step when-where">
+            <h3>Når er vakten?</h3>
+            <p className="step-description">Velg dato og klokkeslett for vakten.</p>
 
-        <div className="form-step when-where">
-          <h3>Når er vakten?</h3>
-          <p className="step-description">Velg dato og klokkeslett for vakten.</p>
-
-          <div>
-            <label>Dato</label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-              min={new Date().toISOString().split("T")[0]}
-              max={
-                new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-                  .toISOString()
-                  .split("T")[0]
-              }
-            />
-          </div>
-
-          <div className="time-range-group">
-            <div className="time-input-group">
-              <label>Fra</label>
+            <div>
+              <label>Dato</label>
               <input
-                type="time"
-                list="quarter-hour-options"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="time-input"
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
                 required
+                min={new Date().toISOString().split("T")[0]}
+                max={
+                  new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                    .toISOString()
+                    .split("T")[0]
+                }
               />
             </div>
 
-            <div className="time-input-group">
-              <label>Til</label>
-              <input
-                type="time"
-                list="quarter-hour-options"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="time-input"
-                required
-              />
+            <div className="time-range-group">
+              <div className="time-input-group">
+                <label>Fra</label>
+                <input
+                  type="time"
+                  list="quarter-hour-options"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                  className="time-input"
+                  required
+                />
+              </div>
+
+              <div className="time-input-group">
+                <label>Til</label>
+                <input
+                  type="time"
+                  list="quarter-hour-options"
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
+                  className="time-input"
+                  required
+                />
+              </div>
             </div>
+
+            <datalist id="quarter-hour-options">
+              {Array.from({ length: 24 * 4 }, (_, i) => {
+                const hours = String(Math.floor(i / 4)).padStart(2, "0");
+                const minutes = String((i % 4) * 15).padStart(2, "0");
+                return (
+                  <option key={`${hours}:${minutes}`} value={`${hours}:${minutes}`} />
+                );
+              })}
+            </datalist>
           </div>
-
-          <datalist id="quarter-hour-options">
-            {Array.from({ length: 24 * 4 }, (_, i) => {
-              const hours = String(Math.floor(i / 4)).padStart(2, "0");
-              const minutes = String((i % 4) * 15).padStart(2, "0");
-              return (
-                <option key={`${hours}:${minutes}`} value={`${hours}:${minutes}`} />
-              );
-            })}
-          </datalist>
-        </div>
-
 
           <div className="form-step">
             <h3>Kvalifikasjoner</h3>
@@ -207,21 +204,20 @@ const CreateShift = () => {
               })}
             </div>
           </div>
-
         </div>
 
         <button type="submit" disabled={loading}>
           {loading ? "Oppretter..." : "Opprett vakt"}
         </button>
       </form>
-      {showConfirmModal && (
-  <CreateShiftConfirmModal
-    shiftData={pendingShiftData}
-    onCancel={() => setShowConfirmModal(false)}
-    onConfirm={confirmCreateShift}
-  />
-)}
 
+      {showConfirmModal && (
+        <CreateShiftConfirmModal
+          shiftData={pendingShiftData}
+          onCancel={() => setShowConfirmModal(false)}
+          onConfirm={confirmCreateShift}
+        />
+      )}
     </div>
   );
 };

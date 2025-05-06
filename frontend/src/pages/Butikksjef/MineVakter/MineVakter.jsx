@@ -77,8 +77,11 @@ const MineVakter = () => {
 
       <div className="mine-vakter-tab-bar">
         <Link to="/bs/vakter/lag-vakt" className="mine-vakter-create-link">
-          <div className="mine-vakter-create-round-button">
-            <HiPlusSm size={26} />
+          <div className="mine-vakter-create-button-wrapper">
+            <div className="mine-vakter-create-round-button">
+              <HiPlusSm size={26} />
+            </div>
+            <span className="mine-vakter-create-text">Legg ut vakt</span>
           </div>
         </Link>
 

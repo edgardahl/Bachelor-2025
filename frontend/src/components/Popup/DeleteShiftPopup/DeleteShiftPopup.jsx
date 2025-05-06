@@ -51,22 +51,24 @@ const DeleteShiftPopup = ({ shiftTitle, onCancel, onConfirm }) => {
   return (
     <div className="delete-popup-overlay" onClick={handleOverlayClick}>
       <div className="delete-popup" onClick={handleOverlayClick}>
-        <h3>Confirm Deletion</h3>
+        <h3>Bekreft sletting</h3>
         <p>
-          Are you sure you want to delete the shift titled{" "}
-          <strong>{shiftTitle}</strong>? Please type the title below to confirm:
+         Er du sikker på at du vil slette vakten med tittelen: {" "}
+          <br /> "<strong>{shiftTitle}</strong>"? 
+          <br /> <br />
+          Vennligst skriv tittelen under for å bekrefte:
         </p>
         <input
           type="text"
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="Enter shift title"
+          placeholder="Skriv tittelen her"
         />
         {error && <p className="error-message">{error}</p>}{" "}
         {/* Conditionally render error message */}
         <div className="delete-popup-actions">
-          <button onClick={onCancel}>Cancel</button>
-          <button onClick={handleConfirmClick}>Confirm</button>
+          <button onClick={onCancel}>Avbryt</button>
+          <button onClick={handleConfirmClick}>Bekreft</button>
         </div>
       </div>
 

@@ -57,7 +57,7 @@
   padding: 0.5rem;
   font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 4px;
   max-width: 100%;
 }
 
@@ -110,7 +110,7 @@
 
 .select__control {
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 4px;
   box-shadow: none;
   font-size: 0.95rem;
 }
@@ -166,7 +166,7 @@ ul.municipality-list li {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .change-password-button {
@@ -214,7 +214,7 @@ ul.municipality-list li {
   padding: 0.6rem 1rem;
   font-size: 1rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
@@ -245,7 +245,7 @@ ul.municipality-list li {
   transition: ease 0.1s;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
@@ -259,7 +259,6 @@ ul.municipality-list li {
     margin: 1rem;
     padding: 1rem;
     box-shadow: none;
-    border-radius: 0;
   }
 
   .profile-header {

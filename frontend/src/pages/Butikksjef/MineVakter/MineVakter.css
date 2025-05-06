@@ -43,15 +43,60 @@
   background-color: var(--Shifts-button-hover);
 }
 
-/* Tabs */
+/* Pluss-knapp med tekst */
+.mine-vakter-create-link {
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+}
 
+.mine-vakter-create-button-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--Shifts-claimed-accent);
+  padding: 10px 16px;
+  border-radius: 30px;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.mine-vakter-create-button-wrapper:hover {
+  opacity: 0.85;
+  text-decoration: none;
+}
+
+.mine-vakter-create-round-button {
+  width: 34px;
+  height: 34px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--Shifts-claimed-accent);
+  font-weight: bold;
+  transition: opacity 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.mine-vakter-create-text {
+  white-space: nowrap;
+}
+
+/* Tabs */
 .mine-vakter-tab-bar {
   margin-bottom: 50px;
 }
 
 .mine-vakter-tab-boxes {
   display: grid;
-  grid-template-columns: 2fr 2fr; /* 3 equal columns */
+  grid-template-columns: 2fr 2fr;
   justify-content: center;
   margin: 20px 0 40px 0;
   max-width: 100%;
@@ -61,14 +106,14 @@
 
 .mine-vakter-tab-box {
   padding: 16px 12px;
-  background-color: transparent; /* No background */
+  background-color: transparent;
   color: var(--Text-color-light);
   text-align: center;
   font-weight: 500;
   font-size: 1.1rem;
   text-transform: uppercase;
   border: none;
-  border-bottom: 4px solid var(--Shifts-tab-hover); /* Default: no underline */
+  border-bottom: 4px solid var(--Shifts-tab-hover);
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease;
   display: flex;
@@ -79,47 +124,19 @@
 }
 
 .mine-vakter-tab-box:hover {
-  color: var(--Text-color); /* Darker on hover */
+  color: var(--Text-color);
   border-bottom: 4px solid var(--Shifts-tab-hover);
 }
 
 .mine-vakter-tab-box.active {
-  color: var(--Text-color); /* Or white if preferred */
-  border-bottom: 4px solid var(--Shifts-tab-open); /* Solid underline for active */
+  color: var(--Text-color);
+  border-bottom: 4px solid var(--Shifts-tab-open);
   font-weight: 600;
 }
 
 .mine-vakter-tab-box.create {
   color: white;
   font-weight: 600;
-}
-
-/* Special style for the static blue "Create" box */
-.mine-vakter-create-link {
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 50px;
-}
-
-.mine-vakter-create-round-button {
-  width: 60px;
-  height: 60px;
-  background-color: var(
-    --Shifts-claimed-accent
-  ); /* Bright blue or whatever you use */
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.mine-vakter-create-round-button:hover {
-  opacity: 0.85;
 }
 
 /* Section headers */
@@ -160,8 +177,6 @@
   margin-left: auto;
   margin-right: auto;
   max-width: 816px;
-
-  /* 👇 Dette gjør at kortene starter fra venstre, men hele containeren er sentrert */
   justify-content: flex-start;
 }
 
@@ -173,6 +188,7 @@
   padding: 40px 0;
 }
 
+/* Responsive tweaks */
 @media (max-width: 965px) {
   .shift-date-heading-wrapper {
     text-align: center;
@@ -189,11 +205,11 @@
   }
 }
 
-/* media query max 1030px*/
 @media (max-width: 1030px) {
   .mine-vakter-container {
     width: 100%;
     max-width: 100%;
+    border-radius: 0;
   }
 }
 

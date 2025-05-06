@@ -9,7 +9,7 @@
 .auth-form {
   background-color: #fff;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 4px;
   width: 100%;
   max-width: 500px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -63,7 +63,7 @@
   background-color: #0077cc;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
@@ -120,7 +120,7 @@
 .select__control {
   min-height: 48px; /* Match .auth-input height */
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 1rem;
   padding: 0 0.75rem;
   box-sizing: border-box;
