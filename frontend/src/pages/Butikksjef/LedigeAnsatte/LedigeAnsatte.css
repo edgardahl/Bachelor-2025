@@ -28,6 +28,13 @@
   line-height: 1.6;
 }
 
+.no-employee-found{
+  text-align: center;
+  font-size: 1.2rem;
+  color:var(--Text-color-light);;
+  margin-top: 20px;
+}
+
 .ledige-ansatte-text {
   color: var(--Available-text);
   margin-bottom: 24px;
