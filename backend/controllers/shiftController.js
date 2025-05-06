@@ -14,6 +14,7 @@ import {
 import { newShiftPublishedNotificationModel, notifyStoreManagerOnShiftClaimedModel } from "../models/notificationModel.js";
 import { getUserByIdModel } from "../models/userModel.js";
 import { getShiftQualificationsModel } from "../models/qualificationModel.js";
+import { sanitizeShift } from "../utils/sanitizeInput.js";
 
 // Get all shifts
 export const getAllShiftsController = async (req, res) => {
@@ -137,6 +138,20 @@ export const claimShiftController = async (req, res) => {
 export const createShiftController = async (req, res) => {
   try {
     const shiftData = req.body;
+
+    //sanitize input
+    let sanitizedShiftData;
+    try {
+      sanitizedShiftData = sanitizeShift(shiftData);
+    } catch (sanitizeError) {
+      // Return the error message in the expected format
+      return res.status(400).json({ error: { general: sanitizeError.message } });
+    }
+
+    if (sanitizedShiftData.errors) {
+      console.log("Sanitized data errors:", sanitizedShiftData.errors);
+      return res.status(400).json({ error: sanitizedShiftData.errors });
+    }
 
     const newShift = await createShiftModel(shiftData);
 

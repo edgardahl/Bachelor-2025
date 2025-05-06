@@ -219,7 +219,6 @@ export const registerNewEmployeeController = async (req, res) => {
       store_id: storeManager.storeId,
     };
 
-    console.log("Sanitize data before");
     // Sanitize user input
     let sanitizedUserData;
     try {
