@@ -10,5 +10,11 @@ export const getAllMunicipalitiesModel = async () => {
   if (error) {
     throw new Error(error.message);
   }
+
+  // Sort the municipalities based on the Norwegian alphabet
+  data.sort((a, b) => {
+    return a.municipality_name.localeCompare(b.municipality_name, 'no', { sensitivity: 'base' });
+  });
+
   return data;
 };
