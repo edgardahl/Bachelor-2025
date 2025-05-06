@@ -11,10 +11,6 @@
   min-height: 100%;
 }
 
-.butikkansatt-card:hover {
-  transform: translateY(-3px);
-}
-
 .card-left {
   margin-right: 16px;
   font-size: 2rem;
