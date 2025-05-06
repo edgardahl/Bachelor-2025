@@ -99,7 +99,7 @@ export const newShiftPublishedNotificationModel = async (shiftData) => {
         receiver_id: user.user_id,
         title: `Ny vakt: ${title}`,
         message: `En ny vakt er publisert for ${storeName} den ${date} kl. ${start_time}–${end_time}`,
-        status: "unopened",
+        status: "Uåpnet",
         shift_id: shift_id, // 👈 Add this line
       }));      
         console.log("Notifications to be inserted:", notifications);
@@ -165,9 +165,9 @@ export const notifyStoreManagerOnShiftClaimedModel = async (shift_id, claimedByU
       const notification = {
         notification_id: uuidv4(),
         receiver_id: storeManagerData.user_id, // Store manager's ID
-        title: `Shift You Posted Has Been Claimed`,
-        message: `${claimedByFirstName} ${claimedByLastName} has claimed the shift: "${shiftTitle}".`,
-        status: 'unopened',
+        title: `Vakten du publiserte er nå tatt`,
+        message: `${claimedByFirstName} ${claimedByLastName} har tatt vakten: "${shiftTitle}".`,
+        status: 'Uåpnet',
         shift_id: shift_id
       };
   
