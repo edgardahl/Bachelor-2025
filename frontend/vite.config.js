@@ -29,6 +29,7 @@ if (isDev) {
 }
 
 export default defineConfig({
+  base: "/",
   resolve: {
     alias: {
       "@": "/src",
@@ -44,7 +45,13 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react", "react-dom"],
   },
-
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./src/setupTests.js",
+    css: true,
+  },
+  publicDir: "public",
   plugins: [react(), ...(isDev && mkcert ? [mkcert()] : [])],
   server: {
     https: isDev
