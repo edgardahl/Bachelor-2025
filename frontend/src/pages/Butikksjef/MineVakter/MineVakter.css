@@ -188,8 +188,8 @@
   }
 }
 
-/* media query max 1006px*/
-@media (max-width: 1006px) {
+/* media query max 1030px*/
+@media (max-width: 1030px) {
   .mine-vakter-container {
     width: 100%;
     max-width: 100%;
