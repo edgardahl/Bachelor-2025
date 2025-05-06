@@ -30,7 +30,6 @@ if (isProduction) {
 app.use(
   cors({
     origin: (origin, callback) => {
-      console.log("CORS request from origin:", origin);
       const allowed = [
         `https://localhost:${FRONTEND_PORT}`,
         process.env.FRONTEND_URL,
