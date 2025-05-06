@@ -21,16 +21,18 @@ if (isDev) {
 
 export default defineConfig({
   plugins: [react(), ...(isDev && mkcert ? [mkcert()] : [])],
-  server: {
-    https: isDev,
-    proxy: {
-      "/api": {
-        target: "https://localhost:5001",
-        changeOrigin: true,
-        secure: false,
-      },
-    },
-  },
+  server: isDev
+    ? {
+        https: true,
+        proxy: {
+          "/api": {
+            target: "https://localhost:5001",
+            changeOrigin: true,
+            secure: false,
+          },
+        },
+      }
+    : undefined,
   build: {
     outDir: "dist",
   },
