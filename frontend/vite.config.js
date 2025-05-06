@@ -35,15 +35,12 @@ export default defineConfig({
       "@": "/src",
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@import "@/styles/variables.scss";`,
-      },
-    },
-  },
   optimizeDeps: {
-    include: ["react", "react-dom"],
+    include: [
+      "react",
+      "react-dom",
+      "react-router-dom",
+    ],
   },
   test: {
     globals: true,
@@ -69,9 +66,24 @@ export default defineConfig({
       },
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "./src/index.css";`,
+      },
+    },
+  },
   build: {
     outDir: "dist",
-    sourcemap: true,
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
   },
   define: {
     __API_BASE__: JSON.stringify(isDev ? "/api" : process.env.VITE_API_URL),
