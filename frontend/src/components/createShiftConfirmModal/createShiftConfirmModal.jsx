@@ -7,45 +7,46 @@ const CreateShiftConfirmModal = ({ shiftData, onCancel, onConfirm }) => {
       <div className="modal-content">
         <h2>Er du sikker på at du vil opprette vakten?</h2>
 
-        <div className="modal-info">
-          <div>
-            <label>Tittel:</label>
-            <p>{shiftData.title}</p>
+        <div className="modal-two-column">
+          {/* Venstre kolonne */}
+          <div className="modal-column">
+            <div className="modal-field">
+              <label>Tittel:</label>
+              <p>{shiftData.title}</p>
+            </div>
+
+            <div className="modal-field">
+              <label>Beskrivelse:</label>
+              <p>{shiftData.description}</p>
+            </div>
+
+            <div className="modal-field">
+              <label>Kvalifikasjoner:</label>
+              <div className="qualifications">
+                {shiftData.qualifications.map((q, i) => (
+                  <span key={i} className="qualification-tag">
+                    {q}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label>Beskrivelse:</label>
-            <p>{shiftData.description}</p>
-          </div>
-
-          <div className="row">
-            <div>
+          {/* Høyre kolonne */}
+          <div className="modal-column">
+            <div className="modal-field">
               <label>Dato:</label>
               <p>{shiftData.date}</p>
             </div>
-            <div>
-              <label>Fra:</label>
-              <p>{shiftData.start_time}</p>
-            </div>
-            <div>
-              <label>Til:</label>
-              <p>{shiftData.end_time}</p>
-            </div>
-          </div>
 
-          <div>
-            <label>Kvalifikasjoner:</label>
-            <div className="qualifications">
-              {shiftData.qualifications.map((q, i) => (
-                <span key={i} className="qualification-tag">
-                  {q}
-                </span>
-              ))}
+            <div className="modal-field">
+              <label>Tid:</label>
+              <p>{shiftData.start_time} – {shiftData.end_time}</p>
             </div>
           </div>
         </div>
 
-        <div className="modal-buttons">
+        <div className="modal-buttons center">
           <button onClick={onCancel}>Avbryt</button>
           <button className="confirm" onClick={onConfirm}>Bekreft</button>
         </div>
