@@ -8,6 +8,7 @@
   z-index: 100;
   font-family: sans-serif;
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 }
 
 /* Home logo (desktop only) */
@@ -175,5 +176,11 @@
 
   .desktop-only {
     display: block;
+  }
+}
+
+@media (max-width: 1006px) {
+  .navbar{
+    margin-bottom: 0;
   }
 }
