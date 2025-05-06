@@ -21,7 +21,7 @@
 }
 
 .butikk-card:hover {
-  transform: translateY(-5px);
+  transform: scale(1.02);
 }
 
 /* Header with the image */
