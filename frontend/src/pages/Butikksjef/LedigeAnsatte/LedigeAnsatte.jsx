@@ -69,7 +69,7 @@ const LedigeAnsatte = () => {
       {error && <p className="ledige-error-message">{error}</p>}
 
       {filteredEmployees.length === 0 && !error && !loading && (
-        <p>Ingen ledige ansatte funnet med de valgte kvalifikasjonene.</p>
+        <p className="no-employee-found">Ingen ledige ansatte funnet med alle valgte kvalifikasjonene.</p>
       )}
 
       {loading ? (

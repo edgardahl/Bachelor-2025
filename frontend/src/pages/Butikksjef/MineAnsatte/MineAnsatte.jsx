@@ -105,7 +105,7 @@ const MineAnsatte = () => {
                 </Link>
               ))
             ) : (
-              <p>Ingen ansatte</p>
+              <p className="no-employee-found">Du har ingen ansatte med alle valgte kvalifikasjoner</p>
             )}
           </div>
 
