@@ -2,7 +2,7 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 4px;
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   font-family: Arial, sans-serif;
@@ -26,7 +26,7 @@
   background-color: #2e7d32;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
@@ -79,7 +79,7 @@
 .cancel-button {
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   border: 1px solid transparent;
 }
@@ -175,7 +175,7 @@ ul.municipality-list li {
   background-color: #424242;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   width: 100%;
 }

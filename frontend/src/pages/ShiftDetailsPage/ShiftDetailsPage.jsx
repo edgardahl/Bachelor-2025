@@ -165,7 +165,7 @@ const ShiftDetailsPage = () => {
                 className="claim-button"
                 onClick={() => setShowClaimPopup(true)}
               >
-                Ta Vakt
+                Ta vakt
               </button>
             )}
             {canDelete && (
