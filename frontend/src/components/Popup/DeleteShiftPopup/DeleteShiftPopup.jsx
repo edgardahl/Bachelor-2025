@@ -23,7 +23,7 @@ const DeleteShiftPopup = ({ shiftTitle, onCancel, onConfirm }) => {
       try {
         await onConfirm(); // Call the onConfirm function
         setShowSuccessPopup(true); // Show success popup
-      } catch (err) {
+      } catch {
         setErrorMessage("Failed to delete the shift. Please try again."); // Set error message
         setShowErrorPopup(true); // Show error popup
       }

@@ -17,10 +17,15 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingQualifications, setIsEditingQualifications] = useState(false);
-  const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" });
+  const [passwords, setPasswords] = useState({
+    currentPassword: "",
+    newPassword: "",
+  });
   const [municipalityOptions, setMunicipalityOptions] = useState([]);
-  const [selectedMunicipalityOptions, setSelectedMunicipalityOptions] = useState([]);
-  const [selectedResidenceMunicipality, setSelectedResidenceMunicipality] = useState(null);
+  const [selectedMunicipalityOptions, setSelectedMunicipalityOptions] =
+    useState([]);
+  const [selectedResidenceMunicipality, setSelectedResidenceMunicipality] =
+    useState(null);
   const [allQualifications, setAllQualifications] = useState([]);
   const [qualificationMap, setQualificationMap] = useState({});
 
@@ -45,20 +50,24 @@ const Profile = () => {
       const idToFetch = profileId || user?.id;
       if (!idToFetch) return;
 
-      const [municipalityOptionsRes, qualificationsRes, profileRes] = await Promise.all([
-        fetchMunicipalities(),
-        fetchQualifications(),
-        axios.get(`/users/${idToFetch}`),
-      ]);
+      const [municipalityOptionsRes, qualificationsRes, profileRes] =
+        await Promise.all([
+          fetchMunicipalities(),
+          fetchQualifications(),
+          axios.get(`/users/${idToFetch}`),
+        ]);
 
       setMunicipalityOptions(municipalityOptionsRes);
       setAllQualifications(qualificationsRes);
       setFormData(profileRes.data);
 
-      const currentSelected = profileRes.data.work_municipalities?.map((name) => {
-        const match = municipalityOptionsRes.find((m) => m.label === name);
-        return match ? { label: match.label, value: match.value } : null;
-      }).filter(Boolean) || [];
+      const currentSelected =
+        profileRes.data.work_municipalities
+          ?.map((name) => {
+            const match = municipalityOptionsRes.find((m) => m.label === name);
+            return match ? { label: match.label, value: match.value } : null;
+          })
+          .filter(Boolean) || [];
       setSelectedMunicipalityOptions(currentSelected);
 
       const residenceMatch = municipalityOptionsRes.find(
@@ -76,7 +85,14 @@ const Profile = () => {
       setError("Kunne ikke hente profildata");
       if (isOwnProfile) navigate("/login");
     }
-  }, [fetchMunicipalities, fetchQualifications, profileId, user?.id, isOwnProfile, navigate]);
+  }, [
+    fetchMunicipalities,
+    fetchQualifications,
+    profileId,
+    user?.id,
+    isOwnProfile,
+    navigate,
+  ]);
 
   useEffect(() => {
     fetchProfile();
@@ -101,7 +117,9 @@ const Profile = () => {
           phone_number: formData.phone_number,
           availability: formData.availability,
           municipality_id: selectedResidenceMunicipality?.value || null,
-          work_municipality_ids: selectedMunicipalityOptions.map((opt) => opt.value),
+          work_municipality_ids: selectedMunicipalityOptions.map(
+            (opt) => opt.value
+          ),
         };
 
         await axios.put(`/users/updateCurrentUser`, rawData);
@@ -144,16 +162,23 @@ const Profile = () => {
   };
 
   const handleQualificationToggle = (id) => {
-    const isSelected = formData.qualifications.some((q) => q.qualification_id === id);
+    const isSelected = formData.qualifications.some(
+      (q) => q.qualification_id === id
+    );
     const updated = isSelected
       ? formData.qualifications.filter((q) => q.qualification_id !== id)
-      : [...formData.qualifications, { qualification_id: id, qualification_name: qualificationMap[id] }];
+      : [
+          ...formData.qualifications,
+          { qualification_id: id, qualification_name: qualificationMap[id] },
+        ];
     setFormData((prev) => ({ ...prev, qualifications: updated }));
   };
 
   const saveQualifications = async () => {
     try {
-      const selectedIds = formData.qualifications.map((q) => q.qualification_id);
+      const selectedIds = formData.qualifications.map(
+        (q) => q.qualification_id
+      );
       await axios.post("/users/myemployees/qualifications/update", {
         user_id: profileId,
         qualification_ids: selectedIds,
@@ -167,8 +192,12 @@ const Profile = () => {
     }
   };
 
-  const canEditQualifications = user?.role === "store_manager" && !isOwnProfile && user?.storeId === formData?.store_id;
-  const canViewQualifications = formData?.role === "employee" || canEditQualifications;
+  const canEditQualifications =
+    user?.role === "store_manager" &&
+    !isOwnProfile &&
+    user?.storeId === formData?.store_id;
+  const canViewQualifications =
+    formData?.role === "employee" || canEditQualifications;
 
   if (error) return <p>{error}</p>;
   if (!user || !formData) return <Loading />;
@@ -178,27 +207,71 @@ const Profile = () => {
       {showBackButton && <BackButton />}
 
       <div className="profile-header">
-        <h1>{isOwnProfile ? "Min profil" : "Ansattprofil"}</h1>
+        <h1>
+          {isOwnProfile
+            ? "Min profil"
+            : `${formData.first_name} ${formData.last_name}`}
+        </h1>
         {isOwnProfile && !isEditing && (
-          <button className="edit-button" onClick={toggleEdit}>Rediger</button>
+          <button className="edit-button" onClick={toggleEdit}>
+            Rediger
+          </button>
         )}
       </div>
 
       <div className="profile-grid">
-        {["first_name", "last_name", "email", "phone_number"].map((field) => (
-          <div className="profile-field" key={field}>
-            <label>{field.replace("_", " ").toUpperCase()}:</label>
-            {isEditing ? (
-              <input
-                name={field}
-                value={formData[field] || ""}
-                onChange={handleChange}
-              />
-            ) : (
-              <p>{formData[field] || "Ikke oppgitt"}</p>
-            )}
-          </div>
-        ))}
+  <div className="profile-field">
+    <label>Fornavn:</label>
+    {isEditing ? (
+      <input
+        name="first_name"
+        value={formData.first_name || ""}
+        onChange={handleChange}
+      />
+    ) : (
+      <p>{formData.first_name || "Ikke oppgitt"}</p>
+    )}
+  </div>
+
+  <div className="profile-field">
+    <label>Etternavn:</label>
+    {isEditing ? (
+      <input
+        name="last_name"
+        value={formData.last_name || ""}
+        onChange={handleChange}
+      />
+    ) : (
+      <p>{formData.last_name || "Ikke oppgitt"}</p>
+    )}
+  </div>
+
+  <div className="profile-field">
+    <label>E-post:</label>
+    {isEditing ? (
+      <input
+        name="email"
+        type="email"
+        value={formData.email || ""}
+        onChange={handleChange}
+      />
+    ) : (
+      <p>{formData.email || "Ikke oppgitt"}</p>
+    )}
+  </div>
+
+  <div className="profile-field">
+    <label>Telefonnummer:</label>
+    {isEditing ? (
+      <input
+        name="phone_number"
+        value={formData.phone_number || ""}
+        onChange={handleChange}
+      />
+    ) : (
+      <p>{formData.phone_number || "Ikke oppgitt"}</p>
+    )}
+  </div>
 
         <div className="profile-field">
           <label>Butikk:</label>
@@ -251,26 +324,41 @@ const Profile = () => {
             <label>Kvalifikasjoner:</label>
             {canEditQualifications && isEditingQualifications ? (
               <>
-                <div className="qualification-form">
-                  {allQualifications.map((q) => (
-                    <label key={q.id}>
-                      <input
-                        type="checkbox"
-                        checked={formData.qualifications.some(
-                          (sel) => sel.qualification_id === q.id
-                        )}
-                        onChange={() => handleQualificationToggle(q.id)}
-                      />
-                      {q.name}
-                    </label>
-                  ))}
+                <div className="qualification-cards">
+                  {allQualifications.map((qualification) => {
+                    const isSelected = formData.qualifications.some(
+                      (q) => q.qualification_id === qualification.id
+                    );
+                    return (
+                      <div
+                        key={qualification.id}
+                        className={`qualification-card ${
+                          isSelected ? "selected" : ""
+                        }`}
+                        onClick={() =>
+                          handleQualificationToggle(qualification.id)
+                        }
+                      >
+                        <h4>{qualification.name}</h4>
+                        {isSelected && <span className="checkmark">✔</span>}
+                      </div>
+                    );
+                  })}
+                  <div className="qualification-action-buttons">
+                    <button
+                      className="qualification-save-btn"
+                      onClick={saveQualifications}
+                    >
+                      Lagre kvalifikasjoner
+                    </button>
+                    <button
+                      className="qualification-cancel-btn"
+                      onClick={() => setIsEditingQualifications(false)}
+                    >
+                      Avbryt
+                    </button>
+                  </div>
                 </div>
-                <button onClick={saveQualifications}>
-                  Lagre kvalifikasjoner
-                </button>
-                <button onClick={() => setIsEditingQualifications(false)}>
-                  Avbryt
-                </button>
               </>
             ) : (
               <>
@@ -284,7 +372,10 @@ const Profile = () => {
                   )}
                 </ul>
                 {canEditQualifications && !isEditingQualifications && (
-                  <button onClick={() => setIsEditingQualifications(true)}>
+                  <button
+                    className="edit-qualifications-btn"
+                    onClick={() => setIsEditingQualifications(true)}
+                  >
                     Rediger kvalifikasjoner
                   </button>
                 )}
