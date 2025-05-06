@@ -87,14 +87,15 @@ const MineAnsatte = () => {
       ) : (
         <>
           <div className="employee-list">
-          <Link to="/bs/ansatte/mine/nyAnsatt">
-            <ButikkansattCard isEmptyCard={true} cardClass="employee-theme" />
-          </Link>
+            <Link to="/bs/ansatte/mine/nyAnsatt">
+              <ButikkansattCard isEmptyCard={true} cardClass="employee-theme" />
+            </Link>
 
             {paginatedEmployees.length > 0 ? (
               paginatedEmployees.map((employee) => (
                 <Link
                   to={`/bs/ansatte/profil/${employee.user_id}`}
+                  state={{ fromMineAnsatte: true }}
                   key={employee.user_id}
                 >
                   <ButikkansattCard
