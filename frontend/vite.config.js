@@ -7,32 +7,44 @@ dotenv.config();
 const isDev = process.env.NODE_ENV === "development";
 
 let mkcert;
+let useHttps = false;
+
 if (isDev) {
   try {
     mkcert = require("vite-plugin-mkcert").default;
-    require("child_process").execSync("mkcert -version", { stdio: "ignore" });
+    require("child_process").execSync("mkcert -version", {
+      stdio: "ignore",
+      env: {
+        ...process.env,
+        PATH: process.env.PATH + ":/opt/homebrew/bin",
+      },
+    });
+    useHttps = true;
   } catch (error) {
-    console.error(
-      "Error: mkcert is not installed or not available in PATH. Please install mkcert and ensure it is properly configured."
+    console.warn(
+      "⚠️ mkcert not found or not in PATH. Falling back to HTTP server for development."
     );
-    process.exit(1);
   }
 }
 
 export default defineConfig({
   plugins: [react(), ...(isDev && mkcert ? [mkcert()] : [])],
-  server: isDev
-    ? {
-        https: true,
-        proxy: {
-          "/api": {
-            target: "https://localhost:5001",
-            changeOrigin: true,
-            secure: false,
-          },
-        },
-      }
-    : undefined,
+  server: {
+    https: isDev
+      ? {
+          key: "../pem/localhost-key.pem",
+          cert: "../pem/localhost.pem",
+        }
+      : false,
+    port: 5002,
+    proxy: {
+      "/api": {
+        target: "https://localhost:5001",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
   build: {
     outDir: "dist",
   },

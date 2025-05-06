@@ -19,7 +19,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "5173:80"
+      - "5002:80"
     env_file:
       - ./frontend/.env
     volumes:

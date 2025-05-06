@@ -30,7 +30,7 @@ build
 *.njsproj
 *.sln
 *.sw?
-*.pem
+/pem
 
 # OS-specific files
 Thumbs.db
