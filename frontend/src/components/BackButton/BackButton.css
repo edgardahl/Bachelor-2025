@@ -1,32 +1,58 @@
 .back-button {
   display: flex;
   align-items: center;
+  gap: 10px;
   position: absolute;
   left: 1rem;
-  padding: 10px;
-  cursor: pointer;
+  top: -1rem;
+  padding: 10px 14px;
   background-color: var(--White);
   border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.back-button:hover {
+  background-color: #f2f2f2;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
 }
 
 .back-text {
-  margin-left: 8px;
   font-size: 16px;
+  font-weight: 500;
   color: #333;
+  white-space: nowrap;
 }
 
 .arrow {
-  width: auto;
-  height: 100%;
+  width: 20px;
+  height: 20px;
 }
 
+@media (max-width: 1030px) {
+  .back-button {
+    top: 1rem;
+  }
+}
+
+/* Mobile: hide text, keep round button */
 @media screen and (max-width: 768px) {
+  .back-button {
+    border-radius: 50%;
+    padding: 10px;
+    width: 44px;
+    height: 44px;
+    justify-content: center;
+  }
+
   .back-text {
     display: none;
   }
 
-  .back-button {
-    border-radius: 100%;
+  .arrow {
+    width: 20px;
+    height: 20px;
   }
 }

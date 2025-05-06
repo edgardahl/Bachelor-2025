@@ -5,11 +5,14 @@ import useAuth from "../../context/UseAuth";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading/Loading";
+import BackButton from "../../components/BackButton/BackButton";
 import "./Profile.css";
 
 const Profile = () => {
   const { user } = useAuth();
   const { id: profileId } = useParams();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState(null);
   const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -21,8 +24,8 @@ const Profile = () => {
   const [allQualifications, setAllQualifications] = useState([]);
   const [qualificationMap, setQualificationMap] = useState({});
 
-  const navigate = useNavigate();
   const isOwnProfile = !profileId || user?.id === profileId;
+  const showBackButton = user?.role === "store_manager" && !isOwnProfile;
 
   const fetchMunicipalities = useCallback(async () => {
     const res = await axios.get("/municipalities");
@@ -100,7 +103,7 @@ const Profile = () => {
           municipality_id: selectedResidenceMunicipality?.value || null,
           work_municipality_ids: selectedMunicipalityOptions.map((opt) => opt.value),
         };
-  
+
         await axios.put(`/users/updateCurrentUser`, rawData);
         await fetchProfile();
         setIsEditing(false);
@@ -117,7 +120,6 @@ const Profile = () => {
       setIsEditing(true);
     }
   };
-  
 
   const handlePasswordChange = async () => {
     try {
@@ -173,6 +175,8 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
+      {showBackButton && <BackButton />}
+
       <div className="profile-header">
         <h1>{isOwnProfile ? "Min profil" : "Ansattprofil"}</h1>
         {isOwnProfile && !isEditing && (
@@ -185,7 +189,11 @@ const Profile = () => {
           <div className="profile-field" key={field}>
             <label>{field.replace("_", " ").toUpperCase()}:</label>
             {isEditing ? (
-              <input name={field} value={formData[field] || ""} onChange={handleChange} />
+              <input
+                name={field}
+                value={formData[field] || ""}
+                onChange={handleChange}
+              />
             ) : (
               <p>{formData[field] || "Ikke oppgitt"}</p>
             )}
@@ -227,7 +235,9 @@ const Profile = () => {
             ) : (
               <ul className="municipality-list">
                 {formData.work_municipalities?.length > 0 ? (
-                  formData.work_municipalities.map((name, i) => <li key={i}>{name}</li>)
+                  formData.work_municipalities.map((name, i) => (
+                    <li key={i}>{name}</li>
+                  ))
                 ) : (
                   <li>Ingen valgt</li>
                 )}
@@ -246,27 +256,37 @@ const Profile = () => {
                     <label key={q.id}>
                       <input
                         type="checkbox"
-                        checked={formData.qualifications.some((sel) => sel.qualification_id === q.id)}
+                        checked={formData.qualifications.some(
+                          (sel) => sel.qualification_id === q.id
+                        )}
                         onChange={() => handleQualificationToggle(q.id)}
                       />
                       {q.name}
                     </label>
                   ))}
                 </div>
-                <button onClick={saveQualifications}>Lagre kvalifikasjoner</button>
-                <button onClick={() => setIsEditingQualifications(false)}>Avbryt</button>
+                <button onClick={saveQualifications}>
+                  Lagre kvalifikasjoner
+                </button>
+                <button onClick={() => setIsEditingQualifications(false)}>
+                  Avbryt
+                </button>
               </>
             ) : (
               <>
                 <ul>
                   {formData.qualifications?.length > 0 ? (
-                    formData.qualifications.map((q) => <li key={q.qualification_id}>{q.qualification_name}</li>)
+                    formData.qualifications.map((q) => (
+                      <li key={q.qualification_id}>{q.qualification_name}</li>
+                    ))
                   ) : (
                     <li>Ingen kvalifikasjoner</li>
                   )}
                 </ul>
                 {canEditQualifications && !isEditingQualifications && (
-                  <button onClick={() => setIsEditingQualifications(true)}>Rediger kvalifikasjoner</button>
+                  <button onClick={() => setIsEditingQualifications(true)}>
+                    Rediger kvalifikasjoner
+                  </button>
                 )}
               </>
             )}
@@ -284,8 +304,19 @@ const Profile = () => {
       {isEditing && (
         <>
           <div className="save-container">
-            <button className="save-button" onClick={toggleEdit}>Lagre</button>
-            <button className="cancel-button" onClick={() => { setIsEditing(false); fetchProfile(); setPasswords({ currentPassword: "", newPassword: "" }); }}>Avbryt</button>
+            <button className="save-button" onClick={toggleEdit}>
+              Lagre
+            </button>
+            <button
+              className="cancel-button"
+              onClick={() => {
+                setIsEditing(false);
+                fetchProfile();
+                setPasswords({ currentPassword: "", newPassword: "" });
+              }}
+            >
+              Avbryt
+            </button>
           </div>
 
           <div className="change-password-section">
@@ -293,14 +324,29 @@ const Profile = () => {
             <div className="password-grid">
               <div className="password-field">
                 <label>Nåværende passord:</label>
-                <input type="password" name="currentPassword" value={passwords.currentPassword} onChange={handleChange} />
+                <input
+                  type="password"
+                  name="currentPassword"
+                  value={passwords.currentPassword}
+                  onChange={handleChange}
+                />
               </div>
               <div className="password-field">
                 <label>Nytt passord:</label>
-                <input type="password" name="newPassword" value={passwords.newPassword} onChange={handleChange} />
+                <input
+                  type="password"
+                  name="newPassword"
+                  value={passwords.newPassword}
+                  onChange={handleChange}
+                />
               </div>
             </div>
-            <button className="change-password-button" onClick={handlePasswordChange}>Oppdater passord</button>
+            <button
+              className="change-password-button"
+              onClick={handlePasswordChange}
+            >
+              Oppdater passord
+            </button>
           </div>
         </>
       )}
