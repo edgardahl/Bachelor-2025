@@ -55,7 +55,8 @@ export const getStoresWithMunicipality = async (
   const { data, error } = await supabase.from("stores").select(
     `store_id, name, store_chain, address, phone_number, email, manager_id,
       municipality:municipality_id (municipality_name, county_name)`
-  );
+  )
+  .order('name', { ascending: true });
 
   if (error) {
     throw new Error(error.message);

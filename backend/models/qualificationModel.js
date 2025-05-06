@@ -4,14 +4,20 @@ import { supabase } from "../config/supabaseClient.js";
 export const getAllQualificationsModel = async () => {
   const { data, error } = await supabase
     .from("qualification") // Name of the table
-    .select("*"); // Select all columns (You can specify specific columns if needed)
+    .select("*") // Select all columns (You can specify specific columns if needed)
 
   if (error) {
     throw new Error(error.message); // Throw an error if there's an issue
   }
 
-  return data; // Return the qualifications
+  // Sort the qualifications by name using Norwegian alphabet order
+  data.sort((a, b) => {
+    return a.name.localeCompare(b.name, 'no', { sensitivity: 'base' });
+  });
+
+  return data; // Return the sorted qualifications
 };
+
 
 // get qualifications for a specific shift
 export const getShiftQualificationsModel = async (shiftId) => {

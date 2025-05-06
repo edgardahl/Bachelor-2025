@@ -90,3 +90,11 @@
     cursor: not-allowed;
   }
   
+
+  .new-user-error-message {
+
+    color: red;
+    margin-top: 0;
+    margin-bottom: 50px;
+    font-size: 14px;
+  }

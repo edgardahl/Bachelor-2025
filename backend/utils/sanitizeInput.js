@@ -8,51 +8,87 @@ export const sanitizeShift = (shiftData) => {
     start_time,
     end_time,
     store_id,
-    posted_by: UserId, 
+    posted_by: UserId,
     qualifications,
   } = shiftData;
 
+  const errors = {};
+  // Title validation
   if (typeof title !== "string" || title.trim() === "") {
-    throw new Error("Title is required and must be a non-empty string.");
+    errors.title = "Title is required and must be a non-empty string.";
+  } else if (!/^[a-zA-ZæøåÆØÅ\s]+$/.test(title.trim())) {
+    errors.title = "Tittelen kan bare innholde bokstaver og mellomrom.";
   }
+
   if (typeof description !== "string" || description.trim() === "") {
-    throw new Error("Description is required and must be a non-empty string.");
+    errors.description = "Beskrivelse er påkrevd";
   }
+
   const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(date);
-  if (!isValidDate) {
-    throw new Error("Date must be in the format YYYY-MM-DD.");
+
+if (!isValidDate) {
+  errors.date = "Datoen må være i formatet YYYY-MM-DD.";
+} else {
+  const inputDate = new Date(date);
+  const today = new Date();
+  const oneWeekFromNow = new Date(today);
+  oneWeekFromNow.setDate(today.getDate() + 7); // Setter datoen til 7 dager fremover
+
+  // Sjekk om datoen er i fremtiden, og at den ikke er mer enn en uke frem i tid
+  if (inputDate < today) {
+    errors.date = "Datoen har allerede vært.";
+  } else if (inputDate > oneWeekFromNow) {
+    errors.date = "Datoen kan ikke være mer enn 7 dager frem i tid.";
+  }
+}
+
+  const startTimeParts = start_time?.split(":") || [];
+  const endTimeParts = end_time?.split(":") || [];
+
+  if (
+    startTimeParts.length !== 2 ||
+    isNaN(+startTimeParts[0]) ||
+    isNaN(+startTimeParts[1])
+  ) {
+    errors.start_time = "Start tiden er ugyldig. Sørg for at den er i HH:mm format.";
   }
 
-  const startTimeParts = start_time.split(":");
-  const endTimeParts = end_time.split(":");
-
-  if (startTimeParts.length !== 2 || isNaN(+startTimeParts[0]) || isNaN(+startTimeParts[1])) {
-    throw new Error("Start time is invalid. Ensure it's in HH:mm format.");
-  }
-  if (endTimeParts.length !== 2 || isNaN(+endTimeParts[0]) || isNaN(+endTimeParts[1])) {
-    throw new Error("End time is invalid. Ensure it's in HH:mm format.");
+  if (
+    endTimeParts.length !== 2 ||
+    isNaN(+endTimeParts[0]) ||
+    isNaN(+endTimeParts[1])
+  ) {
+    errors.end_time = "End tiden er ugyldig. Sørg for at den er i HH:mm format.";
   }
 
-  const startTimeInMinutes = +startTimeParts[0] * 60 + +startTimeParts[1];
-  const endTimeInMinutes = +endTimeParts[0] * 60 + +endTimeParts[1];
+  if (!errors.start_time && !errors.end_time) {
+    const startTimeInMinutes = +startTimeParts[0] * 60 + +startTimeParts[1];
+    const endTimeInMinutes = +endTimeParts[0] * 60 + +endTimeParts[1];
 
-  if (endTimeInMinutes <= startTimeInMinutes) {
-    throw new Error("End time must be later than start time.");
+    if (endTimeInMinutes <= startTimeInMinutes) {
+      errors.end_time = "End tiden må være etter start tiden.";
+    }
   }
 
   if (!isUUID(store_id)) {
-    throw new Error("Store ID must be a valid UUID.");
+    errors.store_id = "Store ID must be a valid UUID.";
   }
+
   if (!isUUID(UserId)) {
-    throw new Error(`User ID is invalid. Expected a valid UUID, but received: ${UserId}`);
+    errors.posted_by = `User ID is invalid. Expected a valid UUID, but received: ${UserId}`;
   }
 
   if (qualifications && qualifications.length > 0) {
     qualifications.forEach((q) => {
       if (!isUUID(q)) {
-        throw new Error(`Qualification ID is invalid: ${q}`);
+        if (!errors.qualifications) errors.qualifications = [];
+        errors.qualifications.push(`Invalid qualification ID: ${q}`);
       }
     });
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { errors };
   }
 
   const start_time_formatted = `${startTimeParts[0]}:${startTimeParts[1]}:00`;
@@ -94,25 +130,25 @@ export const sanitizeUserData = (userData) => {
   const validRoles = ["employee", "store_manager", "admin"];
 
   if (typeof first_name !== "string" || first_name.trim() === "" || !nameRegex.test(first_name)) {
-    errors.first_name = "First name must only contain letters and cannot be empty.";
+    errors.first_name = "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(last_name)) {
-    errors.last_name = "Last name must only contain letters and cannot be empty.";
+    errors.last_name = "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!email || !emailRegex.test(email)) {
-    errors.email = "Invalid email format.";
+    errors.email = "Ugyldig e-postformat.";
   }
   if (typeof password !== "string" || password.length < 6) {
-    errors.password = "Password must be at least 6 characters long.";
+    errors.password = "Passordet må være minst 6 tegn langt.";
   }
   if (!phoneRegex.test(phone_number)) {
     errors.phone_number = "Telefonnummeret er ugyldig.";
   }
   if (!validAvailability.includes(availability)) {
-    errors.availability = "Availability must be 'Fleksibel' or 'Ikke-fleksibel'.";
+    errors.availability = "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
   }
   if (!validRoles.includes(role)) {
-    errors.role = `Role must be one of: ${validRoles.join(", ")}`;
+    errors.role = `Role må være en av følgende: ${validRoles.join(", ")}.`;
   }
   if (store_id && !isUUID(store_id)) {
     errors.store_id = "Store ID must be a valid UUID.";
@@ -181,19 +217,19 @@ export const sanitizeUserProfileUpdateData = (userData) => {
   const validAvailability = ["Fleksibel", "Ikke-fleksibel"];
 
   if (typeof first_name !== "string" || first_name.trim() === "" || !nameRegex.test(first_name)) {
-    errors.first_name = "First name must only contain letters and cannot be empty.";
+    errors.first_name = "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(last_name)) {
-    errors.last_name = "Last name must only contain letters and cannot be empty.";
+    errors.last_name = "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!email || !emailRegex.test(email)) {
-    errors.email = "Invalid email format.";
+    errors.email = "Ugyldig e-postformat.";
   }
   if (!phoneRegex.test(phone_number)) {
     errors.phone_number = "Telefonnummeret er ugyldig.";
   }
   if (!validAvailability.includes(availability)) {
-    errors.availability = "Availability must be 'Fleksibel' or 'Ikke-fleksibel'.";
+    errors.availability = "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
   }
   if (municipality_id && !isUUID(municipality_id)) {
     errors.municipality_id = "Municipality ID must be a valid UUID.";
