@@ -16,8 +16,8 @@ export const sanitizeShift = (shiftData) => {
 
   if (typeof title !== "string" || title.trim() === "") {
     errors.title = "Tittel er påkrevd.";
-  } else if (!/^[a-zA-ZæøåÆØÅ\s]+$/.test(title.trim())) {
-    errors.title = "Tittelen kan bare inneholde bokstaver og mellomrom.";
+  } else if (!/^[a-zA-ZæøåÆØÅ0-9\s]+$/.test(title.trim())) {
+    errors.title = "Tittelen kan bare inneholde bokstaver, tall og mellomrom.";
   }
 
   if (typeof description !== "string" || description.trim() === "") {
