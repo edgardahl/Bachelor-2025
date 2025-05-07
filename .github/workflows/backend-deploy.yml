@@ -26,7 +26,6 @@ jobs:
         run: npm ci
         working-directory: backend
 
-      # Hvis du har tester, fjern kommentaren under:
       # - name: Run tests
       #   run: npm test
       #   working-directory: backend
