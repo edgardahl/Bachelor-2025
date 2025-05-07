@@ -13,6 +13,7 @@ import {
   getUserByPhoneNumber,
   insertUserMunicipalitiesModel,
 } from "../models/authModel.js";
+import{getUserQualificationsModel} from "../models/userModel.js";
 import { sanitizeUserData } from '../utils/sanitizeInput.js';
 
 // 🟢 Login User
@@ -30,16 +31,22 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ error: "Feil e-post eller passord." });
     }
 
+    //get user qualifications
+    const userQualifications = await getUserQualificationsModel([user.user_id]);
+    console.log("User qualifications:", userQualifications);
+
     const accessToken = generateAccessToken({
       userId: user.user_id,
       role: user.role,
       storeId: user.store_id,
+      user_qualifications: userQualifications
     });
-
+    
     const refreshToken = generateRefreshToken({
       userId: user.user_id,
       role: user.role,
       storeId: user.store_id,
+      user_qualifications: userQualifications
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -58,6 +65,7 @@ export const loginUser = async (req, res) => {
         name: user.first_name,
         role: user.role,
         storeId: user.store_id,
+        user_qualifications: userQualifications
       },
     });
   } catch (error) {
@@ -76,10 +84,15 @@ export const refreshAccessToken = async (req, res) => {
     const user = await getUserBasicById(decoded.userId);
     if (!user) return res.sendStatus(403); // Ingen feilmelding til frontend
 
+    //get user qualifications
+    const userQualifications = await getUserQualificationsModel([user.user_id]);
+    console.log("User qualifications in refreshtoken:", userQualifications);
+
     const accessToken = generateAccessToken({
       userId: user.user_id,
       role: decoded.role,
       storeId: decoded.storeId,
+      user_qualifications: userQualifications
     });
 
     res.json({ accessToken });
@@ -106,6 +119,7 @@ export const getCurrentUser = async (req, res) => {
         name: user.first_name,
         role: user.role,
         storeId: user.store_id,
+        user_qualifications: user.user_qualifications,
       },
     });
   } catch (error) {
