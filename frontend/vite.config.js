@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
+import path from "path";
 
 dotenv.config();
 
@@ -15,10 +16,7 @@ if (isDev) {
     mkcert = require("vite-plugin-mkcert").default;
     require("child_process").execSync("mkcert -version", {
       stdio: "ignore",
-      env: {
-        ...process.env,
-        PATH: process.env.PATH + ":/opt/homebrew/bin",
-      },
+      env: process.env,
     });
     useHttps = true;
   } catch (error) {
@@ -32,15 +30,11 @@ export default defineConfig({
   base: "/",
   resolve: {
     alias: {
-      "@": "/src",
+      "@": path.resolve(__dirname, "src"),
     },
   },
   optimizeDeps: {
-    include: [
-      "react",
-      "react-dom",
-      "react-router-dom",
-    ],
+    include: ["react", "react-dom", "react-router-dom"],
   },
   test: {
     globals: true,
@@ -51,41 +45,19 @@ export default defineConfig({
   publicDir: "public",
   plugins: [react(), ...(isDev && mkcert ? [mkcert()] : [])],
   server: {
-    https: isDev
+    https: useHttps
       ? {
-          key: "../pem/localhost-key.pem",
-          cert: "../pem/localhost.pem",
+          key: path.resolve(__dirname, "../pem/localhost-key.pem"),
+          cert: path.resolve(__dirname, "../pem/localhost.pem"),
         }
       : false,
     port: 5002,
     proxy: {
       "/api": {
-        target: "https://localhost:5001",
+        target: `http://localhost:${process.env.BACKEND_PORT || 5001}`,
         changeOrigin: true,
         secure: false,
       },
     },
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@import "./src/index.css";`,
-      },
-    },
-  },
-  build: {
-    outDir: "dist",
-    sourcemap: false,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ["react", "react-dom"],
-        },
-      },
-    },
-    chunkSizeWarningLimit: 1000,
-  },
-  define: {
-    __API_BASE__: JSON.stringify(isDev ? "/api" : process.env.VITE_API_URL),
   },
 });
