@@ -1,7 +1,4 @@
 import express from "express";
-import fs from "fs";
-import https from "https";
-import path from "path";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import helmetMiddleware from "./middleware/helmetMiddleware.js";
@@ -21,12 +18,10 @@ const PORT = process.env.PORT || 5001;
 const FRONTEND_PORT = process.env.FRONTEND_PORT || 5002;
 const isProduction = process.env.NODE_ENV === "production";
 
-// Enable secure cookies in production
 if (isProduction) {
-  app.set("trust proxy", 1); // Enable trust proxy for secure cookies in production
+  app.set("trust proxy", 1);
 }
 
-// CORS Setup: Allow only trusted origins in production
 app.use(
   cors({
     origin: (origin, callback) => {
