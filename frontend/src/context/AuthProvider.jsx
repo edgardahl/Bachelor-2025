@@ -62,6 +62,7 @@ export const AuthProvider = ({ children }) => {
       try {
         // ✅ No need to manually add the Authorization header
         const res = await axios.get("/auth/me");
+        console.log("[AuthProvider] /auth/me response:", res.data);
         setUserState(res.data.user);
         console.log("[AuthProvider] /auth/me response:", res.data);
       } catch (err) {
