@@ -71,11 +71,14 @@
   width: 100%;
 }
 
-.profile-field p {
-  margin: 0;
-  padding: 0.3rem 0 0 0;
-  color: #444;
-  font-size: 0.95rem;
+.qualification-card.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+  cursor: default;
+}
+
+.qualification-card.clickable {
+  cursor: pointer;
 }
 
 .save-container {
@@ -165,8 +168,9 @@
 
 .qualification-action-buttons {
   display: flex;
+  justify-content: center;
   gap: 0.8rem;
-  margin: 1.2rem auto;
+  margin: 1.2rem;
 }
 
 .qualification-save-btn,
