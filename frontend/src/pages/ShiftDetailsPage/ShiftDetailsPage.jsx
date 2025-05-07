@@ -28,7 +28,7 @@ const ShiftDetailsPage = () => {
   const storeId = user?.storeId;
   const userRole = user?.role;
 
-  console.log(user)
+  console.log("LOGGED INN AS:", user)
   console.log(shiftDetails)
 
   useEffect(() => {
@@ -117,8 +117,8 @@ const ShiftDetailsPage = () => {
     ? user.user_qualifications
     : [];
   
-    //logs shift and user qualic
-    
+    //logs shift and user quali
+    const claimedByYou = shiftDetails.claimed_by_id === userId;
     const requiredQualificationIds = requiredQualifications.map((q) => q.qualification_id);
     const hasAllQualifications = requiredQualificationIds.every((id) =>
     userQualifications.includes(id)
@@ -129,10 +129,13 @@ const ShiftDetailsPage = () => {
   
   const shiftIsClaimed = !!shiftDetails.claimed_by_first_name;
   
-  const canClaim = userRole === "employee" && !shiftIsClaimed && hasAllQualifications;
+  const canClaim = userRole === "employee" && !shiftIsClaimed && hasAllQualifications && !claimedByYou;
   
   let claimDisabledReason = "";
-  if (shiftIsClaimed) {
+  
+  if (claimedByYou) {
+    claimDisabledReason = "Du har allerede reservert denne vakten";
+  } else if (shiftIsClaimed) {
     claimDisabledReason = "Vakten er allerede tatt.";
   } else if (!hasAllQualifications) {
     claimDisabledReason = "Du mangler nødvendige kvalifikasjoner.";

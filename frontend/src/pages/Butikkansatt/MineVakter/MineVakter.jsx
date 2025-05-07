@@ -14,7 +14,9 @@ const MineVakterAnsatt = () => {
   const [preferredMunicipalityNames, setPreferredMunicipalityNames] = useState([]);
   const [selectedMunicipalityIds, setSelectedMunicipalityIds] = useState([]);
   const [selectedMunicipalityNames, setSelectedMunicipalityNames] = useState([]);
+  const [claimedShifts, setClaimedShifts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("available");
 
   useEffect(() => {
     const fetchPreferredMunicipalities = async () => {
@@ -40,23 +42,39 @@ const MineVakterAnsatt = () => {
       }
     };
 
+    const fetchClaimedShifts = async () => {
+      try{
+        const respons = await axios.get(`/shifts/claimedByCurrentUser`);
+        console.log(respons.data);
+        setClaimedShifts(respons.data.data);
+      } catch (error) {
+        console.error("Error fetching claimed shifts:", error);
+      }
+    }
+
     if (user) {
       setUserId(user.id);
       setStoreId(user.storeId);
       fetchPreferredMunicipalities();
       fetchShiftsUserIsQualifiedFor();
+      fetchClaimedShifts();
     }
   }, [user]);
 
-  const filterShiftsByMunicipality = (shifts, selectedMunicipalityNames) => {
-    return shifts.filter((shift) => {
+  const filterShiftsByMunicipality = (shiftsToFilter) => {
+    return shiftsToFilter.filter((shift) => {
       return selectedMunicipalityIds.length === 0
         ? preferredMunicipalityNames.includes(shift.municipality_name)
         : selectedMunicipalityNames.includes(shift.municipality_name);
     });
   };
 
-  const groupedShifts = filterShiftsByMunicipality(shifts, selectedMunicipalityNames).reduce((acc, shift) => {
+  const shiftsToDisplay =
+    activeTab === "available"
+      ? filterShiftsByMunicipality(shifts)
+      : filterShiftsByMunicipality(claimedShifts);
+
+  const groupedShifts = shiftsToDisplay.reduce((acc, shift) => {
     const dateKey = new Date(shift.date).toLocaleDateString("no-NO", {
       weekday: "long",
       day: "numeric",
@@ -71,19 +89,38 @@ const MineVakterAnsatt = () => {
     <div className="mine-vakter-container">
       <h1 className="mine-vakter-title">Vakter</h1>
 
-      <KommuneFilter
-        onChange={(selectedIds) => {
-          setSelectedMunicipalityIds(selectedIds);
-          setSelectedMunicipalityNames(selectedIds);
-        }}
-        defaultValue={selectedMunicipalityNames}
-        userPreferredMunicipalities={preferredMunicipalityNames}
-      />
+      <div className="mine-vakter-tab-boxes">
+        <button
+          className={`mine-vakter-tab-box ${activeTab === "available" ? "active" : ""}`}
+          onClick={() => setActiveTab("available")}
+        >
+          Finn vakter
+        </button>
+        <button
+          className={`mine-vakter-tab-box ${activeTab === "claimed" ? "active" : ""}`}
+          onClick={() => setActiveTab("claimed")}
+        >
+          Vakter du har tatt
+        </button>
+      </div>
+
+      {activeTab === "available" && (
+        <KommuneFilter
+          onChange={(selectedIds) => {
+            setSelectedMunicipalityIds(selectedIds);
+            setSelectedMunicipalityNames(selectedIds);
+          }}
+          defaultValue={selectedMunicipalityNames}
+          userPreferredMunicipalities={preferredMunicipalityNames}
+        />
+      )}
 
       <h3 className="mine-vakter-shift-list-title">
-        {selectedMunicipalityNames.length > 0
-          ? `Vakter i valgte kommuner (${selectedMunicipalityNames.join(", ")})`
-          : `Vakter i dine foretrukne kommuner (${preferredMunicipalityNames.join(", ")})`}
+        {activeTab === "available"
+          ? selectedMunicipalityNames.length > 0
+            ? `Vakter i valgte kommuner (${selectedMunicipalityNames.join(", ")})`
+            : `Vakter i dine foretrukne kommuner (${preferredMunicipalityNames.join(", ")})`
+          : "Vakter du har tatt"}
       </h3>
 
       {loading ? (
@@ -91,7 +128,11 @@ const MineVakterAnsatt = () => {
       ) : (
         <>
           {Object.keys(groupedShifts).length === 0 ? (
-            <p className="mine-vakter-empty-message">Ingen vakter funnet med dine kvalifikasjoner.</p>
+            <p className="mine-vakter-empty-message">
+              {activeTab === "available"
+                ? "Ingen vakter funnet med dine kvalifikasjoner."
+                : "Du har ikke tatt noen vakter enda."}
+            </p>
           ) : (
             Object.entries(groupedShifts).map(([date, shiftGroup]) => (
               <div key={date} className="shift-date-group">
