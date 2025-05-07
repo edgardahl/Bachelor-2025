@@ -1,4 +1,5 @@
 import { supabase } from "../config/supabaseClient.js";
+import { getUserQualificationsModel } from "./userModel.js"; // Husk riktig path
 
 // 🏛 Register User in Database
 export const registerUserInDB = async (userData) => {
@@ -89,21 +90,37 @@ export const getUserByEmail = async (email) => {
   return data;
 };
 
+
 // 🔍 Get user by ID (for /auth/me)
 export const getUserById = async (userId) => {
   const { data, error } = await supabase
     .from("users")
-    .select("user_id, email, first_name, role, store_id") 
+    .select("user_id, email, first_name, role, store_id")
     .eq("user_id", userId)
     .single();
 
-  if (error) {
+  if (error || !data) {
     console.error("Error fetching user by ID:", error);
     return null;
   }
 
-  return data;
+  try {
+    const userQualifications = await getUserQualificationsModel([data.user_id]);
+    const qualificationIds = userQualifications.map((q) => q.qualification_id);
+
+    return {
+      ...data,
+      user_qualifications: qualificationIds,
+    };
+  } catch (err) {
+    console.error("Error fetching user qualifications:", err);
+    return {
+      ...data,
+      user_qualifications: [],
+    };
+  }
 };
+
 
 // 🔍 Get user ID + role only (for refresh-token)
 export const getUserBasicById = async (userId) => {
