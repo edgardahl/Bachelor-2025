@@ -31,9 +31,10 @@ app.use(
   cors({
     origin: (origin, callback) => {
       const allowed = [
-        `https://localhost:${FRONTEND_PORT}`,
+        `http://localhost:${FRONTEND_PORT}`,
         process.env.FRONTEND_URL,
       ];
+
       if (!origin || allowed.includes(origin)) {
         callback(null, true);
       } else {
@@ -61,17 +62,6 @@ app.use("/api/qualifications", qualificationRoutes);
 app.use("/api/notifications", notificationRoutes);
 
 // Server setup
-if (!isProduction) {
-  const sslOptions = {
-    key: fs.readFileSync(path.resolve("../pem/localhost-key.pem")),
-    cert: fs.readFileSync(path.resolve("../pem/localhost.pem")),
-  };
-
-  https.createServer(sslOptions, app).listen(PORT, () => {
-    console.log(`🔐 Dev HTTPS running at https://localhost:${PORT}/api`);
-  });
-} else {
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`🚀 Production backend running on port ${PORT}`);
-  });
-}
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Backend running at http://localhost:${PORT}/api`);
+});

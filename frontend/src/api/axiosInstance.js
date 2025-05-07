@@ -2,7 +2,7 @@ import axios from "axios";
 
 const baseURL =
   window.location.hostname === "localhost"
-    ? "https://localhost:5001/api"
+    ? "http://localhost:5001/api"
     : import.meta.env.VITE_API_URL;
 
 //   const baseURL = __API_BASE__; TESTE DENNE
