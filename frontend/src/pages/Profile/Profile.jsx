@@ -1,3 +1,4 @@
+// Profile.jsx
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../api/axiosInstance";
@@ -6,6 +7,7 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading/Loading";
 import BackButton from "../../components/BackButton/BackButton";
+import ButikkCard from "../../components/Cards/ButikkCard/ButikkCard";
 import "./Profile.css";
 
 const Profile = () => {
@@ -28,6 +30,7 @@ const Profile = () => {
     useState(null);
   const [allQualifications, setAllQualifications] = useState([]);
   const [qualificationMap, setQualificationMap] = useState({});
+  const [storeData, setStoreData] = useState(null);
 
   const isOwnProfile = !profileId || user?.id === profileId;
   const showBackButton = user?.role === "store_manager" && !isOwnProfile;
@@ -97,6 +100,19 @@ const Profile = () => {
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
+
+  useEffect(() => {
+    const fetchStore = async () => {
+      if (!formData?.store_id) return;
+      try {
+        const res = await axios.get(`/stores/${formData.store_id}`);
+        setStoreData(res.data);
+      } catch (err) {
+        console.error("Error fetching store:", err);
+      }
+    };
+    fetchStore();
+  }, [formData?.store_id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -220,62 +236,57 @@ const Profile = () => {
       </div>
 
       <div className="profile-grid">
-  <div className="profile-field">
-    <label>Fornavn:</label>
-    {isEditing ? (
-      <input
-        name="first_name"
-        value={formData.first_name || ""}
-        onChange={handleChange}
-      />
-    ) : (
-      <p>{formData.first_name || "Ikke oppgitt"}</p>
-    )}
-  </div>
-
-  <div className="profile-field">
-    <label>Etternavn:</label>
-    {isEditing ? (
-      <input
-        name="last_name"
-        value={formData.last_name || ""}
-        onChange={handleChange}
-      />
-    ) : (
-      <p>{formData.last_name || "Ikke oppgitt"}</p>
-    )}
-  </div>
-
-  <div className="profile-field">
-    <label>E-post:</label>
-    {isEditing ? (
-      <input
-        name="email"
-        type="email"
-        value={formData.email || ""}
-        onChange={handleChange}
-      />
-    ) : (
-      <p>{formData.email || "Ikke oppgitt"}</p>
-    )}
-  </div>
-
-  <div className="profile-field">
-    <label>Telefonnummer:</label>
-    {isEditing ? (
-      <input
-        name="phone_number"
-        value={formData.phone_number || ""}
-        onChange={handleChange}
-      />
-    ) : (
-      <p>{formData.phone_number || "Ikke oppgitt"}</p>
-    )}
-  </div>
+        <div className="profile-field">
+          <label>Fornavn:</label>
+          {isEditing ? (
+            <input
+              name="first_name"
+              value={formData.first_name || ""}
+              onChange={handleChange}
+            />
+          ) : (
+            <p>{formData.first_name || "Ikke oppgitt"}</p>
+          )}
+        </div>
 
         <div className="profile-field">
-          <label>Butikk:</label>
-          <p>{formData.store_name || "Ingen tilknyttet butikk"}</p>
+          <label>Etternavn:</label>
+          {isEditing ? (
+            <input
+              name="last_name"
+              value={formData.last_name || ""}
+              onChange={handleChange}
+            />
+          ) : (
+            <p>{formData.last_name || "Ikke oppgitt"}</p>
+          )}
+        </div>
+
+        <div className="profile-field">
+          <label>E-post:</label>
+          {isEditing ? (
+            <input
+              name="email"
+              type="email"
+              value={formData.email || ""}
+              onChange={handleChange}
+            />
+          ) : (
+            <p>{formData.email || "Ikke oppgitt"}</p>
+          )}
+        </div>
+
+        <div className="profile-field">
+          <label>Telefonnummer:</label>
+          {isEditing ? (
+            <input
+              name="phone_number"
+              value={formData.phone_number || ""}
+              onChange={handleChange}
+            />
+          ) : (
+            <p>{formData.phone_number || "Ikke oppgitt"}</p>
+          )}
         </div>
 
         <div className="profile-field">
@@ -319,75 +330,80 @@ const Profile = () => {
           </div>
         )}
 
-        {canViewQualifications && (
+        {formData.role === "employee" && storeData && (
           <div className="profile-field">
-            <label>Kvalifikasjoner:</label>
-            {canEditQualifications && isEditingQualifications ? (
-              <>
-                <div className="qualification-cards">
-                  {allQualifications.map((qualification) => {
-                    const isSelected = formData.qualifications.some(
-                      (q) => q.qualification_id === qualification.id
-                    );
-                    return (
-                      <div
-                        key={qualification.id}
-                        className={`qualification-card ${
-                          isSelected ? "selected" : ""
-                        }`}
-                        onClick={() =>
-                          handleQualificationToggle(qualification.id)
-                        }
-                      >
-                        <h4>{qualification.name}</h4>
-                        {isSelected && <span className="checkmark">✔</span>}
-                      </div>
-                    );
-                  })}
-                  <div className="qualification-action-buttons">
-                    <button
-                      className="qualification-save-btn"
-                      onClick={saveQualifications}
-                    >
-                      Lagre kvalifikasjoner
-                    </button>
-                    <button
-                      className="qualification-cancel-btn"
-                      onClick={() => setIsEditingQualifications(false)}
-                    >
-                      Avbryt
-                    </button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <ul>
-                  {formData.qualifications?.length > 0 ? (
-                    formData.qualifications.map((q) => (
-                      <li key={q.qualification_id}>{q.qualification_name}</li>
-                    ))
-                  ) : (
-                    <li>Ingen kvalifikasjoner</li>
-                  )}
-                </ul>
-                {canEditQualifications && !isEditingQualifications && (
-                  <button
-                    className="edit-qualifications-btn"
-                    onClick={() => setIsEditingQualifications(true)}
-                  >
-                    Rediger kvalifikasjoner
-                  </button>
-                )}
-              </>
-            )}
+            <label>Butikk:</label>
+            <ButikkCard store={storeData} shiftsCount={0} />
           </div>
         )}
+
+{canViewQualifications && (
+  <div className="profile-field">
+    <label>Kvalifikasjoner:</label>
+    <div className="qualification-cards">
+      {allQualifications.map((qualification) => {
+        const isSelected = formData.qualifications.some(
+          (q) => q.qualification_id === qualification.id
+        );
+        return (
+          <div
+            key={qualification.id}
+            className={`qualification-card ${isSelected ? "selected" : ""} ${
+              canEditQualifications && isEditingQualifications ? "clickable" : "disabled"
+            }`}
+            onClick={() =>
+              canEditQualifications && isEditingQualifications &&
+              handleQualificationToggle(qualification.id)
+            }
+          >
+            <h4>{qualification.name}</h4>
+            {isSelected && <span className="checkmark">✔</span>}
+          </div>
+        );
+      })}
+    </div>
+
+    {canEditQualifications && !isEditingQualifications && (
+      <button
+        className="edit-qualifications-btn"
+        onClick={() => setIsEditingQualifications(true)}
+      >
+        Rediger kvalifikasjoner
+      </button>
+    )}
+
+    {canEditQualifications && isEditingQualifications && (
+      <div className="qualification-action-buttons">
+        <button
+          className="qualification-save-btn"
+          onClick={saveQualifications}
+        >
+          Lagre kvalifikasjoner
+        </button>
+        <button
+          className="qualification-cancel-btn"
+          onClick={() => setIsEditingQualifications(false)}
+        >
+          Avbryt
+        </button>
+      </div>
+    )}
+  </div>
+)}
 
         {isOwnProfile && !isEditing && (
           <div className="profile-field">
             <label>Passord:</label>
             <p>********</p>
+          </div>
+        )}
+
+        {storeData && formData.role === "store_manager" && (
+          <div className="profile-field full-width">
+            <label>Butikk:</label>
+            <div className="centered-store-card">
+              <ButikkCard store={storeData} shiftsCount={0} />
+            </div>
           </div>
         )}
       </div>

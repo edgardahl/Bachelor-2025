@@ -1,6 +1,7 @@
+/* Container for the shift details page */
 .shift-details-container {
   max-width: 800px;
-  margin: 2rem auto;
+  margin: 30px auto;
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 16px;
@@ -9,6 +10,7 @@
   border: 1px solid #e5e5e5;
 }
 
+/* Header section */
 .shift-header {
   background: linear-gradient(to right, var(--Main-dark-color), #333);
   padding: 2rem 1.5rem;
@@ -71,26 +73,49 @@
   flex-wrap: wrap;
 }
 
-/* Claim button */
+.claim-button-wrapper {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .claim-button {
   display: block;
   padding: 0.8rem 3rem;
   background: linear-gradient(to right, #4caf50, #388e3c);
   color: white;
-  font-size: 1rem;
-  font-weight: 600;
+  font-weight: bold;
   border: none;
   border-radius: 8px;
+  font-size: 1rem;
   cursor: pointer;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   transition: background 0.25s ease, transform 0.1s ease;
-  margin: 40px auto;
-
+  margin-top: 40px;
 }
 
-.claim-button:hover {
+.claim-button:hover:not(:disabled) {
   background: linear-gradient(to right, #3a9142, #2e7d32);
   transform: translateY(-2px);
+}
+
+.claim-button:disabled {
+  background-color: #d6d6d6;
+  color: #7a7a7a;
+  cursor: not-allowed;
+}
+
+.claim-disabled-reason {
+  margin-top: 0.75rem;
+  color: #c0392b;
+  font-size: 0.95rem;
+  text-align: center;
+  max-width: 300px;
+  background: #fce4e4;
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: 1px solid #f5c2c2;
 }
 
 /* Delete button */

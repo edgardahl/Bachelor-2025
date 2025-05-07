@@ -92,13 +92,34 @@ const ShiftDetailsPage = () => {
   if (isLoading || !shiftDetails) return <Loading />;
 
   const qualifications = Array.isArray(shiftDetails.qualifications)
-    ? shiftDetails.qualifications.join(", ")
+    ? shiftDetails.qualifications.map((q) => q.name).join(", ")
     : "Ingen krav spesifisert";
+
+  const requiredQualificationIds = Array.isArray(shiftDetails.qualifications)
+    ? shiftDetails.qualifications.map((q) => q.qualification_id)
+    : [];
+
+  const userQualifications = Array.isArray(user?.user_qualifications)
+    ? user.user_qualifications
+    : [];
+
+  const hasAllQualifications = requiredQualificationIds.every((id) =>
+    userQualifications.includes(id)
+  );
+
+  const shiftIsClaimed = !!shiftDetails.claimed_by_first_name;
 
   const canDelete =
     userRole === "store_manager" && shiftDetails.store_id === storeId;
-  const canClaim =
-    userRole === "employee" && !shiftDetails.claimed_by_first_name;
+
+  const canClaim = userRole === "employee" && !shiftIsClaimed && hasAllQualifications;
+
+  let claimDisabledReason = "";
+  if (shiftIsClaimed) {
+    claimDisabledReason = "Vakten er allerede tatt.";
+  } else if (!hasAllQualifications) {
+    claimDisabledReason = "Du mangler nødvendige kvalifikasjoner.";
+  }
 
   return (
     <>
@@ -115,7 +136,7 @@ const ShiftDetailsPage = () => {
                 store_id: shiftDetails.store_id,
                 name: shiftDetails.store_name,
                 address: shiftDetails.store_address,
-                store_chain: shiftDetails.store_chain, // this is essential for logo
+                store_chain: shiftDetails.store_chain,
               }}
               shiftsCount={0}
             />
@@ -123,34 +144,17 @@ const ShiftDetailsPage = () => {
 
           <div className="shift-right">
             <div className="shift-detail-section">
-              <p>
-                <strong>Dato:</strong> {shiftDetails.date}
-              </p>
-              <p>
-                <strong>Tid:</strong> {shiftDetails.start_time} -{" "}
-                {shiftDetails.end_time}
-              </p>
-              <p>
-                <strong>Beskrivelse:</strong>{" "}
-                {shiftDetails.description?.trim() || "Ingen beskrivelse"}
-              </p>
-              <p>
-                <strong>Kvalifikasjoner:</strong> {qualifications}
-              </p>
-              <p>
-                <strong>Publisert av:</strong>{" "}
-                {shiftDetails.posted_by_first_name}{" "}
-                {shiftDetails.posted_by_last_name}
-              </p>
+              <p><strong>Dato:</strong> {shiftDetails.date}</p>
+              <p><strong>Tid:</strong> {shiftDetails.start_time} - {shiftDetails.end_time}</p>
+              <p><strong>Beskrivelse:</strong> {shiftDetails.description?.trim() || "Ingen beskrivelse"}</p>
+              <p><strong>Kvalifikasjoner:</strong> {qualifications}</p>
+              <p><strong>Publisert av:</strong> {shiftDetails.posted_by_first_name} {shiftDetails.posted_by_last_name}</p>
               {userRole === "store_manager" && (
                 <p>
                   <strong>Reservert av:</strong>{" "}
                   {shiftDetails.claimed_by_first_name ? (
-                    <Link
-                      to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}
-                    >
-                      {shiftDetails.claimed_by_first_name}{" "}
-                      {shiftDetails.claimed_by_last_name}
+                    <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
+                      {shiftDetails.claimed_by_first_name} {shiftDetails.claimed_by_last_name}
                     </Link>
                   ) : (
                     "Ingen"
@@ -159,15 +163,22 @@ const ShiftDetailsPage = () => {
               )}
             </div>
 
-            <div className="shift-actions">
-              {canClaim && (
-                <button
-                  className="claim-button"
-                  onClick={() => setShowClaimPopup(true)}
-                >
-                  Ta vakt
-                </button>
+            <div className="shift-actions-bottom">
+              {userRole === "employee" && (
+                <div className="claim-button-wrapper">
+                  <button
+                    className="claim-button"
+                    onClick={() => setShowClaimPopup(true)}
+                    disabled={!canClaim}
+                  >
+                    Ta vakt
+                  </button>
+                  {!canClaim && (
+                    <p className="claim-disabled-reason">{claimDisabledReason}</p>
+                  )}
+                </div>
               )}
+
               {canDelete && (
                 <button
                   className="delete-button"

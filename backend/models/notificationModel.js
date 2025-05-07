@@ -62,60 +62,64 @@ export const updateNotificationStatusModel = async (notificationId, userId) => {
 
 
 export const newShiftPublishedNotificationModel = async (shiftData) => {
-    const { store_id, qualifications, title, date, start_time, end_time, shift_id } = shiftData;
+  const { store_id, qualifications, title, date, start_time, end_time, shift_id } = shiftData;
 
-  
-    console.log("Shift Data for Notification:", shiftData);
-    try {
-      // Step 1: Get municipality of the store
-      const { data: storeData, error: storeError } = await supabase
-        .from("stores")
-        .select("municipality_id, name")
-        .eq("store_id", store_id)
-        .single();
-  
-      if (storeError || !storeData) throw new Error("Store not found");
-  
-      const storeMunicipalityId = storeData.municipality_id;
-      const storeName = storeData.name;
-      console.log("Store That published shift:", storeName, storeMunicipalityId);
-  
-      // Step 2: Get users who:
-      // - are employees
-      // - have this municipality in `user_municipality`
-      // - have all required qualifications
-      console.log("Qualifications needed for shift:", qualifications);
-      const { data: qualifiedUsers, error: userError } = await supabase.rpc("find_qualified_users_for_shift", {
-        required_qualifications: qualifications,
-        municipality_id: storeMunicipalityId,
-      });
-        console.log("Qualified Users for ", storeName, "´s shift is " , qualifiedUsers);
-  
-      if (userError) throw userError;
-  
-      // Step 3: Create notifications for each user
-      const notifications = qualifiedUsers.map((user) => ({
-        notification_id: uuidv4(),
-        receiver_id: user.user_id,
-        title: `Ny vakt: ${title}`,
-        message: `En ny vakt er publisert for ${storeName} den ${date} kl. ${start_time}–${end_time}`,
-        status: "unopened",
-        shift_id: shift_id, // 👈 Add this line
-      }));      
-        console.log("Notifications to be inserted:", notifications);
-  
-      const { error: insertError } = await supabase
-        .from("notifications")
-        .insert(notifications);
-  
-      if (insertError) throw insertError;
-  
-      return notifications;
-    } catch (err) {
-      console.error("Error creating shift notifications:", err);
-      throw new Error("Kunne ikke sende varsler for ny vakt.");
-    }
-  };
+  console.log("Shift Data for Notification:", shiftData);
+  try {
+    // Step 1: Get municipality of the store
+    const { data: storeData, error: storeError } = await supabase
+      .from("stores")
+      .select("municipality_id, name")
+      .eq("store_id", store_id)
+      .single();
+
+    if (storeError || !storeData) throw new Error("Store not found");
+
+    const storeMunicipalityId = storeData.municipality_id;
+    const storeName = storeData.name;
+    console.log("Store That published shift:", storeName, storeMunicipalityId);
+
+    // Step 2: Get users based on qualifications (or none required)
+    const requiredQualifications = Array.isArray(qualifications) && qualifications.length > 0
+      ? qualifications
+      : []; // Empty array means no qualifications required
+
+    console.log("Qualifications needed for shift:", requiredQualifications.length > 0 ? requiredQualifications : "Ingen kvalifikasjoner");
+
+    const { data: qualifiedUsers, error: userError } = await supabase.rpc("find_qualified_users_for_shift", {
+      required_qualifications: requiredQualifications,
+      municipality_id: storeMunicipalityId,
+    });
+
+    console.log("Qualified Users for ", storeName, "´s shift is " , qualifiedUsers);
+
+    if (userError) throw userError;
+
+    // Step 3: Create notifications for each user
+    const notifications = qualifiedUsers.map((user) => ({
+      notification_id: uuidv4(),
+      receiver_id: user.user_id,
+      title: `Ny vakt: ${title}`,
+      message: `En ny vakt er publisert for ${storeName} den ${date} kl. ${start_time}–${end_time}`,
+      status: "unopened",
+      shift_id: shift_id,
+    }));
+
+    console.log("Notifications to be inserted:", notifications);
+
+    const { error: insertError } = await supabase
+      .from("notifications")
+      .insert(notifications);
+
+    if (insertError) throw insertError;
+
+    return notifications;
+  } catch (err) {
+    console.error("Error creating shift notifications:", err);
+    throw new Error("Kunne ikke sende varsler for ny vakt.");
+  }
+};
+
 
 
 
@@ -165,8 +169,8 @@ export const notifyStoreManagerOnShiftClaimedModel = async (shift_id, claimedByU
       const notification = {
         notification_id: uuidv4(),
         receiver_id: storeManagerData.user_id, // Store manager's ID
-        title: `Shift You Posted Has Been Claimed`,
-        message: `${claimedByFirstName} ${claimedByLastName} has claimed the shift: "${shiftTitle}".`,
+        title: `Vakten du publiserte er nå tatt`,
+        message: `${claimedByFirstName} ${claimedByLastName} har tatt vakten: "${shiftTitle}".`,
         status: 'unopened',
         shift_id: shift_id
       };

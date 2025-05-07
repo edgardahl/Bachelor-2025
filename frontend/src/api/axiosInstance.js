@@ -1,15 +1,15 @@
 import axios from "axios";
 
-const isDev = window.location.hostname === "localhost";
+const baseURL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5001/api"
+    : import.meta.env.VITE_API_URL;
 
 const instance = axios.create({
-  baseURL: isDev
-    ? import.meta.env.VITE_API_URL
-    : "https://your-production-backend-url.com/api", // Replace with your production URL
+  baseURL,
   withCredentials: true,
 });
 
-// Request interceptor to attach access token to requests
 instance.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
   if (token) {
@@ -18,7 +18,6 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor to handle expired tokens and failed login attempts
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -38,12 +37,14 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // If the error is due to token expiration or other 401 errors that are not related to login failure
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
       error.response?.data?.error !== "Invalid credentials"
     ) {
+      console.warn(
+        "[AuthProvider] Access token expired or missing, attempting to refresh."
+      );
       originalRequest._retry = true;
 
       if (isRefreshing) {
@@ -61,7 +62,6 @@ instance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Attempt to refresh the access token
         const res = await instance.post("/auth/refresh-token");
         const newAccessToken = res.data.accessToken;
 
@@ -79,9 +79,7 @@ instance.interceptors.response.use(
       }
     }
 
-    // If it's a failed login attempt, don't trigger refresh token logic
     if (error.response?.data?.error === "Invalid credentials") {
-      // Do not attempt to refresh the token here
       return Promise.reject(error);
     }
 

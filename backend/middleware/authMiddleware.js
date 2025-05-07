@@ -19,7 +19,9 @@ export const verifyToken = (req, res, next) => {
       userId: decoded.userId,
       role: decoded.role,
       storeId: decoded.storeId, // If you want the storeId from token
+      user_qualifications: decoded.user_qualifications, // If you want the user qualifications from token
     };
+    console.log("Decoded token:", req.user);
     next();
   } catch (err) {
     return res.status(401).json({ error: "Unauthorized: Invalid token" });
