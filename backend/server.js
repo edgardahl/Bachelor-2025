@@ -18,7 +18,7 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
-const FRONTEND_PORT = process.env.FRONTEND_PORT || 5173;
+const FRONTEND_PORT = process.env.FRONTEND_PORT || 5002;
 const isProduction = process.env.NODE_ENV === "production";
 
 // Enable secure cookies in production
@@ -29,9 +29,17 @@ if (isProduction) {
 // CORS Setup: Allow only trusted origins in production
 app.use(
   cors({
-    origin: isProduction
-      ? "https://your-frontend-domain.com"
-      : `https://localhost:${FRONTEND_PORT}`, // Change to the actual frontend URL in production
+    origin: (origin, callback) => {
+      const allowed = [
+        `https://localhost:${FRONTEND_PORT}`,
+        process.env.FRONTEND_URL,
+      ];
+      if (!origin || allowed.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -42,14 +50,6 @@ app.use(helmetMiddleware);
 // Middleware for parsing JSON and cookies
 app.use(express.json());
 app.use(cookieParser());
-
-// 🔐 Ensure req.secure is available (for HTTPS cookie logic)
-app.use((req, res, next) => {
-  if (req.headers["x-forwarded-proto"] === "https") {
-    req.secure = true;
-  }
-  next();
-});
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -63,16 +63,15 @@ app.use("/api/notifications", notificationRoutes);
 // Server setup
 if (!isProduction) {
   const sslOptions = {
-    key: fs.readFileSync(path.resolve("localhost-key.pem")),
-    cert: fs.readFileSync(path.resolve("localhost.pem")),
+    key: fs.readFileSync(path.resolve("../pem/localhost-key.pem")),
+    cert: fs.readFileSync(path.resolve("../pem/localhost.pem")),
   };
 
   https.createServer(sslOptions, app).listen(PORT, () => {
     console.log(`🔐 Dev HTTPS running at https://localhost:${PORT}/api`);
   });
 } else {
-  // Production: Ensure HTTPS is enabled for secure connections
-  app.listen(PORT, () => {
+  app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 Production backend running on port ${PORT}`);
   });
 }
