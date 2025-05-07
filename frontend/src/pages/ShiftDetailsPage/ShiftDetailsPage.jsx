@@ -3,10 +3,14 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "../../api/axiosInstance";
 import DeleteShiftPopup from "../../components/Popup/DeleteShiftPopup/DeleteShiftPopup";
 import ClaimShiftPopup from "../../components/Popup/ClaimShiftPopup/ClaimShiftPopup";
+
+import ErrorPopup from "../../components/Popup/ErrorPopup/ErrorPopup";
+import SuccessPopup from "../../components/Popup/SuccessPopup/SuccessPopup";
 import BackButton from "../../components/BackButton/BackButton";
 import Loading from "../../components/Loading/Loading";
-import useAuth from "../../context/UseAuth";
 import ButikkCard from "../../components/Cards/ButikkCard/ButikkCard";
+
+import useAuth from "../../context/UseAuth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./ShiftDetailsPage.css";
@@ -24,7 +28,10 @@ const ShiftDetailsPage = () => {
   const userId = user?.id;
   const storeId = user?.storeId;
   const userRole = user?.role;
-  
+
+  console.log("LOGGED INN AS:", user)
+  console.log(shiftDetails)
+
   useEffect(() => {
     const fetchShiftDetails = async () => {
       try {
@@ -37,6 +44,7 @@ const ShiftDetailsPage = () => {
         setIsLoading(false);
       }
     };
+
     fetchShiftDetails();
   }, [shiftId]);
 
@@ -46,6 +54,7 @@ const ShiftDetailsPage = () => {
       const res = await axios.delete("/shifts/deleteShiftById", {
         data: { shiftId, shiftStoreId: shiftDetails.store_id },
       });
+
       if (res.status === 200) {
         setShowDeletePopup(false);
         toast.success("Vakten ble slettet.");
@@ -67,6 +76,7 @@ const ShiftDetailsPage = () => {
       const res = await axios.post(`/shifts/claim/${shiftId}`, {
         user_id: userId,
       });
+
       if (res.status === 200) {
         setShiftDetails((prev) => ({
           ...prev,
@@ -89,34 +99,36 @@ const ShiftDetailsPage = () => {
     }
   };
 
-  if (isLoading || !shiftDetails) return <Loading />;
+  if (isLoading || !shiftDetails) {
+    return <Loading />;
+  }
 
   const qualifications = Array.isArray(shiftDetails.qualifications)
-    ? shiftDetails.qualifications.map((q) => q.name).join(", ")
-    : "Ingen krav spesifisert";
+  ? shiftDetails.qualifications.map((q) => q.name).join(", ")
+  : "Ingen krav spesifisert";
 
-  const requiredQualificationIds = Array.isArray(shiftDetails.qualifications)
-    ? shiftDetails.qualifications.map((q) => q.qualification_id)
+  const canDelete =
+    userRole === "store_manager" && shiftDetails.store_id === storeId;
+
+    const requiredQualifications = Array.isArray(shiftDetails.qualifications)
+    ? shiftDetails.qualifications
     : [];
-
+  
   const userQualifications = Array.isArray(user?.user_qualifications)
     ? user.user_qualifications
     : [];
-
   
     //logs shift and user quali
     const claimedByYou = shiftDetails.claimed_by_id === userId;
     const requiredQualificationIds = requiredQualifications.map((q) => q.qualification_id);
     const hasAllQualifications = requiredQualificationIds.every((id) =>
     userQualifications.includes(id)
-  );
+    );
+    console.log("Shift qualifications:", requiredQualifications);
+    console.log("User qualifications:", userQualifications);
 
+  
   const shiftIsClaimed = !!shiftDetails.claimed_by_first_name;
-
-
-  const canDelete =
-    userRole === "store_manager" && shiftDetails.store_id === storeId;
-
   
   const canClaim = userRole === "employee" && !shiftIsClaimed && hasAllQualifications && !claimedByYou;
   
@@ -129,6 +141,7 @@ const ShiftDetailsPage = () => {
   } else if (!hasAllQualifications) {
     claimDisabledReason = "Du mangler nødvendige kvalifikasjoner.";
   }
+  
 
   return (
     <>
@@ -137,7 +150,7 @@ const ShiftDetailsPage = () => {
         <div className="shift-header">
           <h2 className="shift-title">{shiftDetails.title}</h2>
         </div>
-
+  
         <div className="shift-details two-column-layout">
           <div className="shift-left">
             <ButikkCard
@@ -150,20 +163,35 @@ const ShiftDetailsPage = () => {
               shiftsCount={0}
             />
           </div>
-
+  
           <div className="shift-right">
             <div className="shift-detail-section">
-              <p><strong>Dato:</strong> {shiftDetails.date}</p>
-              <p><strong>Tid:</strong> {shiftDetails.start_time} - {shiftDetails.end_time}</p>
-              <p><strong>Beskrivelse:</strong> {shiftDetails.description?.trim() || "Ingen beskrivelse"}</p>
-              <p><strong>Kvalifikasjoner:</strong> {qualifications}</p>
-              <p><strong>Publisert av:</strong> {shiftDetails.posted_by_first_name} {shiftDetails.posted_by_last_name}</p>
+              <p>
+                <strong>Dato:</strong> {shiftDetails.date}
+              </p>
+              <p>
+                <strong>Tid:</strong> {shiftDetails.start_time} -{" "}
+                {shiftDetails.end_time}
+              </p>
+              <p>
+                <strong>Beskrivelse:</strong>{" "}
+                {shiftDetails.description?.trim() || "Ingen beskrivelse"}
+              </p>
+              <p>
+                <strong>Kvalifikasjoner:</strong> {qualifications}
+              </p>
+              <p>
+                <strong>Publisert av:</strong> {shiftDetails.posted_by_first_name}{" "}
+                {shiftDetails.posted_by_last_name}
+              </p>
+  
               {userRole === "store_manager" && (
                 <p>
                   <strong>Reservert av:</strong>{" "}
                   {shiftDetails.claimed_by_first_name ? (
                     <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
-                      {shiftDetails.claimed_by_first_name} {shiftDetails.claimed_by_last_name}
+                      {shiftDetails.claimed_by_first_name}{" "}
+                      {shiftDetails.claimed_by_last_name}
                     </Link>
                   ) : (
                     "Ingen"
@@ -171,7 +199,7 @@ const ShiftDetailsPage = () => {
                 </p>
               )}
             </div>
-
+  
             <div className="shift-actions-bottom">
               {userRole === "employee" && (
                 <div className="claim-button-wrapper">
@@ -187,7 +215,7 @@ const ShiftDetailsPage = () => {
                   )}
                 </div>
               )}
-
+  
               {canDelete && (
                 <button
                   className="delete-button"
@@ -199,7 +227,7 @@ const ShiftDetailsPage = () => {
             </div>
           </div>
         </div>
-
+  
         {showDeletePopup && (
           <DeleteShiftPopup
             shiftTitle={shiftDetails.title}
@@ -207,6 +235,7 @@ const ShiftDetailsPage = () => {
             onConfirm={handleDeleteShift}
           />
         )}
+  
         {showClaimPopup && (
           <ClaimShiftPopup
             shiftTitle={shiftDetails.title}
@@ -217,6 +246,7 @@ const ShiftDetailsPage = () => {
       </div>
     </>
   );
+  
 };
 
 export default ShiftDetailsPage;
