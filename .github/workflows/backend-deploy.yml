@@ -3,10 +3,10 @@ name: Backend CI/CD
 on:
   push:
     branches:
-      - struktur-test
+      - production-deploy
   pull_request:
     branches:
-      - struktur-test
+      - production-deploy
 
 jobs:
   build-and-deploy:
