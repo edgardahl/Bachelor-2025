@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
+import path from "path";
+import os from "os";
 
 dotenv.config();
 
@@ -29,7 +31,7 @@ export default defineConfig({
   base: "/",
   resolve: {
     alias: {
-      "@": "/src",
+      "@": path.resolve(__dirname, "src"), // Use path.resolve for cross-platform paths
     },
   },
   optimizeDeps: {
@@ -46,8 +48,8 @@ export default defineConfig({
   server: {
     https: isDev
       ? {
-          key: "../pem/localhost-key.pem",
-          cert: "../pem/localhost.pem",
+          key: path.resolve(__dirname, "../pem/localhost-key.pem"), // Use path.resolve
+          cert: path.resolve(__dirname, "../pem/localhost.pem"), // Use path.resolve
         }
       : false,
     port: 5002,
@@ -62,7 +64,10 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "./src/index.css";`,
+        additionalData: `@import "${path.resolve(
+          __dirname,
+          "src/index.css"
+        )}";`, // Use path.resolve
       },
     },
   },
