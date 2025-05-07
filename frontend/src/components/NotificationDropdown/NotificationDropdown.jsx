@@ -159,12 +159,23 @@ export default function NotificationDropdown() {
                       <FaTimes size={12} />
                     </button>
                   </div>
-
+                
                   <div className="notification-message">{notif.message}</div>
+                  
                   <div className="notification-time">
-                    {new Date(notif.created_at).toLocaleString("no-NO")}
+                    {/* Vis dato og klokkeslett */}
+                    {new Date(notif.created_at).toLocaleDateString("no-NO", {
+                      day: "numeric",
+                      month: "long"
+                    })}{" "}
+                    {new Date(notif.created_at).toLocaleTimeString("no-NO", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false
+                    })}
                   </div>
                 </li>
+              
               ))}
             </ul>
           )}
