@@ -17,7 +17,7 @@ import jwt from 'jsonwebtoken';
 export const generateAccessToken = (user) => {
   console.log('generateAccessToken', user);
     return jwt.sign(
-      { userId: user.userId, role: user.role, storeId: user.storeId }, // ✅ fixed key
+      { userId: user.userId, role: user.role, storeId: user.storeId, user_qualifications: user.user_qualifications }, // ✅ fixed key
       process.env.JWT_SECRET,
       { expiresIn: '15m' } // shorter is better for access tokens
     );
@@ -26,7 +26,7 @@ export const generateAccessToken = (user) => {
   export const generateRefreshToken = (user) => {
     console.log('generateRefreshToken', user);
     return jwt.sign(
-      { userId: user.userId, role: user.role, storeId: user.storeId }, // ✅ fixed key
+      { userId: user.userId, role: user.role, storeId: user.storeId,user_qualifications: user.user_qualifications }, // ✅ fixed key
       process.env.JWT_REFRESH_SECRET,
       { expiresIn: '7d' }
     );
