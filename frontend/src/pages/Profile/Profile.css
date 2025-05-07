@@ -12,9 +12,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   border-bottom: 2px solid #e0e0e0;
   padding-bottom: 1rem;
   margin-bottom: 2.5rem;
+  gap: 1rem;
 }
 
 .profile-header h1 {
@@ -33,6 +35,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  white-space: nowrap;
 }
 
 .edit-button:hover {
@@ -112,7 +115,8 @@
 }
 
 .edit-qualifications-btn {
-  margin-top: 1.2rem;
+  display: block;
+  margin: 1.2rem auto;
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
   background-color: #1976d2;
@@ -162,7 +166,7 @@
 .qualification-action-buttons {
   display: flex;
   gap: 0.8rem;
-  margin-top: 1.2rem;
+  margin: 1.2rem auto;
 }
 
 .qualification-save-btn,
@@ -205,19 +209,39 @@ ul.municipality-list li {
   margin-bottom: 0.2rem;
 }
 
+/* Make the field span the full grid width */
+.profile-field.full-width {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+/* Center the actual card inside */
+.centered-store-card {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
 /* Responsive */
 @media (max-width: 700px) {
   .profile-page {
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
+    border-radius: 0;
   }
 
   .profile-grid {
     grid-template-columns: 1fr;
   }
 
+  .profile-field {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 95%;
+  }
+
   .save-button,
   .cancel-button,
-  .edit-button,
   .qualification-save-btn,
   .qualification-cancel-btn,
   .edit-qualifications-btn {
