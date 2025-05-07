@@ -23,17 +23,18 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: frontend
 
       - name: Build frontend
         run: npm run build
         working-directory: frontend
 
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
       - name: Deploy to Railway
+        working-directory: frontend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_FRONTEND_TOKEN }}
-        run: |
-          npm install -g railway
-          railway up --project Bachelor-frontend
-        working-directory: frontend
+        run: railway up --environment production

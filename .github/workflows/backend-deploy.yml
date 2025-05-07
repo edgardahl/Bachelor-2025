@@ -23,18 +23,19 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: backend
 
-# lage tests ?
+      # Hvis du har tester, fjern kommentaren under:
       # - name: Run tests
       #   run: npm test
       #   working-directory: backend
 
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
       - name: Deploy to Railway
+        working-directory: backend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_BACKEND_TOKEN }}
-        run: |
-          npm install -g railway
-          railway up --project Bachelor-backend
-        working-directory: backend
+        run: railway up --environment production
