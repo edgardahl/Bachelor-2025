@@ -86,7 +86,9 @@
 .notification-time {
   font-size: 12px;
   color: #999;
+  margin-top: 8px;
 }
+
 
 .loading,
 .notification-dropdown .error,
