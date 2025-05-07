@@ -2,8 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
 import path from "path";
-import { fileURLToPath } from "url";
-import { execSync } from "child_process";
 
 dotenv.config();
 
@@ -32,7 +30,7 @@ export default defineConfig({
   base: "/",
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"), // Use path.resolve for cross-platform paths
+      "@": path.resolve(__dirname, "src"),
     },
   },
   optimizeDeps: {
