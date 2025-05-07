@@ -58,6 +58,7 @@ const AnsattDashboard = () => {
           <div className="dashboard-cards">
             <DashboardCard
               icon={<FiBriefcase size={52} />}
+              themeClass="card-theme-shifts"
               title="Vakter"
               description="Finn og reserver vakter i andre butikker"
               statValue={qualifiedShifts}
@@ -67,6 +68,7 @@ const AnsattDashboard = () => {
             />
             <DashboardCard
               icon={<MdOutlineStorefront size={52} />}
+              themeClass="card-theme-stores"
               title="Butikker"
               description="Se andre butikker i ditt område og relevant info"
               statValue={storeStats.total}

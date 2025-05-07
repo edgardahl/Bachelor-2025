@@ -28,6 +28,9 @@ const ShiftDetailsPage = () => {
   const storeId = user?.storeId;
   const userRole = user?.role;
 
+  console.log(user)
+  console.log(shiftDetails)
+
   useEffect(() => {
     const fetchShiftDetails = async () => {
       try {
@@ -100,14 +103,41 @@ const ShiftDetailsPage = () => {
   }
 
   const qualifications = Array.isArray(shiftDetails.qualifications)
-    ? shiftDetails.qualifications.join(", ")
-    : "Ingen krav spesifisert";
+  ? shiftDetails.qualifications.map((q) => q.name).join(", ")
+  : "Ingen krav spesifisert";
 
   const canDelete =
     userRole === "store_manager" && shiftDetails.store_id === storeId;
 
-  const canClaim =
-    userRole === "employee" && !shiftDetails.claimed_by_first_name;
+    const requiredQualifications = Array.isArray(shiftDetails.qualifications)
+    ? shiftDetails.qualifications
+    : [];
+  
+  const userQualifications = Array.isArray(user?.user_qualifications)
+    ? user.user_qualifications
+    : [];
+  
+    //logs shift and user qualic
+    
+    const requiredQualificationIds = requiredQualifications.map((q) => q.qualification_id);
+    const hasAllQualifications = requiredQualificationIds.every((id) =>
+    userQualifications.includes(id)
+    );
+    console.log("Shift qualifications:", requiredQualifications);
+    console.log("User qualifications:", userQualifications);
+
+  
+  const shiftIsClaimed = !!shiftDetails.claimed_by_first_name;
+  
+  const canClaim = userRole === "employee" && !shiftIsClaimed && hasAllQualifications;
+  
+  let claimDisabledReason = "";
+  if (shiftIsClaimed) {
+    claimDisabledReason = "Vakten er allerede tatt.";
+  } else if (!hasAllQualifications) {
+    claimDisabledReason = "Du mangler nødvendige kvalifikasjoner.";
+  }
+  
 
   return (
     <>
@@ -160,14 +190,21 @@ const ShiftDetailsPage = () => {
           </div>
 
           <div className="shift-actions">
-            {canClaim && (
+          {userRole === "employee" && (
+            <div className="claim-button-wrapper">
               <button
                 className="claim-button"
                 onClick={() => setShowClaimPopup(true)}
+                disabled={!canClaim}
               >
                 Ta vakt
               </button>
-            )}
+              {!canClaim && (
+                <p className="claim-disabled-reason">{claimDisabledReason}</p>
+              )}
+            </div>
+          )}
+
             {canDelete && (
               <button
                 className="delete-button"

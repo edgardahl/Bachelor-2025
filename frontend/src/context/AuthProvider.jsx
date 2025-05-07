@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
     setUserState(userData);
   };
 
+  console.log("userdata from AuthProvider", user);
   useEffect(() => {
     const fetchUser = async () => {
       let token = localStorage.getItem("accessToken");
