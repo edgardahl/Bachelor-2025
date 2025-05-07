@@ -19,7 +19,7 @@ export const generateAccessToken = (user) => {
     return jwt.sign(
       { userId: user.userId, role: user.role, storeId: user.storeId, user_qualifications: user.user_qualifications }, // ✅ fixed key
       process.env.JWT_SECRET,
-      { expiresIn: '15m' } // shorter is better for access tokens
+      { expiresIn: '15s' } // shorter is better for access tokens
     );
   };
   
