@@ -2,7 +2,8 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
 import path from "path";
-import os from "os";
+import { fileURLToPath } from "url";
+import { execSync } from "child_process";
 
 dotenv.config();
 
@@ -46,44 +47,19 @@ export default defineConfig({
   publicDir: "public",
   plugins: [react(), ...(isDev && mkcert ? [mkcert()] : [])],
   server: {
-    https: isDev
+    https: useHttps
       ? {
-          key: path.resolve(__dirname, "../pem/localhost-key.pem"), // Use path.resolve
-          cert: path.resolve(__dirname, "../pem/localhost.pem"), // Use path.resolve
+          key: path.resolve(__dirname, "../pem/localhost-key.pem"),
+          cert: path.resolve(__dirname, "../pem/localhost.pem"),
         }
       : false,
     port: 5002,
     proxy: {
       "/api": {
-        target: "https://localhost:5001",
+        target: `http://localhost:${process.env.BACKEND_PORT || 5001}`,
         changeOrigin: true,
         secure: false,
       },
     },
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@import "${path.resolve(
-          __dirname,
-          "src/index.css"
-        )}";`, // Use path.resolve
-      },
-    },
-  },
-  build: {
-    outDir: "dist",
-    sourcemap: false,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ["react", "react-dom"],
-        },
-      },
-    },
-    chunkSizeWarningLimit: 1000,
-  },
-  define: {
-    __API_BASE__: JSON.stringify(isDev ? "/api" : process.env.VITE_API_URL),
   },
 });
