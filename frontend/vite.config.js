@@ -15,10 +15,7 @@ if (isDev) {
     mkcert = require("vite-plugin-mkcert").default;
     require("child_process").execSync("mkcert -version", {
       stdio: "ignore",
-      env: {
-        ...process.env,
-        PATH: process.env.PATH + ":/opt/homebrew/bin",
-      },
+      env: process.env,
     });
     useHttps = true;
   } catch (error) {
@@ -36,11 +33,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: [
-      "react",
-      "react-dom",
-      "react-router-dom",
-    ],
+    include: ["react", "react-dom", "react-router-dom"],
   },
   test: {
     globals: true,
