@@ -43,10 +43,6 @@ const Landing = () => {
         <button className="login-button" onClick={() => navigate("/login")}>
           Logg inn
         </button>
-        <p>eller</p>
-        <button className="login-button" onClick={() => navigate("/register")}>
-          Registrer ny bruker
-        </button>
       </div>
     </div>
   );
