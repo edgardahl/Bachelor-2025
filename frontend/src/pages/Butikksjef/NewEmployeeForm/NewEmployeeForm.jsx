@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "../../../api/axiosInstance";
-import { useRef } from "react";
+import { toast } from "react-toastify";
 import "./NewEmployeeForm.css";
 
 export default function RegisterNewEmployeeForm() {
@@ -10,7 +10,7 @@ export default function RegisterNewEmployeeForm() {
     email: "",
     password: "",
     phone_number: "",
-    qualifications: [], // stores selected qualifications
+    qualifications: [],
   });
 
   const fieldRefs = {
@@ -21,9 +21,9 @@ export default function RegisterNewEmployeeForm() {
   };
 
   const [qualifications, setQualifications] = useState([]);
-  const [errors, setErrors] = useState({});  // To store error messages for each field
+  const [errors, setErrors] = useState({});
 
-  // Fetch qualifications from the API
+  // ✅ Keeps your Promise.all intact
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,13 +39,11 @@ export default function RegisterNewEmployeeForm() {
     fetchData();
   }, []);
 
-  // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle qualification selection (toggle)
   const handleQualificationChange = (id) => {
     setFormData((prev) => {
       const alreadySelected = prev.qualifications.includes(id);
@@ -58,54 +56,49 @@ export default function RegisterNewEmployeeForm() {
     });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setErrors({});  // Clear any previous error messages
-  
-      // Send formData to server
-      const response = await axios.post("/auth/registerNewEmployee", formData);
-      alert("Bruker registrert!");
-  
-      // Reset form fields to their initial values
+      setErrors({});
+      await axios.post("/auth/registerNewEmployee", formData);
+      toast.success("Bruker registrert!");
+
       setFormData({
         first_name: "",
         last_name: "",
         email: "",
         password: "",
         phone_number: "",
-        qualifications: [], // Reset qualifications as well
+        qualifications: [],
       });
-  
     } catch (err) {
       if (err.response?.data?.error) {
         const errorMessages = err.response.data.error;
         const newErrors = {};
-  
-        // Map backend error messages to form fields
+
         for (const key in errorMessages) {
           if (Object.hasOwnProperty.call(errorMessages, key)) {
             newErrors[key] = errorMessages[key];
           }
         }
-  
+
         setErrors(newErrors);
-  
-        // Scroll to the first field with an error
+
         const firstErrorField = Object.keys(fieldRefs).find(
           (key) => newErrors[key]
         );
         if (firstErrorField && fieldRefs[firstErrorField].current) {
-          fieldRefs[firstErrorField].current.scrollIntoView({ behavior: "smooth", block: "center" });
+          fieldRefs[firstErrorField].current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
           fieldRefs[firstErrorField].current.focus();
         }
       } else {
-        alert("Noe gikk galt");
+        toast.error("Noe gikk galt. Prøv igjen.");
       }
     }
   };
-  
 
   return (
     <form className="register-form" onSubmit={handleSubmit}>
@@ -114,15 +107,14 @@ export default function RegisterNewEmployeeForm() {
         Den ansatte kan endre e-post, telefonnummer, passord og mer etter innlogging.
       </p>
 
-
       <label>Fornavn</label>
       <input
         name="first_name"
         ref={fieldRefs.first_name}
-        value={formData.first_name}  // Bind value to formData
+        value={formData.first_name}
         onChange={handleChange}
         required
-        className={errors.first_name ? 'error' : ''}
+        className={errors.first_name ? "error" : ""}
       />
       {errors.first_name && <div className="error-message">{errors.first_name}</div>}
 
@@ -130,10 +122,10 @@ export default function RegisterNewEmployeeForm() {
       <input
         name="last_name"
         ref={fieldRefs.last_name}
-        value={formData.last_name}  // Bind value to formData
+        value={formData.last_name}
         onChange={handleChange}
         required
-        className={errors.last_name ? 'error' : ''}
+        className={errors.last_name ? "error" : ""}
       />
       {errors.last_name && <div className="error-message">{errors.last_name}</div>}
 
@@ -142,10 +134,10 @@ export default function RegisterNewEmployeeForm() {
         name="email"
         type="email"
         ref={fieldRefs.email}
-        value={formData.email}  // Bind value to formData
+        value={formData.email}
         onChange={handleChange}
         required
-        className={errors.email ? 'error' : ''}
+        className={errors.email ? "error" : ""}
       />
       {errors.email && <div className="error-message">{errors.email}</div>}
 
@@ -153,28 +145,27 @@ export default function RegisterNewEmployeeForm() {
       <input
         name="phone_number"
         type="text"
-        value={formData.phone_number}  // Bind value to formData
-        required
+        value={formData.phone_number}
         onChange={handleChange}
-        className={errors.phone_number ? 'error' : ''}
+        required
+        className={errors.phone_number ? "error" : ""}
       />
       {errors.phone_number && <div className="error-message">{errors.phone_number}</div>}
 
       <label>
-        Passord<br/> <span className="label-note">(kan endres av den ansatte etter innlogging)</span>
+        Passord<br />
+        <span className="label-note">(kan endres av den ansatte etter innlogging)</span>
       </label>
-
       <input
         name="password"
         type="password"
         ref={fieldRefs.password}
-        value={formData.password}  // Bind value to formData
+        value={formData.password}
         onChange={handleChange}
         required
-        className={errors.password ? 'error' : ''}
+        className={errors.password ? "error" : ""}
       />
       {errors.password && <div className="error-message">{errors.password}</div>}
-
 
       <label>Kvalifikasjoner</label>
       <div className="qualification-cards">
@@ -192,9 +183,9 @@ export default function RegisterNewEmployeeForm() {
           );
         })}
       </div>
-      
+
       {errors.general && <div className="error-message">{errors.general}</div>}
-      
+
       <button type="submit" className="submit-btn">Registrer</button>
     </form>
   );
