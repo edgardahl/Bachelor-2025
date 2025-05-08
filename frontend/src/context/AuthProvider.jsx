@@ -64,7 +64,6 @@ export const AuthProvider = ({ children }) => {
         const res = await axios.get("/auth/me");
         console.log("[AuthProvider] /auth/me response:", res.data);
         setUserState(res.data.user);
-        console.log("[AuthProvider] /auth/me response:", res.data);
       } catch (err) {
         console.error("[AuthProvider] /auth/me failed:", err);
         if (err.response?.status === 401) {
