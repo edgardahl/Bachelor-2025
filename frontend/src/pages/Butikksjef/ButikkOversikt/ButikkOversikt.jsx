@@ -24,53 +24,49 @@ const ButikkOversikt = () => {
   const fetchStores = async (filters = {}, page = 1, append = false) => {
     try {
       const queryParams = new URLSearchParams();
-
+  
       if (filters.municipality && filters.municipality.length > 0) {
         queryParams.append("municipality", filters.municipality);
+        console.log("Municipality filter:", filters.municipality);
       }
-
+  
       if (filters.store_chain && filters.store_chain.length > 0) {
         queryParams.append("store_chain", filters.store_chain);
       }
-
+  
+      // Paginering (kun nødvendig om det ikke er filtrert)
       if (
         (filters.municipality && filters.municipality.length > 0) ||
         (filters.store_chain && filters.store_chain.length > 0)
       ) {
-        queryParams.append("pageSize", 1000);
+        queryParams.append("pageSize", 1000); // eller valgfritt tall
       } else {
         queryParams.append("page", page);
         queryParams.append("pageSize", PAGE_SIZE);
       }
 
+      console.log("Query params:", queryParams.toString());
+  
       const response = await axios.get(
         `/stores/stores-with-municipality?${queryParams.toString()}`
       );
-
-      if (append) {
-        setStores((prevStores) => [...prevStores, ...response.data.stores]);
-      } else {
-        setStores(response.data.stores);
-      }
-
-      setTotalStores(response.data.total);
-
+  
+      const storeData = response.data.stores;
+  
+      // shiftCount allerede inkludert, så vi slipper egne API-kall
       const shiftsData = {};
-      for (const store of response.data.stores) {
-        try {
-          const shiftsResponse = await axios.get(
-            `/shifts/store/${store.store_id}`
-          );
-          shiftsData[store.store_id] = shiftsResponse.data.length;
-        } catch {
-          shiftsData[store.store_id] = 0;
-        }
+      for (const store of storeData) {
+        shiftsData[store.store_id] = store.shift_count || 0;
       }
-
-      setShiftsCount((prevShiftsCount) => ({
-        ...prevShiftsCount,
-        ...shiftsData,
-      }));
+  
+      if (append) {
+        setStores((prevStores) => [...prevStores, ...storeData]);
+      } else {
+        setStores(storeData);
+      }
+  
+      setTotalStores(response.data.total);
+      setShiftsCount((prev) => ({ ...prev, ...shiftsData }));
     } catch (err) {
       console.error("Error fetching stores:", err);
     } finally {
@@ -78,6 +74,7 @@ const ButikkOversikt = () => {
       setLoadingMore(false);
     }
   };
+  
 
   useEffect(() => {
     const fetchPreferredMunicipalities = async () => {

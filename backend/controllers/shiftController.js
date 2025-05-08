@@ -225,19 +225,20 @@ export const getPreferredQualifiedShiftsController = async (req, res) => {
 
 export const getRequestedQualifiedShiftsController = async (req, res) => {
   const userId = req.user.userId;
-  const { municipality_id } = req.params;
-
-  if (!municipality_id) {
-    return res.status(400).json({ error: "Municipality ID is required." });
-  }
 
   try {
-    const shifts = await getRequestedQualifiedShiftsModel(userId, municipality_id);
+    const user = await getUserByIdModel(userId);
+
+    const municipalityIds = user?.municipalities?.map((m) => m.municipality_id);
+
+    if (!municipalityIds || municipalityIds.length === 0) {
+      return res.status(400).json({ error: "User has no associated municipalities." });
+    }
+
+    const shifts = await getRequestedQualifiedShiftsModel(userId, municipalityIds);
     return res.json(shifts);
   } catch (error) {
     console.error("Error fetching requested municipality shifts:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
-

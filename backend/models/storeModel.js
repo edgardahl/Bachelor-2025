@@ -44,61 +44,37 @@ export const getStoreByIdModel = async (storeId) => {
   return data;
 };
 
-// Fetch stores with pagination and filtering by municipality and county
 export const getStoresWithMunicipality = async (
   municipalities = [],
-  counties = [],
+  storeChains = [],
   page = 1,
   pageSize = 10000
 ) => {
-  // Fetch all stores without pagination for filtering
-  const { data, error } = await supabase.from("stores").select(
-    `store_id, name, store_chain, address, phone_number, email, manager_id,
-      municipality:municipality_id (municipality_name, county_name)`
-  )
-  .order('name', { ascending: true });
+  const { data, error } = await supabase.rpc("get_stores_with_shift_count", {
+    p_municipality_names: municipalities.length > 0 ? municipalities : null,
+    p_store_chains: storeChains.length > 0 ? storeChains : null,
+  });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  // Filter stores based on selected municipalities and counties
-  let filteredData = data;
-  if (municipalities.length > 0) {
-    filteredData = filteredData.filter(
-      (store) =>
-        store.municipality?.municipality_name &&
-        municipalities.includes(store.municipality.municipality_name)
-    );
-  }
-  if (counties.length > 0) {
-    filteredData = filteredData.filter(
-      (store) =>
-        store.municipality?.county_name &&
-        counties.includes(store.municipality.county_name)
-    );
-  }
-
-  // Calculate total pages
-  const totalFiltered = filteredData.length;
-  const totalPages = Math.ceil(totalFiltered / pageSize);
-
-  // Ensure the page is within range
+  // Paginering
+  const total = data.length;
+  const totalPages = Math.ceil(total / pageSize);
   const validPage = Math.max(1, Math.min(page, totalPages));
-
-  // Apply pagination
   const start = (validPage - 1) * pageSize;
-  const end = start + pageSize;
-  const pagedData = filteredData.slice(start, end);
+  const pagedData = data.slice(start, start + pageSize);
 
   return {
     stores: pagedData,
-    total: totalFiltered,
+    total,
     page: validPage,
     pageSize,
     totalPages,
   };
 };
+
 
 
 
