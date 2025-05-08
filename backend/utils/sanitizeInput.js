@@ -13,34 +13,32 @@ export const sanitizeShift = (shiftData) => {
   } = shiftData;
 
   const errors = {};
-  // Title validation
+
   if (typeof title !== "string" || title.trim() === "") {
-    errors.title = "Title is required and must be a non-empty string.";
-  } else if (!/^[a-zA-ZæøåÆØÅ\s]+$/.test(title.trim())) {
-    errors.title = "Tittelen kan bare innholde bokstaver og mellomrom.";
+    errors.title = "Tittel er påkrevd.";
+  } else if (!/^[a-zA-ZæøåÆØÅ0-9\s]+$/.test(title.trim())) {
+    errors.title = "Tittelen kan bare inneholde bokstaver, tall og mellomrom.";
   }
 
   if (typeof description !== "string" || description.trim() === "") {
-    errors.description = "Beskrivelse er påkrevd";
+    errors.description = "Beskrivelse er påkrevd.";
   }
 
   const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(date);
+  if (!isValidDate) {
+    errors.date = "Datoen må være i formatet ÅÅÅÅ-MM-DD.";
+  } else {
+    const inputDate = new Date(date);
+    const today = new Date();
+    const oneWeekFromNow = new Date(today);
+    oneWeekFromNow.setDate(today.getDate() + 7);
 
-if (!isValidDate) {
-  errors.date = "Datoen må være i formatet YYYY-MM-DD.";
-} else {
-  const inputDate = new Date(date);
-  const today = new Date();
-  const oneWeekFromNow = new Date(today);
-  oneWeekFromNow.setDate(today.getDate() + 7); // Setter datoen til 7 dager fremover
-
-  // Sjekk om datoen er i fremtiden, og at den ikke er mer enn en uke frem i tid
-  if (inputDate < today) {
-    errors.date = "Datoen har allerede vært.";
-  } else if (inputDate > oneWeekFromNow) {
-    errors.date = "Datoen kan ikke være mer enn 7 dager frem i tid.";
+    if (inputDate < today) {
+      errors.date = "Datoen har allerede vært.";
+    } else if (inputDate > oneWeekFromNow) {
+      errors.date = "Datoen kan ikke være mer enn 7 dager frem i tid.";
+    }
   }
-}
 
   const startTimeParts = start_time?.split(":") || [];
   const endTimeParts = end_time?.split(":") || [];
@@ -50,7 +48,7 @@ if (!isValidDate) {
     isNaN(+startTimeParts[0]) ||
     isNaN(+startTimeParts[1])
   ) {
-    errors.start_time = "Start tiden er ugyldig. Sørg for at den er i HH:mm format.";
+    errors.start_time = "Starttid må være i HH:mm-format.";
   }
 
   if (
@@ -58,48 +56,42 @@ if (!isValidDate) {
     isNaN(+endTimeParts[0]) ||
     isNaN(+endTimeParts[1])
   ) {
-    errors.end_time = "End tiden er ugyldig. Sørg for at den er i HH:mm format.";
+    errors.end_time = "Sluttid må være i HH:mm-format.";
   }
 
   if (!errors.start_time && !errors.end_time) {
     const startTimeInMinutes = +startTimeParts[0] * 60 + +startTimeParts[1];
     const endTimeInMinutes = +endTimeParts[0] * 60 + +endTimeParts[1];
-
     if (endTimeInMinutes <= startTimeInMinutes) {
-      errors.end_time = "End tiden må være etter start tiden.";
+      errors.end_time = "Sluttiden må være etter starttiden.";
     }
   }
 
   if (!isUUID(store_id)) {
-    errors.store_id = "Store ID must be a valid UUID.";
+    errors.store_id = "Butikk-ID må være en gyldig UUID.";
   }
 
   if (!isUUID(UserId)) {
-    errors.posted_by = `User ID is invalid. Expected a valid UUID, but received: ${UserId}`;
+    errors.posted_by = `Bruker-ID er ugyldig. Forventet en gyldig UUID, men fikk: ${UserId}`;
   }
 
-  if (qualifications && qualifications.length > 0) {
+  if (qualifications?.length) {
     qualifications.forEach((q) => {
       if (!isUUID(q)) {
         if (!errors.qualifications) errors.qualifications = [];
-        errors.qualifications.push(`Invalid qualification ID: ${q}`);
+        errors.qualifications.push(`Ugyldig kvalifikasjons-ID: ${q}`);
       }
     });
   }
 
-  if (Object.keys(errors).length > 0) {
-    return { errors };
-  }
-
-  const start_time_formatted = `${startTimeParts[0]}:${startTimeParts[1]}:00`;
-  const end_time_formatted = `${endTimeParts[0]}:${endTimeParts[1]}:00`;
+  if (Object.keys(errors).length > 0) return { errors };
 
   return {
     title: title.trim(),
     description: description.trim(),
     date,
-    start_time: start_time_formatted,
-    end_time: end_time_formatted,
+    start_time: `${startTimeParts[0]}:${startTimeParts[1]}:00`,
+    end_time: `${endTimeParts[0]}:${endTimeParts[1]}:00`,
     store_id,
     posted_by: UserId,
     qualifications,
@@ -129,14 +121,14 @@ export const sanitizeUserData = (userData) => {
   const validAvailability = ["Fleksibel", "Ikke-fleksibel"];
   const validRoles = ["employee", "store_manager", "admin"];
 
-  if (typeof first_name !== "string" || first_name.trim() === "" || !nameRegex.test(first_name)) {
+  if (!nameRegex.test(first_name || "")) {
     errors.first_name = "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
-  if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(last_name)) {
+  if (!nameRegex.test(last_name || "")) {
     errors.last_name = "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!email || !emailRegex.test(email)) {
-    errors.email = "Ugyldig e-postformat.";
+    errors.email = "Ugyldig e-postadresse.";
   }
   if (typeof password !== "string" || password.length < 6) {
     errors.password = "Passordet må være minst 6 tegn langt.";
@@ -148,40 +140,30 @@ export const sanitizeUserData = (userData) => {
     errors.availability = "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
   }
   if (!validRoles.includes(role)) {
-    errors.role = `Role må være en av følgende: ${validRoles.join(", ")}.`;
+    errors.role = `Rolle må være en av: ${validRoles.join(", ")}.`;
   }
   if (store_id && !isUUID(store_id)) {
-    errors.store_id = "Store ID must be a valid UUID.";
+    errors.store_id = "Butikk-ID må være en gyldig UUID.";
   }
   if (municipality_id && !isUUID(municipality_id)) {
-    errors.municipality_id = "Municipality ID must be a valid UUID.";
-  }
-  if (qualifications && !Array.isArray(qualifications)) {
-    errors.qualifications = "Qualifications must be an array.";
+    errors.municipality_id = "Kommune-ID må være en gyldig UUID.";
   }
   if (qualifications?.length) {
     qualifications.forEach((q) => {
       if (!isUUID(q)) {
-        errors.qualifications = `Invalid qualification ID: ${q}`;
+        errors.qualifications = `Ugyldig kvalifikasjons-ID: ${q}`;
       }
     });
-  }
-  if (work_municipality_ids && !Array.isArray(work_municipality_ids)) {
-    errors.work_municipality_ids = "Work municipality IDs must be an array.";
   }
   if (work_municipality_ids?.length) {
     work_municipality_ids.forEach((id) => {
       if (!isUUID(id)) {
-        errors.work_municipality_ids = `Invalid Municipality ID: ${id}`;
+        errors.work_municipality_ids = `Ugyldig kommune-ID: ${id}`;
       }
     });
   }
 
-  console.log("Errors:", errors);
-
-  if (Object.keys(errors).length > 0) {
-    return { errors };
-  }
+  if (Object.keys(errors).length > 0) return { errors };
 
   return {
     first_name: first_name.trim(),
@@ -216,14 +198,14 @@ export const sanitizeUserProfileUpdateData = (userData) => {
   const phoneRegex = /^[0-9+\- ]{6,20}$/;
   const validAvailability = ["Fleksibel", "Ikke-fleksibel"];
 
-  if (typeof first_name !== "string" || first_name.trim() === "" || !nameRegex.test(first_name)) {
+  if (!nameRegex.test(first_name || "")) {
     errors.first_name = "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
-  if (typeof last_name !== "string" || last_name.trim() === "" || !nameRegex.test(last_name)) {
+  if (!nameRegex.test(last_name || "")) {
     errors.last_name = "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!email || !emailRegex.test(email)) {
-    errors.email = "Ugyldig e-postformat.";
+    errors.email = "Ugyldig e-postadresse.";
   }
   if (!phoneRegex.test(phone_number)) {
     errors.phone_number = "Telefonnummeret er ugyldig.";
@@ -232,24 +214,17 @@ export const sanitizeUserProfileUpdateData = (userData) => {
     errors.availability = "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
   }
   if (municipality_id && !isUUID(municipality_id)) {
-    errors.municipality_id = "Municipality ID must be a valid UUID.";
-  }
-  if (work_municipality_ids && !Array.isArray(work_municipality_ids)) {
-    errors.work_municipality_ids = "Work municipality IDs must be an array.";
+    errors.municipality_id = "Kommune-ID må være en gyldig UUID.";
   }
   if (work_municipality_ids?.length) {
     work_municipality_ids.forEach((id) => {
       if (!isUUID(id)) {
-        errors.work_municipality_ids = `Invalid Municipality ID: ${id}`;
+        errors.work_municipality_ids = `Ugyldig kommune-ID: ${id}`;
       }
     });
   }
 
-  console.log("Errors:", errors);
-
-  if (Object.keys(errors).length > 0) {
-    return { errors };
-  }
+  if (Object.keys(errors).length > 0) return { errors };
 
   return {
     first_name: first_name.trim(),

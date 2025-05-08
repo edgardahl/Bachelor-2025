@@ -3,15 +3,11 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "../../api/axiosInstance";
 import DeleteShiftPopup from "../../components/Popup/DeleteShiftPopup/DeleteShiftPopup";
 import ClaimShiftPopup from "../../components/Popup/ClaimShiftPopup/ClaimShiftPopup";
-
-import ErrorPopup from "../../components/Popup/ErrorPopup/ErrorPopup";
-import SuccessPopup from "../../components/Popup/SuccessPopup/SuccessPopup";
 import BackButton from "../../components/BackButton/BackButton";
 import Loading from "../../components/Loading/Loading";
-
+import ButikkCard from "../../components/Cards/ButikkCard/ButikkCard";
 import useAuth from "../../context/UseAuth";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import "./ShiftDetailsPage.css";
 
 const ShiftDetailsPage = () => {
@@ -20,6 +16,8 @@ const ShiftDetailsPage = () => {
   const navigate = useNavigate();
 
   const [shiftDetails, setShiftDetails] = useState(null);
+  const [shiftsCount, setShiftsCount] = useState(0);
+  const [qualificationMap, setQualificationMap] = useState({});
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showClaimPopup, setShowClaimPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,24 +26,48 @@ const ShiftDetailsPage = () => {
   const storeId = user?.storeId;
   const userRole = user?.role;
 
-  console.log(user)
-  console.log(shiftDetails)
-
   useEffect(() => {
     const fetchShiftDetails = async () => {
       try {
         const res = await axios.get(`/shifts/${shiftId}`);
         setShiftDetails(res.data[0]);
-      } catch (err) {
-        console.error("Feil ved henting av vakt:", err);
+      } catch {
         toast.error("Kunne ikke hente vaktinformasjon.");
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchShiftDetails();
   }, [shiftId]);
+
+  useEffect(() => {
+    const fetchShiftsForStore = async () => {
+      if (!shiftDetails?.store_id) return;
+      try {
+        const res = await axios.get(`/shifts/store/${shiftDetails.store_id}`);
+        setShiftsCount(res.data.length);
+      } catch {
+        setShiftsCount(0);
+      }
+    };
+    fetchShiftsForStore();
+  }, [shiftDetails]);
+
+  useEffect(() => {
+    const fetchQualifications = async () => {
+      try {
+        const res = await axios.get("/qualifications");
+        const map = res.data.reduce((acc, q) => {
+          acc[q.qualification_id] = q.name;
+          return acc;
+        }, {});
+        setQualificationMap(map);
+      } catch {
+        console.error("Feil ved henting av kvalifikasjoner");
+      }
+    };
+    fetchQualifications();
+  }, []);
 
   const handleDeleteShift = async () => {
     setIsLoading(true);
@@ -53,16 +75,14 @@ const ShiftDetailsPage = () => {
       const res = await axios.delete("/shifts/deleteShiftById", {
         data: { shiftId, shiftStoreId: shiftDetails.store_id },
       });
-
       if (res.status === 200) {
-        setShowDeletePopup(false);
         toast.success("Vakten ble slettet.");
+        setShowDeletePopup(false);
         navigate("/bs/hjem");
       } else {
         toast.error("Kunne ikke slette vakten.");
       }
-    } catch (err) {
-      console.error("Feil ved sletting:", err);
+    } catch {
       toast.error("En feil oppstod ved sletting.");
     } finally {
       setIsLoading(false);
@@ -75,7 +95,6 @@ const ShiftDetailsPage = () => {
       const res = await axios.post(`/shifts/claim/${shiftId}`, {
         user_id: userId,
       });
-
       if (res.status === 200) {
         setShiftDetails((prev) => ({
           ...prev,
@@ -90,54 +109,32 @@ const ShiftDetailsPage = () => {
       } else {
         toast.error("Kunne ikke reservere vakten.");
       }
-    } catch (err) {
-      console.error("Feil ved reservasjon:", err);
+    } catch {
       toast.error("En feil oppstod ved reservasjon.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (isLoading || !shiftDetails) {
-    return <Loading />;
-  }
+  if (isLoading || !shiftDetails) return <Loading />;
 
-  const qualifications = Array.isArray(shiftDetails.qualifications)
-  ? shiftDetails.qualifications.map((q) => q.name).join(", ")
-  : "Ingen krav spesifisert";
+  const requiredQualifications = shiftDetails.qualifications || [];
+  const userQualifications = user?.user_qualifications || [];
+  const claimedByYou = shiftDetails.claimed_by_id === userId;
 
-  const canDelete =
-    userRole === "store_manager" && shiftDetails.store_id === storeId;
+  const hasAllQualifications = requiredQualifications.every((q) =>
+    userQualifications.includes(q.qualification_id)
+  );
 
-    const requiredQualifications = Array.isArray(shiftDetails.qualifications)
-    ? shiftDetails.qualifications
-    : [];
-  
-  const userQualifications = Array.isArray(user?.user_qualifications)
-    ? user.user_qualifications
-    : [];
-  
-    //logs shift and user qualic
-    
-    const requiredQualificationIds = requiredQualifications.map((q) => q.qualification_id);
-    const hasAllQualifications = requiredQualificationIds.every((id) =>
-    userQualifications.includes(id)
-    );
-    console.log("Shift qualifications:", requiredQualifications);
-    console.log("User qualifications:", userQualifications);
-
-  
   const shiftIsClaimed = !!shiftDetails.claimed_by_first_name;
-  
-  const canClaim = userRole === "employee" && !shiftIsClaimed && hasAllQualifications;
-  
+  const canDelete = userRole === "store_manager" && shiftDetails.store_id === storeId;
+  const canClaim =
+    userRole === "employee" && !shiftIsClaimed && hasAllQualifications && !claimedByYou;
+
   let claimDisabledReason = "";
-  if (shiftIsClaimed) {
-    claimDisabledReason = "Vakten er allerede tatt.";
-  } else if (!hasAllQualifications) {
-    claimDisabledReason = "Du mangler nødvendige kvalifikasjoner.";
-  }
-  
+  if (claimedByYou) claimDisabledReason = "Du har allerede reservert denne vakten";
+  else if (shiftIsClaimed) claimDisabledReason = "Vakten er allerede tatt.";
+  else if (!hasAllQualifications) claimDisabledReason = "Du mangler nødvendige kvalifikasjoner.";
 
   return (
     <>
@@ -147,49 +144,58 @@ const ShiftDetailsPage = () => {
           <h2 className="shift-title">{shiftDetails.title}</h2>
         </div>
 
-        <div className="shift-details">
-          <div className="shift-detail-section">
-            <p>
-              <strong>Butikk:</strong> {shiftDetails.store_name}
-            </p>
-            <p>
-              <strong>Adresse:</strong> {shiftDetails.store_address}
-            </p>
-            <p>
-              <strong>Dato:</strong> {shiftDetails.date}
-            </p>
-            <p>
-              <strong>Tid:</strong> {shiftDetails.start_time} -{" "}
-              {shiftDetails.end_time}
-            </p>
-            <p>
-              <strong>Beskrivelse:</strong>{" "}
-              {shiftDetails.description?.trim() || "Ingen beskrivelse"}
-            </p>
-            <p>
-              <strong>Kvalifikasjoner:</strong> {qualifications}
-            </p>
-            <p>
-              <strong>Publisert av:</strong> {shiftDetails.posted_by_first_name}{" "}
-              {shiftDetails.posted_by_last_name}
-            </p>
-
-            {userRole === "store_manager" && (
-              <p>
-                <strong>Reservert av:</strong>{" "}
-                {shiftDetails.claimed_by_first_name ? (
-                  <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
-                    {shiftDetails.claimed_by_first_name}{" "}
-                    {shiftDetails.claimed_by_last_name}
-                  </Link>
-                ) : (
-                  "Ingen"
-                )}
-              </p>
-            )}
+        <div className="shift-details two-column-layout">
+          <div className="shift-left">
+            <ButikkCard
+              store={{
+                store_id: shiftDetails.store_id,
+                name: shiftDetails.store_name,
+                address: shiftDetails.store_address,
+                store_chain: shiftDetails.store_chain,
+              }}
+              shiftsCount={shiftsCount}
+            />
           </div>
 
-          <div className="shift-actions">
+          <div className="shift-right">
+            <div className="shift-detail-section">
+              <p><strong>Dato:</strong> {shiftDetails.date}</p>
+              <p><strong>Tid:</strong> {shiftDetails.start_time} - {shiftDetails.end_time}</p>
+              <p><strong>Beskrivelse:</strong> {shiftDetails.description?.trim() || "Ingen beskrivelse"}</p>
+              <p><strong>Nødvendige kvalifikasjoner:</strong></p>
+              <div className="qualification-cards">
+                {requiredQualifications.length > 0 ? (
+                  requiredQualifications.map((q) => (
+                    <div
+                      key={q.qualification_id}
+                      className="qualification-card selected disabled"
+                    >
+                      <h4>{qualificationMap[q.qualification_id] || q.name}</h4>
+                      <span className="checkmark">✔</span>
+                    </div>
+                  ))
+                ) : (
+                  <p>Ingen krav spesifisert</p>
+                )}
+              </div>
+
+              {userRole === "store_manager" && (
+                <p>
+                  <strong>Reservert av:</strong>{" "}
+                  {shiftDetails.claimed_by_first_name ? (
+                    <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
+                      {shiftDetails.claimed_by_first_name} {shiftDetails.claimed_by_last_name}
+                    </Link>
+                  ) : (
+                    "Ingen"
+                  )}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="shift-bottom-row">
           {userRole === "employee" && (
             <div className="claim-button-wrapper">
               <button
@@ -204,17 +210,22 @@ const ShiftDetailsPage = () => {
               )}
             </div>
           )}
-
-            {canDelete && (
-              <button
-                className="delete-button"
-                onClick={() => setShowDeletePopup(true)}
-              >
-                <img src="/icons/delete-white.svg" alt="Slett" />
-              </button>
-            )}
+          <div className="published-by">
+            <strong>Publisert av:</strong> {shiftDetails.posted_by_first_name}{" "}
+            {shiftDetails.posted_by_last_name}
           </div>
         </div>
+
+        {canDelete && (
+          <div className="shift-actions-bottom">
+            <button
+              className="delete-button"
+              onClick={() => setShowDeletePopup(true)}
+            >
+              <img src="/icons/delete-white.svg" alt="Slett" />
+            </button>
+          </div>
+        )}
 
         {showDeletePopup && (
           <DeleteShiftPopup
