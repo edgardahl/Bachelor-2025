@@ -17,7 +17,7 @@ router.get("/", verifyToken, getAllUsersController);
 
 // ✅ Get employees for a store manager
 router.get(
-  "/myemployees",
+  "/employees",
   verifyToken,
   authorizeRoles("store_manager"),
   getEmployeesByStoreIdController
@@ -25,7 +25,7 @@ router.get(
 
 // ✅ Update qualifications for a specific employee
 router.post(
-  "/myemployees/qualifications/update",
+  "/employees/qualifications/update",
   verifyToken,
   authorizeRoles("store_manager"),
   updateEmployeeQualificationsController
@@ -33,7 +33,7 @@ router.post(
 
 // ✅ Get available employees in manager's municipality
 router.get(
-  "/available-employees",
+  "/available",
   verifyToken,
   authorizeRoles("store_manager"),
   getAvailableEmployeesController
@@ -43,9 +43,9 @@ router.get(
 router.get("/:id", verifyToken, getUserByIdController);
 
 // ✅ Update user info by ID
-router.put("/updateCurrentUser", verifyToken, updateUserByIdController);
+router.put("/current/update", verifyToken, updateUserByIdController);
 
 // ✅ Update own password
-router.patch("/me/password", verifyToken, changePassword);
+router.patch("/current/password", verifyToken, changePassword);
 
 export default router;

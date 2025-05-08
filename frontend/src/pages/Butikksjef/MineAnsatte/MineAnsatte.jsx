@@ -25,7 +25,7 @@ const MineAnsatte = () => {
     const fetchEmployees = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/users/myemployees");
+        const response = await axios.get("/users/employees");
         console.log(response.data);
         setEmployees(response.data);
         setFilteredEmployees(response.data);
@@ -105,7 +105,9 @@ const MineAnsatte = () => {
                 </Link>
               ))
             ) : (
-              <p className="no-employee-found">Du har ingen ansatte med alle valgte kvalifikasjoner</p>
+              <p className="no-employee-found">
+                Du har ingen ansatte med alle valgte kvalifikasjoner
+              </p>
             )}
           </div>
 

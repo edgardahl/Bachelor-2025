@@ -25,9 +25,9 @@ const ButikksjefDashboard = () => {
       try {
         const managerId = user.id;
         const [availableRes, empRes, storeRes, shiftsRes] = await Promise.all([
-          axios.get("/users/available-employees"),
-          axios.get("/users/myemployees"),
-          axios.get("/stores/stores-with-municipality?page=1&pageSize=1000"),
+          axios.get("/users/available"),
+          axios.get("/users/employees"),
+          axios.get("/stores/storesWithMunicipality?page=1&pageSize=1000"),
           axios.get(`/shifts/posted_by/${managerId}`),
         ]);
 

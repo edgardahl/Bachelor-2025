@@ -4,19 +4,19 @@ import {
   getStoreByIdController,
   getStoresWithMunicipalityController,
   createStoreController,
-  getAllStoresWithInfoController
+  getAllStoresWithInfoController,
 } from "../controllers/storeController.js";
 
 const router = express.Router();
 
 // Route to get stores with municipality details
-router.get("/stores-with-municipality", getStoresWithMunicipalityController);
+router.get("/storesWithMunicipality", getStoresWithMunicipalityController);
 
 // Route to get all stores
 router.get("/", getAllStoresController);
 
+// Route to get all stores with additional information
 router.get("/getAllStoresWithInfo", getAllStoresWithInfoController);
-
 
 // Route to get a single store by ID
 router.get("/:storeId", getStoreByIdController);

@@ -1,4 +1,3 @@
-// routes/municipalityRoutes.js
 import express from "express";
 import { getAllMunicipalitiesController } from "../controllers/municipalityController.js";
 

@@ -138,7 +138,7 @@ const Profile = () => {
           ),
         };
 
-        await axios.put(`/users/updateCurrentUser`, rawData);
+        await axios.put(`/users/current/update`, rawData);
         await fetchProfile();
         setIsEditing(false);
         toast.success("Profil oppdatert.");
@@ -162,7 +162,7 @@ const Profile = () => {
         return;
       }
 
-      await axios.patch("/users/me/password", passwords);
+      await axios.patch("/users/current/password", passwords);
       toast.success("Passord oppdatert");
       setPasswords({ currentPassword: "", newPassword: "" });
     } catch (err) {
@@ -195,7 +195,7 @@ const Profile = () => {
       const selectedIds = formData.qualifications.map(
         (q) => q.qualification_id
       );
-      await axios.post("/users/myemployees/qualifications/update", {
+      await axios.post("/users/employees/qualifications/update", {
         user_id: profileId,
         qualification_ids: selectedIds,
       });
@@ -337,59 +337,64 @@ const Profile = () => {
           </div>
         )}
 
-{canViewQualifications && (
-  <div className="profile-field">
-    <label>Kvalifikasjoner:</label>
-    <div className="qualification-cards">
-      {allQualifications.map((qualification) => {
-        const isSelected = formData.qualifications.some(
-          (q) => q.qualification_id === qualification.id
-        );
-        return (
-          <div
-            key={qualification.id}
-            className={`qualification-card ${isSelected ? "selected" : ""} ${
-              canEditQualifications && isEditingQualifications ? "clickable" : "disabled"
-            }`}
-            onClick={() =>
-              canEditQualifications && isEditingQualifications &&
-              handleQualificationToggle(qualification.id)
-            }
-          >
-            <h4>{qualification.name}</h4>
-            {isSelected && <span className="checkmark">✔</span>}
+        {canViewQualifications && (
+          <div className="profile-field">
+            <label>Kvalifikasjoner:</label>
+            <div className="qualification-cards">
+              {allQualifications.map((qualification) => {
+                const isSelected = formData.qualifications.some(
+                  (q) => q.qualification_id === qualification.id
+                );
+                return (
+                  <div
+                    key={qualification.id}
+                    className={`qualification-card ${
+                      isSelected ? "selected" : ""
+                    } ${
+                      canEditQualifications && isEditingQualifications
+                        ? "clickable"
+                        : "disabled"
+                    }`}
+                    onClick={() =>
+                      canEditQualifications &&
+                      isEditingQualifications &&
+                      handleQualificationToggle(qualification.id)
+                    }
+                  >
+                    <h4>{qualification.name}</h4>
+                    {isSelected && <span className="checkmark">✔</span>}
+                  </div>
+                );
+              })}
+            </div>
+
+            {canEditQualifications && !isEditingQualifications && (
+              <button
+                className="edit-qualifications-btn"
+                onClick={() => setIsEditingQualifications(true)}
+              >
+                Rediger kvalifikasjoner
+              </button>
+            )}
+
+            {canEditQualifications && isEditingQualifications && (
+              <div className="qualification-action-buttons">
+                <button
+                  className="qualification-save-btn"
+                  onClick={saveQualifications}
+                >
+                  Lagre kvalifikasjoner
+                </button>
+                <button
+                  className="qualification-cancel-btn"
+                  onClick={() => setIsEditingQualifications(false)}
+                >
+                  Avbryt
+                </button>
+              </div>
+            )}
           </div>
-        );
-      })}
-    </div>
-
-    {canEditQualifications && !isEditingQualifications && (
-      <button
-        className="edit-qualifications-btn"
-        onClick={() => setIsEditingQualifications(true)}
-      >
-        Rediger kvalifikasjoner
-      </button>
-    )}
-
-    {canEditQualifications && isEditingQualifications && (
-      <div className="qualification-action-buttons">
-        <button
-          className="qualification-save-btn"
-          onClick={saveQualifications}
-        >
-          Lagre kvalifikasjoner
-        </button>
-        <button
-          className="qualification-cancel-btn"
-          onClick={() => setIsEditingQualifications(false)}
-        >
-          Avbryt
-        </button>
-      </div>
-    )}
-  </div>
-)}
+        )}
 
         {isOwnProfile && !isEditing && (
           <div className="profile-field">
