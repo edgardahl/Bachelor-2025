@@ -93,6 +93,7 @@ export const getUserByEmail = async (email) => {
 
 // 🔍 Get user by ID (for /auth/me)
 export const getUserById = async (userId) => {
+  console.log("Fetching user by ID:", userId);
   const { data, error } = await supabase
     .from("users")
     .select("user_id, email, first_name, role, store_id")
@@ -107,7 +108,7 @@ export const getUserById = async (userId) => {
   try {
     const userQualifications = await getUserQualificationsModel([data.user_id]);
     const qualificationIds = userQualifications.map((q) => q.qualification_id);
-
+    console.log("User qualifications:", userQualifications);
     return {
       ...data,
       user_qualifications: qualificationIds,
