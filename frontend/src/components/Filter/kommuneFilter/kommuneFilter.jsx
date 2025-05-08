@@ -47,6 +47,7 @@ const KommuneFilter = ({
     setSelectedMunicipalities(selectedOptions || []);
     onChange((selectedOptions || []).map((opt) => opt.value));
   };
+  
 
   const handleReset = () => {
     setSelectedMunicipalities(defaultSelected);
