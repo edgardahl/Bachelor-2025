@@ -100,6 +100,7 @@ const Butikk = () => {
               endTime={shift.end_time}
               qualifications={shift.qualifications}
               storeName={shift.store_name}
+              storeChain={shift.store_chain}
               postedBy={`${shift.posted_by_first_name} ${shift.posted_by_last_name}`}
               postedById={shift.posted_by_id}
               userId={userId}

@@ -19,6 +19,8 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingQualifications, setIsEditingQualifications] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -228,6 +230,22 @@ const Profile = () => {
             ? "Min profil"
             : `${formData.first_name} ${formData.last_name}`}
         </h1>
+        {user?.role === "store_manager" &&
+          !isOwnProfile &&
+          formData.role === "employee" && (
+            <div
+              className={`status-badge ${
+                formData.availability === "Fleksibel"
+                  ? "status-green"
+                  : "status-red"
+              }`}
+            >
+              {formData.availability === "Fleksibel"
+                ? "Tilgjengelig"
+                : "Utilgjengelig"}
+            </div>
+          )}
+
         {isOwnProfile && !isEditing && (
           <button className="edit-button" onClick={toggleEdit}>
             Rediger
@@ -329,6 +347,102 @@ const Profile = () => {
             )}
           </div>
         )}
+        {formData.role === "employee" && isOwnProfile && (
+          <div className="profile-field">
+            <label>Status:</label>
+            <div
+              className={`availability-toggle ${!isEditing ? "disabled" : ""}`}
+            >
+              <label className="availability-option">
+                <input
+                  type="radio"
+                  name="availability"
+                  value="Fleksibel"
+                  checked={formData.availability === "Fleksibel"}
+                  onChange={(e) =>
+                    isEditing &&
+                    setFormData((prev) => ({
+                      ...prev,
+                      availability: e.target.value,
+                    }))
+                  }
+                  disabled={!isEditing}
+                />
+                <span className="custom-radio">Tilgjengelig</span>
+              </label>
+              <label className="availability-option">
+                <input
+                  type="radio"
+                  name="availability"
+                  value="Ikke-fleksibel"
+                  checked={formData.availability === "Ikke-fleksibel"}
+                  onChange={(e) =>
+                    isEditing &&
+                    setFormData((prev) => ({
+                      ...prev,
+                      availability: e.target.value,
+                    }))
+                  }
+                  disabled={!isEditing}
+                />
+                <span className="custom-radio">Utilgjengelig</span>
+              </label>
+            </div>
+          </div>
+        )}
+
+        {isOwnProfile && (
+          <div className="profile-field">
+            <label>Passord:</label>
+            {isChangingPassword ? (
+              <>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  placeholder="Nåværende passord"
+                  value={passwords.currentPassword}
+                  onChange={handleChange}
+                  className="password-input"
+                />
+                <input
+                  type="password"
+                  name="newPassword"
+                  placeholder="Nytt passord"
+                  value={passwords.newPassword}
+                  onChange={handleChange}
+                  className="password-input"
+                />
+                <div className="qualification-action-buttons">
+                  <button
+                    className="qualification-save-btn"
+                    onClick={handlePasswordChange}
+                  >
+                    Oppdater passord
+                  </button>
+                  <button
+                    className="qualification-cancel-btn"
+                    onClick={() => {
+                      setIsChangingPassword(false);
+                      setPasswords({ currentPassword: "", newPassword: "" });
+                    }}
+                  >
+                    Avbryt
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p>***********</p>
+                <button
+                  className="edit-qualifications-btn"
+                  onClick={() => setIsChangingPassword(true)}
+                >
+                  Endre passord
+                </button>
+              </>
+            )}
+          </div>
+        )}
 
         {formData.role === "employee" && storeData && (
           <div className="profile-field">
@@ -337,64 +451,63 @@ const Profile = () => {
           </div>
         )}
 
-{canViewQualifications && (
-  <div className="profile-field">
-    <label>Kvalifikasjoner:</label>
-    <div className="qualification-cards">
-      {allQualifications.map((qualification) => {
-        const isSelected = formData.qualifications.some(
-          (q) => q.qualification_id === qualification.id
-        );
-        return (
-          <div
-            key={qualification.id}
-            className={`qualification-card ${isSelected ? "selected" : ""} ${
-              canEditQualifications && isEditingQualifications ? "clickable" : "disabled"
-            }`}
-            onClick={() =>
-              canEditQualifications && isEditingQualifications &&
-              handleQualificationToggle(qualification.id)
-            }
-          >
-            <h4>{qualification.name}</h4>
-            {isSelected && <span className="checkmark">✔</span>}
-          </div>
-        );
-      })}
-    </div>
-
-    {canEditQualifications && !isEditingQualifications && (
-      <button
-        className="edit-qualifications-btn"
-        onClick={() => setIsEditingQualifications(true)}
-      >
-        Rediger kvalifikasjoner
-      </button>
-    )}
-
-    {canEditQualifications && isEditingQualifications && (
-      <div className="qualification-action-buttons">
-        <button
-          className="qualification-save-btn"
-          onClick={saveQualifications}
-        >
-          Lagre kvalifikasjoner
-        </button>
-        <button
-          className="qualification-cancel-btn"
-          onClick={() => setIsEditingQualifications(false)}
-        >
-          Avbryt
-        </button>
-      </div>
-    )}
-  </div>
-)}
-
-        {isOwnProfile && !isEditing && (
+        {canViewQualifications && (
           <div className="profile-field">
-            <label>Passord:</label>
-            <p>********</p>
+            <label>Kvalifikasjoner:</label>
+            <div className="qualification-cards">
+              {allQualifications.map((qualification) => {
+                const isSelected = formData.qualifications.some(
+                  (q) => q.qualification_id === qualification.id
+                );
+
+                return (
+                  <div
+                    key={qualification.id}
+                    className={`qualification-card ${
+                      isSelected ? "selected" : ""
+                    } ${
+                      canEditQualifications && isEditingQualifications
+                        ? "clickable"
+                        : "disabled"
+                    }`}
+                    onClick={() =>
+                      canEditQualifications &&
+                      isEditingQualifications &&
+                      handleQualificationToggle(qualification.id)
+                    }
+                  >
+                    <h4>{qualification.name}</h4>
+                    {isSelected && <span className="checkmark">✔</span>}
+                  </div>
+                );
+              })}
+            </div>
+
+            {canEditQualifications && !isEditingQualifications && (
+              <button
+                className="edit-qualifications-btn"
+                onClick={() => setIsEditingQualifications(true)}
+              >
+                Rediger kvalifikasjoner
+              </button>
+            )}
+
+            {canEditQualifications && isEditingQualifications && (
+              <div className="qualification-action-buttons">
+                <button
+                  className="qualification-save-btn"
+                  onClick={saveQualifications}
+                >
+                  Lagre kvalifikasjoner
+                </button>
+                <button
+                  className="qualification-cancel-btn"
+                  onClick={() => setIsEditingQualifications(false)}
+                >
+                  Avbryt
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -423,36 +536,6 @@ const Profile = () => {
               }}
             >
               Avbryt
-            </button>
-          </div>
-
-          <div className="change-password-section">
-            <h3>Endre passord</h3>
-            <div className="password-grid">
-              <div className="password-field">
-                <label>Nåværende passord:</label>
-                <input
-                  type="password"
-                  name="currentPassword"
-                  value={passwords.currentPassword}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="password-field">
-                <label>Nytt passord:</label>
-                <input
-                  type="password"
-                  name="newPassword"
-                  value={passwords.newPassword}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <button
-              className="change-password-button"
-              onClick={handlePasswordChange}
-            >
-              Oppdater passord
             </button>
           </div>
         </>
