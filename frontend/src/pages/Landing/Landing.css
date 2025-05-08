@@ -65,9 +65,8 @@
 }
 
 
-/* landing-container */
-/* CTA Seksjon */
-.landing-cta {
+/* bunn container */
+.kom-i-gang-container{
   text-align: center;
   padding: 4rem 2rem;
   height: 100vh;
@@ -75,7 +74,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.landing-cta {
+.kom-i-gang-container {
   background: linear-gradient(to right, #213653, #5d89c7); /* Gradient bakgrunn */
   padding: 4rem 2rem;
   display: flex;
@@ -86,24 +85,24 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.cta-content {
+.kom-i-gang-content {
   max-width: 600px;
 }
 
-.cta-heading {
+.kom-i-gang-heading {
   font-size: 2.5rem;
   margin-bottom: 1rem;
   font-weight: bold;
   text-transform: uppercase;
 }
 
-.cta-text {
+.kom-i-gang-text {
   font-size: 1.2rem;
   margin-bottom: 2rem;
   font-weight: 400;
 }
 
-.cta-button {
+.kom-i-gang-button{
   padding: 1.2rem 3rem;
   font-size: 1.3rem;
   background-color: #fff;
@@ -117,13 +116,13 @@
   margin-top: 20px;
 }
 
-.cta-button:hover {
+.kom-i-gang-button:hover {
   background-color: #f0f0f0;
   transform: scale(1.05);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-.cta-button:active {
+.kom-i-gang-button:active {
   background-color: #e0e0e0;
   transform: scale(1);
 }
