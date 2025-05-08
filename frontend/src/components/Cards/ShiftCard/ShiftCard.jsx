@@ -15,6 +15,7 @@ const ShiftCard = ({
   endTime,
   qualifications,
   storeName,
+  storeChain,
   shiftStoreId,
   deleteShift,
   claimedByName,
@@ -89,7 +90,7 @@ const ShiftCard = ({
             </li>
             <li className="info-list-item">
               <FiMapPin className="info-icon" size={22} />
-              <p className="info-p-location">{storeName}</p>
+              <p className="info-p-location">{storeChain} {storeName}</p>
             </li>
             <li className="info-list-item">
               <FiAward className="info-icon" size={22} />
