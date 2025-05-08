@@ -22,14 +22,16 @@ const ShiftCard = ({
 }) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useAuth(); // Bruker informasjon for å sjekke om de er logget inn
   const shiftDate = new Date(date);
   const day = shiftDate.getDate();
   const month = shiftDate.toLocaleString("nb-NO", { month: "short" });
 
   const handleCardClick = () => {
-    const rolePath = user.role === "employee" ? "ba" : "bs";
-    navigate(`/${rolePath}/vakter/detaljer/${shiftId}`);
+    if (user?.role) {
+      const rolePath = user.role === "employee" ? "ba" : "bs";
+      navigate(`/${rolePath}/vakter/detaljer/${shiftId}`);
+    }
   };
 
   const handleConfirmDelete = async () => {
@@ -53,10 +55,14 @@ const ShiftCard = ({
     }
   };
 
+  const isDisabled = !user?.role; // Sjekk om brukeren er logget inn
+
   return (
     <div
-      className={`shift-card-container ${claimedById ? "claimed" : ""}`}
-      onClick={handleCardClick}
+      className={`shift-card-container ${claimedById ? "claimed" : ""} ${
+        isDisabled ? "disabled" : ""
+      }`}
+      onClick={isDisabled ? null : handleCardClick} // Hindre klikk når kortet er deaktivert
     >
       {showDeletePopup && (
         <DeleteShiftPopup

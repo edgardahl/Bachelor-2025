@@ -1,97 +1,164 @@
 .landing-container {
-  padding: 4rem;
+  font-family: 'Helvetica Neue', sans-serif;
+  scroll-behavior: smooth;
+  color: #333;
+  background: #f9f9f9;
+}
+
+.landing-hero {
+  height: 100vh;
+  background: linear-gradient(to bottom right, #5d89c7, #213653);
+  color: white;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 2rem;
 }
 
-.landing-header {
-  margin-bottom: 2rem;
+.landing-hero img {
+  width: 30vw;
+  height: auto;
+  min-width: 300px;
+  margin-bottom: 4rem;
+  filter: invert(1); /* Inverterer fargene på bildet */
 }
 
-.landing-header h1 {
+
+.landing-hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.landing-section-heading {
   font-size: 2.5rem;
-  color: #333;
+  margin-bottom: 1rem;
 }
 
-.landing-header p {
+.landing-section-text {
   font-size: 1.2rem;
-  color: #666;
+  max-width: 600px;
 }
 
-.landing-features {
-  display: grid;
-  grid-gap: 0.8rem;
-  grid-template-columns: 1fr 1fr;
-  justify-items: center;
+
+.hero-login-button {
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  background-color: white;
+  color: #184d47;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
 }
 
-.feature {
-  max-width: 300px;
-  padding: 0.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+.hero-login-button:hover {
+  background-color: #f0f0f0;
 }
 
-.feature h2 {
-  font-size: 1.5rem;
-  color: var(--White);
+.landing-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background-color: #e7f0fe;
 }
 
-.feature p {
-  font-size: 1rem;
-  color: #555;
-}
-
-.landing-butikker {
-  background-color: rgb(159, 144, 242);
-}
-
-.landing-ansatte {
-  background-color: rgb(127, 209, 133);
-}
-
-.landing-vakter {
-  background-color: rgb(241, 177, 92);
+.landing-section.alt {
+  background-color: rgb(255, 255, 255);
 }
 
 .landing-footer {
-  margin-top: 2rem;
-  width: fit-content;
+  background-color: #3b5f90;
+  color: white;
+  padding: 2rem;
+  text-align: center;
 }
 
-.login-button {
-  padding: 0.75rem 1.5rem;
-  background-color: #0077cc;
+
+/* landing-container */
+/* CTA Seksjon */
+.landing-cta {
+  text-align: center;
+  padding: 4rem 2rem;
+  height: 100vh;
+  background: linear-gradient(135deg, #5d89c7, #213653);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.landing-cta {
+  background: linear-gradient(to right, #213653, #5d89c7); /* Gradient bakgrunn */
+  padding: 4rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: white;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.cta-content {
+  max-width: 600px;
+}
+
+.cta-heading {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.cta-text {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+.cta-button {
+  padding: 1.2rem 3rem;
+  font-size: 1.3rem;
+  background-color: #fff;
+  color: #213653;
   border: none;
   border-radius: 4px;
-  font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.login-button:hover {
-  background-color: #005fa3;
+.cta-button:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.05);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-@media screen and (max-width: 768px) {
-  .landing-container {
-    padding: 2rem;
-  }
+.cta-button:active {
+  background-color: #e0e0e0;
+  transform: scale(1);
+}
 
-  .landing-header h1 {
-    font-size: 2rem;
-  }
 
-  .landing-header p {
-    font-size: 1rem;
-  }
 
-  .landing-features {
-    grid-template-columns: 1fr;
-  }
-  .feature {
-    max-width: 100%;
-  }
+
+
+
+/* cards */
+.landing-container .butikk-card-link.disabled, .landing-container .shift-card-container.disabled{
+  cursor: not-allowed;
+  pointer-events: none;
+  width: 100%;
+}
+
+.preview-card{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
 }
