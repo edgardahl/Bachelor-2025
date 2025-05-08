@@ -1,15 +1,31 @@
 import React from "react";
 import "./ClaimShiftPopup.css";
 
-const ClaimShiftPopup = ({ shiftTitle, onCancel, onConfirm }) => {
+const ClaimShiftPopup = ({
+  shiftTitle,
+  date,
+  startTime,
+  endTime,
+  onCancel,
+  onConfirm,
+}) => {
+  const formatTime = (timeStr) => timeStr?.slice(0, 5);
+
   return (
     <div className="claim-shift-popup-overlay">
       <div className="claim-shift-popup">
         <h2>Bekreft reservasjon</h2>
-        <p>
-          Er du sikker på at du vil reservere vakten{" "}
-          <strong>{shiftTitle}</strong>?
+        <p className="shift-popup-summary">
+          Du er i ferd med å reservere følgende vakt:
         </p>
+        <div className="popup-shift-info">
+          <p><strong>Tittel:</strong> {shiftTitle}</p>
+          <p><strong>Dato:</strong> {date}</p>
+          <p>
+            <strong>Tid:</strong> {formatTime(startTime)} - {formatTime(endTime)}
+          </p>
+        </div>
+        <p className="confirm-question">Er du sikker på at du vil reservere denne vakten?</p>
         <div className="claim-shift-popup-buttons">
           <button className="cancel-button" onClick={onCancel}>
             Avbryt
