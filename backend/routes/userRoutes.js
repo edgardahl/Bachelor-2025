@@ -12,40 +12,40 @@ import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// ✅ Get all users (protected)
+// Henter alle brukere
 router.get("/", verifyToken, getAllUsersController);
 
-// ✅ Get employees for a store manager
+// Henter alle ansatte for en butikk
 router.get(
-  "/myemployees",
+  "/employees",
   verifyToken,
   authorizeRoles("store_manager"),
   getEmployeesByStoreIdController
 );
 
-// ✅ Update qualifications for a specific employee
+// Oppdatarer kvalifikasjoner for en ansatt
 router.post(
-  "/myemployees/qualifications/update",
+  "/employees/qualifications/update",
   verifyToken,
   authorizeRoles("store_manager"),
   updateEmployeeQualificationsController
 );
 
-// ✅ Get available employees in manager's municipality
+// Henter alle tilgjengelige ansatte
 router.get(
-  "/available-employees",
+  "/available",
   verifyToken,
   authorizeRoles("store_manager"),
   getAvailableEmployeesController
 );
 
-// ✅ Get a specific user by ID
+// Henter en bruker med en bestemt id
 router.get("/:id", verifyToken, getUserByIdController);
 
-// ✅ Update user info by ID
-router.put("/updateCurrentUser", verifyToken, updateUserByIdController);
+// Henter innloggede bruker
+router.put("/current/update", verifyToken, updateUserByIdController);
 
-// ✅ Update own password
-router.patch("/me/password", verifyToken, changePassword);
+// Oppdaterer passord for innloggede bruker
+router.patch("/current/password", verifyToken, changePassword);
 
 export default router;

@@ -1,10 +1,10 @@
-import { 
-  getNotificationByUserIdModel, 
+import {
+  getNotificationByUserIdModel,
   updateNotificationStatusModel,
-  deleteNotificationByIdModel
+  deleteNotificationByIdModel,
 } from "../models/notificationModel.js";
 
-// Hent alle varsler for en bruker
+// Henter varsler for en spesifikk bruker
 export const getNotificationByUserIdController = async (req, res) => {
   const userId = req.user.userId;
 
@@ -22,12 +22,15 @@ export const getNotificationByUserIdController = async (req, res) => {
   }
 };
 
-// Oppdater varselstatus til 'åpnet'
+// Oppdaterer statusen til et varsel og markerer det som lest
 export const updateNotificationStatusController = async (req, res) => {
   const { notificationId, userId } = req.body;
 
   try {
-    const updatedNotification = await updateNotificationStatusModel(notificationId, userId);
+    const updatedNotification = await updateNotificationStatusModel(
+      notificationId,
+      userId
+    );
 
     if (!updatedNotification) {
       return res.status(404).json({ message: "Varsel ikke funnet." });
@@ -36,11 +39,13 @@ export const updateNotificationStatusController = async (req, res) => {
     return res.status(200).json({ message: "Varsel markert som lest." });
   } catch (err) {
     console.error("Feil ved oppdatering av varselstatus:", err);
-    return res.status(500).json({ message: "Kunne ikke oppdatere varselstatus." });
+    return res
+      .status(500)
+      .json({ message: "Kunne ikke oppdatere varselstatus." });
   }
 };
 
-// Slett et varsel basert på ID
+// Sletter et varsel
 export const deleteNotificationController = async (req, res) => {
   const { notificationId } = req.params;
 
@@ -49,6 +54,8 @@ export const deleteNotificationController = async (req, res) => {
     return res.status(200).json({ message: "Varsel slettet." });
   } catch (err) {
     console.error("Feil ved sletting av varsel:", err);
-    return res.status(500).json({ message: err.message || "Intern serverfeil." });
+    return res
+      .status(500)
+      .json({ message: err.message || "Intern serverfeil." });
   }
 };

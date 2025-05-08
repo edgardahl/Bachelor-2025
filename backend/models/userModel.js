@@ -75,23 +75,6 @@ export const updateUserByIdModel = async (
   return userData;
 };
 
-export const findUserByEmailOrPhone = async (email, phone_number) => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("user_id, email, phone_number") // <- important!
-    .or(`email.eq.${email},phone_number.eq.${phone_number}`)
-    .neq("deleted", true);
-
-  if (error) {
-    console.error("Error checking email/phone duplication:", error);
-    throw new Error(error.message);
-  }
-
-  return data?.[0] || null;
-};
-
-
-
 export const getAvailableEmployeesInMunicipality = async (municipalityId) => {
   const { data, error } = await supabase.rpc(
     "get_available_employees_in_municipality",
@@ -205,21 +188,4 @@ export const updateUserPasswordById = async (userId, hashedPassword) => {
   }
 
   return data;
-};
-
-// ➕ Insert default preferred municipality (same as residence)
-export const insertDefaultWorkMunicipality = async (
-  user_id,
-  municipality_id
-) => {
-  const { error } = await supabase
-    .from("user_municipality")
-    .insert([{ user_id, municipality_id }], { ignoreDuplicates: true }); // This avoids inserting duplicates
-
-  if (error) {
-    console.error("Error inserting default municipality:", error);
-    return null;
-  }
-
-  return true;
 };

@@ -4,7 +4,7 @@ import { supabase } from "../config/supabaseClient.js";
 export const getAllQualificationsModel = async () => {
   const { data, error } = await supabase
     .from("qualification") // Name of the table
-    .select("*") // Select all columns (You can specify specific columns if needed)
+    .select("*"); // Select all columns (You can specify specific columns if needed)
 
   if (error) {
     throw new Error(error.message); // Throw an error if there's an issue
@@ -12,12 +12,11 @@ export const getAllQualificationsModel = async () => {
 
   // Sort the qualifications by name using Norwegian alphabet order
   data.sort((a, b) => {
-    return a.name.localeCompare(b.name, 'no', { sensitivity: 'base' });
+    return a.name.localeCompare(b.name, "no", { sensitivity: "base" });
   });
 
   return data; // Return the sorted qualifications
 };
-
 
 // get qualifications for a specific shift
 export const getShiftQualificationsModel = async (shiftId) => {
@@ -31,17 +30,4 @@ export const getShiftQualificationsModel = async (shiftId) => {
   }
 
   return data; // Return the qualifications for the shift
-};
-
-export const deleteNotificationByIdModel = async (notificationId) => {
-  const { error } = await supabase
-    .from("notifications")
-    .delete()
-    .eq("notification_id", notificationId);
-
-  if (error) {
-    throw new Error("Kunne ikke slette varsel.");
-  }
-
-  return true;
 };
