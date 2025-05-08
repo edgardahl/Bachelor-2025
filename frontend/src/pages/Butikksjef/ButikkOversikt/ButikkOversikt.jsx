@@ -118,6 +118,7 @@ const ButikkOversikt = () => {
         </p>
 
         <KommuneFilter
+          userRole={user.role}
           onChange={(selectedMunicipalityIds) => {
             setFilters({
               municipality: selectedMunicipalityIds.join(","),

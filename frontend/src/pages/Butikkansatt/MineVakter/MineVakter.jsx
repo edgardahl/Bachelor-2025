@@ -114,6 +114,7 @@ const MineVakterAnsatt = () => {
 
       {activeTab === "available" && (
         <KommuneFilter
+          userRole={user.role}
           onChange={(selectedIds) => {
             setSelectedMunicipalityIds(selectedIds);
             setSelectedMunicipalityNames(selectedIds);
