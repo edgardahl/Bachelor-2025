@@ -71,8 +71,8 @@ export const createShiftModel = async (shiftData) => {
   const sanitizedData = sanitizeShift(shiftData);
 
   // Calculate delete_at (24 hours after the shift end time)
-  const deleteAt = new Date(sanitizedData.date + ' ' + sanitizedData.end_time); // Combine date and end_time
-  deleteAt.setHours(deleteAt.getHours() + 24);  // Add 24 hours to the end time
+  const deleteAt = new Date(sanitizedData.date + " " + sanitizedData.end_time); // Combine date and end_time
+  deleteAt.setHours(deleteAt.getHours() + 24); // Add 24 hours to the end time
 
   // Insert the shift into the database with the calculated delete_at value
   const { data: shiftDataResponse, error: shiftError } = await supabase
@@ -86,7 +86,7 @@ export const createShiftModel = async (shiftData) => {
         end_time: sanitizedData.end_time,
         store_id: sanitizedData.store_id,
         posted_by: sanitizedData.posted_by,
-        delete_at: deleteAt.toISOString(),  // Insert the calculated delete_at
+        delete_at: deleteAt.toISOString(), // Insert the calculated delete_at
       },
     ])
     .select()
@@ -114,7 +114,6 @@ export const createShiftModel = async (shiftData) => {
 
   return shiftDataResponse;
 };
-
 
 // Delete a shift from the database
 export const deleteShiftModel = async (shiftId) => {
@@ -154,7 +153,10 @@ export const getPreferredQualifiedShiftsModel = async (userId) => {
   return data;
 };
 
-export const getRequestedQualifiedShiftsModel = async (userId, municipalityId) => {
+export const getRequestedQualifiedShiftsModel = async (
+  userId,
+  municipalityId
+) => {
   const { data, error } = await supabase.rpc(
     "get_qualified_shifts_requested_municipality",
     {
@@ -166,5 +168,3 @@ export const getRequestedQualifiedShiftsModel = async (userId, municipalityId) =
   if (error) throw new Error(error.message);
   return data;
 };
-
-

@@ -2,7 +2,6 @@ import {
   getAllUsersModel,
   getUserByIdModel,
   getEmployeesByStoreIdModel,
-  getUserQualificationsModel,
   getUserWithPasswordById,
   getAvailableEmployeesInMunicipality,
   updateUserPasswordById,
@@ -13,8 +12,9 @@ import {
 import { getStoreByIdModel } from "../models/storeModel.js";
 import bcrypt from "bcryptjs";
 import { supabase } from "../config/supabaseClient.js";
-import { sanitizeUserProfileUpdateData } from "../utils/sanitizeInput.js";
+import { sanitizeUserUpdate } from "../utils/sanitizeInput.js";
 
+// Henter alle brukere
 export const getAllUsersController = async (req, res) => {
   try {
     const users = await getAllUsersModel();
@@ -25,6 +25,7 @@ export const getAllUsersController = async (req, res) => {
   }
 };
 
+// Henter en bruker med ID
 export const getUserByIdController = async (req, res) => {
   const { id } = req.params;
 
@@ -40,13 +41,16 @@ export const getUserByIdController = async (req, res) => {
   }
 };
 
+// Oppdaterer bruker med ID
 export const updateUserByIdController = async (req, res) => {
   const userId = req.user.userId;
   const rawData = req.body;
 
-  const sanitized = sanitizeUserProfileUpdateData(rawData);
+  const sanitized = sanitizeUserUpdate(rawData);
   if (sanitized.errors) {
-    return res.status(400).json({ error: Object.values(sanitized.errors).join(" ") });
+    return res
+      .status(400)
+      .json({ error: Object.values(sanitized.errors).join(" ") });
   }
 
   const { email, phone_number } = sanitized;
@@ -63,11 +67,15 @@ export const updateUserByIdController = async (req, res) => {
 
       if (emailError) {
         console.error("Error checking email duplication:", emailError);
-        return res.status(500).json({ error: "Intern serverfeil ved sjekk av e-post." });
+        return res
+          .status(500)
+          .json({ error: "Intern serverfeil ved sjekk av e-post." });
       }
 
       if (emailUsers.length > 0) {
-        return res.status(400).json({ error: "E-postadressen er allerede i bruk." });
+        return res
+          .status(400)
+          .json({ error: "E-postadressen er allerede i bruk." });
       }
     }
 
@@ -80,11 +88,15 @@ export const updateUserByIdController = async (req, res) => {
 
       if (phoneError) {
         console.error("Error checking phone duplication:", phoneError);
-        return res.status(500).json({ error: "Intern serverfeil ved sjekk av telefonnummer." });
+        return res
+          .status(500)
+          .json({ error: "Intern serverfeil ved sjekk av telefonnummer." });
       }
 
       if (phoneUsers.length > 0) {
-        return res.status(400).json({ error: "Telefonnummeret er allerede i bruk." });
+        return res
+          .status(400)
+          .json({ error: "Telefonnummeret er allerede i bruk." });
       }
     }
 
@@ -112,19 +124,24 @@ export const updateUserByIdController = async (req, res) => {
   }
 };
 
+// Endrer passord
 export const changePassword = async (req, res) => {
   const userId = req.user.userId;
   const { currentPassword, newPassword } = req.body;
 
   if (!currentPassword || !newPassword) {
-    return res.status(400).json({ error: "Both current and new passwords are required." });
+    return res
+      .status(400)
+      .json({ error: "Both current and new passwords are required." });
   }
 
   try {
     const user = await getUserWithPasswordById(userId);
 
     if (!user || !user.password) {
-      return res.status(404).json({ error: "User not found or missing password." });
+      return res
+        .status(404)
+        .json({ error: "User not found or missing password." });
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
@@ -146,6 +163,7 @@ export const changePassword = async (req, res) => {
   }
 };
 
+// Henter ansatte for en butikk
 export const getEmployeesByStoreIdController = async (req, res) => {
   const storeId = req.user.storeId;
 
@@ -153,7 +171,9 @@ export const getEmployeesByStoreIdController = async (req, res) => {
     const employees = await getEmployeesByStoreIdModel(storeId);
 
     if (!employees || employees.length === 0) {
-      return res.status(404).json({ error: "No employees found for this store" });
+      return res
+        .status(404)
+        .json({ error: "No employees found for this store" });
     }
 
     return res.json(employees);
@@ -163,42 +183,28 @@ export const getEmployeesByStoreIdController = async (req, res) => {
   }
 };
 
-export const getEmployeesQualificationsController = async (req, res) => {
-  try {
-    const { user_ids } = req.body;
-
-    if (!user_ids || user_ids.length === 0) {
-      return res.status(400).json({ error: "No user IDs provided." });
-    }
-
-    const qualifications = await getUserQualificationsModel(user_ids);
-
-    if (!qualifications || qualifications.length === 0) {
-      return res.status(404).json({ error: "No qualifications found for these users." });
-    }
-
-    return res.json(qualifications);
-  } catch (error) {
-    console.error("Error fetching qualifications:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-
+// Henter alle tilgjengelige ansatte
 export const getAvailableEmployeesController = async (req, res) => {
   try {
     const manager = await getUserByIdModel(req.user.userId);
 
     if (!manager || !manager.store_id) {
-      return res.status(400).json({ error: "Manager does not have a store set." });
+      return res
+        .status(400)
+        .json({ error: "Manager does not have a store set." });
     }
 
     const store = await getStoreByIdModel(manager.store_id);
 
     if (!store || !store.municipality_id) {
-      return res.status(400).json({ error: "Store does not have a municipality set." });
+      return res
+        .status(400)
+        .json({ error: "Store does not have a municipality set." });
     }
 
-    const matchingEmployees = await getAvailableEmployeesInMunicipality(store.municipality_id);
+    const matchingEmployees = await getAvailableEmployeesInMunicipality(
+      store.municipality_id
+    );
 
     res.json(matchingEmployees);
   } catch (error) {
@@ -207,24 +213,34 @@ export const getAvailableEmployeesController = async (req, res) => {
   }
 };
 
+// Oppdaterer kvalifikasjoner for en ansatt
 export const updateEmployeeQualificationsController = async (req, res) => {
   const managerStoreId = req.user.storeId;
   const { user_id, qualification_ids } = req.body;
 
   if (!user_id || !Array.isArray(qualification_ids)) {
-    return res.status(400).json({ error: "user_id and qualification_ids are required." });
+    return res
+      .status(400)
+      .json({ error: "user_id and qualification_ids are required." });
   }
 
   try {
     const employee = await getUserByIdModel(user_id);
     if (!employee || employee.store_id !== managerStoreId) {
-      return res.status(403).json({ error: "You are not authorized to update this employee." });
+      return res
+        .status(403)
+        .json({ error: "You are not authorized to update this employee." });
     }
 
-    const success = await updateUserQualificationsModel(user_id, qualification_ids);
+    const success = await updateUserQualificationsModel(
+      user_id,
+      qualification_ids
+    );
 
     if (!success) {
-      return res.status(500).json({ error: "Failed to update qualifications." });
+      return res
+        .status(500)
+        .json({ error: "Failed to update qualifications." });
     }
 
     return res.json({ message: "Kvalifikasjoner oppdatert." });

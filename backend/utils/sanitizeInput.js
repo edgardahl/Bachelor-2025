@@ -1,5 +1,6 @@
 import { validate as isUUID } from "uuid";
 
+// Middleware for å validere innkommende vakt
 export const sanitizeShift = (shiftData) => {
   const {
     title,
@@ -90,15 +91,16 @@ export const sanitizeShift = (shiftData) => {
     title: title.trim(),
     description: description.trim(),
     date,
-    start_time: `${startTimeParts[0]}:${startTimeParts[1]}:00`,
-    end_time: `${endTimeParts[0]}:${endTimeParts[1]}:00`,
+    start_time: `${startTimeParts[0]}:${startTimeParts[1]}`, // fjernet ":00"
+    end_time: `${endTimeParts[0]}:${endTimeParts[1]}`, // fjernet ":00"
     store_id,
     posted_by: UserId,
     qualifications,
   };
 };
 
-export const sanitizeUserData = (userData) => {
+// Middleware for å validere innkommende bruker
+export const sanitizeUser = (userData) => {
   const {
     first_name,
     last_name,
@@ -122,10 +124,12 @@ export const sanitizeUserData = (userData) => {
   const validRoles = ["employee", "store_manager", "admin"];
 
   if (!nameRegex.test(first_name || "")) {
-    errors.first_name = "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
+    errors.first_name =
+      "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!nameRegex.test(last_name || "")) {
-    errors.last_name = "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
+    errors.last_name =
+      "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!email || !emailRegex.test(email)) {
     errors.email = "Ugyldig e-postadresse.";
@@ -137,7 +141,8 @@ export const sanitizeUserData = (userData) => {
     errors.phone_number = "Telefonnummeret er ugyldig.";
   }
   if (!validAvailability.includes(availability)) {
-    errors.availability = "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
+    errors.availability =
+      "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
   }
   if (!validRoles.includes(role)) {
     errors.role = `Rolle må være en av: ${validRoles.join(", ")}.`;
@@ -180,7 +185,8 @@ export const sanitizeUserData = (userData) => {
   };
 };
 
-export const sanitizeUserProfileUpdateData = (userData) => {
+// Middleware for å validere innkommende brukeroppdatering
+export const sanitizeUserUpdate = (userData) => {
   const {
     first_name,
     last_name,
@@ -199,10 +205,12 @@ export const sanitizeUserProfileUpdateData = (userData) => {
   const validAvailability = ["Fleksibel", "Ikke-fleksibel"];
 
   if (!nameRegex.test(first_name || "")) {
-    errors.first_name = "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
+    errors.first_name =
+      "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!nameRegex.test(last_name || "")) {
-    errors.last_name = "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
+    errors.last_name =
+      "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!email || !emailRegex.test(email)) {
     errors.email = "Ugyldig e-postadresse.";
@@ -211,7 +219,8 @@ export const sanitizeUserProfileUpdateData = (userData) => {
     errors.phone_number = "Telefonnummeret er ugyldig.";
   }
   if (!validAvailability.includes(availability)) {
-    errors.availability = "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
+    errors.availability =
+      "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
   }
   if (municipality_id && !isUUID(municipality_id)) {
     errors.municipality_id = "Kommune-ID må være en gyldig UUID.";

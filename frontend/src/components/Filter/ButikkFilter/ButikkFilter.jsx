@@ -12,7 +12,7 @@ const ButikkFilter = ({ onFilter }) => {
   useEffect(() => {
     const fetchCountiesAndMunicipalities = async () => {
       try {
-        const response = await axios.get("/stores/stores-with-municipality");
+        const response = await axios.get("/stores/storesWithMunicipality");
         const uniqueCounties = new Set();
         const municipalitiesByCounty = {};
 

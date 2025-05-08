@@ -140,7 +140,7 @@ const Profile = () => {
           ),
         };
 
-        await axios.put(`/users/updateCurrentUser`, rawData);
+        await axios.put(`/users/current/update`, rawData);
         await fetchProfile();
         setIsEditing(false);
         toast.success("Profil oppdatert.");
@@ -164,7 +164,7 @@ const Profile = () => {
         return;
       }
 
-      await axios.patch("/users/me/password", passwords);
+      await axios.patch("/users/current/password", passwords);
       toast.success("Passord oppdatert");
       setPasswords({ currentPassword: "", newPassword: "" });
     } catch (err) {
@@ -197,7 +197,7 @@ const Profile = () => {
       const selectedIds = formData.qualifications.map(
         (q) => q.qualification_id
       );
-      await axios.post("/users/myemployees/qualifications/update", {
+      await axios.post("/users/employees/qualifications/update", {
         user_id: profileId,
         qualification_ids: selectedIds,
       });
@@ -459,7 +459,6 @@ const Profile = () => {
                 const isSelected = formData.qualifications.some(
                   (q) => q.qualification_id === qualification.id
                 );
-
                 return (
                   <div
                     key={qualification.id}
