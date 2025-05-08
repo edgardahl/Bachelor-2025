@@ -13,10 +13,9 @@ import {
   getUserByPhoneNumber,
   insertUserMunicipalitiesModel,
 } from "../models/authModel.js";
-import{getUserQualificationsModel} from "../models/userModel.js";
-import { sanitizeUserData } from '../utils/sanitizeInput.js';
+import { getUserQualificationsModel } from "../models/userModel.js";
+import { sanitizeUser } from "../utils/sanitizeInput.js";
 
-// 🟢 Login User
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -33,21 +32,19 @@ export const loginUser = async (req, res) => {
 
     const userQualifications = await getUserQualificationsModel([user.user_id]);
     const qualificationIds = userQualifications.map((q) => q.qualification_id);
-    
-
 
     const accessToken = generateAccessToken({
       userId: user.user_id,
       role: user.role,
       storeId: user.store_id,
-      user_qualifications: qualificationIds
+      user_qualifications: qualificationIds,
     });
-    
+
     const refreshToken = generateRefreshToken({
       userId: user.user_id,
       role: user.role,
       storeId: user.store_id,
-      user_qualifications: qualificationIds
+      user_qualifications: qualificationIds,
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -62,7 +59,7 @@ export const loginUser = async (req, res) => {
       userId: user.user_id,
       role: user.role,
       storeId: user.store_id,
-      user_qualifications: qualificationIds
+      user_qualifications: qualificationIds,
     });
 
     res.json({
@@ -73,7 +70,7 @@ export const loginUser = async (req, res) => {
         name: user.first_name,
         role: user.role,
         storeId: user.store_id,
-        user_qualifications: qualificationIds
+        user_qualifications: qualificationIds,
       },
     });
   } catch (error) {
@@ -82,7 +79,6 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// 🔄 Refresh Access Token
 export const refreshAccessToken = async (req, res) => {
   const token = req.cookies.refreshToken;
   if (!token) return res.sendStatus(204); // Ingen feilmelding til frontend
@@ -92,7 +88,6 @@ export const refreshAccessToken = async (req, res) => {
     const user = await getUserBasicById(decoded.userId);
     if (!user) return res.sendStatus(403); // Ingen feilmelding til frontend
 
-    //get user qualifications
     const userQualifications = await getUserQualificationsModel([user.user_id]);
     const qualificationIds = userQualifications.map((q) => q.qualification_id);
     console.log("userqualifications in refresh:", userQualifications);
@@ -101,7 +96,7 @@ export const refreshAccessToken = async (req, res) => {
       userId: user.user_id,
       role: decoded.role,
       storeId: decoded.storeId,
-      user_qualifications: qualificationIds
+      user_qualifications: qualificationIds,
     });
 
     res.json({ accessToken });
@@ -111,7 +106,6 @@ export const refreshAccessToken = async (req, res) => {
   }
 };
 
-// 👤 Get Current User
 export const getCurrentUser = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -137,7 +131,6 @@ export const getCurrentUser = async (req, res) => {
   }
 };
 
-// 🚪 Logout User
 export const logoutUser = (req, res) => {
   res.clearCookie("refreshToken", {
     httpOnly: true,
@@ -149,7 +142,6 @@ export const logoutUser = (req, res) => {
   res.json({ message: "Du er logget ut." });
 };
 
-// 📝 Register User
 export const registerUser = async (req, res) => {
   try {
     const {
@@ -168,12 +160,16 @@ export const registerUser = async (req, res) => {
 
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
-      return res.status(400).json({ error: "E-postadressen er allerede i bruk." });
+      return res
+        .status(400)
+        .json({ error: "E-postadressen er allerede i bruk." });
     }
 
     const existingPhoneNumber = await getUserByPhoneNumber(phone_number);
     if (existingPhoneNumber) {
-      return res.status(400).json({ error: "Telefonnummeret er allerede i bruk." });
+      return res
+        .status(400)
+        .json({ error: "Telefonnummeret er allerede i bruk." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -195,9 +191,14 @@ export const registerUser = async (req, res) => {
     }
 
     if (qualifications && qualifications.length > 0) {
-      const inserted = await insertUserQualifications(newUser.user_id, qualifications);
+      const inserted = await insertUserQualifications(
+        newUser.user_id,
+        qualifications
+      );
       if (!inserted) {
-        return res.status(400).json({ error: "Kunne ikke lagre kvalifikasjoner." });
+        return res
+          .status(400)
+          .json({ error: "Kunne ikke lagre kvalifikasjoner." });
       }
     }
 
@@ -208,17 +209,18 @@ export const registerUser = async (req, res) => {
       ]);
 
       console.log("Municipalities to insert:", municipalitiesToInsert);
-    
+
       const success = await insertUserMunicipalitiesModel(
         newUser.user_id,
         Array.from(municipalitiesToInsert)
       );
-    
+
       if (!success) {
-        return res.status(400).json({ error: "Kunne ikke lagre ønskede kommuner." });
+        return res
+          .status(400)
+          .json({ error: "Kunne ikke lagre ønskede kommuner." });
       }
     }
-    
 
     return res.status(201).json({
       message: "Bruker registrert.",
@@ -229,7 +231,6 @@ export const registerUser = async (req, res) => {
     res.status(500).json({ error: "Intern serverfeil" });
   }
 };
-
 
 export const registerNewEmployeeController = async (req, res) => {
   try {
@@ -242,18 +243,17 @@ export const registerNewEmployeeController = async (req, res) => {
       store_id: storeManager.storeId,
     };
 
-    // Sanitize user input
     let sanitizedUserData;
     try {
-      sanitizedUserData = sanitizeUserData(sanitizedData);
+      sanitizedUserData = sanitizeUser(sanitizedData);
     } catch (sanitizeError) {
-      // Return the error message in the expected format
-      return res.status(400).json({ error: { general: sanitizeError.message } });
+      return res
+        .status(400)
+        .json({ error: { general: sanitizeError.message } });
     }
 
     console.log("Sanitize data after", sanitizedUserData);
 
-    // ✅ If there are validation errors from sanitization, return them immediately
     if (sanitizedUserData.errors) {
       return res.status(400).json({ error: sanitizedUserData.errors });
     }
@@ -271,7 +271,6 @@ export const registerNewEmployeeController = async (req, res) => {
       qualifications,
     } = sanitizedUserData;
 
-    // Check for store manager authorization
     if (storeManager.role !== "store_manager") {
       return res.status(403).json({ error: "Ikke autorisert." });
     }
@@ -280,22 +279,23 @@ export const registerNewEmployeeController = async (req, res) => {
       return res.status(403).json({ error: "Ingen tilknyttede butikker." });
     }
 
-    // Check if email exists AFTER sanitization
     const existingUser = await getUserByEmail(email);
     console.log("Existing user:", existingUser);
     if (existingUser) {
-      return res.status(400).json({ error: { email: "E-postadressen er allerede i bruk." } });
+      return res
+        .status(400)
+        .json({ error: { email: "E-postadressen er allerede i bruk." } });
     }
 
-    // Check if phone number exists
     const existingPhone = await getUserByPhoneNumber(phone_number);
     if (existingPhone) {
-      return res.status(400).json({ error: { phone_number: "Telefonnummeret er allerede i bruk." } });
+      return res.status(400).json({
+        error: { phone_number: "Telefonnummeret er allerede i bruk." },
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Register the user in the database
     const newUser = await registerUserInDB({
       first_name,
       last_name,
@@ -309,14 +309,20 @@ export const registerNewEmployeeController = async (req, res) => {
     });
 
     if (!newUser) {
-      return res.status(400).json({ error: { general: "Kunne ikke registrere bruker." } });
+      return res
+        .status(400)
+        .json({ error: { general: "Kunne ikke registrere bruker." } });
     }
 
-    // Insert qualifications if provided
     if (qualifications?.length > 0) {
-      const inserted = await insertUserQualifications(newUser.user_id, qualifications);
+      const inserted = await insertUserQualifications(
+        newUser.user_id,
+        qualifications
+      );
       if (!inserted) {
-        return res.status(400).json({ error: { general: "Kunne ikke lagre kvalifikasjoner." } });
+        return res
+          .status(400)
+          .json({ error: { general: "Kunne ikke lagre kvalifikasjoner." } });
       }
     }
 
@@ -327,19 +333,17 @@ export const registerNewEmployeeController = async (req, res) => {
   } catch (error) {
     console.error("Register new employee error:", error);
 
-    // Send the validation error messages for each field
     if (error.message) {
       return res.status(400).json({ error: { general: error.message } });
     }
 
-    // Fallback error message with hardcoded field errors if other error
     return res.status(400).json({
       error: {
         first_name: "First name must only contain letters and cannot be empty.",
         email: "Email format is incorrect.",
         password: "Password must be at least 6 characters long.",
         phone_number: "Phone number is invalid.",
-      }
+      },
     });
   }
 };

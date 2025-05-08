@@ -127,14 +127,20 @@ const ShiftDetailsPage = () => {
   );
 
   const shiftIsClaimed = !!shiftDetails.claimed_by_first_name;
-  const canDelete = userRole === "store_manager" && shiftDetails.store_id === storeId;
+  const canDelete =
+    userRole === "store_manager" && shiftDetails.store_id === storeId;
   const canClaim =
-    userRole === "employee" && !shiftIsClaimed && hasAllQualifications && !claimedByYou;
+    userRole === "employee" &&
+    !shiftIsClaimed &&
+    hasAllQualifications &&
+    !claimedByYou;
 
   let claimDisabledReason = "";
-  if (claimedByYou) claimDisabledReason = "Du har allerede reservert denne vakten";
+  if (claimedByYou)
+    claimDisabledReason = "Du har allerede reservert denne vakten";
   else if (shiftIsClaimed) claimDisabledReason = "Vakten er allerede tatt.";
-  else if (!hasAllQualifications) claimDisabledReason = "Du mangler nødvendige kvalifikasjoner.";
+  else if (!hasAllQualifications)
+    claimDisabledReason = "Du mangler nødvendige kvalifikasjoner.";
 
   return (
     <>
@@ -159,10 +165,57 @@ const ShiftDetailsPage = () => {
 
           <div className="shift-right">
             <div className="shift-detail-section">
-              <p><strong>Dato:</strong> {shiftDetails.date}</p>
-              <p><strong>Tid:</strong> {shiftDetails.start_time} - {shiftDetails.end_time}</p>
-              <p><strong>Beskrivelse:</strong> {shiftDetails.description?.trim() || "Ingen beskrivelse"}</p>
-              <p><strong>Nødvendige kvalifikasjoner:</strong></p>
+              <p>
+                <strong>Dato:</strong> {shiftDetails.date}
+              </p>
+              <p>
+                <strong>Tid:</strong> {shiftDetails.start_time} -{" "}
+                {shiftDetails.end_time}
+              </p>
+              <p>
+                <strong>Beskrivelse:</strong>{" "}
+                {shiftDetails.description?.trim() || "Ingen beskrivelse"}
+              </p>
+
+              <div className="published-info">
+                <p>
+                  <strong>Publisert av:</strong>{" "}
+                  {shiftDetails.posted_by_first_name}{" "}
+                  {shiftDetails.posted_by_last_name}
+                </p>
+                {shiftDetails.posted_by_email && (
+                  <p>
+                    <strong>E-post:</strong> {shiftDetails.posted_by_email}
+                  </p>
+                )}
+                {shiftDetails.posted_by_phone && (
+                  <p>
+                    <strong>Telefon:</strong> {shiftDetails.posted_by_phone}
+                  </p>
+                )}
+                {userRole === "store_manager" && (
+                <div className="reserved-by">
+                  <strong>Reservert av:</strong>{" "}
+                  {shiftDetails.claimed_by_first_name ? (
+                    <Link
+                      to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}
+                    >
+                      {shiftDetails.claimed_by_first_name}{" "}
+                      {shiftDetails.claimed_by_last_name}
+                    </Link>
+                  ) : (
+                    "Ingen"
+                  )}
+                </div>
+              )}
+              </div>
+
+              <div className="qualifications-header">
+                <p>
+                  <strong>Nødvendige kvalifikasjoner:</strong>
+                </p>
+              </div>
+
               <div className="qualification-cards">
                 {requiredQualifications.length > 0 ? (
                   requiredQualifications.map((q) => (
@@ -179,18 +232,6 @@ const ShiftDetailsPage = () => {
                 )}
               </div>
 
-              {userRole === "store_manager" && (
-                <p>
-                  <strong>Reservert av:</strong>{" "}
-                  {shiftDetails.claimed_by_first_name ? (
-                    <Link to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}>
-                      {shiftDetails.claimed_by_first_name} {shiftDetails.claimed_by_last_name}
-                    </Link>
-                  ) : (
-                    "Ingen"
-                  )}
-                </p>
-              )}
             </div>
           </div>
         </div>
@@ -210,10 +251,6 @@ const ShiftDetailsPage = () => {
               )}
             </div>
           )}
-          <div className="published-by">
-            <strong>Publisert av:</strong> {shiftDetails.posted_by_first_name}{" "}
-            {shiftDetails.posted_by_last_name}
-          </div>
         </div>
 
         {canDelete && (

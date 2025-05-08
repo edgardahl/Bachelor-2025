@@ -17,23 +17,25 @@ const ButikkOversikt = () => {
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [preferredMunicipalityNames, setPreferredMunicipalityNames] = useState([]);
+  const [preferredMunicipalityNames, setPreferredMunicipalityNames] = useState(
+    []
+  );
 
   const PAGE_SIZE = 12;
 
   const fetchStores = async (filters = {}, page = 1, append = false) => {
     try {
       const queryParams = new URLSearchParams();
-  
+
       if (filters.municipality && filters.municipality.length > 0) {
         queryParams.append("municipality", filters.municipality);
         console.log("Municipality filter:", filters.municipality);
       }
-  
+
       if (filters.store_chain && filters.store_chain.length > 0) {
         queryParams.append("store_chain", filters.store_chain);
       }
-  
+
       // Paginering (kun nødvendig om det ikke er filtrert)
       if (
         (filters.municipality && filters.municipality.length > 0) ||
@@ -46,25 +48,25 @@ const ButikkOversikt = () => {
       }
 
       console.log("Query params:", queryParams.toString());
-  
+
       const response = await axios.get(
-        `/stores/stores-with-municipality?${queryParams.toString()}`
+        `/stores/storesWithMunicipality?${queryParams.toString()}`
       );
-  
+
       const storeData = response.data.stores;
-  
+
       // shiftCount allerede inkludert, så vi slipper egne API-kall
       const shiftsData = {};
       for (const store of storeData) {
         shiftsData[store.store_id] = store.shift_count || 0;
       }
-  
+
       if (append) {
         setStores((prevStores) => [...prevStores, ...storeData]);
       } else {
         setStores(storeData);
       }
-  
+
       setTotalStores(response.data.total);
       setShiftsCount((prev) => ({ ...prev, ...shiftsData }));
     } catch (err) {
@@ -74,7 +76,6 @@ const ButikkOversikt = () => {
       setLoadingMore(false);
     }
   };
-  
 
   useEffect(() => {
     const fetchPreferredMunicipalities = async () => {
@@ -117,6 +118,7 @@ const ButikkOversikt = () => {
         </p>
 
         <KommuneFilter
+          userRole={user.role}
           onChange={(selectedMunicipalityIds) => {
             setFilters({
               municipality: selectedMunicipalityIds.join(","),
