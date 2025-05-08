@@ -11,9 +11,13 @@ const MineVakterAnsatt = () => {
   const [userId, setUserId] = useState(null);
   const [storeId, setStoreId] = useState(null);
   const [shifts, setShifts] = useState([]);
-  const [preferredMunicipalityNames, setPreferredMunicipalityNames] = useState([]);
+  const [preferredMunicipalityNames, setPreferredMunicipalityNames] = useState(
+    []
+  );
   const [selectedMunicipalityIds, setSelectedMunicipalityIds] = useState([]);
-  const [selectedMunicipalityNames, setSelectedMunicipalityNames] = useState([]);
+  const [selectedMunicipalityNames, setSelectedMunicipalityNames] = useState(
+    []
+  );
   const [claimedShifts, setClaimedShifts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("available");
@@ -33,7 +37,7 @@ const MineVakterAnsatt = () => {
     const fetchShiftsUserIsQualifiedFor = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/shifts/user_is_qualified_for");
+        const response = await axios.get("/shifts/userIsQualifiedFor");
         setShifts(response.data);
       } catch (error) {
         console.error("Error fetching shifts:", error);
@@ -43,14 +47,14 @@ const MineVakterAnsatt = () => {
     };
 
     const fetchClaimedShifts = async () => {
-      try{
+      try {
         const respons = await axios.get(`/shifts/claimedByCurrentUser`);
         console.log(respons.data);
         setClaimedShifts(respons.data.data);
       } catch (error) {
         console.error("Error fetching claimed shifts:", error);
       }
-    }
+    };
 
     if (user) {
       setUserId(user.id);
@@ -91,13 +95,17 @@ const MineVakterAnsatt = () => {
 
       <div className="mine-vakter-tab-boxes">
         <button
-          className={`mine-vakter-tab-box ${activeTab === "available" ? "active" : ""}`}
+          className={`mine-vakter-tab-box ${
+            activeTab === "available" ? "active" : ""
+          }`}
           onClick={() => setActiveTab("available")}
         >
           Finn vakter
         </button>
         <button
-          className={`mine-vakter-tab-box ${activeTab === "claimed" ? "active" : ""}`}
+          className={`mine-vakter-tab-box ${
+            activeTab === "claimed" ? "active" : ""
+          }`}
           onClick={() => setActiveTab("claimed")}
         >
           Vakter du har tatt
@@ -106,6 +114,7 @@ const MineVakterAnsatt = () => {
 
       {activeTab === "available" && (
         <KommuneFilter
+          userRole={user.role}
           onChange={(selectedIds) => {
             setSelectedMunicipalityIds(selectedIds);
             setSelectedMunicipalityNames(selectedIds);
@@ -118,8 +127,12 @@ const MineVakterAnsatt = () => {
       <h3 className="mine-vakter-shift-list-title">
         {activeTab === "available"
           ? selectedMunicipalityNames.length > 0
-            ? `Vakter i valgte kommuner (${selectedMunicipalityNames.join(", ")})`
-            : `Vakter i dine foretrukne kommuner (${preferredMunicipalityNames.join(", ")})`
+            ? `Vakter i valgte kommuner (${selectedMunicipalityNames.join(
+                ", "
+              )})`
+            : `Vakter i dine foretrukne kommuner (${preferredMunicipalityNames.join(
+                ", "
+              )})`
           : "Vakter du har tatt"}
       </h3>
 
@@ -151,13 +164,15 @@ const MineVakterAnsatt = () => {
                       endTime={shift.end_time}
                       qualifications={shift.qualifications}
                       storeName={shift.store_name}
+                      storeChain={shift.store_chain} 
                       postedBy={`${shift.posted_by_first_name} ${shift.posted_by_last_name}`}
                       postedById={shift.posted_by_id}
                       userId={userId}
                       usersstoreId={storeId}
                       shiftStoreId={shift.store_id}
                       claimedByName={
-                        shift.claimed_by_first_name && shift.claimed_by_last_name
+                        shift.claimed_by_first_name &&
+                        shift.claimed_by_last_name
                           ? `${shift.claimed_by_first_name} ${shift.claimed_by_last_name}`
                           : ""
                       }

@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
-import path from "path";
 
 dotenv.config();
 
@@ -30,7 +29,7 @@ export default defineConfig({
   base: "/",
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
+      "@": "/src",
     },
   },
   optimizeDeps: {
@@ -39,7 +38,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: "./src/setupTests.js",
+    // setupFiles: "./src/setupTests.js",
     css: true,
   },
   publicDir: "public",
@@ -47,17 +46,39 @@ export default defineConfig({
   server: {
     https: useHttps
       ? {
-          key: path.resolve(__dirname, "../pem/localhost-key.pem"),
-          cert: path.resolve(__dirname, "../pem/localhost.pem"),
+          key: "../pem/localhost-key.pem",
+          cert: "../pem/localhost.pem",
         }
       : false,
     port: 5002,
     proxy: {
       "/api": {
-        target: `http://localhost:${process.env.BACKEND_PORT || 5001}`,
+        target: "http://localhost:5001",
         changeOrigin: true,
         secure: false,
       },
     },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "./src/index.css";`,
+      },
+    },
+  },
+  build: {
+    outDir: "dist",
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+  },
+  define: {
+    __API_BASE__: JSON.stringify(isDev ? "/api" : process.env.VITE_API_URL),
   },
 });

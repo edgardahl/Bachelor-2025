@@ -46,7 +46,6 @@ app.use(helmetMiddleware);
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/shifts", shiftRoutes);
@@ -56,5 +55,5 @@ app.use("/api/qualifications", qualificationRoutes);
 app.use("/api/notifications", notificationRoutes);
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Backend running at http://localhost:${PORT}/api`);
+  console.log(`Backend running at http://localhost:${PORT}/api`);
 });

@@ -17,7 +17,9 @@ const ButikkOversikt = () => {
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [preferredMunicipalityNames, setPreferredMunicipalityNames] = useState([]);
+  const [preferredMunicipalityNames, setPreferredMunicipalityNames] = useState(
+    []
+  );
 
   const PAGE_SIZE = 12;
 
@@ -27,50 +29,46 @@ const ButikkOversikt = () => {
 
       if (filters.municipality && filters.municipality.length > 0) {
         queryParams.append("municipality", filters.municipality);
+        console.log("Municipality filter:", filters.municipality);
       }
 
       if (filters.store_chain && filters.store_chain.length > 0) {
         queryParams.append("store_chain", filters.store_chain);
       }
 
+      // Paginering (kun nødvendig om det ikke er filtrert)
       if (
         (filters.municipality && filters.municipality.length > 0) ||
         (filters.store_chain && filters.store_chain.length > 0)
       ) {
-        queryParams.append("pageSize", 1000);
+        queryParams.append("pageSize", 1000); // eller valgfritt tall
       } else {
         queryParams.append("page", page);
         queryParams.append("pageSize", PAGE_SIZE);
       }
 
+      console.log("Query params:", queryParams.toString());
+
       const response = await axios.get(
-        `/stores/stores-with-municipality?${queryParams.toString()}`
+        `/stores/storesWithMunicipality?${queryParams.toString()}`
       );
 
+      const storeData = response.data.stores;
+
+      // shiftCount allerede inkludert, så vi slipper egne API-kall
+      const shiftsData = {};
+      for (const store of storeData) {
+        shiftsData[store.store_id] = store.shift_count || 0;
+      }
+
       if (append) {
-        setStores((prevStores) => [...prevStores, ...response.data.stores]);
+        setStores((prevStores) => [...prevStores, ...storeData]);
       } else {
-        setStores(response.data.stores);
+        setStores(storeData);
       }
 
       setTotalStores(response.data.total);
-
-      const shiftsData = {};
-      for (const store of response.data.stores) {
-        try {
-          const shiftsResponse = await axios.get(
-            `/shifts/store/${store.store_id}`
-          );
-          shiftsData[store.store_id] = shiftsResponse.data.length;
-        } catch {
-          shiftsData[store.store_id] = 0;
-        }
-      }
-
-      setShiftsCount((prevShiftsCount) => ({
-        ...prevShiftsCount,
-        ...shiftsData,
-      }));
+      setShiftsCount((prev) => ({ ...prev, ...shiftsData }));
     } catch (err) {
       console.error("Error fetching stores:", err);
     } finally {
@@ -120,6 +118,7 @@ const ButikkOversikt = () => {
         </p>
 
         <KommuneFilter
+          userRole={user.role}
           onChange={(selectedMunicipalityIds) => {
             setFilters({
               municipality: selectedMunicipalityIds.join(","),

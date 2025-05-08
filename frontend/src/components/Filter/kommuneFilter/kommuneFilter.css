@@ -58,3 +58,25 @@
     font-size: 1rem;
   }
 }
+
+
+
+.reset-all-button {
+  margin-top: 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.reset-all-button:hover {
+  background-color: #d32f2f;
+}
+
+.hidden {
+  display: none;
+}

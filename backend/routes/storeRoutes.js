@@ -4,24 +4,24 @@ import {
   getStoreByIdController,
   getStoresWithMunicipalityController,
   createStoreController,
-  getAllStoresWithInfoController
+  getAllStoresWithInfoController,
 } from "../controllers/storeController.js";
 
 const router = express.Router();
 
-// Route to get stores with municipality details
-router.get("/stores-with-municipality", getStoresWithMunicipalityController);
+// Henter alle butikker med tilhørende kommune
+router.get("/storesWithMunicipality", getStoresWithMunicipalityController);
 
-// Route to get all stores
+// Henter alle butikker
 router.get("/", getAllStoresController);
 
+// Henter alle butikker med tilhørende informasjon
 router.get("/getAllStoresWithInfo", getAllStoresWithInfoController);
 
-
-// Route to get a single store by ID
+// Henter en butikk med en bestemt id
 router.get("/:storeId", getStoreByIdController);
 
-//Create a new store
+// Oppretter en ny butikk
 router.post("/createNewStore", createStoreController);
 
 export default router;

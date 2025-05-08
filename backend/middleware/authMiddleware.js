@@ -1,10 +1,5 @@
-// backend/middleware/authMiddleware.js
 import jwt from "jsonwebtoken";
 
-/**
- * Middleware: Verifies access token from Authorization header.
- */
-// backend/middleware/authMiddleware.js
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
   const token = authHeader?.split(" ")[1];
@@ -18,8 +13,8 @@ export const verifyToken = (req, res, next) => {
     req.user = {
       userId: decoded.userId,
       role: decoded.role,
-      storeId: decoded.storeId, // If you want the storeId from token
-      user_qualifications: decoded.user_qualifications, // If you want the user qualifications from token
+      storeId: decoded.storeId,
+      user_qualifications: decoded.user_qualifications,
     };
     console.log("Decoded token:", req.user);
     next();
@@ -28,10 +23,6 @@ export const verifyToken = (req, res, next) => {
   }
 };
 
-
-/**
- * Middleware: Allows only specific roles to access the route.
- */
 export const authorizeRoles = (...allowedRoles) => {
   return (req, res, next) => {
     const userRole = req.user?.role;

@@ -63,7 +63,7 @@ export default function RegisterNewEmployeeForm() {
     e.preventDefault();
     try {
       setErrors({});
-      await axios.post("/auth/registerNewEmployee", formData);
+      await axios.post("/auth/employee/register", formData);
       toast.success("Bruker registrert!");
 
       setFormData({
@@ -109,7 +109,8 @@ export default function RegisterNewEmployeeForm() {
 
       <h2 className="form-title">Registrer ny bruker</h2>
       <p className="form-subtitle">
-        Den ansatte kan endre e-post, telefonnummer, passord og mer etter innlogging.
+        Den ansatte kan endre e-post, telefonnummer, passord og mer etter
+        innlogging.
       </p>
 
       <label>Fornavn</label>
@@ -121,7 +122,9 @@ export default function RegisterNewEmployeeForm() {
         required
         className={errors.first_name ? "error" : ""}
       />
-      {errors.first_name && <div className="error-message">{errors.first_name}</div>}
+      {errors.first_name && (
+        <div className="error-message">{errors.first_name}</div>
+      )}
 
       <label>Etternavn</label>
       <input
@@ -132,7 +135,9 @@ export default function RegisterNewEmployeeForm() {
         required
         className={errors.last_name ? "error" : ""}
       />
-      {errors.last_name && <div className="error-message">{errors.last_name}</div>}
+      {errors.last_name && (
+        <div className="error-message">{errors.last_name}</div>
+      )}
 
       <label>E-post</label>
       <input
@@ -155,11 +160,16 @@ export default function RegisterNewEmployeeForm() {
         required
         className={errors.phone_number ? "error" : ""}
       />
-      {errors.phone_number && <div className="error-message">{errors.phone_number}</div>}
+      {errors.phone_number && (
+        <div className="error-message">{errors.phone_number}</div>
+      )}
 
       <label>
-        Passord<br />
-        <span className="label-note">(kan endres av den ansatte etter innlogging)</span>
+        Passord
+        <br />
+        <span className="label-note">
+          (kan endres av den ansatte etter innlogging)
+        </span>
       </label>
       <input
         name="password"
@@ -170,17 +180,23 @@ export default function RegisterNewEmployeeForm() {
         required
         className={errors.password ? "error" : ""}
       />
-      {errors.password && <div className="error-message">{errors.password}</div>}
+      {errors.password && (
+        <div className="error-message">{errors.password}</div>
+      )}
 
       <label>Kvalifikasjoner</label>
       <div className="qualification-cards">
         {qualifications.map((qualification) => {
-          const isSelected = formData.qualifications.includes(qualification.qualification_id);
+          const isSelected = formData.qualifications.includes(
+            qualification.qualification_id
+          );
           return (
             <div
               key={qualification.qualification_id}
               className={`qualification-card ${isSelected ? "selected" : ""}`}
-              onClick={() => handleQualificationChange(qualification.qualification_id)}
+              onClick={() =>
+                handleQualificationChange(qualification.qualification_id)
+              }
             >
               <h4>{qualification.name}</h4>
               {isSelected && <span className="checkmark">✔</span>}
@@ -191,7 +207,9 @@ export default function RegisterNewEmployeeForm() {
 
       {errors.general && <div className="error-message">{errors.general}</div>}
 
-      <button type="submit" className="submit-btn">Registrer</button>
+      <button type="submit" className="submit-btn">
+        Registrer
+      </button>
     </form>
   );
 }

@@ -21,46 +21,51 @@ const storeChainImages = {
 
 const ButikkCard = ({ store, shiftsCount }) => {
   const { user } = useAuth();
-  const role = user.role === "employee" ? "ba" : "bs";
+  const role = user?.role === "employee" ? "ba" : "bs";
 
   const imageSrc =
     storeChainImages[store.store_chain] || storeChainImages["default"];
 
-  // Split address: "Majorstuveien 2, 0353 Oslo" → ["Majorstuveien 2", "0353 Oslo"]
   const [street, city] = store.address.split(",").map((part) => part.trim());
 
-  console.log(store.store_chain);
+  const cardContent = (
+    <div className="butikk-card">
+      <div>
+        <div className="butikk-card-header">
+          <div className="image-container">
+            <img src={`/icons/${imageSrc}`} alt={store.store_chain} />
+          </div>
+          <h2>
+            {store.store_chain} {store.name}
+          </h2>
+        </div>
 
-  return (
+        <div className="butikk-card-info">
+          <div className="butikk-general-info">
+            <p className="butikk-address">{street}</p>
+            <p className="butikk-address">{city}</p>
+            <span className="butikk-chip">
+              {shiftsCount} publiserte vakter
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <p className="butikk-more-info">
+        {user?.role ? "Mer info →" : "Logg inn for mer info"}
+      </p>
+    </div>
+  );
+
+  return user?.role ? (
     <Link
       to={`/${role}/butikker/${store.store_chain}/${store.name}/${store.store_id}`}
       className="butikk-card-link"
     >
-      <div className="butikk-card">
-        <div>
-          <div className="butikk-card-header">
-            <div className="image-container">
-              <img src={`/icons/${imageSrc}`} alt={store.store_chain} />
-            </div>
-            <h2>
-              {store.store_chain} {store.name}
-            </h2>
-          </div>
-
-          <div className="butikk-card-info">
-            <div className="butikk-general-info">
-              <p className="butikk-address">{street}</p>
-              <p className="butikk-address">{city}</p>
-              <span className="butikk-chip">
-                {shiftsCount} publiserte vakter
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <p className="butikk-more-info">Mer info →</p>
-      </div>
+      {cardContent}
     </Link>
+  ) : (
+    <div className="butikk-card-link disabled">{cardContent}</div>
   );
 };
 
