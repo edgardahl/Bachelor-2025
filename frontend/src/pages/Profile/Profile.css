@@ -1,5 +1,5 @@
 .profile-page {
-  max-width: 860px;
+  max-width: 940px;
   margin: 2rem auto;
   padding: 2.5rem;
   border-radius: 12px;
@@ -142,12 +142,16 @@
 }
 
 .qualification-card {
+  flex: 1 1 calc(33.333% - 0.75rem);
+  box-sizing: border-box;
   padding: 0.6rem 1rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #fff;
   cursor: pointer;
   transition: all 0.15s ease;
+  min-width: 120px;
+  text-align: center;
 }
 
 .qualification-card.selected {
@@ -213,13 +217,11 @@ ul.municipality-list li {
   margin-bottom: 0.2rem;
 }
 
-/* Make the field span the full grid width */
 .profile-field.full-width {
   grid-column: 1 / -1;
   text-align: center;
 }
 
-/* Center the actual card inside */
 .centered-store-card {
   display: flex;
   justify-content: center;
@@ -251,6 +253,10 @@ ul.municipality-list li {
   .edit-qualifications-btn {
     width: 100%;
     font-size: 1rem;
+  }
+
+  .qualification-card {
+    flex: 1 1 calc(50% - 0.75rem);
   }
 
   .change-password-section {
