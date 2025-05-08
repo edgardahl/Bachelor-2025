@@ -166,16 +166,16 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .save-button,
 .cancel-button {
-  padding: 0.6rem 1.4rem;
+  padding: 0.8rem 1.8rem;
   font-size: 1rem;
   border-radius: 6px;
   cursor: pointer;
   border: 1px solid transparent;
-  font-weight: 500;
 }
 
 .save-button {
@@ -331,7 +331,7 @@ ul.municipality-list li {
   .qualification-save-btn,
   .qualification-cancel-btn,
   .edit-qualifications-btn {
-    width: 100%;
+    width: 30%;
     font-size: 1rem;
   }
 
