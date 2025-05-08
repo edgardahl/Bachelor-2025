@@ -17,17 +17,17 @@ import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Route to get all shifts
+// Henter alle skift
 router.get("/", getAllShiftsController);
 
-// Route to get all shifts a user is qualified for
+// Henter alle skift som brukeren er kvalifisert for
 router.get(
   "/userIsQualifiedFor",
   verifyToken,
   getShiftsUserIsQualifiedForController
 );
 
-// ✅ Get shifts in the user's preferred municipalities
+// Henter alle skift brukeren er kvalifisert for og i foretrukket kommune
 router.get(
   "/qualified/preferred",
   verifyToken,
@@ -35,7 +35,7 @@ router.get(
   getPreferredQualifiedShiftsController
 );
 
-// ✅ Get shifts in a user-requested municipality
+// Henter alle skift som brukeren har bedt om
 router.get(
   "/qualified/requested/:municipality_id",
   verifyToken,
@@ -43,23 +43,23 @@ router.get(
   getRequestedQualifiedShiftsController
 );
 
-// Route to get claimed shifts by user ID
+// Henter alle skift som brukeren tatt
 router.get(
   "/claimedByCurrentUser",
   verifyToken,
   getClaimedShiftsByUserController
 );
 
-// Route to get all shifts from a store
+// Henter alle skift i en bestemt butikk
 router.get("/store/:store_id", verifyToken, getShiftsByStoreController);
 
-// Route to get all shifts posted by a specific user
+// Henter alle skift i en butikk som er publisert av en bestemt bruker
 router.get("/posted_by/:posted_by", getShiftByPostedByController);
 
-// Route to get a single shift by ID
+// Henter et skift med en bestemt id
 router.get("/:shift_id", getShiftByIdController);
 
-// Route to claim a shift
+// Route for å ta et skift
 router.post(
   "/claim/:shift_id",
   verifyToken,
@@ -67,7 +67,7 @@ router.post(
   claimShiftController
 );
 
-// Route to create a new shift
+// Oppretter et nytt skift
 router.post(
   "/",
   verifyToken,
@@ -75,7 +75,7 @@ router.post(
   createShiftController
 );
 
-// Route to delete a shift
+// Sletter et skift
 router.delete(
   "/deleteShiftById",
   verifyToken,

@@ -3,7 +3,7 @@ import {
   getStoreByIdModel,
   getStoresWithMunicipality,
   createStoreModel,
-  getAllStoresWithInfoModel
+  getAllStoresWithInfoModel,
 } from "../models/storeModel.js";
 
 export const getAllStoresController = async (req, res) => {
@@ -16,7 +16,6 @@ export const getAllStoresController = async (req, res) => {
   }
 };
 
-
 export const getAllStoresWithInfoController = async (req, res) => {
   try {
     const stores = await getAllStoresWithInfoModel();
@@ -27,9 +26,6 @@ export const getAllStoresWithInfoController = async (req, res) => {
   }
 };
 
-
-
-// Get a single store by ID
 export const getStoreByIdController = async (req, res) => {
   const { storeId } = req.params;
 
@@ -71,8 +67,6 @@ export const getStoresWithMunicipalityController = async (req, res) => {
   }
 };
 
-
-// Create a new store
 export const createStoreController = async (req, res) => {
   try {
     const newStore = await createStoreModel(req.body);

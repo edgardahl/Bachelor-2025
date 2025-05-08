@@ -12,10 +12,8 @@ import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// ✅ Get all users (protected)
 router.get("/", verifyToken, getAllUsersController);
 
-// ✅ Get employees for a store manager
 router.get(
   "/employees",
   verifyToken,
@@ -23,7 +21,6 @@ router.get(
   getEmployeesByStoreIdController
 );
 
-// ✅ Update qualifications for a specific employee
 router.post(
   "/employees/qualifications/update",
   verifyToken,
@@ -31,7 +28,6 @@ router.post(
   updateEmployeeQualificationsController
 );
 
-// ✅ Get available employees in manager's municipality
 router.get(
   "/available",
   verifyToken,
@@ -39,13 +35,10 @@ router.get(
   getAvailableEmployeesController
 );
 
-// ✅ Get a specific user by ID
 router.get("/:id", verifyToken, getUserByIdController);
 
-// ✅ Update user info by ID
 router.put("/current/update", verifyToken, updateUserByIdController);
 
-// ✅ Update own password
 router.patch("/current/password", verifyToken, changePassword);
 
 export default router;

@@ -122,10 +122,12 @@ export const sanitizeUserData = (userData) => {
   const validRoles = ["employee", "store_manager", "admin"];
 
   if (!nameRegex.test(first_name || "")) {
-    errors.first_name = "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
+    errors.first_name =
+      "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!nameRegex.test(last_name || "")) {
-    errors.last_name = "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
+    errors.last_name =
+      "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!email || !emailRegex.test(email)) {
     errors.email = "Ugyldig e-postadresse.";
@@ -137,7 +139,8 @@ export const sanitizeUserData = (userData) => {
     errors.phone_number = "Telefonnummeret er ugyldig.";
   }
   if (!validAvailability.includes(availability)) {
-    errors.availability = "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
+    errors.availability =
+      "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
   }
   if (!validRoles.includes(role)) {
     errors.role = `Rolle må være en av: ${validRoles.join(", ")}.`;
@@ -199,10 +202,12 @@ export const sanitizeUserProfileUpdateData = (userData) => {
   const validAvailability = ["Fleksibel", "Ikke-fleksibel"];
 
   if (!nameRegex.test(first_name || "")) {
-    errors.first_name = "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
+    errors.first_name =
+      "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!nameRegex.test(last_name || "")) {
-    errors.last_name = "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
+    errors.last_name =
+      "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!email || !emailRegex.test(email)) {
     errors.email = "Ugyldig e-postadresse.";
@@ -211,7 +216,8 @@ export const sanitizeUserProfileUpdateData = (userData) => {
     errors.phone_number = "Telefonnummeret er ugyldig.";
   }
   if (!validAvailability.includes(availability)) {
-    errors.availability = "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
+    errors.availability =
+      "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
   }
   if (municipality_id && !isUUID(municipality_id)) {
     errors.municipality_id = "Kommune-ID må være en gyldig UUID.";

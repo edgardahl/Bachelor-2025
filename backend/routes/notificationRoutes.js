@@ -8,13 +8,13 @@ import {
 
 const router = express.Router();
 
-// Hent alle varsler for en bruker
+// Henter alle varsler for en bruker
 router.get("/user", verifyToken, getNotificationByUserIdController);
 
-// Oppdater status på et varsel til 'åpnet'
+// Oppdaterer status på et varsel til 'åpnet'
 router.put("/status/update", verifyToken, updateNotificationStatusController);
 
-// ✅ Slett et varsel
+// Sletter et varsel
 router.delete(
   "/delete/:notificationId",
   verifyToken,

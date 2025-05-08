@@ -11,12 +11,14 @@ import {
   getPreferredQualifiedShiftsModel,
   getRequestedQualifiedShiftsModel,
 } from "../models/shiftModel.js";
-import { newShiftPublishedNotificationModel, notifyStoreManagerOnShiftClaimedModel } from "../models/notificationModel.js";
+import {
+  newShiftPublishedNotificationModel,
+  notifyStoreManagerOnShiftClaimedModel,
+} from "../models/notificationModel.js";
 import { getUserByIdModel } from "../models/userModel.js";
 import { getShiftQualificationsModel } from "../models/qualificationModel.js";
 import { sanitizeShift } from "../utils/sanitizeInput.js";
 
-// Get all shifts
 export const getAllShiftsController = async (req, res) => {
   try {
     const shifts = await getAllShiftsModel();
@@ -27,7 +29,6 @@ export const getAllShiftsController = async (req, res) => {
   }
 };
 
-// Get all shifts from a store
 export const getShiftsByStoreController = async (req, res) => {
   const { store_id } = req.params;
   try {
@@ -39,7 +40,6 @@ export const getShiftsByStoreController = async (req, res) => {
   }
 };
 
-// Get shift by Posted_by
 export const getShiftByPostedByController = async (req, res) => {
   const { posted_by } = req.params;
   try {
@@ -51,7 +51,6 @@ export const getShiftByPostedByController = async (req, res) => {
   }
 };
 
-// Get a single shift by ID
 export const getShiftByIdController = async (req, res) => {
   const { shift_id } = req.params;
   try {
@@ -64,9 +63,8 @@ export const getShiftByIdController = async (req, res) => {
   }
 };
 
-// Route to get claimed shifts by user ID
 export const getClaimedShiftsByUserController = async (req, res) => {
-  const userId = req.user.userId; // assuming verifyToken sets req.user
+  const userId = req.user.userId;
   console.log("User ID from token:", userId);
 
   try {
@@ -90,42 +88,41 @@ export const claimShiftController = async (req, res) => {
   }
 
   try {
-    // Fetch required qualifications for the shift
     const shiftQualifications = await getShiftQualificationsModel(shift_id);
     console.log("Shift Qualifications:", shiftQualifications);
 
-    // Fetch user and their qualifications
     const user = await getUserByIdModel(userId);
     const userQualifications = user.qualifications || [];
     console.log("User Qualifications:", userQualifications);
 
-    // Extract qualification IDs
-    const shiftQualificationIds = shiftQualifications.map((q) => q.qualification_id);
-    const userQualificationIds = userQualifications.map((q) => q.qualification_id);
+    const shiftQualificationIds = shiftQualifications.map(
+      (q) => q.qualification_id
+    );
+    const userQualificationIds = userQualifications.map(
+      (q) => q.qualification_id
+    );
 
-    // Check if user has ALL required qualifications
     const hasAllQualifications = shiftQualificationIds.every((id) =>
       userQualificationIds.includes(id)
     );
 
     if (!hasAllQualifications) {
       return res.status(403).json({
-        error: "You do not have the required qualifications to claim this shift.",
+        error:
+          "You do not have the required qualifications to claim this shift.",
       });
     }
 
-    // Claim the shift using the model
     const claimedShift = await claimShiftModel(shift_id, userId);
 
-    // Step 2: Notify the store manager about the claimed shift
-    await notifyStoreManagerOnShiftClaimedModel(shift_id, userId); // Call the updated notification model
+    await notifyStoreManagerOnShiftClaimedModel(shift_id, userId);
 
     return res.json({
       ...claimedShift,
       claimed_by_first_name: user.first_name,
       claimed_by_last_name: user.last_name,
       claimed_by_email: user.email,
-      claimed_by_phone: user.phone_number, // fixed this
+      claimed_by_phone: user.phone_number,
     });
   } catch (error) {
     console.error("Error claiming shift:", error);
@@ -133,19 +130,17 @@ export const claimShiftController = async (req, res) => {
   }
 };
 
-
-// Create a new shift
 export const createShiftController = async (req, res) => {
   try {
     const shiftData = req.body;
 
-    //sanitize input
     let sanitizedShiftData;
     try {
       sanitizedShiftData = sanitizeShift(shiftData);
     } catch (sanitizeError) {
-      // Return the error message in the expected format
-      return res.status(400).json({ error: { general: sanitizeError.message } });
+      return res
+        .status(400)
+        .json({ error: { general: sanitizeError.message } });
     }
 
     if (sanitizedShiftData.errors) {
@@ -155,8 +150,10 @@ export const createShiftController = async (req, res) => {
 
     const newShift = await createShiftModel(shiftData);
 
-    // Merge back qualifications so notification has full data
-    const fullShiftData = { ...newShift, qualifications: shiftData.qualifications };
+    const fullShiftData = {
+      ...newShift,
+      qualifications: shiftData.qualifications,
+    };
     await newShiftPublishedNotificationModel(fullShiftData);
 
     return res.status(201).json({
@@ -171,9 +168,6 @@ export const createShiftController = async (req, res) => {
   }
 };
 
-
-
-// Delete a shift
 export const deleteShiftController = async (req, res) => {
   const { shiftId, shiftStoreId } = req.body;
 
@@ -197,10 +191,8 @@ export const deleteShiftController = async (req, res) => {
   }
 };
 
-
-// Get all shifts that a specific user is qualified for
 export const getShiftsUserIsQualifiedForController = async (req, res) => {
-  const user_id = req.user.userId; // assuming verifyToken sets req.user
+  const user_id = req.user.userId;
 
   try {
     const shifts = await getShiftsUserIsQualifiedForModel(user_id);
@@ -232,10 +224,15 @@ export const getRequestedQualifiedShiftsController = async (req, res) => {
     const municipalityIds = user?.municipalities?.map((m) => m.municipality_id);
 
     if (!municipalityIds || municipalityIds.length === 0) {
-      return res.status(400).json({ error: "User has no associated municipalities." });
+      return res
+        .status(400)
+        .json({ error: "User has no associated municipalities." });
     }
 
-    const shifts = await getRequestedQualifiedShiftsModel(userId, municipalityIds);
+    const shifts = await getRequestedQualifiedShiftsModel(
+      userId,
+      municipalityIds
+    );
     return res.json(shifts);
   } catch (error) {
     console.error("Error fetching requested municipality shifts:", error);

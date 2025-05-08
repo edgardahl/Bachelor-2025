@@ -1,7 +1,5 @@
-// controllers/municipalityController.js
 import { getAllMunicipalitiesModel } from "../models/municipalityModel.js";
 
-// Get all municipalities
 export const getAllMunicipalitiesController = async (req, res) => {
   try {
     const municipalities = await getAllMunicipalitiesModel();

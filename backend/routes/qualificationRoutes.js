@@ -3,7 +3,7 @@ import { getAllQualificationsController } from "../controllers/qualificationCont
 
 const router = express.Router();
 
-// Route to get all qualifications
+// Henter alle kvalifikasjoner
 router.get("/", getAllQualificationsController);
 
 export default router;

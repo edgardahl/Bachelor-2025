@@ -12,14 +12,14 @@ import { verifyToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// 🔑 Auth-related routes
+// Håndterer innlogging og utlogging
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.post("/refresh-token", refreshAccessToken);
 router.post("/register", registerUser);
 router.post("/employee/register", verifyToken, registerNewEmployeeController);
 
-// 👤 User session & profile
+// Henter den innloggede brukeren
 router.get("/me", verifyToken, getCurrentUser);
 
 export default router;

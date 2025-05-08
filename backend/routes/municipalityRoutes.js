@@ -3,7 +3,7 @@ import { getAllMunicipalitiesController } from "../controllers/municipalityContr
 
 const router = express.Router();
 
-// Route to get all municipalities
+// Henter alle kommuner
 router.get("/", getAllMunicipalitiesController);
 
 export default router;
