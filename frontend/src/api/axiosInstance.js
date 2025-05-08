@@ -3,7 +3,12 @@ import axios from "axios";
 const baseURL =
   window.location.hostname === "localhost"
     ? "http://localhost:5001/api"
-    : import.meta.env.VITE_API_URL;
+    : import.meta.env.VITE_API_URL ||
+      "https://bachelor-backend-production.up.railway.app/api";
+
+if (!baseURL) {
+  console.error("⚠️ API base URL er ikke definert");
+}
 
 const instance = axios.create({
   baseURL,
