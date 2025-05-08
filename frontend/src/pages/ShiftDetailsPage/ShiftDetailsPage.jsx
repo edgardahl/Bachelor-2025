@@ -248,7 +248,14 @@ const ShiftDetailsPage = () => {
                 Ta vakt
               </button>
               {!canClaim && (
-                <p className="claim-disabled-reason">{claimDisabledReason}</p>
+                <p
+                  className={`claim-disabled-reason ${
+                    claimedByYou ? "success" : ""
+                  }`}
+                >
+                {claimDisabledReason}
+              </p>
+              
               )}
             </div>
           )}
@@ -276,6 +283,9 @@ const ShiftDetailsPage = () => {
         {showClaimPopup && (
           <ClaimShiftPopup
             shiftTitle={shiftDetails.title}
+            date={shiftDetails.date}
+            startTime={shiftDetails.start_time}
+            endTime={shiftDetails.end_time}
             onCancel={() => setShowClaimPopup(false)}
             onConfirm={handleClaimShift}
           />

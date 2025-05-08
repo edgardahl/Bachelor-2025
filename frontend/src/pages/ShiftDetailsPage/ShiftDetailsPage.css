@@ -149,6 +149,13 @@
   border: 1px solid #f5c2c2;
 }
 
+.claim-disabled-reason.success {
+  color: #2e7d32;
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+}
+
+
 .published-info {
   margin-top: 1.45rem;
   padding-top: 1rem;
