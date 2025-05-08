@@ -1,5 +1,6 @@
 import { getAllQualificationsModel } from "../models/qualificationModel.js";
 
+// Henter alle kvalifikasjoner
 export const getAllQualificationsController = async (req, res) => {
   try {
     const qualifications = await getAllQualificationsModel();

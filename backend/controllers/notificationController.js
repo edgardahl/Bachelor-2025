@@ -4,6 +4,7 @@ import {
   deleteNotificationByIdModel,
 } from "../models/notificationModel.js";
 
+// Henter varsler for en spesifikk bruker
 export const getNotificationByUserIdController = async (req, res) => {
   const userId = req.user.userId;
 
@@ -21,6 +22,7 @@ export const getNotificationByUserIdController = async (req, res) => {
   }
 };
 
+// Oppdaterer statusen til et varsel og markerer det som lest
 export const updateNotificationStatusController = async (req, res) => {
   const { notificationId, userId } = req.body;
 
@@ -43,6 +45,7 @@ export const updateNotificationStatusController = async (req, res) => {
   }
 };
 
+// Sletter et varsel
 export const deleteNotificationController = async (req, res) => {
   const { notificationId } = req.params;
 

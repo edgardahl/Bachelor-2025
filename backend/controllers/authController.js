@@ -14,7 +14,7 @@ import {
   insertUserMunicipalitiesModel,
 } from "../models/authModel.js";
 import { getUserQualificationsModel } from "../models/userModel.js";
-import { sanitizeUserData } from "../utils/sanitizeInput.js";
+import { sanitizeUser } from "../utils/sanitizeInput.js";
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -245,7 +245,7 @@ export const registerNewEmployeeController = async (req, res) => {
 
     let sanitizedUserData;
     try {
-      sanitizedUserData = sanitizeUserData(sanitizedData);
+      sanitizedUserData = sanitizeUser(sanitizedData);
     } catch (sanitizeError) {
       return res
         .status(400)
@@ -289,11 +289,9 @@ export const registerNewEmployeeController = async (req, res) => {
 
     const existingPhone = await getUserByPhoneNumber(phone_number);
     if (existingPhone) {
-      return res
-        .status(400)
-        .json({
-          error: { phone_number: "Telefonnummeret er allerede i bruk." },
-        });
+      return res.status(400).json({
+        error: { phone_number: "Telefonnummeret er allerede i bruk." },
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

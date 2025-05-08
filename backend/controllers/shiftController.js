@@ -29,6 +29,7 @@ export const getAllShiftsController = async (req, res) => {
   }
 };
 
+// Henter alle vakter i en butikk
 export const getShiftsByStoreController = async (req, res) => {
   const { store_id } = req.params;
   try {
@@ -40,6 +41,7 @@ export const getShiftsByStoreController = async (req, res) => {
   }
 };
 
+// Henter vakter som er lagt ut av en bruker
 export const getShiftByPostedByController = async (req, res) => {
   const { posted_by } = req.params;
   try {
@@ -51,6 +53,7 @@ export const getShiftByPostedByController = async (req, res) => {
   }
 };
 
+// Henter vakt med en spesifikk ID
 export const getShiftByIdController = async (req, res) => {
   const { shift_id } = req.params;
   try {
@@ -63,6 +66,7 @@ export const getShiftByIdController = async (req, res) => {
   }
 };
 
+// Henter vakter som er tatt av en bruker
 export const getClaimedShiftsByUserController = async (req, res) => {
   const userId = req.user.userId;
   console.log("User ID from token:", userId);
@@ -76,6 +80,7 @@ export const getClaimedShiftsByUserController = async (req, res) => {
   }
 };
 
+// Lar en bruker ta en vakt
 export const claimShiftController = async (req, res) => {
   const { shift_id } = req.params;
   const userId = req.user.userId;
@@ -130,6 +135,7 @@ export const claimShiftController = async (req, res) => {
   }
 };
 
+// Lar en bruker legge ut en vakt
 export const createShiftController = async (req, res) => {
   try {
     const shiftData = req.body;
@@ -168,6 +174,7 @@ export const createShiftController = async (req, res) => {
   }
 };
 
+// Lar en bruker slette en vakt
 export const deleteShiftController = async (req, res) => {
   const { shiftId, shiftStoreId } = req.body;
 
@@ -191,6 +198,7 @@ export const deleteShiftController = async (req, res) => {
   }
 };
 
+// Henter vakter som en bruker er kvalifisert for
 export const getShiftsUserIsQualifiedForController = async (req, res) => {
   const user_id = req.user.userId;
 
@@ -203,6 +211,7 @@ export const getShiftsUserIsQualifiedForController = async (req, res) => {
   }
 };
 
+// Henter vakter med foretrukket kvalifikasjoner
 export const getPreferredQualifiedShiftsController = async (req, res) => {
   const userId = req.user.userId;
 
@@ -215,6 +224,7 @@ export const getPreferredQualifiedShiftsController = async (req, res) => {
   }
 };
 
+// Henter vakter med forespurte kvalifikasjoner
 export const getRequestedQualifiedShiftsController = async (req, res) => {
   const userId = req.user.userId;
 

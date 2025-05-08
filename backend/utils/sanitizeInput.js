@@ -1,5 +1,6 @@
 import { validate as isUUID } from "uuid";
 
+// Middleware for å validere innkommende vakt
 export const sanitizeShift = (shiftData) => {
   const {
     title,
@@ -90,15 +91,16 @@ export const sanitizeShift = (shiftData) => {
     title: title.trim(),
     description: description.trim(),
     date,
-    start_time: `${startTimeParts[0]}:${startTimeParts[1]}:00`,
-    end_time: `${endTimeParts[0]}:${endTimeParts[1]}:00`,
+    start_time: `${startTimeParts[0]}:${startTimeParts[1]}`, // fjernet ":00"
+    end_time: `${endTimeParts[0]}:${endTimeParts[1]}`, // fjernet ":00"
     store_id,
     posted_by: UserId,
     qualifications,
   };
 };
 
-export const sanitizeUserData = (userData) => {
+// Middleware for å validere innkommende bruker
+export const sanitizeUser = (userData) => {
   const {
     first_name,
     last_name,
@@ -183,7 +185,8 @@ export const sanitizeUserData = (userData) => {
   };
 };
 
-export const sanitizeUserProfileUpdateData = (userData) => {
+// Middleware for å validere innkommende brukeroppdatering
+export const sanitizeUserUpdate = (userData) => {
   const {
     first_name,
     last_name,

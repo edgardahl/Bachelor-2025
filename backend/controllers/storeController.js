@@ -6,6 +6,7 @@ import {
   getAllStoresWithInfoModel,
 } from "../models/storeModel.js";
 
+// Henter alle butikker
 export const getAllStoresController = async (req, res) => {
   try {
     const stores = await getAllStoresModel();
@@ -16,6 +17,7 @@ export const getAllStoresController = async (req, res) => {
   }
 };
 
+// Henter alle butikker med tilhørende informasjon
 export const getAllStoresWithInfoController = async (req, res) => {
   try {
     const stores = await getAllStoresWithInfoModel();
@@ -26,6 +28,7 @@ export const getAllStoresWithInfoController = async (req, res) => {
   }
 };
 
+// Henter en butikk med ID
 export const getStoreByIdController = async (req, res) => {
   const { storeId } = req.params;
 
@@ -41,6 +44,7 @@ export const getStoreByIdController = async (req, res) => {
   }
 };
 
+// Henter butikker i en kommune
 export const getStoresWithMunicipalityController = async (req, res) => {
   try {
     const { municipality, store_chain, page = 1, pageSize = 10000 } = req.query;
@@ -67,6 +71,7 @@ export const getStoresWithMunicipalityController = async (req, res) => {
   }
 };
 
+// Oppretter en ny butikk
 export const createStoreController = async (req, res) => {
   try {
     const newStore = await createStoreModel(req.body);

@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+// Genererer access token
 export const generateAccessToken = (user) => {
   console.log("generateAccessToken", user);
   return jwt.sign(
@@ -14,6 +15,7 @@ export const generateAccessToken = (user) => {
   );
 };
 
+// Genererer refresh token
 export const generateRefreshToken = (user) => {
   console.log("generateRefreshToken", user);
   return jwt.sign(

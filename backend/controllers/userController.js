@@ -12,8 +12,9 @@ import {
 import { getStoreByIdModel } from "../models/storeModel.js";
 import bcrypt from "bcryptjs";
 import { supabase } from "../config/supabaseClient.js";
-import { sanitizeUserProfileUpdateData } from "../utils/sanitizeInput.js";
+import { sanitizeUserUpdate } from "../utils/sanitizeInput.js";
 
+// Henter alle brukere
 export const getAllUsersController = async (req, res) => {
   try {
     const users = await getAllUsersModel();
@@ -24,6 +25,7 @@ export const getAllUsersController = async (req, res) => {
   }
 };
 
+// Henter en bruker med ID
 export const getUserByIdController = async (req, res) => {
   const { id } = req.params;
 
@@ -39,11 +41,12 @@ export const getUserByIdController = async (req, res) => {
   }
 };
 
+// Oppdaterer bruker med ID
 export const updateUserByIdController = async (req, res) => {
   const userId = req.user.userId;
   const rawData = req.body;
 
-  const sanitized = sanitizeUserProfileUpdateData(rawData);
+  const sanitized = sanitizeUserUpdate(rawData);
   if (sanitized.errors) {
     return res
       .status(400)
@@ -121,6 +124,7 @@ export const updateUserByIdController = async (req, res) => {
   }
 };
 
+// Endrer passord
 export const changePassword = async (req, res) => {
   const userId = req.user.userId;
   const { currentPassword, newPassword } = req.body;
@@ -159,6 +163,7 @@ export const changePassword = async (req, res) => {
   }
 };
 
+// Henter ansatte for en butikk
 export const getEmployeesByStoreIdController = async (req, res) => {
   const storeId = req.user.storeId;
 
@@ -178,6 +183,7 @@ export const getEmployeesByStoreIdController = async (req, res) => {
   }
 };
 
+// Henter alle tilgjengelige ansatte
 export const getAvailableEmployeesController = async (req, res) => {
   try {
     const manager = await getUserByIdModel(req.user.userId);
@@ -207,6 +213,7 @@ export const getAvailableEmployeesController = async (req, res) => {
   }
 };
 
+// Oppdaterer kvalifikasjoner for en ansatt
 export const updateEmployeeQualificationsController = async (req, res) => {
   const managerStoreId = req.user.storeId;
   const { user_id, qualification_ids } = req.body;
