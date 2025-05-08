@@ -19,7 +19,7 @@ const AnsattDashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const [qualifiedRes, storeRes] = await Promise.all([
-          axios.get(`/shifts/user_is_qualified_for`), // Fetch qualified shifts
+          axios.get(`/shifts/qualified/preferred`), // Fetch qualified shifts
           axios.get("/stores/stores-with-municipality?page=1&pageSize=1000"), // Fetch store stats
         ]);
 
@@ -60,9 +60,9 @@ const AnsattDashboard = () => {
               icon={<FiBriefcase size={52} />}
               themeClass="card-theme-shifts"
               title="Vakter"
-              description="Finn og reserver vakter i andre butikker"
+              description="Finn og reserver vakter i andre butikker du er kvalifisert for"
               statValue={qualifiedShifts}
-              statText="vakter"
+              statText="Ledige vakter i dine valgte kommuner"
               linkText="Utforsk vakter"
               linkTo="/ba/vakter"
             />

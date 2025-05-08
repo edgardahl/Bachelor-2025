@@ -45,14 +45,21 @@ export const getStoreByIdController = async (req, res) => {
   }
 };
 
-// Get stores filtered by municipality and county
 export const getStoresWithMunicipalityController = async (req, res) => {
   try {
-    const { municipality, county, page = 1, pageSize = 10000 } = req.query;
+    const { municipality, store_chain, page = 1, pageSize = 10000 } = req.query;
+
+    const municipalities = municipality
+      ? municipality.split(",").map((name) => name.trim())
+      : [];
+
+    const storeChains = store_chain
+      ? store_chain.split(",").map((sc) => sc.trim())
+      : [];
 
     const storesWithPagination = await getStoresWithMunicipality(
-      municipality,
-      county,
+      municipalities,
+      storeChains,
       Number(page),
       Number(pageSize)
     );
@@ -63,6 +70,7 @@ export const getStoresWithMunicipalityController = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Create a new store
 export const createStoreController = async (req, res) => {
