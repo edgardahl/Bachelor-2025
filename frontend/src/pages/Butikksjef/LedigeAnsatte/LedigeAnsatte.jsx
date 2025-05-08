@@ -24,7 +24,7 @@ const LedigeAnsatte = () => {
   useEffect(() => {
     const fetchAvailableEmployees = async () => {
       try {
-        const res = await axios.get("/users/available-employees");
+        const res = await axios.get("/users/available");
         setEmployees(res.data);
         console.log("Available employees:", res.data);
         setFilteredEmployees(res.data);
@@ -69,7 +69,9 @@ const LedigeAnsatte = () => {
       {error && <p className="ledige-error-message">{error}</p>}
 
       {filteredEmployees.length === 0 && !error && !loading && (
-        <p className="no-employee-found">Ingen ledige ansatte funnet med alle valgte kvalifikasjonene.</p>
+        <p className="no-employee-found">
+          Ingen ledige ansatte funnet med alle valgte kvalifikasjonene.
+        </p>
       )}
 
       {loading ? (

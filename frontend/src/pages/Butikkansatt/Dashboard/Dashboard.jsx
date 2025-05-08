@@ -20,7 +20,7 @@ const AnsattDashboard = () => {
       try {
         const [qualifiedRes, storeRes] = await Promise.all([
           axios.get(`/shifts/qualified/preferred`), // Fetch qualified shifts
-          axios.get("/stores/stores-with-municipality?page=1&pageSize=1000"), // Fetch store stats
+          axios.get("/stores/storesWithMunicipality?page=1&pageSize=1000"), // Fetch store stats
         ]);
 
         // Qualified shifts

@@ -1,7 +1,6 @@
-// controllers/municipalityController.js
 import { getAllMunicipalitiesModel } from "../models/municipalityModel.js";
 
-// Get all municipalities
+// Henter alle kommuner
 export const getAllMunicipalitiesController = async (req, res) => {
   try {
     const municipalities = await getAllMunicipalitiesModel();

@@ -23,7 +23,7 @@ export default function NotificationDropdown() {
       setLoading(true);
       setError(null);
       try {
-        const res = await axios.get("/notifications/getNotificationByUserId");
+        const res = await axios.get("/notifications/user");
 
         if (!Array.isArray(res.data)) {
           setNotifications([]);
@@ -68,7 +68,7 @@ export default function NotificationDropdown() {
       setUnopenedCount((count) => count - 1);
 
       try {
-        await axios.put("/notifications/updateNotificationStatus", {
+        await axios.put("/notifications/status/update", {
           notificationId: id,
           userId: user.id,
         });
@@ -105,7 +105,7 @@ export default function NotificationDropdown() {
     }
 
     try {
-      await axios.delete(`/notifications/deleteNotification/${id}`);
+      await axios.delete(`/notifications/delete/${id}`);
     } catch (err) {
       console.error("Feil ved sletting av varsel:", err);
     }
@@ -159,23 +159,22 @@ export default function NotificationDropdown() {
                       <FaTimes size={12} />
                     </button>
                   </div>
-                
+
                   <div className="notification-message">{notif.message}</div>
-                  
+
                   <div className="notification-time">
                     {/* Vis dato og klokkeslett */}
                     {new Date(notif.created_at).toLocaleDateString("no-NO", {
                       day: "numeric",
-                      month: "long"
+                      month: "long",
                     })}{" "}
                     {new Date(notif.created_at).toLocaleTimeString("no-NO", {
                       hour: "2-digit",
                       minute: "2-digit",
-                      hour12: false
+                      hour12: false,
                     })}
                   </div>
                 </li>
-              
               ))}
             </ul>
           )}

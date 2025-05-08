@@ -1,9 +1,7 @@
-// database/index.js
-// ✅ Only using Supabase now, so no need for dynamic DB switching
-import { supabase } from '../config/supabaseClient.js';
+import { supabase } from "../config/supabaseClient.js";
 
 const connectDB = async () => {
-  console.log('✅ Supabase client initialized');
+  console.log("Supabase client initialized");
   return supabase;
 };
 
