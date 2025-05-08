@@ -34,6 +34,12 @@ const Landing = () => {
         <img src="../../../public/icons/coop-compis-logo-sort.svg" alt="Coop logo" />
         <h1>Velkommen til Coop Compis</h1>
         <p>En enklere måte å koordinere vakter og ansatte i butikkene.</p>
+        <button
+            className="cta-button"
+            onClick={() => navigate("/login")}
+          >
+            Kom i gang
+          </button>
       </section>
 
       {/* Section 1 – Butikker */}
