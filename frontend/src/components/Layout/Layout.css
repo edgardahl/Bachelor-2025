@@ -8,7 +8,9 @@ body,
 }
 
 body {
-  background-color: var(--Shifts-main);
+  background: url("/icons/bakgrund.png");
+  background-size: cover;
+  background-attachment: fixed;
   font-family: sans-serif;
 }
 
