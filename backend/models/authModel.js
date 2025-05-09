@@ -35,29 +35,6 @@ export const insertUserQualifications = async (userId, qualifications) => {
   return true;
 };
 
-// ➕ Insert multiple preferred municipalities
-export const insertUserMunicipalitiesModel = async (user_id, municipality_ids) => {
-  console.log("Inserting preferred municipalities:", municipality_ids);
-  if (!municipality_ids || municipality_ids.length === 0) return true;
-
-  const inserts = municipality_ids.map((id) => ({
-    user_id,
-    municipality_id: id,
-  }));
-
-  const { error } = await supabase
-    .from("user_municipality")
-    .insert(inserts, { ignoreDuplicates: true });
-
-  if (error) {
-    console.error("Error inserting preferred municipalities:", error);
-    return false;
-  }
-
-  return true;
-};
-
-
 // 📝 Check if the phone number already exists
 export const getUserByPhoneNumber = async (phoneNumber) => {
   const { data, error } = await supabase
