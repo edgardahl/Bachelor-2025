@@ -12,7 +12,7 @@ import {
 import { getStoreByIdModel } from "../models/storeModel.js";
 import bcrypt from "bcryptjs";
 import { supabase } from "../config/supabaseClient.js";
-import { sanitizeUserUpdate } from "../utils/sanitizeInput.js";
+import { sanitizeUserUpdate, sanitizePasswordUpdate } from "../utils/sanitizeInput.js";
 
 // Henter alle brukere
 export const getAllUsersController = async (req, res) => {
@@ -48,11 +48,8 @@ export const updateUserByIdController = async (req, res) => {
 
   const sanitized = sanitizeUserUpdate(rawData);
   if (sanitized.errors) {
-    return res
-      .status(400)
-      .json({ error: Object.values(sanitized.errors).join(" ") });
+    return res.status(400).json({ error: sanitized.errors });
   }
-
   const { email, phone_number } = sanitized;
 
   try {
@@ -75,8 +72,9 @@ export const updateUserByIdController = async (req, res) => {
       if (emailUsers.length > 0) {
         return res
           .status(400)
-          .json({ error: "E-postadressen er allerede i bruk." });
+          .json({ error: { email: "E-postadressen er allerede i bruk." } });
       }
+      
     }
 
     if (phone_number && phone_number !== currentUser.phone_number) {
@@ -96,8 +94,9 @@ export const updateUserByIdController = async (req, res) => {
       if (phoneUsers.length > 0) {
         return res
           .status(400)
-          .json({ error: "Telefonnummeret er allerede i bruk." });
+          .json({ error: { phone_number: "Telefonnummeret er allerede i bruk." } });
       }
+      
     }
 
     const updatedUser = await updateUserByIdModel(
@@ -127,13 +126,13 @@ export const updateUserByIdController = async (req, res) => {
 // Endrer passord
 export const changePassword = async (req, res) => {
   const userId = req.user.userId;
-  const { currentPassword, newPassword } = req.body;
 
-  if (!currentPassword || !newPassword) {
-    return res
-      .status(400)
-      .json({ error: "Both current and new passwords are required." });
+  const result = sanitizePasswordUpdate(req.body);
+  if (result.errors) {
+    return res.status(400).json({ error: result.errors });
   }
+
+  const { currentPassword, newPassword } = result;
 
   try {
     const user = await getUserWithPasswordById(userId);
@@ -141,25 +140,25 @@ export const changePassword = async (req, res) => {
     if (!user || !user.password) {
       return res
         .status(404)
-        .json({ error: "User not found or missing password." });
+        .json({ error: "Bruker ikke funnet eller mangler passord." });
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res.status(401).json({ error: "Current password is incorrect." });
+      return res.status(401).json({ error: "Nåværende passord er feil." });
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     const updated = await updateUserPasswordById(userId, hashedNewPassword);
 
     if (!updated) {
-      return res.status(500).json({ error: "Failed to update password" });
+      return res.status(500).json({ error: "Kunne ikke oppdatere passordet." });
     }
 
-    return res.json({ message: "Password updated successfully." });
+    return res.json({ message: "Passordet ble oppdatert." });
   } catch (error) {
-    console.error("Change password error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Feil ved oppdatering av passord:", error);
+    res.status(500).json({ error: "Intern serverfeil" });
   }
 };
 
