@@ -35,7 +35,7 @@ const Landing = () => {
         <h1>Velkommen til Coop Compis</h1>
         <p>En enklere måte å koordinere vakter og ansatte i butikkene.</p>
         <button
-            className="cta-button"
+            className="kom-i-gang-button"
             onClick={() => navigate("/login")}
           >
             Kom i gang
