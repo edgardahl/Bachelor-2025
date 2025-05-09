@@ -16,6 +16,7 @@ import {
 import { getUserQualificationsModel } from "../models/userModel.js";
 import { sanitizeUser } from "../utils/sanitizeInput.js";
 
+// Logger inn bruker
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -79,6 +80,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// Oppfrisker access token
 export const refreshAccessToken = async (req, res) => {
   const token = req.cookies.refreshToken;
   if (!token) return res.sendStatus(204); // Ingen feilmelding til frontend
@@ -106,6 +108,7 @@ export const refreshAccessToken = async (req, res) => {
   }
 };
 
+// Henter informasjon om den nåværende brukeren
 export const getCurrentUser = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -131,6 +134,7 @@ export const getCurrentUser = async (req, res) => {
   }
 };
 
+// Logger ut bruker
 export const logoutUser = (req, res) => {
   res.clearCookie("refreshToken", {
     httpOnly: true,
@@ -142,6 +146,7 @@ export const logoutUser = (req, res) => {
   res.json({ message: "Du er logget ut." });
 };
 
+// Registrerer ny bruker
 export const registerUser = async (req, res) => {
   try {
     const {
@@ -232,6 +237,7 @@ export const registerUser = async (req, res) => {
   }
 };
 
+// Registrerer ny ansatt
 export const registerNewEmployeeController = async (req, res) => {
   try {
     const storeManager = req.user;

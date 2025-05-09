@@ -1,4 +1,7 @@
 import express from "express";
+import { verifyToken } from "../middleware/authMiddleware.js";
+import { authorizeRoles } from "../middleware/authMiddleware.js";
+
 import {
   getAllStoresController,
   getStoreByIdController,
@@ -10,10 +13,14 @@ import {
 const router = express.Router();
 
 // Henter alle butikker med tilhørende kommune
-router.get("/storesWithMunicipality", getStoresWithMunicipalityController);
+router.get(
+  "/storesWithMunicipality",
+  verifyToken,
+  getStoresWithMunicipalityController
+);
 
 // Henter alle butikker
-router.get("/", getAllStoresController);
+router.get("/", verifyToken, getAllStoresController);
 
 // Henter alle butikker med tilhørende informasjon
 router.get("/getAllStoresWithInfo", getAllStoresWithInfoController);
@@ -22,6 +29,11 @@ router.get("/getAllStoresWithInfo", getAllStoresWithInfoController);
 router.get("/:storeId", getStoreByIdController);
 
 // Oppretter en ny butikk
-router.post("/createNewStore", createStoreController);
+router.post(
+  "/createNewStore",
+  verifyToken,
+  authorizeRoles("store_manager"), // Må oppdateres til admin
+  createStoreController
+);
 
 export default router;
