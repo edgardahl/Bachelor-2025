@@ -18,7 +18,7 @@ import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // Henter alle skift
-router.get("/", getAllShiftsController);
+router.get("/", verifyToken, getAllShiftsController);
 
 // Henter alle skift som brukeren er kvalifisert for
 router.get(
@@ -54,10 +54,10 @@ router.get(
 router.get("/store/:store_id", verifyToken, getShiftsByStoreController);
 
 // Henter alle skift i en butikk som er publisert av en bestemt bruker
-router.get("/posted_by/:posted_by", getShiftByPostedByController);
+router.get("/posted_by/:posted_by", verifyToken, getShiftByPostedByController);
 
 // Henter et skift med en bestemt id
-router.get("/:shift_id", getShiftByIdController);
+router.get("/:shift_id", verifyToken, getShiftByIdController);
 
 // Route for å ta et skift
 router.post(

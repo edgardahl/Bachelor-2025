@@ -1,9 +1,11 @@
 import express from "express";
+import { verifyToken } from "../middleware/authMiddleware.js";
+
 import { getAllMunicipalitiesController } from "../controllers/municipalityController.js";
 
 const router = express.Router();
 
 // Henter alle kommuner
-router.get("/", getAllMunicipalitiesController);
+router.get("/", verifyToken, getAllMunicipalitiesController);
 
 export default router;

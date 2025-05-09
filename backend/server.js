@@ -22,6 +22,7 @@ if (isProduction) {
   app.set("trust proxy", 1);
 }
 
+// Middleware for CORS
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -55,5 +56,5 @@ app.use("/api/qualifications", qualificationRoutes);
 app.use("/api/notifications", notificationRoutes);
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Backend running at http://localhost:${PORT}/api`);
+  console.log(`Backend kjører på http://localhost:${PORT}/api`);
 });
