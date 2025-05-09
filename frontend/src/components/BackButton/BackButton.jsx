@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { IoArrowBackOutline } from "react-icons/io5";
 import "./BackButton.css";
 
 const BackButton = () => {
@@ -7,13 +8,7 @@ const BackButton = () => {
 
   return (
     <div className="back-button" onClick={() => navigate(-1)}>
-      <img
-        src="/icons/back-arrow.svg"
-        className="arrow"
-        alt="Tilbake"
-        width="24"
-        height="24"
-      />
+      <IoArrowBackOutline />
       <span className="back-text">Tilbake</span>
     </div>
   );

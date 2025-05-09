@@ -1,11 +1,18 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
-import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Tooltip,
+  useMap,
+} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./CoopMap.css";
-import redStoreIconUrl from "../../../public/icons/red_store.png";
+import redStoreIconUrl from "/icons/red_store.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -52,7 +59,9 @@ const LocationSearch = () => {
     if (!query) return;
 
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+        query
+      )}`
     );
     const data = await response.json();
     if (data && data.length > 0) {
@@ -147,7 +156,9 @@ const CoopMap = () => {
                   navigate(
                     `/${
                       user?.role === "store_manager" ? "bs" : "ba"
-                    }/butikker/${store.store_chain}/${store.name}/${store.store_id}`
+                    }/butikker/${store.store_chain}/${store.name}/${
+                      store.store_id
+                    }`
                   )
                 }
               >
