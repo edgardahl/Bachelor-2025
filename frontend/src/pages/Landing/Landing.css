@@ -6,30 +6,44 @@
 }
 
 .landing-hero {
-  height: 100vh;
-  background: linear-gradient(to bottom right, #5d89c7, #213653);
-  color: white;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #213653 0%, #5d89c7 100%);
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
   padding: 2rem;
+  text-align: center;
+  color: white;
 }
 
-.landing-hero img {
-  width: 30vw;
+.hero-content {
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.hero-logo {
+  width: clamp(150px, 30vw, 400px);
   height: auto;
-  min-width: 300px;
-  margin-bottom: 4rem;
-  filter: invert(1); /* Inverterer fargene på bildet */
+  filter: invert(1);
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+.hero-subtitle {
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  max-width: 60ch;
+  margin: 0;
 }
 
 
-.landing-hero h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
 
 .landing-section-heading {
   font-size: 2.5rem;
@@ -144,4 +158,41 @@
   flex-direction: column;
   gap: 20px;
   height: fit-content;
+}
+
+.scroll-down-indicator {
+  margin-top: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  animation: floatUpDown 2s infinite ease-in-out;
+  transition: transform 0.3s ease;
+}
+
+.scroll-down-indicator:hover {
+  transform: translateY(4px);
+}
+
+.scroll-down-text {
+  font-size: 1rem;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.scroll-down-arrow {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+/* Animation for smooth bounce */
+@keyframes floatUpDown {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
 }
