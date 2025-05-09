@@ -31,7 +31,7 @@ const Landing = () => {
     <div className="landing-container">
       {/* Hero */}
       <section className="landing-hero">
-        <img src="/public/icons/coop-compis-logo-sort.svg" alt="Coop logo" />
+        <img src="/icons/coop-compis-logo-sort.svg" alt="Coop logo" />
         <h1>Velkommen til Coop Compis</h1>
         <p>En enklere måte å koordinere vakter og ansatte i butikkene.</p>
         <button className="cta-button" onClick={() => navigate("/login")}>

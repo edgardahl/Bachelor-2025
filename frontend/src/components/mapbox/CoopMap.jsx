@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
 import {
@@ -12,7 +12,7 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./CoopMap.css";
-import redStoreIconUrl from "/public/icons/red_store.png";
+import redStoreIconUrl from "/icons/red_store.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
