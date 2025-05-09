@@ -13,8 +13,8 @@ const Landing = () => {
 
   // Oppretter employee objektet her
   const employee = {
-    first_name: "Sara",
-    last_name: "Larsen",
+    first_name: "Kari",
+    last_name: "Nordmann",
     availability: "Ikke tilgjengelig",
     qualifications: "Kasse, Post",
     store_name: "Coop Mega Løren",
@@ -31,37 +31,40 @@ const Landing = () => {
     <div className="landing-container">
       {/* Hero */}
       <section className="landing-hero">
-      <div className="hero-content">
-        <img
-          src="/icons/coop-compis-logo-sort.svg"
-          alt="Coop logo"
-          className="hero-logo"
-        />
-        <h1 className="hero-title">Velkommen til Coop Compis</h1>
-        <p className="hero-subtitle">
-          Den smarte måten å organisere vakter og ansatte i butikkene dine.
-        </p>
-        <button className="kom-i-gang-button" onClick={() => navigate("/login")}>
-          Kom i gang
-        </button>
-        <div
-          className="scroll-down-indicator"
-          onClick={() =>
-            window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
-          }
-        >
-          <span className="scroll-down-text">Scroll ned</span>
-          <span className="scroll-down-arrow">⌄</span>
+        <div className="hero-content">
+          <img
+            src="/icons/coop-compis-logo-sort.svg"
+            alt="Coop logo"
+            className="hero-logo"
+          />
+          <h1 className="hero-title">Velkommen til Coop Compis</h1>
+          <p className="hero-subtitle">
+            Den smarte måten å organisere vakter og ansatte i butikkene dine.
+          </p>
+          <button
+            className="kom-i-gang-button"
+            onClick={() => navigate("/login")}
+          >
+            Kom i gang
+          </button>
+          <div
+            className="scroll-down-indicator"
+            onClick={() =>
+              window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
+            }
+          >
+            <span className="scroll-down-text">Scroll ned</span>
+            <span className="scroll-down-arrow">⌄</span>
+          </div>
         </div>
-      </div>
-    </section>
-
+      </section>
 
       {/* Section 1 – Butikker */}
       <section className="landing-section">
         <h2 className="landing-section-heading">🏬 Butikker</h2>
         <p className="landing-section-text">
-          Få oversikt over alle Coop Øst-butikker. Se deres beliggenhet, tilgjengelige vakter og hvilke behov de har for bemanning.
+          Få oversikt over alle Coop Øst-butikker. Se deres beliggenhet,
+          tilgjengelige vakter og hvilke behov de har for bemanning.
         </p>
         <div className="preview-card">
           <ButikkCard
@@ -80,7 +83,8 @@ const Landing = () => {
       <section className="landing-section alt">
         <h2 className="landing-section-heading">📢 Publisere vakter</h2>
         <p className="landing-section-text">
-          Trenger du folk på jobb? Legg ut en vakt! Systemet matcher den med ansatte som har riktig kvalifikasjon og tilgjengelighet.
+          Trenger du folk på jobb? Legg ut en vakt! Systemet matcher den med
+          ansatte som har riktig kvalifikasjon og tilgjengelighet.
         </p>
         <div className="preview-card">
           <ShiftCard
@@ -103,7 +107,8 @@ const Landing = () => {
       <section className="landing-section">
         <h2 className="landing-section-heading">📆 Ta vakt</h2>
         <p className="landing-section-text">
-        Som ansatt kan du selv velge vakter i kommunene du er interessert i. Du får kun opp relevante vakter du er kvalifisert for.
+          Som ansatt kan du selv velge vakter i kommunene du er interessert i.
+          Du får kun opp relevante vakter du er kvalifisert for.
         </p>
         <div className="preview-card">
           <ShiftCard
@@ -126,17 +131,13 @@ const Landing = () => {
       <section className="landing-section alt">
         <h2 className="landing-section-heading">👥 Administrer ansatte</h2>
         <p className="landing-section-text">
-          Butikksjefer får full oversikt over egne ansatte, deres kvalifikasjoner og hvilke eksterne ansatte som er interesserte i å jobbe i din kommune.
+          Butikksjefer får full oversikt over egne ansatte, deres
+          kvalifikasjoner og hvilke eksterne ansatte som er interesserte i å
+          jobbe i din kommune.
         </p>
         <div className="preview-card">
-          <ButikkansattCard
-            employee={employee}
-            cardClass="employee-theme"
-          />
-          <ButikkansattCard
-            employee={employee2}
-            cardClass="available-theme"
-          />
+          <ButikkansattCard employee={employee} cardClass="employee-theme" />
+          <ButikkansattCard employee={employee2} cardClass="available-theme" />
         </div>
       </section>
 
@@ -144,7 +145,10 @@ const Landing = () => {
       <section className="kom-i-gang-container">
         <div className="kom-i-gang-content">
           <h2 className="kom-i-gang-heading">Er du klar for å komme i gang?</h2>
-          <p className="kom-i-gang-text">Bli med på Coop Compis og effektiviser hvordan du administrerer vakter og ansatte!</p>
+          <p className="kom-i-gang-text">
+            Bli med på Coop Compis og effektiviser hvordan du administrerer
+            vakter og ansatte!
+          </p>
           <button
             className="kom-i-gang-button"
             onClick={() => navigate("/login")}
