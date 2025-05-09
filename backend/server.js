@@ -22,6 +22,7 @@ if (isProduction) {
   app.set("trust proxy", 1);
 }
 
+// Middleware for CORS
 app.use(
   cors({
     origin: (origin, callback) => {
