@@ -45,11 +45,13 @@ const ButikkansattCard = ({
           </p>
         )}
 
-        <p className="qualifications">
+      <div className="qualifications">
+        <div className="icon-wrapper">
           <FaBriefcase className="icon" />
-          {employee.qualifications || "Ingen kvalifikasjoner"}
-        </p>
+        </div>
+        <p>{employee.qualifications || "Ingen kvalifikasjoner"}</p>
       </div>
+</div>
 
       <div className="card-arrow">
         <HiChevronRight />
