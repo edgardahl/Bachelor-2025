@@ -1,4 +1,4 @@
-.auth-wrapper {
+.login-wrapper {
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -6,7 +6,7 @@
   padding: 2rem;
 }
 
-.auth-form {
+.login-form {
   background-color: #fff;
   padding: 2rem;
   border-radius: 4px;
@@ -16,11 +16,11 @@
   font-family: sans-serif;
 }
 
-.auth-form * {
+.login-form * {
   box-sizing: border-box;
 }
 
-.auth-title {
+.login-title {
   text-align: center;
   font-size: 1.75rem;
   margin-bottom: 1.5rem;
@@ -28,19 +28,19 @@
   font-weight: bold;
 }
 
-.auth-field {
+.login-field {
   margin-bottom: 1.25rem;
 }
 
-.auth-label {
+.login-label {
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #333;
 }
 
-.auth-input,
-.auth-select {
+.login-input,
+.login-select {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #ccc;
@@ -51,13 +51,13 @@
   display: block;
 }
 
-.auth-input:focus,
-.auth-select:focus {
+.login-input:focus,
+.login-select:focus {
   border-color: #0077cc;
   outline: none;
 }
 
-.auth-button {
+.login-button {
   width: 100%;
   padding: 0.9rem;
   background-color: #0077cc;
@@ -71,16 +71,16 @@
   margin-top: 0.5rem;
 }
 
-.auth-button:disabled {
+.login-button:disabled {
   background-color: #999;
   cursor: not-allowed;
 }
 
-.auth-button:hover:not(:disabled) {
+.login-button:hover:not(:disabled) {
   background-color: #005fa3;
 }
 
-.auth-error {
+.login-error {
   color: #d8000c;
   background-color: #ffdddd;
   padding: 0.5rem;
@@ -89,7 +89,7 @@
   font-size: 0.9rem;
 }
 
-.auth-success {
+.login-success {
   color: #270;
   background-color: #d4edda;
   padding: 0.5rem;
@@ -98,27 +98,26 @@
   font-size: 0.95rem;
 }
 
-.auth-checkbox {
+.login-checkbox {
   margin-right: 0.5rem;
 }
 
-.auth-footer {
+.login-footer {
   margin-top: 1.5rem;
   text-align: center;
 }
 
-.auth-link {
-  color: #0077cc;
-  font-weight: bold;
-  text-decoration: none;
+.login-note {
+  font-size: 0.95rem;
+  color: #555;
+  margin-top: 0.25rem;
+  font-style: italic;
 }
 
-.auth-link:hover {
-  text-decoration: underline;
-}
 
+/* Optional: matching select styles */
 .select__control {
-  min-height: 48px; /* Match .auth-input height */
+  min-height: 48px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1rem;
