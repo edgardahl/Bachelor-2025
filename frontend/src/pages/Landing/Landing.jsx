@@ -126,12 +126,12 @@ const Landing = () => {
       </section>
 
       {/* Kom i gang knapp på bunnen */}
-      <section className="landing-cta">
-        <div className="cta-content">
-          <h2 className="cta-heading">Er du klar for å komme i gang?</h2>
-          <p className="cta-text">Bli med på Coop Compis og effektiviser hvordan du administrerer vakter og ansatte!</p>
+      <section className="kom-i-gang-container">
+        <div className="kom-i-gang-content">
+          <h2 className="kom-i-gang-heading">Er du klar for å komme i gang?</h2>
+          <p className="kom-i-gang-text">Bli med på Coop Compis og effektiviser hvordan du administrerer vakter og ansatte!</p>
           <button
-            className="cta-button"
+            className="kom-i-gang-button"
             onClick={() => navigate("/login")}
           >
             Kom i gang
