@@ -245,3 +245,70 @@ export const sanitizeUserUpdate = (userData) => {
     work_municipality_ids,
   };
 };
+
+// Middleware to sanitize store data before updating
+export const sanitizeStoreUpdate = (storeData) => {
+  const {
+    store_name, // Butikkens navn
+    address,
+    postal_code,
+    municipality_id,
+    manager_id,
+    phone_number,
+    store_chain,
+  } = storeData;
+
+  const errors = {};
+
+  // Validating the name of the store
+  if (typeof store_name !== "string" || store_name.trim() === "") {
+    errors.store_name = "Navn på butikken er påkrevd.";
+  } else if (!/^[a-zA-ZæøåÆØÅ0-9\s]+$/.test(store_name.trim())) {
+    errors.store_name = "Butikknavn kan bare inneholde bokstaver, tall og mellomrom.";
+  }
+
+  // Validating address
+  if (typeof address !== "string" || address.trim() === "") {
+    errors.address = "Adresse er påkrevd.";
+  }
+
+  // Validating postal code
+  const postalCodeRegex = /^[0-9]{4}(\s[0-9]{4})?$/;
+  if (postal_code && !postalCodeRegex.test(postal_code)) {
+    errors.postal_code = "Postnummer må være i riktig format (f.eks. 1234 eller 1234 5678).";
+  }
+
+  // Validating municipality_id (UUID check)
+  if (municipality_id && !isUUID(municipality_id)) {
+    errors.municipality_id = "Kommune-ID må være en gyldig UUID.";
+  }
+
+  // Validating manager_id (UUID check)
+  if (manager_id && !isUUID(manager_id)) {
+    errors.manager_id = "Manager-ID må være en gyldig UUID.";
+  }
+
+  // Validating phone number
+  const phoneRegex = /^[0-9+\- ]{6,20}$/;
+  if (phone_number && !phoneRegex.test(phone_number)) {
+    errors.phone_number = "Telefonnummeret er ugyldig.";
+  }
+
+  // Validating store chain
+  if (store_chain && typeof store_chain !== "string") {
+    errors.store_chain = "Butikkjede må være en gyldig tekststreng.";
+  }
+
+  if (Object.keys(errors).length > 0) return { errors };
+
+  // Return sanitized data
+  return {
+    store_name: store_name.trim(),
+    address: address.trim(),
+    postal_code,
+    municipality_id,
+    manager_id,
+    phone_number: phone_number?.trim(),
+    store_chain: store_chain?.trim(),
+  };
+};

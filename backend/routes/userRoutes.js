@@ -7,6 +7,7 @@ import {
   getAvailableEmployeesController,
   updateEmployeeQualificationsController,
   changePassword,
+  getAllStoreManagersController,
 } from "../controllers/userController.js";
 import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
@@ -30,6 +31,15 @@ router.post(
   authorizeRoles("store_manager"),
   updateEmployeeQualificationsController
 );
+
+// Hent alle store managers (uavhengig om de har butikk eller ikke)
+router.get(
+  "/store_managers", // Endret ruten fra "/store_managers_without_store" til "/store_managers"
+  verifyToken,
+  authorizeRoles("admin"),
+  getAllStoreManagersController
+);
+
 
 // Henter alle tilgjengelige ansatte
 router.get(

@@ -75,6 +75,20 @@ export const getStoresWithMunicipality = async (
   };
 };
 
+//Get stores with all info from this rpc get_full_store_info(store_uuid uuid)
+export const getStoreWithFullInfoModel = async (storeId) => {
+  const { data, error } = await supabase.rpc("get_full_store_info", {
+    store_uuid: storeId,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
+
 
 
 
@@ -135,4 +149,31 @@ if (error) {
 console.log("Store successfully inserted: ", data[0]);  // Data contains the inserted row now
 return data[0];  // Return the inserted row
 
+};
+
+
+// In storeModel.js
+export const updateStoreModel = async (storeId, storeData) => {
+  const { name, store_chain, municipality_id, address, phone_number, email, manager_id } = storeData;
+
+  // Update the store in the database
+  const { data, error } = await supabase
+    .from("stores")
+    .update({
+      name,
+      store_chain,
+      municipality_id,
+      address,
+      phone_number,
+      email,
+      manager_id,
+    })
+    .eq("store_id", storeId)
+    .select();  // Return the updated row
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data[0];  // Return the updated store
 };

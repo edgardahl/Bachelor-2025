@@ -21,7 +21,9 @@ const storeChainImages = {
 
 const ButikkCard = ({ store, shiftsCount }) => {
   const { user } = useAuth();
-  const role = user?.role === "employee" ? "ba" : "bs";
+  const role = user?.role === "employee" ? "ba" : user?.role === "store_manager" ? "bs" : "admin";
+
+
 
   const imageSrc =
     storeChainImages[store.store_chain] || storeChainImages["default"];

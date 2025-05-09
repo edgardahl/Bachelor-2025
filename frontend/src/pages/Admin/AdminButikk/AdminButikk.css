@@ -1,0 +1,95 @@
+.adminbutikk-page {
+    max-width: 1006px;
+    margin: 0 auto;
+    padding: 24px;
+    font-family: "Segoe UI", sans-serif;
+    background-color: var(--Body-background);
+    color: var(--Text-color-light);
+}
+
+.adminbutikk-title {
+    text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+}
+
+.adminbutikk-form {
+    margin: 0 auto;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 700px;
+  transition: box-shadow 0.3s ease;
+}
+
+.adminbutikk-form:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.adminbutikk-field {
+  margin-bottom: 1.5rem;
+}
+
+.adminbutikk-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+  color: #555;
+}
+
+.adminbutikk-text {
+  font-size: 1.05rem;
+  padding: 0.75rem 1rem;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  color: #333;
+  border: 1px solid transparent;
+}
+
+.adminbutikk-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1.05rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background-color: #ffffff;
+  transition: border 0.2s ease;
+  outline: none;
+}
+
+.adminbutikk-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.adminbutikk-select {
+  font-size: 1.05rem;
+}
+
+.adminbutikk-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.adminbutikk-button {
+  background-color: var(--Card-header-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.adminbutikk-button:hover {
+  background-color: var(--Main-dark-color);
+}
