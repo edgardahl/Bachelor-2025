@@ -31,22 +31,20 @@ const Landing = () => {
     <div className="landing-container">
       {/* Hero */}
       <section className="landing-hero">
-        <img src="../../../public/icons/coop-compis-logo-sort.svg" alt="Coop logo" />
+        <img src="/public/icons/coop-compis-logo-sort.svg" alt="Coop logo" />
         <h1>Velkommen til Coop Compis</h1>
         <p>En enklere måte å koordinere vakter og ansatte i butikkene.</p>
-        <button
-            className="cta-button"
-            onClick={() => navigate("/login")}
-          >
-            Kom i gang
-          </button>
+        <button className="cta-button" onClick={() => navigate("/login")}>
+          Kom i gang
+        </button>
       </section>
 
       {/* Section 1 – Butikker */}
       <section className="landing-section">
         <h2 className="landing-section-heading">🏬 Butikker</h2>
         <p className="landing-section-text">
-          Se alle butikker i Coop Øst, hva de kan tilby og hva de trenger hjelp med.
+          Se alle butikker i Coop Øst, hva de kan tilby og hva de trenger hjelp
+          med.
         </p>
         <div className="preview-card">
           <ButikkCard
@@ -65,7 +63,9 @@ const Landing = () => {
       <section className="landing-section alt">
         <h2 className="landing-section-heading">📢 Publisere vakter</h2>
         <p className="landing-section-text">
-          Når du trenger en vakt fylt, kan du legge den ut, og alle ansatte i Coop Øst med de kvalifikasjonene du trenger vil få den opp og kunne ta den.
+          Når du trenger en vakt fylt, kan du legge den ut, og alle ansatte i
+          Coop Øst med de kvalifikasjonene du trenger vil få den opp og kunne ta
+          den.
         </p>
         <div className="preview-card">
           <ShiftCard
@@ -88,7 +88,8 @@ const Landing = () => {
       <section className="landing-section">
         <h2 className="landing-section-heading">📆 Ta vakt</h2>
         <p className="landing-section-text">
-          Som ansatt kan du velge hvilke kommuner du er interessert i å jobbe i, og ta vakter i de områdene du er kvalifisert for.
+          Som ansatt kan du velge hvilke kommuner du er interessert i å jobbe i,
+          og ta vakter i de områdene du er kvalifisert for.
         </p>
         <div className="preview-card">
           <ShiftCard
@@ -111,17 +112,13 @@ const Landing = () => {
       <section className="landing-section alt">
         <h2 className="landing-section-heading">👥 Administrer ansatte</h2>
         <p className="landing-section-text">
-          Som butikksjef kan du se en oversikt over alle dine ansatte og deres kvalifikasjoner. Du kan også se alle ansatte i Coop Øst som ønsker å jobbe i din kommune.
+          Som butikksjef kan du se en oversikt over alle dine ansatte og deres
+          kvalifikasjoner. Du kan også se alle ansatte i Coop Øst som ønsker å
+          jobbe i din kommune.
         </p>
         <div className="preview-card">
-          <ButikkansattCard
-            employee={employee}
-            cardClass="employee-theme"
-          />
-          <ButikkansattCard
-            employee={employee2}
-            cardClass="available-theme"
-          />
+          <ButikkansattCard employee={employee} cardClass="employee-theme" />
+          <ButikkansattCard employee={employee2} cardClass="available-theme" />
         </div>
       </section>
 
@@ -129,7 +126,10 @@ const Landing = () => {
       <section className="kom-i-gang-container">
         <div className="kom-i-gang-content">
           <h2 className="kom-i-gang-heading">Er du klar for å komme i gang?</h2>
-          <p className="kom-i-gang-text">Bli med på Coop Compis og effektiviser hvordan du administrerer vakter og ansatte!</p>
+          <p className="kom-i-gang-text">
+            Bli med på Coop Compis og effektiviser hvordan du administrerer
+            vakter og ansatte!
+          </p>
           <button
             className="kom-i-gang-button"
             onClick={() => navigate("/login")}
