@@ -1,9 +1,13 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 import { toast } from "react-toastify";
+import BackButton from "../../../components/BackButton/BackButton";
 import "./NewEmployeeForm.css";
 
 export default function RegisterNewEmployeeForm() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -23,7 +27,6 @@ export default function RegisterNewEmployeeForm() {
   const [qualifications, setQualifications] = useState([]);
   const [errors, setErrors] = useState({});
 
-  // ✅ Keeps your Promise.all intact
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -102,6 +105,8 @@ export default function RegisterNewEmployeeForm() {
 
   return (
     <form className="register-form" onSubmit={handleSubmit}>
+      <BackButton onClick={() => navigate(-1)} />
+
       <h2 className="form-title">Registrer ny bruker</h2>
       <p className="form-subtitle">
         Den ansatte kan endre e-post, telefonnummer, passord og mer etter
