@@ -34,47 +34,44 @@ export default function LoginPage() {
   
 
   return (
-    <div className="auth-wrapper">
-      <form onSubmit={handleSubmit} className="auth-form">
-        <h2 className="auth-title">Logg inn</h2>
+    <div className="login-wrapper">
+      <form onSubmit={handleSubmit} className="login-form">
+        <h2 className="login-title">Logg inn</h2>
 
-        <div className="auth-field">
-          <label className="auth-label">E-post</label>
+        <div className="login-field">
+          <label className="login-label">E-post</label>
           <input
             type="email"
-            className="auth-input"
+            className="login-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
 
-        <div className="auth-field">
-          <label className="auth-label">Passord</label>
+        <div className="login-field">
+          <label className="login-label">Passord</label>
           <input
             type="password"
-            className="auth-input"
+            className="login-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
 
-        {inlineError && <p className="auth-error">{inlineError}</p>}
+        {inlineError && <p className="login-error">{inlineError}</p>}
 
-        <button type="submit" className="auth-button">
+        <button type="submit" className="login-button">
           Logg inn
         </button>
 
-        <div className="auth-footer">
-          <p>
-            Har du ikke brukerkonto?{" "}
-            <Link to="/register" className="auth-link">
-              Registrer deg her
-            </Link>
-          </p>
+        <div className="login-footer">
+          <p>Har du ikke brukerkonto?</p>
+          <p className="login-note">Spørr din butikksjef om en bruker</p>
         </div>
       </form>
     </div>
+
   );
 }
