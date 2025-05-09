@@ -4,7 +4,6 @@ import {
   logoutUser,
   getCurrentUser,
   refreshAccessToken,
-  registerUser,
   registerNewEmployeeController,
 } from "../controllers/authController.js";
 
@@ -17,7 +16,6 @@ const router = express.Router();
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.post("/refresh-token", refreshAccessToken);
-router.post("/register", registerUser);
 router.post(
   "/employee/register",
   verifyToken,
