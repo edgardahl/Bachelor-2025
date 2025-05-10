@@ -1,105 +1,97 @@
 .register-form {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: #ffffff;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    border-radius: 4px;
-  }
-  
-  .form-title {
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    color: #333;
-    text-align: center;
-  }
-  
-  .form-subtitle {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 2rem;
-    text-align: center;
-    max-width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .register-form label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 0.25rem;
-    color: #444;
-  }
-  .label-note {
-    font-weight: normal;
-    font-size: 0.9rem;
-    color: #777;
-  }
-  
-  
-  .register-form input {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 3rem;
-    font-size: 1rem;
-    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  }
-  
-  .register-form input:focus {
-    border-color: var(--Shifts-main);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-    outline: none;
-  }
-  
-  .register-form .error-message {
-    color: red;
-    font-size: 0.875rem;
-    margin-top: -0.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .register-form .error {
-    border: 2px solid red;
-  }
-  
-  .register-form .submit-btn {
-    display: block;
-    width: 50%;
-    padding: 0.75rem;
-    font-size: 1rem;
-    border: none;
-    border-radius: 4px;
-    background-color: var(--Shifts-main);
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-    margin: 2rem auto;
-  }
-  
-  .register-form .submit-btn:hover {
-    background-color: var(--Shifts-main);
-  }
-  
-  button[disabled] {
-    background-color: #a4c8f0;
-    cursor: not-allowed;
-  }
-  
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
 
-  .new-user-error-message {
+.form-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #333;
+  text-align: center;
+}
 
-    color: red;
-    margin-top: 0;
-    margin-bottom: 50px;
-    font-size: 14px;
-  }
+.form-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2rem;
+  text-align: center;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  @media (max-width: 616px) {
-    .register-form {
-      border-radius: 0px;
-    }
+.register-form label {
+  display: block;
+  font-weight: 500;
+  margin-top: 2.2rem; /* Nytt */
+  margin-bottom: 0.25rem;
+  color: #444;
+}
+
+.label-note {
+  font-weight: normal;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 0.5rem; /* Nytt */
+  font-size: 1rem;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.register-form input:focus {
+  border-color: var(--Shifts-main);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  outline: none;
+}
+
+.register-form .error {
+  border: 2px solid red;
+}
+
+.register-form .submit-btn {
+  display: block;
+  width: 50%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--Shifts-main);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin: 2rem auto;
+}
+
+.register-form .submit-btn:hover {
+  background-color: var(--Shifts-main);
+}
+
+button[disabled] {
+  background-color: #a4c8f0;
+  cursor: not-allowed;
+}
+
+.new-user-error-message {
+  color: red;
+  margin-top: 0;
+  margin-bottom: 50px;
+  font-size: 14px;
+}
+
+@media (max-width: 616px) {
+  .register-form {
+    border-radius: 0px;
   }
+}

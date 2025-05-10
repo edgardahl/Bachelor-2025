@@ -14,7 +14,7 @@ import {
 import { getStoreByIdModel } from "../models/storeModel.js";
 import bcrypt from "bcryptjs";
 import { supabase } from "../config/supabaseClient.js";
-import { sanitizeUserUpdate } from "../utils/sanitizeInput.js";
+import { sanitizeUserUpdate, sanitizePasswordUpdate } from "../utils/sanitizeInput.js";
 
 // Henter alle brukere
 export const getAllUsersController = async (req, res) => {
@@ -74,11 +74,17 @@ export const updateUserByIdController = async (req, res) => {
   const userId = req.user.userId;
   const rawData = req.body;
 
+  // Logging rådata
+  console.log("🟡 Raw data received from frontend:", rawData);
+
   const sanitized = sanitizeUserUpdate(rawData);
+
+  // Logging sanitiserte data
+  console.log("🟢 Sanitized update payload:", sanitized);
+
   if (sanitized.errors) {
-    return res
-      .status(400)
-      .json({ error: Object.values(sanitized.errors).join(" ") });
+    console.log("🔴 Validation errors from sanitizeUserUpdate:", sanitized.errors);
+    return res.status(400).json({ error: sanitized.errors });
   }
 
   const { email, phone_number } = sanitized;
@@ -86,6 +92,7 @@ export const updateUserByIdController = async (req, res) => {
   try {
     const currentUser = await getUserByIdModel(userId);
 
+    // Sjekk om e-posten skal endres og om den allerede er i bruk
     if (email && email !== currentUser.email) {
       const { data: emailUsers, error: emailError } = await supabase
         .from("users")
@@ -94,19 +101,16 @@ export const updateUserByIdController = async (req, res) => {
         .neq("user_id", userId);
 
       if (emailError) {
-        console.error("Error checking email duplication:", emailError);
-        return res
-          .status(500)
-          .json({ error: "Intern serverfeil ved sjekk av e-post." });
+        console.error("🔴 Error checking email duplication:", emailError);
+        return res.status(500).json({ error: "Intern serverfeil ved sjekk av e-post." });
       }
 
       if (emailUsers.length > 0) {
-        return res
-          .status(400)
-          .json({ error: "E-postadressen er allerede i bruk." });
+        return res.status(400).json({ error: { email: "E-postadressen er allerede i bruk." } });
       }
     }
 
+    // Sjekk om telefonnummer skal endres og om det allerede er i bruk
     if (phone_number && phone_number !== currentUser.phone_number) {
       const { data: phoneUsers, error: phoneError } = await supabase
         .from("users")
@@ -115,18 +119,26 @@ export const updateUserByIdController = async (req, res) => {
         .neq("user_id", userId);
 
       if (phoneError) {
-        console.error("Error checking phone duplication:", phoneError);
-        return res
-          .status(500)
-          .json({ error: "Intern serverfeil ved sjekk av telefonnummer." });
+        console.error("🔴 Error checking phone duplication:", phoneError);
+        return res.status(500).json({ error: "Intern serverfeil ved sjekk av telefonnummer." });
       }
 
       if (phoneUsers.length > 0) {
-        return res
-          .status(400)
-          .json({ error: "Telefonnummeret er allerede i bruk." });
+        return res.status(400).json({ error: { phone_number: "Telefonnummeret er allerede i bruk." } });
       }
     }
+
+    // Logg verdier som skal lagres
+    console.log("🛠️ Final update values to send to DB:");
+    console.log("Updates:", {
+      first_name: sanitized.first_name,
+      last_name: sanitized.last_name,
+      email: sanitized.email,
+      phone_number: sanitized.phone_number,
+      availability: sanitized.availability,
+      municipality_id: sanitized.municipality_id,
+    });
+    console.log("Preferred municipality IDs:", sanitized.work_municipality_ids);
 
     const updatedUser = await updateUserByIdModel(
       userId,
@@ -142,12 +154,13 @@ export const updateUserByIdController = async (req, res) => {
     );
 
     if (!updatedUser) {
+      console.error("❌ Failed to update user. Sanitized payload was:", sanitized);
       return res.status(400).json({ error: "Oppdatering av bruker feilet." });
     }
 
     return res.json(updatedUser);
   } catch (error) {
-    console.error("Error updating user:", error);
+    console.error("🔥 Uncaught error updating user:", error);
     return res.status(500).json({ error: "Intern serverfeil." });
   }
 };
@@ -155,13 +168,13 @@ export const updateUserByIdController = async (req, res) => {
 // Endrer passord
 export const changePassword = async (req, res) => {
   const userId = req.user.userId;
-  const { currentPassword, newPassword } = req.body;
 
-  if (!currentPassword || !newPassword) {
-    return res
-      .status(400)
-      .json({ error: "Both current and new passwords are required." });
+  const result = sanitizePasswordUpdate(req.body);
+  if (result.errors) {
+    return res.status(400).json({ error: result.errors });
   }
+
+  const { currentPassword, newPassword } = result;
 
   try {
     const user = await getUserWithPasswordById(userId);
@@ -169,25 +182,25 @@ export const changePassword = async (req, res) => {
     if (!user || !user.password) {
       return res
         .status(404)
-        .json({ error: "User not found or missing password." });
+        .json({ error: "Bruker ikke funnet eller mangler passord." });
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res.status(401).json({ error: "Current password is incorrect." });
+      return res.status(401).json({ error: "Nåværende passord er feil." });
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     const updated = await updateUserPasswordById(userId, hashedNewPassword);
 
     if (!updated) {
-      return res.status(500).json({ error: "Failed to update password" });
+      return res.status(500).json({ error: "Kunne ikke oppdatere passordet." });
     }
 
-    return res.json({ message: "Password updated successfully." });
+    return res.json({ message: "Passordet ble oppdatert." });
   } catch (error) {
-    console.error("Change password error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Feil ved oppdatering av passord:", error);
+    res.status(500).json({ error: "Intern serverfeil" });
   }
 };
 

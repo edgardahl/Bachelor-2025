@@ -70,7 +70,7 @@ const MineVakter = () => {
       <h1 className="mine-vakter-title">DINE UTLYSTE VAKTER</h1>
       <div className="mine-vakter-beskrivelse">
         <p>
-          Her kan du se alle vaktene du har lagt ut, legge ut nye, sjekke hvilke
+          Her kan du se alle vaktene du har lagt ut, legge ut nye, se hvilke
           som er tatt og se vaktene andre i butikken din har delt.
         </p>
       </div>
