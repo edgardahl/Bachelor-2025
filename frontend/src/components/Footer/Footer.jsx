@@ -16,14 +16,14 @@ const Footer = () => {
 
         <div className="footer-section">
           <h4>Kontakt</h4>
-          <p>
+          <span>
             <MdEmail className="footer-icon" />
-            support@coop.no
-          </p>
-          <p>
+            <a href="mailto:support@coop.no">support@coop.no</a>
+          </span>
+          <span>
             <MdPhone className="footer-icon" />
-            +47 22 22 22 22
-          </p>
+            <a href="tlf:12345678">12 34 56 78</a>
+          </span>
         </div>
       </div>
 

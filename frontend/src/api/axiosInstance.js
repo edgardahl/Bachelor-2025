@@ -47,9 +47,6 @@ instance.interceptors.response.use(
       !originalRequest._retry &&
       error.response?.data?.error !== "Invalid credentials"
     ) {
-      console.warn(
-        "[AuthProvider] Access token expired or missing, attempting to refresh."
-      );
       originalRequest._retry = true;
 
       if (isRefreshing) {

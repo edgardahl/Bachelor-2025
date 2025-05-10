@@ -58,6 +58,24 @@ export default function Navbar() {
     </>
   );
 
+  const adminLinks = (
+    <>
+      <NavLink to="/admin/hjem" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+        Hjem
+      </NavLink>
+      <NavLink to="/admin/managers" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+        Butikksjefer
+      </NavLink>
+      <NavLink to="/admin/butikker" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+        Butikker
+      </NavLink>
+      <NavLink to="/admin/statistikk" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+        Statistikk
+      </NavLink>
+    </>
+  );  
+  
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuOpen && menuRef.current && !menuRef.current.contains(e.target)) {
@@ -90,7 +108,13 @@ export default function Navbar() {
         </button>
 
         <div className={`nav-links ${menuOpen ? "open" : ""}`} ref={menuRef}>
-          {user?.role === "employee" ? employeeLinks : storeManagerLinks}
+        {user?.role === "employee"
+          ? employeeLinks
+          : user?.role === "admin"
+          ? adminLinks
+          : storeManagerLinks
+        }
+
           <button className="logout-button mobile-only" onClick={handleLogout}>
             Logg ut
           </button>

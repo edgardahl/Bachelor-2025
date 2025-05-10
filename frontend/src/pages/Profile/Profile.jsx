@@ -1,5 +1,5 @@
 // Profile.jsx
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import Loading from "../../components/Loading/Loading";
 import BackButton from "../../components/BackButton/BackButton";
 import ButikkCard from "../../components/Cards/ButikkCard/ButikkCard";
+import { FaEdit } from "react-icons/fa";
+
 import "./Profile.css";
 
 const Profile = () => {
@@ -17,13 +19,28 @@ const Profile = () => {
 
   const [formData, setFormData] = useState(null);
   const [error, setError] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [isEditingQualifications, setIsEditingQualifications] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-  const [passwords, setPasswords] = useState({
-    currentPassword: "",
-    newPassword: "",
+  const [errors, setErrors] = useState({});
+  const fieldRefs = {
+    first_name: useRef(null),
+    last_name: useRef(null),
+    email: useRef(null),
+    phone_number: useRef(null),
+    municipality: useRef(null),
+    availability: useRef(null),
+    password: useRef(null),
+  };
+
+  const [originalFormData, setOriginalFormData] = useState(null);
+  const [isEditingQualifications, setIsEditingQualifications] = useState(false);
+  const [editingFields, setEditingFields] = useState({
+    first_name: false,
+    last_name: false,
+    email: false,
+    phone_number: false,
+    municipality: false,
+    availability: false,
+    password: false,
   });
   const [municipalityOptions, setMunicipalityOptions] = useState([]);
   const [selectedMunicipalityOptions, setSelectedMunicipalityOptions] =
@@ -65,15 +82,20 @@ const Profile = () => {
       setMunicipalityOptions(municipalityOptionsRes);
       setAllQualifications(qualificationsRes);
       setFormData(profileRes.data);
+      setFormData((prev) => ({
+        ...prev,
+        currentPassword: "",
+        newPassword: "",
+      }));
 
-      const currentSelected =
+      setOriginalFormData(profileRes.data);
+
+      // Oppdatert del: bruk nyeste work_municipalities fra profileRes
+      const updatedSelected =
         profileRes.data.work_municipalities
-          ?.map((name) => {
-            const match = municipalityOptionsRes.find((m) => m.label === name);
-            return match ? { label: match.label, value: match.value } : null;
-          })
+          ?.map((name) => municipalityOptionsRes.find((m) => m.label === name))
           .filter(Boolean) || [];
-      setSelectedMunicipalityOptions(currentSelected);
+      setSelectedMunicipalityOptions(updatedSelected);
 
       const residenceMatch = municipalityOptionsRes.find(
         (m) => m.label === profileRes.data.municipality_name
@@ -116,65 +138,152 @@ const Profile = () => {
     fetchStore();
   }, [formData?.store_id]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (["currentPassword", "newPassword"].includes(name)) {
-      setPasswords((prev) => ({ ...prev, [name]: value }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+  const toggleFieldEdit = (field, value = false) => {
+    setEditingFields((prev) => ({ ...prev, [field]: value }));
+
+    if (!value && originalFormData && formData) {
+      // Tilbakestill feltet ved avbryt
+      setFormData((prev) => ({
+        ...prev,
+        [field]: originalFormData[field],
+      }));
+
+      if (field === "municipality") {
+        const match = municipalityOptions.find(
+          (m) => m.value === originalFormData.municipality_id
+        );
+        setSelectedResidenceMunicipality(match || null);
+      }
+
+      if (field === "work_municipality_ids") {
+        const matches =
+          originalFormData.work_municipalities
+            ?.map((name) => municipalityOptions.find((m) => m.label === name))
+            .filter(Boolean) || [];
+        setSelectedMunicipalityOptions(matches);
+      }
     }
   };
 
-  const toggleEdit = async () => {
-    if (isEditing && isOwnProfile) {
-      try {
-        const rawData = {
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          email: formData.email,
-          phone_number: formData.phone_number,
-          availability: formData.availability,
-          municipality_id: selectedResidenceMunicipality?.value || null,
-          work_municipality_ids: selectedMunicipalityOptions.map(
-            (opt) => opt.value
-          ),
-        };
+  const handleFieldSave = async (field) => {
+    try {
+      let payload = {
+        [field]: formData[field],
+      };
 
-        await axios.put(`/users/current/update`, rawData);
-        await fetchProfile();
-        setIsEditing(false);
-        toast.success("Profil oppdatert.");
-      } catch (err) {
-        console.error("Error updating profile:", err);
-        if (err.response?.status === 400 && err.response.data?.error) {
-          toast.error(err.response.data.error);
-        } else {
-          toast.error("Noe gikk galt ved lagring av profilen.");
-        }
+      // Special handling for multiselect municipalities
+      if (field === "work_municipality_ids") {
+        payload.work_municipality_ids = selectedMunicipalityOptions.map(
+          (opt) => opt.value
+        );
       }
-    } else {
-      setIsEditing(true);
+
+      if (field === "municipality") {
+        payload.municipality_id = selectedResidenceMunicipality?.value || null;
+      }
+
+      // Ensure municipality is preserved if it's not the field being edited
+      if (field !== "municipality" && selectedResidenceMunicipality?.value) {
+        payload.municipality_id = selectedResidenceMunicipality.value;
+      }
+
+      // Ensure preferred municipalities are preserved if not editing them
+      if (
+        field !== "work_municipality_ids" &&
+        selectedMunicipalityOptions.length > 0
+      ) {
+        payload.work_municipality_ids = selectedMunicipalityOptions.map(
+          (opt) => opt.value
+        );
+      }
+
+      setErrors({});
+      await axios.put("/users/current/update", payload);
+      toggleFieldEdit(field, false);
+      await fetchProfile();
+
+      const fieldLabels = {
+        first_name: "Fornavn",
+        last_name: "Etternavn",
+        email: "E-post",
+        phone_number: "Telefonnummer",
+        availability: "Tilgjengelighet",
+        work_municipality_ids: "Ønskede kommuner",
+        municipality: "Bostedskommune",
+      };
+
+      if (fieldLabels[field]) {
+        toast.success(`${fieldLabels[field]} oppdatert`);
+      }
+    } catch (err) {
+      const apiError = err.response?.data?.error;
+
+      if (apiError) {
+        if (typeof apiError === "string") {
+          setErrors((prev) => ({
+            ...prev,
+            [field]: apiError,
+          }));
+        } else {
+          setErrors((prev) => ({ ...prev, ...apiError }));
+        }
+
+        if (fieldRefs[field] && fieldRefs[field].current) {
+          fieldRefs[field].current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+          fieldRefs[field].current.focus();
+        }
+      } else {
+        setErrors((prev) => ({ ...prev, general: "Noe gikk galt." }));
+      }
     }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePasswordChange = async () => {
-    try {
-      if (!passwords.currentPassword || !passwords.newPassword) {
-        toast.error("Begge feltene må fylles ut");
-        return;
-      }
+    setErrors({}); // Fjern gamle feil
 
-      await axios.patch("/users/current/password", passwords);
+    if (!formData.currentPassword || !formData.newPassword) {
+      setErrors((prev) => ({
+        ...prev,
+        password: "Begge feltene må fylles ut",
+      }));
+      return;
+    }
+
+    try {
+      await axios.patch("/users/current/password", {
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword,
+      });
+
       toast.success("Passord oppdatert");
-      setPasswords({ currentPassword: "", newPassword: "" });
+
+      setFormData((prev) => ({
+        ...prev,
+        currentPassword: "",
+        newPassword: "",
+      }));
+
+      toggleFieldEdit("password", false);
     } catch (err) {
-      console.error("Error changing password:", err);
-      if (err.response?.status === 400 && err.response.data?.error) {
-        toast.error(err.response.data.error);
-      } else if (err.response?.status === 401 && err.response.data?.error) {
-        toast.error(err.response.data.error);
+      const apiError = err.response?.data?.error;
+      if (typeof apiError === "string") {
+        setErrors((prev) => ({
+          ...prev,
+          password: apiError,
+        }));
       } else {
-        toast.error("Kunne ikke oppdatere passordet.");
+        setErrors((prev) => ({
+          ...prev,
+          password: "Kunne ikke oppdatere passordet.",
+        }));
       }
     }
   };
@@ -245,185 +354,417 @@ const Profile = () => {
                 : "Utilgjengelig"}
             </div>
           )}
-
-        {isOwnProfile && !isEditing && (
-          <button className="edit-button" onClick={toggleEdit}>
-            Rediger
-          </button>
-        )}
       </div>
 
       <div className="profile-grid">
         <div className="profile-field">
-          <label>Fornavn:</label>
-          {isEditing ? (
-            <input
-              name="first_name"
-              value={formData.first_name || ""}
-              onChange={handleChange}
-            />
+          <label>Fornavn</label>
+          {editingFields.first_name ? (
+            <>
+              <div className="input-error-wrapper">
+                <input
+                  name="first_name"
+                  ref={fieldRefs.first_name}
+                  value={formData.first_name || ""}
+                  onChange={handleChange}
+                  className={errors.first_name ? "error" : ""}
+                />
+                {errors.first_name && (
+                  <div className="error-message">{errors.first_name}</div>
+                )}
+              </div>
+              <div className="field-buttons">
+                <button
+                  className="primary-button"
+                  onClick={() => handleFieldSave("first_name")}
+                >
+                  Lagre
+                </button>
+                <button
+                  className="secondary-button"
+                  onClick={() => toggleFieldEdit("first_name", false)}
+                >
+                  Avbryt
+                </button>
+              </div>
+            </>
           ) : (
-            <p>{formData.first_name || "Ikke oppgitt"}</p>
+            <>
+              <p>{formData.first_name || "Ikke oppgitt"}</p>
+              {isOwnProfile && (
+                <button
+                  className="edit-icon-button"
+                  onClick={() => toggleFieldEdit("first_name", true)}
+                >
+                  <FaEdit size={28} />
+                </button>
+              )}
+            </>
           )}
         </div>
 
         <div className="profile-field">
-          <label>Etternavn:</label>
-          {isEditing ? (
-            <input
-              name="last_name"
-              value={formData.last_name || ""}
-              onChange={handleChange}
-            />
+          <label>Etternavn</label>
+          {editingFields.last_name ? (
+            <>
+              <input
+                name="last_name"
+                ref={fieldRefs.last_name}
+                value={formData.last_name || ""}
+                onChange={handleChange}
+                className={errors.last_name ? "error" : ""}
+              />
+              {errors.last_name && (
+                <div className="error-message">{errors.last_name}</div>
+              )}
+              <div className="field-buttons">
+                <button
+                  className="primary-button"
+                  onClick={() => handleFieldSave("last_name")}
+                >
+                  Lagre
+                </button>
+                <button
+                  className="secondary-button"
+                  onClick={() => toggleFieldEdit("last_name", false)}
+                >
+                  Avbryt
+                </button>
+              </div>
+            </>
           ) : (
-            <p>{formData.last_name || "Ikke oppgitt"}</p>
+            <>
+              <p>{formData.last_name || "Ikke oppgitt"}</p>
+              {isOwnProfile && (
+                <button
+                  className="edit-icon-button"
+                  onClick={() => toggleFieldEdit("last_name", true)}
+                >
+                  <FaEdit size={28} />
+                </button>
+              )}
+            </>
           )}
         </div>
 
         <div className="profile-field">
           <label>E-post:</label>
-          {isEditing ? (
-            <input
-              name="email"
-              type="email"
-              value={formData.email || ""}
-              onChange={handleChange}
-            />
+          {editingFields.email ? (
+            <>
+              <div className="input-error-wrapper">
+                <input
+                  name="email"
+                  type="email"
+                  ref={fieldRefs.email}
+                  value={formData.email || ""}
+                  onChange={handleChange}
+                  className={errors.email ? "error" : ""}
+                />
+                {errors.email && (
+                  <div className="error-message">{errors.email}</div>
+                )}
+              </div>
+              <div className="field-buttons">
+                <button
+                  className="primary-button"
+                  onClick={() => handleFieldSave("email")}
+                >
+                  Lagre
+                </button>
+                <button
+                  className="secondary-button"
+                  onClick={() => toggleFieldEdit("email", false)}
+                >
+                  Avbryt
+                </button>
+              </div>
+            </>
           ) : (
-            <p>{formData.email || "Ikke oppgitt"}</p>
+            <>
+              <p>{formData.email || "Ikke oppgitt"}</p>
+              {isOwnProfile && (
+                <button
+                  className="edit-icon-button"
+                  onClick={() => toggleFieldEdit("email", true)}
+                >
+                  <FaEdit size={28} />
+                </button>
+              )}
+            </>
           )}
         </div>
 
         <div className="profile-field">
           <label>Telefonnummer:</label>
-          {isEditing ? (
-            <input
-              name="phone_number"
-              value={formData.phone_number || ""}
-              onChange={handleChange}
-            />
+          {editingFields.phone_number ? (
+            <>
+              <div className="input-error-wrapper">
+                <input
+                  name="phone_number"
+                  ref={fieldRefs.phone_number}
+                  value={formData.phone_number || ""}
+                  onChange={handleChange}
+                  className={errors.phone_number ? "error" : ""}
+                />
+                {errors.phone_number && (
+                  <div className="error-message">{errors.phone_number}</div>
+                )}
+              </div>
+              <div className="field-buttons">
+                <button
+                  className="primary-button"
+                  onClick={() => handleFieldSave("phone_number")}
+                >
+                  Lagre
+                </button>
+                <button
+                  className="secondary-button"
+                  onClick={() => toggleFieldEdit("phone_number", false)}
+                >
+                  Avbryt
+                </button>
+              </div>
+            </>
           ) : (
-            <p>{formData.phone_number || "Ikke oppgitt"}</p>
+            <>
+              <p>{formData.phone_number || "Ikke oppgitt"}</p>
+              {isOwnProfile && (
+                <button
+                  className="edit-icon-button"
+                  onClick={() => toggleFieldEdit("phone_number", true)}
+                >
+                  <FaEdit size={28} />
+                </button>
+              )}
+            </>
           )}
         </div>
 
         <div className="profile-field">
           <label>Bostedskommune:</label>
-          {isEditing ? (
-            <Select
-              classNamePrefix="select"
-              options={municipalityOptions}
-              value={selectedResidenceMunicipality}
-              onChange={setSelectedResidenceMunicipality}
-              placeholder="Velg bostedskommune..."
-            />
+          {editingFields.municipality ? (
+            <>
+              <Select
+                classNamePrefix="select"
+                options={municipalityOptions}
+                value={selectedResidenceMunicipality}
+                onChange={setSelectedResidenceMunicipality}
+                placeholder="Velg bostedskommune..."
+              />
+              <div className="field-buttons">
+                <button
+                  className="primary-button"
+                  onClick={() => handleFieldSave("municipality")}
+                >
+                  Lagre
+                </button>
+                <button
+                  className="secondary-button"
+                  onClick={() => toggleFieldEdit("municipality", false)}
+                >
+                  Avbryt
+                </button>
+              </div>
+            </>
           ) : (
-            <p>{formData.municipality_name || "Ikke registrert"}</p>
+            <>
+              <p>{formData.municipality_name || "Ikke registrert"}</p>
+              {isOwnProfile && (
+                <button
+                  className="edit-icon-button"
+                  onClick={() => toggleFieldEdit("municipality", true)}
+                >
+                  <FaEdit size={28} />
+                </button>
+              )}
+            </>
           )}
         </div>
 
         {formData.role === "employee" && (
           <div className="profile-field">
-            <label>Ønsker å jobbe i kommune(r):</label>
-            {isEditing ? (
-              <Select
-                classNamePrefix="select"
-                isMulti
-                options={municipalityOptions}
-                value={selectedMunicipalityOptions}
-                onChange={setSelectedMunicipalityOptions}
-                placeholder="Velg kommuner..."
-              />
+            <label>
+              Ønsker å jobbe i kommune(r):
+              {isOwnProfile && formData.role === "employee" && (
+                <span className="tooltip-container">
+                  <span className="question-icon">?</span>
+                  <span className="tooltip-text">
+                    Her kan du angi hvilke kommuner du ønsker å jobbe i. Du får
+                    varslinger når relevante vakter legges ut.
+                  </span>
+                </span>
+              )}
+            </label>
+
+            {isOwnProfile && editingFields.work_municipality_ids ? (
+              <>
+                <Select
+                  classNamePrefix="select"
+                  isMulti
+                  options={municipalityOptions}
+                  value={selectedMunicipalityOptions}
+                  onChange={setSelectedMunicipalityOptions}
+                  placeholder="Velg kommuner..."
+                />
+                <div className="field-buttons">
+                  <button
+                    className="primary-button"
+                    onClick={() => handleFieldSave("work_municipality_ids")}
+                  >
+                    Lagre
+                  </button>
+                  <button
+                    className="secondary-button"
+                    onClick={() => {
+                      toggleFieldEdit("work_municipality_ids", false);
+                      fetchProfile();
+                    }}
+                  >
+                    Avbryt
+                  </button>
+                </div>
+              </>
             ) : (
-              <ul className="municipality-list">
-                {formData.work_municipalities?.length > 0 ? (
-                  formData.work_municipalities.map((name, i) => (
-                    <li key={i}>{name}</li>
-                  ))
-                ) : (
-                  <li>Ingen valgt</li>
+              <>
+                <ul className="municipality-list">
+                  {formData.work_municipalities?.length > 0 ? (
+                    formData.work_municipalities.map((name, i) => (
+                      <li key={i}>{name}</li>
+                    ))
+                  ) : (
+                    <li>Ingen valgt</li>
+                  )}
+                </ul>
+                {isOwnProfile && (
+                  <button
+                    className="edit-icon-button"
+                    onClick={() =>
+                      toggleFieldEdit("work_municipality_ids", true)
+                    }
+                  >
+                    <FaEdit size={28} />
+                  </button>
                 )}
-              </ul>
+              </>
             )}
           </div>
         )}
+
         {formData.role === "employee" && isOwnProfile && (
           <div className="profile-field">
-            <label>Status:</label>
-            <div
-              className={`availability-toggle ${!isEditing ? "disabled" : ""}`}
-            >
-              <label className="availability-option">
-                <input
-                  type="radio"
-                  name="availability"
-                  value="Fleksibel"
-                  checked={formData.availability === "Fleksibel"}
-                  onChange={(e) =>
-                    isEditing &&
-                    setFormData((prev) => ({
-                      ...prev,
-                      availability: e.target.value,
-                    }))
-                  }
-                  disabled={!isEditing}
-                />
-                <span className="custom-radio">Tilgjengelig</span>
-              </label>
-              <label className="availability-option">
-                <input
-                  type="radio"
-                  name="availability"
-                  value="Ikke-fleksibel"
-                  checked={formData.availability === "Ikke-fleksibel"}
-                  onChange={(e) =>
-                    isEditing &&
-                    setFormData((prev) => ({
-                      ...prev,
-                      availability: e.target.value,
-                    }))
-                  }
-                  disabled={!isEditing}
-                />
-                <span className="custom-radio">Utilgjengelig</span>
-              </label>
-            </div>
+            <label>
+              Status:
+              <span className="tooltip-container">
+                <span className="question-icon">?</span>
+                <span className="tooltip-text">
+                  Statusen avgjør om butikksjefer ser deg som tilgjengelig for
+                  vakter og får varslinger når nye vakter blir utlyst.
+                </span>
+              </span>
+            </label>
+            {editingFields.availability ? (
+              <>
+                <div className="availability-toggle">
+                  <label className="availability-option">
+                    <input
+                      type="radio"
+                      name="availability"
+                      value="Fleksibel"
+                      checked={formData.availability === "Fleksibel"}
+                      onChange={handleChange}
+                    />
+                    <span className="custom-radio">Tilgjengelig</span>
+                  </label>
+                  <label className="availability-option">
+                    <input
+                      type="radio"
+                      name="availability"
+                      value="Ikke-fleksibel"
+                      checked={formData.availability === "Ikke-fleksibel"}
+                      onChange={handleChange}
+                    />
+                    <span className="custom-radio">Utilgjengelig</span>
+                  </label>
+                </div>
+                <div className="field-buttons">
+                  <button
+                    className="primary-button"
+                    onClick={() => handleFieldSave("availability")}
+                  >
+                    Lagre
+                  </button>
+                  <button
+                    className="secondary-button"
+                    onClick={() => toggleFieldEdit("availability", false)}
+                  >
+                    Avbryt
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p>
+                  {formData.availability === "Fleksibel"
+                    ? "Tilgjengelig"
+                    : "Utilgjengelig"}
+                </p>
+                <button
+                  className="edit-icon-button"
+                  onClick={() => toggleFieldEdit("availability", true)}
+                >
+                  <FaEdit size={28} />
+                </button>
+              </>
+            )}
           </div>
         )}
 
         {isOwnProfile && (
           <div className="profile-field">
             <label>Passord:</label>
-            {isChangingPassword ? (
+            {editingFields.password ? (
               <>
-                <input
-                  type="password"
-                  name="currentPassword"
-                  placeholder="Nåværende passord"
-                  value={passwords.currentPassword}
-                  onChange={handleChange}
-                  className="password-input"
-                />
-                <input
-                  type="password"
-                  name="newPassword"
-                  placeholder="Nytt passord"
-                  value={passwords.newPassword}
-                  onChange={handleChange}
-                  className="password-input"
-                />
-                <div className="qualification-action-buttons">
+                <div className="input-error-wrapper">
+                  <input
+                    type="password"
+                    name="currentPassword"
+                    placeholder="Nåværende passord"
+                    value={formData.currentPassword || ""}
+                    onChange={handleChange}
+                    className={errors.password ? "error" : ""}
+                  />
+                  <input
+                    type="password"
+                    name="newPassword"
+                    placeholder="Nytt passord"
+                    value={formData.newPassword || ""}
+                    onChange={handleChange}
+                    className={errors.password ? "error" : ""}
+                  />
+                </div>
+
+                {errors.password && (
+                  <div className="error-message">{errors.password}</div>
+                )}
+
+                <div className="field-buttons">
                   <button
-                    className="qualification-save-btn"
+                    className="primary-button"
                     onClick={handlePasswordChange}
                   >
-                    Oppdater passord
+                    Lagre
                   </button>
                   <button
-                    className="qualification-cancel-btn"
+                    className="secondary-button"
                     onClick={() => {
-                      setIsChangingPassword(false);
-                      setPasswords({ currentPassword: "", newPassword: "" });
+                      toggleFieldEdit("password", false);
+                      setFormData((prev) => ({
+                        ...prev,
+                        currentPassword: "",
+                        newPassword: "",
+                      }));
+
+                      setErrors((prev) => ({ ...prev, password: "" }));
                     }}
                   >
                     Avbryt
@@ -434,10 +775,10 @@ const Profile = () => {
               <>
                 <p>***********</p>
                 <button
-                  className="edit-qualifications-btn"
-                  onClick={() => setIsChangingPassword(true)}
+                  className="edit-icon-button"
+                  onClick={() => toggleFieldEdit("password", true)}
                 >
-                  Endre passord
+                  <FaEdit size={28} />
                 </button>
               </>
             )}
@@ -493,14 +834,11 @@ const Profile = () => {
 
             {canEditQualifications && isEditingQualifications && (
               <div className="qualification-action-buttons">
-                <button
-                  className="qualification-save-btn"
-                  onClick={saveQualifications}
-                >
+                <button className="primary-button" onClick={saveQualifications}>
                   Lagre kvalifikasjoner
                 </button>
                 <button
-                  className="qualification-cancel-btn"
+                  className="secondary-button"
                   onClick={() => setIsEditingQualifications(false)}
                 >
                   Avbryt
@@ -519,26 +857,6 @@ const Profile = () => {
           </div>
         )}
       </div>
-
-      {isEditing && (
-        <>
-          <div className="save-container">
-            <button className="save-button" onClick={toggleEdit}>
-              Lagre
-            </button>
-            <button
-              className="cancel-button"
-              onClick={() => {
-                setIsEditing(false);
-                fetchProfile();
-                setPasswords({ currentPassword: "", newPassword: "" });
-              }}
-            >
-              Avbryt
-            </button>
-          </div>
-        </>
-      )}
     </div>
   );
 };

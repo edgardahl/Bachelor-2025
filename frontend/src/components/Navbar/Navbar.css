@@ -91,7 +91,7 @@
 /* Logout Button */
 .logout-button {
   background-color: var(--Shifts-main); /* now blue */
-  color: var(--White);                  /* now white text */
+  color: var(--White); /* now white text */
   border: 2px solid var(--Shifts-main);
   padding: 8px;
   cursor: pointer;
@@ -102,10 +102,9 @@
 }
 
 .logout-button:hover {
-  background-color: var(--White);      /* hover to white */
-  color: var(--Shifts-main);           /* hover to blue text */
+  background-color: var(--White); /* hover to white */
+  color: var(--Shifts-main); /* hover to blue text */
 }
-
 
 /* Mobile styles */
 @media (max-width: 780px) {
