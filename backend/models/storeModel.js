@@ -6,7 +6,8 @@ export const getAllStoresModel = async () => {
     .from("stores")
     .select(
       "store_id, name, store_chain, municipality_id, address, phone_number, email, manager_id, latitude, longitude"
-    );
+    )
+    .order("name", { ascending: true });
 
   if (error) {
     throw new Error(error.message);

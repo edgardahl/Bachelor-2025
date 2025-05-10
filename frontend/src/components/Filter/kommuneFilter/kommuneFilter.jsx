@@ -7,7 +7,7 @@ const KommuneFilter = ({
   onChange,
   defaultValue = [],
   userPreferredMunicipalities = [],
-  userRole = "", // 👈 new prop
+  userRole = "",
 }) => {
   const [municipalities, setMunicipalities] = useState([]);
   const [selectedMunicipalities, setSelectedMunicipalities] =

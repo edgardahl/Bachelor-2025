@@ -21,6 +21,8 @@ import NewEmployeePage from "./pages/Butikksjef/NewEmployeeForm/NewEmployeeForm"
 import AdminDashboard from "./pages/Admin/adminDashboard/adminDashboard";
 import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk";
 import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers";
+import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages.jsx";
+
 
 import Loading from "./components/Loading/Loading";
 
@@ -243,6 +245,16 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/admin/managers/ny"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <NewManagerPage />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/admin/managers"
         element={
@@ -251,6 +263,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
