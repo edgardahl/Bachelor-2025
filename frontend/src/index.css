@@ -27,6 +27,8 @@
   --Text-color-light: #4f4f4f;
 
   /* Button colors */
+  --Button-color: #1976d2;
+  --Button-hover-color: #125ea8;
   --Error-delete-color: #ec5446;
   --Success-color: #3c9350;
   --Open-link-color: #156363;

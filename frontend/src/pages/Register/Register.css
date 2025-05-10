@@ -37,14 +37,14 @@
   
   .register-input:focus,
   .register-select:focus {
-    border-color: #0077cc;
+    background-color: var(--Button-color);
     outline: none;
   }
   
   .register-button {
     width: 100%;
     padding: 0.9rem;
-    background-color: #0077cc;
+    background-color: var(--Button-color);
     color: white;
     border: none;
     border-radius: 4px;
@@ -60,7 +60,7 @@
   }
   
   .register-button:hover:not(:disabled) {
-    background-color: #005fa3;
+    background-color: var(--Button-hover-color);
   }
   
   .register-checkbox {
@@ -91,7 +91,7 @@
   }
   
   .login-link {
-    color: #0077cc;
+    background-color: var(--Button-color);
     font-weight: bold;
     text-decoration: none;
   }

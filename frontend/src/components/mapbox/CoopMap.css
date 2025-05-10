@@ -50,11 +50,15 @@
 
 .search-button {
   padding: 6px 10px;
-  background-color: #007bff;
+  background-color: var(--Button-color);
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: var(--Button-hover-color);
 }
 
 /* Button inside store popups */

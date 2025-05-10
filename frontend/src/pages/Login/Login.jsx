@@ -35,7 +35,7 @@ export default function LoginPage() {
 
   return (
     <div className="login-wrapper">
-      <BackButton />
+      <BackButton to={"/hjem"} />
       <form onSubmit={handleSubmit} className="login-form">
         <h2 className="login-title">Logg inn</h2>
 
