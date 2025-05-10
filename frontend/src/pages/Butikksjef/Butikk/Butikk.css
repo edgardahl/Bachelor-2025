@@ -1,10 +1,11 @@
 .butikk-page {
   max-width: 1006px;
-  margin: 0 auto;
+  margin: 8px auto;
   padding: 24px;
   font-family: "Segoe UI", sans-serif;
   background-color: var(--Body-background);
   color: var(--Text-color-light);
+  border-radius: 4px;
 }
 
 .butikk-header {
@@ -88,6 +89,7 @@
   .butikk-page {
     width: 100%;
     max-width: 100%;
+    border-radius: 0px;
   }
 
   .butikk-title {
