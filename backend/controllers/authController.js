@@ -49,7 +49,7 @@ export const loginUser = async (req, res) => {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -144,7 +144,6 @@ export const logoutUser = (req, res) => {
 
   res.json({ message: "Du er logget ut." });
 };
-
 
 // Registrerer ny ansatt
 export const registerNewEmployeeController = async (req, res) => {
