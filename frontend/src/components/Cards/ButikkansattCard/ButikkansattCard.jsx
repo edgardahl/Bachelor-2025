@@ -32,10 +32,12 @@ const ButikkansattCard = ({
         <h3>{employee.first_name} {employee.last_name}</h3>
 
         {show === "availability" && (
-          <p className="availability">
+          <div className="availability">
+          <div className="icon-wrapper">
             <FaClock className="icon" />
-            {employee.availability}
-          </p>
+          </div>
+          <p>{employee.availability}</p>
+        </div>        
         )}
 
         {show === "store" && (
@@ -45,11 +47,13 @@ const ButikkansattCard = ({
           </p>
         )}
 
-        <p className="qualifications">
+      <div className="qualifications">
+        <div className="icon-wrapper">
           <FaBriefcase className="icon" />
-          {employee.qualifications || "Ingen kvalifikasjoner"}
-        </p>
+        </div>
+        <p>{employee.qualifications || "Ingen kvalifikasjoner"}</p>
       </div>
+</div>
 
       <div className="card-arrow">
         <HiChevronRight />

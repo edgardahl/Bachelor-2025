@@ -4,11 +4,11 @@ import {
   logoutUser,
   getCurrentUser,
   refreshAccessToken,
-  registerUser,
   registerNewEmployeeController,
 } from "../controllers/authController.js";
 
 import { verifyToken } from "../middleware/authMiddleware.js";
+import { authorizeRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -16,8 +16,12 @@ const router = express.Router();
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.post("/refresh-token", refreshAccessToken);
-router.post("/register", registerUser);
-router.post("/employee/register", verifyToken, registerNewEmployeeController);
+router.post(
+  "/employee/register",
+  verifyToken,
+  authorizeRoles("store_manager"), // Må oppdateres til admin
+  registerNewEmployeeController
+);
 
 // Henter den innloggede brukeren
 router.get("/me", verifyToken, getCurrentUser);

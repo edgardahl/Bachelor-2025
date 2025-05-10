@@ -7,6 +7,8 @@ import {
   updateUserPasswordById,
   updateUserByIdModel,
   updateUserQualificationsModel,
+  getAllStoreManagersWithStoreModel,
+  getManagersByStoreId
 } from "../models/userModel.js";
 
 import { getStoreByIdModel } from "../models/storeModel.js";
@@ -40,6 +42,32 @@ export const getUserByIdController = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Hent alle store managers, uavhengig av om de har en butikk
+export const getAllStoreManagersController = async (req, res) => {
+  try {
+    const storeManagers = await getAllStoreManagersWithStoreModel();  // Bruk den nye funksjonen som henter butikkinfo
+    return res.json(storeManagers);
+  } catch (error) {
+    console.error("Error fetching store managers:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Henter alle managers for en spesifikk butikk
+export const getStoreManagersController = async (req, res) => {
+  const { storeId } = req.params;
+  
+  try {
+    const managers = await getManagersByStoreId(storeId);
+    return res.json(managers);
+  } catch (error) {
+    console.error("Error fetching managers:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
 
 // Oppdaterer bruker med ID
 export const updateUserByIdController = async (req, res) => {

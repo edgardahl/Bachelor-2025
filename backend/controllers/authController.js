@@ -11,11 +11,11 @@ import {
   getUserById,
   getUserBasicById,
   getUserByPhoneNumber,
-  insertUserMunicipalitiesModel,
 } from "../models/authModel.js";
 import { getUserQualificationsModel } from "../models/userModel.js";
 import { sanitizeUser } from "../utils/sanitizeInput.js";
 
+// Logger inn bruker
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -79,6 +79,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// Oppfrisker access token
 export const refreshAccessToken = async (req, res) => {
   const token = req.cookies.refreshToken;
   if (!token) return res.sendStatus(204); // Ingen feilmelding til frontend
@@ -106,6 +107,7 @@ export const refreshAccessToken = async (req, res) => {
   }
 };
 
+// Henter informasjon om den nåværende brukeren
 export const getCurrentUser = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -131,6 +133,7 @@ export const getCurrentUser = async (req, res) => {
   }
 };
 
+// Logger ut bruker
 export const logoutUser = (req, res) => {
   res.clearCookie("refreshToken", {
     httpOnly: true,
@@ -142,96 +145,8 @@ export const logoutUser = (req, res) => {
   res.json({ message: "Du er logget ut." });
 };
 
-export const registerUser = async (req, res) => {
-  try {
-    const {
-      first_name,
-      last_name,
-      email,
-      password,
-      phone_number,
-      availability,
-      role,
-      store_id,
-      municipality_id,
-      qualifications,
-      work_municipality_ids,
-    } = req.body;
 
-    const existingUser = await getUserByEmail(email);
-    if (existingUser) {
-      return res
-        .status(400)
-        .json({ error: "E-postadressen er allerede i bruk." });
-    }
-
-    const existingPhoneNumber = await getUserByPhoneNumber(phone_number);
-    if (existingPhoneNumber) {
-      return res
-        .status(400)
-        .json({ error: "Telefonnummeret er allerede i bruk." });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await registerUserInDB({
-      first_name,
-      last_name,
-      email,
-      password: hashedPassword,
-      phone_number,
-      availability,
-      role,
-      store_id,
-      municipality_id,
-    });
-
-    if (!newUser) {
-      return res.status(400).json({ error: "Kunne ikke registrere bruker." });
-    }
-
-    if (qualifications && qualifications.length > 0) {
-      const inserted = await insertUserQualifications(
-        newUser.user_id,
-        qualifications
-      );
-      if (!inserted) {
-        return res
-          .status(400)
-          .json({ error: "Kunne ikke lagre kvalifikasjoner." });
-      }
-    }
-
-    if (role === "employee") {
-      const municipalitiesToInsert = new Set([
-        municipality_id, // bosted
-        ...(work_municipality_ids || []), // ønskede
-      ]);
-
-      console.log("Municipalities to insert:", municipalitiesToInsert);
-
-      const success = await insertUserMunicipalitiesModel(
-        newUser.user_id,
-        Array.from(municipalitiesToInsert)
-      );
-
-      if (!success) {
-        return res
-          .status(400)
-          .json({ error: "Kunne ikke lagre ønskede kommuner." });
-      }
-    }
-
-    return res.status(201).json({
-      message: "Bruker registrert.",
-      user: newUser,
-    });
-  } catch (error) {
-    console.error("Registration error:", error);
-    res.status(500).json({ error: "Intern serverfeil" });
-  }
-};
-
+// Registrerer ny ansatt
 export const registerNewEmployeeController = async (req, res) => {
   try {
     const storeManager = req.user;

@@ -118,3 +118,51 @@
 }
 
 
+.qualification-text-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.butikkansatt-card .qualifications {
+  display: flex;
+  align-items: flex-start;
+  margin: 10px 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.butikkansatt-card .qualifications .icon-wrapper {
+  margin-right: 6px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.butikkansatt-card .qualifications p {
+  margin: 0;
+  flex: 1;
+  word-break: break-word;
+}
+
+
+.butikkansatt-card .availability {
+  display: flex;
+  align-items: flex-start;
+  margin: 4px 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.butikkansatt-card .availability .icon-wrapper {
+  margin-right: 6px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.butikkansatt-card .availability p {
+  margin: 0;
+  flex: 1;
+  word-break: break-word;
+}

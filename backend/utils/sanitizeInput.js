@@ -26,10 +26,12 @@ export const sanitizeUser = (userData) => {
   const errors = {};
 
   if (!nameRegex.test(first_name || "")) {
-    errors.first_name = "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
+    errors.first_name =
+      "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!nameRegex.test(last_name || "")) {
-    errors.last_name = "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
+    errors.last_name =
+      "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
   }
   if (!email || !emailRegex.test(email)) {
     errors.email = "Ugyldig e-postadresse.";
@@ -41,7 +43,8 @@ export const sanitizeUser = (userData) => {
     errors.phone_number = "Telefonnummeret er ugyldig.";
   }
   if (!validAvailability.includes(availability)) {
-    errors.availability = "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
+    errors.availability =
+      "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
   }
   if (!validRoles.includes(role)) {
     errors.role = `Rolle må være en av: ${validRoles.join(", ")}.`;
@@ -101,7 +104,8 @@ export const sanitizeUserUpdate = (userData) => {
 
   if (first_name !== undefined) {
     if (!nameRegex.test(first_name || "")) {
-      errors.first_name = "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
+      errors.first_name =
+        "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
     } else {
       sanitized.first_name = first_name.trim();
     }
@@ -109,7 +113,8 @@ export const sanitizeUserUpdate = (userData) => {
 
   if (last_name !== undefined) {
     if (!nameRegex.test(last_name || "")) {
-      errors.last_name = "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
+      errors.last_name =
+        "Etternavn må kun inneholde bokstaver og kan ikke være tomt.";
     } else {
       sanitized.last_name = last_name.trim();
     }
@@ -133,7 +138,8 @@ export const sanitizeUserUpdate = (userData) => {
 
   if (availability !== undefined) {
     if (!validAvailability.includes(availability)) {
-      errors.availability = "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
+      errors.availability =
+        "Tilgjengelighet må være 'Fleksibel' eller 'Ikke-fleksibel'.";
     } else {
       sanitized.availability = availability;
     }
@@ -153,7 +159,9 @@ export const sanitizeUserUpdate = (userData) => {
     } else {
       const invalidIds = work_municipality_ids.filter((id) => !isUUID(id));
       if (invalidIds.length > 0) {
-        errors.work_municipality_ids = `Ugyldige kommune-IDer: ${invalidIds.join(", ")}`;
+        errors.work_municipality_ids = `Ugyldige kommune-IDer: ${invalidIds.join(
+          ", "
+        )}`;
       } else {
         sanitized.work_municipality_ids = work_municipality_ids;
       }
@@ -166,7 +174,6 @@ export const sanitizeUserUpdate = (userData) => {
 
   return sanitized;
 };
-
 
 // Validerer innkommende vakt
 export const sanitizeShift = (shiftData) => {
@@ -265,7 +272,6 @@ export const sanitizeShift = (shiftData) => {
     posted_by: UserId,
     qualifications,
   };
-  
 };
 
 // Validerer passordendring (brukes ved PATCH /users/current/password)
@@ -276,7 +282,11 @@ export const sanitizePasswordUpdate = ({ currentPassword, newPassword }) => {
     errors.currentPassword = "Nåværende passord er påkrevd.";
   }
 
-  if (!newPassword || typeof newPassword !== "string" || newPassword.trim().length < 6) {
+  if (
+    !newPassword ||
+    typeof newPassword !== "string" ||
+    newPassword.trim().length < 6
+  ) {
     errors.newPassword = "Nytt passord må være minst 6 tegn langt.";
   }
 
@@ -288,3 +298,74 @@ export const sanitizePasswordUpdate = ({ currentPassword, newPassword }) => {
   };
 };
 
+export const sanitizeStoreUpdate = (storeData) => {
+  const {
+    store_name,
+    address,
+    postal_code,
+    municipality_id,
+    manager_id,
+    store_phone,
+    store_email,
+    store_chain,
+  } = storeData;
+
+  const errors = {};
+  const postalCodeRegex = /^[0-9]{4}(\s[0-9]{4})?$/;
+  const safeTrim = (val) => (typeof val === "string" ? val.trim() : val);
+
+  // store_name
+  if (!store_name || typeof store_name !== "string" || store_name.trim() === "") {
+    errors.store_name = "Navn på butikken er påkrevd.";
+  } else if (!nameRegex.test(store_name.trim())) {
+    errors.store_name = "Butikknavn kan bare inneholde bokstaver og mellomrom.";
+  }
+
+  // address
+  if (!address || typeof address !== "string" || address.trim() === "") {
+    errors.address = "Adresse er påkrevd.";
+  }
+
+  // postal_code
+  if (postal_code && !postalCodeRegex.test(postal_code)) {
+    errors.postal_code = "Postnummer må være i riktig format (f.eks. 1234 eller 1234 5678).";
+  }
+
+  // municipality_id
+  if (municipality_id && !isUUID(municipality_id)) {
+    errors.municipality_id = "Kommune-ID må være en gyldig UUID.";
+  }
+
+  // manager_id
+  if (manager_id && !isUUID(manager_id)) {
+    errors.manager_id = "Manager-ID må være en gyldig UUID.";
+  }
+
+  // store_phone
+  if (store_phone && !phoneRegex.test(store_phone)) {
+    errors.store_phone = "Telefonnummeret er ugyldig.";
+  }
+
+  // store_email
+  if (store_email && !emailRegex.test(store_email)) {
+    errors.store_email = "E-postadressen er ugyldig.";
+  }
+
+  // store_chain
+  if (store_chain && typeof store_chain !== "string") {
+    errors.store_chain = "Butikkjede må være en gyldig tekststreng.";
+  }
+
+  if (Object.keys(errors).length > 0) return { errors };
+
+  return {
+    store_name: safeTrim(store_name),
+    address: safeTrim(address),
+    postal_code,
+    municipality_id,
+    manager_id,
+    store_phone: safeTrim(store_phone),
+    store_email: safeTrim(store_email),
+    store_chain: safeTrim(store_chain),
+  };
+};
