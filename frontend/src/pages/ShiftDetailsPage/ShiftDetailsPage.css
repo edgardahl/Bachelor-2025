@@ -117,7 +117,7 @@
 
 .claim-button {
   padding: 12px 44px;
-  background-color: var(--Shifts-main);
+  background-color: var(--Button-color);
   color: white;
   font-weight: bold;
   border: none;
@@ -128,7 +128,7 @@
 }
 
 .claim-button:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: var(--Button-hover-color);
 }
 
 .claim-button:disabled {
