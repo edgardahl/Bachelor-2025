@@ -66,7 +66,7 @@
   font-size: 1rem;
   border: none;
   border-radius: 4px;
-  background-color: var(--Shifts-main);
+  background-color: var(--Button-color);
   color: white;
   font-weight: 600;
   cursor: pointer;
@@ -75,7 +75,7 @@
 }
 
 .register-form .submit-btn:hover {
-  background-color: var(--Shifts-main);
+  background-color: var(--Button-hover-color);
 }
 
 button[disabled] {
