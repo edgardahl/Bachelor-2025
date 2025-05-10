@@ -63,8 +63,8 @@ export default function Navbar() {
       <NavLink to="/admin/hjem" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
         Hjem
       </NavLink>
-      <NavLink to="/admin/brukere" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
-        Brukere
+      <NavLink to="/admin/managers" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+        Butikksjefer
       </NavLink>
       <NavLink to="/admin/butikker" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
         Butikker

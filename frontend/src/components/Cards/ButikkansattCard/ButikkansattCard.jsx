@@ -7,6 +7,7 @@ import { HiChevronRight } from "react-icons/hi";
 const ButikkansattCard = ({
   employee,
   show = "availability",
+  showQualifications,
   cardClass = "",
   isEmptyCard = false
 }) => {
@@ -20,6 +21,8 @@ const ButikkansattCard = ({
       </div>
     );
   }
+
+  console.log("ButikkansattCard employee:", employee);
   
 
   return (
@@ -43,16 +46,18 @@ const ButikkansattCard = ({
         {show === "store" && (
           <p className="store-name">
             <FaMapMarkerAlt className="icon" />
-            {employee.store_name || "Uten butikk"}
+            {employee.store_chain} {employee.store_name || "Uten butikk"}
           </p>
         )}
 
-      <div className="qualifications">
-        <div className="icon-wrapper">
-          <FaBriefcase className="icon" />
-        </div>
-        <p>{employee.qualifications || "Ingen kvalifikasjoner"}</p>
-      </div>
+          {showQualifications && (
+            <div className="qualifications">
+              <div className="icon-wrapper">
+                <FaBriefcase className="icon" />
+              </div>
+              <p>{employee.qualifications || "Ingen kvalifikasjoner"}</p>
+            </div>
+          )}
 </div>
 
       <div className="card-arrow">

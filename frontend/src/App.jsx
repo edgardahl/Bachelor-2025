@@ -20,6 +20,7 @@ import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
 import NewEmployeePage from "./pages/Butikksjef/NewEmployeeForm/NewEmployeeForm";
 import AdminDashboard from "./pages/Admin/adminDashboard/adminDashboard";
 import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk";
+import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers";
 
 import Loading from "./components/Loading/Loading";
 
@@ -239,6 +240,14 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <AdminButikk />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/managers"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminManagers />
           </ProtectedRoute>
         }
       />
