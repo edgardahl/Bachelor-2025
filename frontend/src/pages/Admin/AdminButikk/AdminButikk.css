@@ -48,7 +48,7 @@
   background-color: #f3f4f6;
   border-radius: 4px;
   color: #333;
-  border: 1px solid transparent;
+  border-bottom: 1px solid transparent;
 }
 
 .adminbutikk-input {
@@ -78,18 +78,95 @@
   margin-top: 2rem;
 }
 
-.adminbutikk-button {
-  background-color: var(--Card-header-color);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.3s ease;
+.adminbutikk-button-edit, .adminbutikk-button-cancle{
+    margin: 10px 10px;
 }
 
-.adminbutikk-button:hover {
-  background-color: var(--Main-dark-color);
+.adminbutikk-button-edit {
+    background-color: var(--Success-color);
+    color: var(--White);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--Text-font);
+    transition: background-color var(--Transition-button-simple);
+  }
+  
+  .adminbutikk-button-edit:hover {
+    background-color: #2e7d32; /* mørkere grønn */
+  }
+  
+  .adminbutikk-button-cancle {
+    background-color: var(--Error-delete-color);
+    color: var(--White);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--Text-font);
+    transition: background-color var(--Transition-button-simple);
+  }
+  
+  .adminbutikk-button-cancle:hover {
+    background-color: #c93d2f; /* mørkere rød */
+  }
+  
+  
+
+
+
+.adminbutikk-manager-link {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .adminbutikk-manager-link:hover {
+    color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  .adminbutikk-manager-link:active {
+    color: #003366;
+  }
+  
+  .adminbutikk-manager-link .adminbutikk-text {
+    color: #007bff;
+    cursor: pointer;
+  }
+  
+  .adminbutikk-manager-link .adminbutikk-text:hover {
+    text-decoration: underline;
+  }
+  
+
+
+
+  .adminbutikk-page .error-message {
+    color: red;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+  
+  .adminbutikk-page .error {
+    border: 2px solid red;
+  }
+
+  .adminbutikk-text,
+.adminbutikk-input,
+.adminbutikk-select__control {
+  font-size: 1.05rem;
+  padding: 0.75rem 1rem;
+  min-height: 48px; /* Sørger for samme høyde */
+  border-radius: 4px;
+  background-color: #f3f4f6;
+  border: 1px solid transparent;
+  box-sizing: border-box;
 }

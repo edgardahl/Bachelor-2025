@@ -8,6 +8,7 @@ import {
   updateEmployeeQualificationsController,
   changePassword,
   getAllStoreManagersController,
+  getStoreManagersController
 } from "../controllers/userController.js";
 import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
@@ -48,6 +49,9 @@ router.get(
   authorizeRoles("store_manager"),
   getAvailableEmployeesController
 );
+
+// Hent alle managers for en butikk
+router.get("/store_managers/:storeId", verifyToken, getStoreManagersController);
 
 // Henter en bruker med en bestemt id
 router.get("/:id", verifyToken, getUserByIdController);

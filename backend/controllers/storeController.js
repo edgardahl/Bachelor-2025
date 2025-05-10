@@ -114,9 +114,11 @@ export const updateStoreController = async (req, res) => {
   console.log("Store ID from params:", storeId);
 
   // Sanitize store data before updating
+  console.log("STORE INFO", storeData);
   const sanitizedStoreData = sanitizeStoreUpdate(storeData);
   if (sanitizedStoreData.errors) {
-    return res.status(400).json(sanitizedStoreData.errors); // Return validation errors
+    console.error("Sanitization errors:", sanitizedStoreData.errors);
+    return res.status(400).json({ error: sanitizedStoreData.errors }); // Send the errors back to the client
   }
 
   try {
@@ -137,6 +139,7 @@ export const updateStoreController = async (req, res) => {
     return res.json(updatedStore); // Send back the updated store data
   } catch (error) {
     console.error("Error updating store:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
+
 };

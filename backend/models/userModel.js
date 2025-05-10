@@ -119,6 +119,21 @@ export const getEmployeesByStoreIdModel = async (storeId) => {
   return data; // Return the data which contains employees and their qualifications
 };
 
+export const getManagersByStoreId = async (storeId) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("user_id, first_name, last_name, email")
+    .eq("role", "store_manager")
+    .eq("store_id", storeId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
+
 // Get user qualifications
 export const getUserQualificationsModel = async (userIds = []) => {
   if (!Array.isArray(userIds) || userIds.length === 0) {
