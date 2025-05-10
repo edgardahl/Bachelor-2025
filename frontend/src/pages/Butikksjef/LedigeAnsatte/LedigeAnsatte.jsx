@@ -86,6 +86,8 @@ const LedigeAnsatte = () => {
               >
                 <ButikkansattCard
                   employee={employee}
+                  show = "store"
+                  showQualifications={true}
                   cardClass="available-theme"
                 />
               </Link>

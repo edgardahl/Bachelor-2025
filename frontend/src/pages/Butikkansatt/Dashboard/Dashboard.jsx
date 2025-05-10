@@ -77,7 +77,7 @@ const AnsattDashboard = () => {
               linkTo="/ba/butikker"
             />
           </div>
-          <CoopMap /> {/* Add CoopMap here */}
+          <CoopMap />
         </>
       )}
     </div>
