@@ -46,9 +46,12 @@ const ButikkCard = ({ store, shiftsCount }) => {
           <div className="butikk-general-info">
             <p className="butikk-address">{street}</p>
             <p className="butikk-address">{city}</p>
-            <span className="butikk-chip">
-              {shiftsCount} publiserte vakter
-            </span>
+            {user.role !== "admin" && (
+              <span className="butikk-chip">
+                {shiftsCount} publiserte vakter
+              </span>
+            )}
+
           </div>
         </div>
       </div>

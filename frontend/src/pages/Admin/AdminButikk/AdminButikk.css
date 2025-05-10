@@ -8,11 +8,14 @@
 }
 
 .adminbutikk-title {
+    color: var(--Stores-main);
+    font-size: 4rem;
+    font-weight: 600;
     text-align: center;
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-  color: #2c3e50;
+    max-width: 80%;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .adminbutikk-form {
@@ -170,3 +173,15 @@
   border: 1px solid transparent;
   box-sizing: border-box;
 }
+
+
+
+.adminbutikk-description {
+    text-align: center;
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  color: var(--Text-color-light);
+  font-size: 16px;
+  line-height: 1.6;
+  }
+  

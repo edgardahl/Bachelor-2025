@@ -136,6 +136,10 @@ const AdminButikk = () => {
     <div className="adminbutikk-page">
       <BackButton />
       <h1 className="adminbutikk-title">Butikkdetaljer</h1>
+        <p className="adminbutikk-description">
+        Her kan du se og redigere informasjon om butikken.
+        </p>
+
       <div className="adminbutikk-form">
         <div
   className="adminbutikk-field"
