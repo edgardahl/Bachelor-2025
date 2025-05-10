@@ -21,7 +21,9 @@ const storeChainImages = {
 
 const ButikkCard = ({ store, shiftsCount }) => {
   const { user } = useAuth();
-  const role = user?.role === "employee" ? "ba" : "bs";
+  const role = user?.role === "employee" ? "ba" : user?.role === "store_manager" ? "bs" : "admin";
+
+
 
   const imageSrc =
     storeChainImages[store.store_chain] || storeChainImages["default"];
@@ -44,9 +46,12 @@ const ButikkCard = ({ store, shiftsCount }) => {
           <div className="butikk-general-info">
             <p className="butikk-address">{street}</p>
             <p className="butikk-address">{city}</p>
-            <span className="butikk-chip">
-              {shiftsCount} publiserte vakter
-            </span>
+            {user.role !== "admin" && (
+              <span className="butikk-chip">
+                {shiftsCount} publiserte vakter
+              </span>
+            )}
+
           </div>
         </div>
       </div>

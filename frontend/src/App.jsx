@@ -18,6 +18,8 @@ import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 import Profile from "./pages/Profile/Profile";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
 import NewEmployeePage from "./pages/Butikksjef/NewEmployeeForm/NewEmployeeForm";
+import AdminDashboard from "./pages/Admin/adminDashboard/adminDashboard";
+import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk";
 
 import Loading from "./components/Loading/Loading";
 
@@ -49,7 +51,9 @@ function App() {
         path="/"
         element={
           user ? (
-            user.role === "store_manager" ? (
+            user.role === "admin" ? (
+              <Navigate to="/admin/hjem" replace />
+            ) : user.role === "store_manager" ? (
               <Navigate to="/bs/hjem" replace />
             ) : user.role === "employee" ? (
               <Navigate to="/ba/hjem" replace />
@@ -61,12 +65,12 @@ function App() {
           )
         }
       />
+
       <Route
         path="/login"
         element={user ? <Navigate to="/" replace /> : <LoginPage />}
       />
 
-      {/* Butikksjef */}
 
       <Route path="/hjem" element={<Landing />} />
 
@@ -207,6 +211,34 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["employee"]}>
             <ShiftDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin */}
+      <Route
+        path="/admin/hjem"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/butikker"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <ButikkOversikt />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/butikker/:store_chain/:name/:store_id"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminButikk />
           </ProtectedRoute>
         }
       />

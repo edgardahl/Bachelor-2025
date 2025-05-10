@@ -12,6 +12,19 @@ export const getAllUsersModel = async () => {
   return data;
 };
 
+// Henter alle store managers, uavhengig av butikk
+export const getAllStoreManagersWithStoreModel = async () => {
+  const { data, error } = await supabase.rpc("get_all_store_managers_with_store");
+
+  if (error) {
+    console.error("Error fetching store managers with store info:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
+
 // Get user by ID
 export const getUserByIdModel = async (userId) => {
   const { data, error } = await supabase.rpc("get_user_by_id", {
@@ -105,6 +118,21 @@ export const getEmployeesByStoreIdModel = async (storeId) => {
 
   return data; // Return the data which contains employees and their qualifications
 };
+
+export const getManagersByStoreId = async (storeId) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("user_id, first_name, last_name, email")
+    .eq("role", "store_manager")
+    .eq("store_id", storeId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
 
 // Get user qualifications
 export const getUserQualificationsModel = async (userIds = []) => {

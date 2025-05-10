@@ -245,3 +245,107 @@ export const sanitizeUserUpdate = (userData) => {
     work_municipality_ids,
   };
 };
+
+export const sanitizeStoreUpdate = (storeData) => {
+  const {
+    store_name, // Butikkens navn
+    address,
+    postal_code,
+    municipality_id,
+    manager_id,
+    store_phone, // store_phone instead of phone_number
+    store_email, // store_email instead of store_email
+    store_chain,
+  } = storeData;
+
+  const errors = {};
+
+  // Validating the name of the store
+  console.log("Validating store_name:", store_name); // Add log to check value
+  if (typeof store_name !== "string" || store_name.trim() === "") {
+    console.log("store_name is empty or not a string"); // Error if empty or not a string
+    errors.store_name = "Navn på butikken er påkrevd.";
+  } else if (!/^[a-zA-ZæøåÆØÅ\s]+$/.test(store_name.trim())) {
+    console.log("store_name does not match the regex:", store_name); // Error if does not match pattern
+    errors.store_name = "Butikknavn kan bare inneholde bokstaver og mellomrom.";
+  }
+
+  // Validating address
+  console.log("Validating address:", address);
+  if (typeof address !== "string" || address.trim() === "") {
+    console.log("address is empty or not a string");
+    errors.address = "Adresse er påkrevd.";
+  }
+
+  // Validating postal code if it's provided
+  const postalCodeRegex = /^[0-9]{4}(\s[0-9]{4})?$/;
+  if (postal_code && !postalCodeRegex.test(postal_code)) {
+    console.log("postal_code does not match regex:", postal_code);
+    errors.postal_code = "Postnummer må være i riktig format (f.eks. 1234 eller 1234 5678).";
+  }
+
+  // Validating municipality_id (UUID check)
+  console.log("Validating municipality_id:", municipality_id);
+  if (municipality_id && !isUUID(municipality_id)) {
+    console.log("municipality_id is not a valid UUID");
+    errors.municipality_id = "Kommune-ID må være en gyldig UUID.";
+  }
+
+  // Validating manager_id (UUID check)
+  console.log("Validating manager_id:", manager_id);
+  if (manager_id && !isUUID(manager_id)) {
+    console.log("manager_id is not a valid UUID");
+    errors.manager_id = "Manager-ID må være en gyldig UUID.";
+  }
+
+  // Validating store_phone if it's provided
+  const phoneRegex = /^[0-9+\- ]{6,20}$/;
+  console.log("Validating store_phone:", store_phone);
+  if (store_phone && !phoneRegex.test(store_phone)) {
+    console.log("store_phone does not match regex:", store_phone);
+    errors.store_phone = "Telefonnummeret er ugyldig.";
+  }
+
+  // Validating store_email if it's provided
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  console.log("Validating store_email:", store_email);
+  if (store_email && !emailRegex.test(store_email)) {
+    console.log("store_email does not match regex:", store_email);
+    errors.store_email = "E-postadressen er ugyldig.";
+  }
+
+  // Validating store_chain if it's provided
+  console.log("Validating store_chain:", store_chain);
+  if (store_chain && typeof store_chain !== "string") {
+    console.log("store_chain is not a string");
+    errors.store_chain = "Butikkjede må være en gyldig tekststreng.";
+  }
+
+  if (Object.keys(errors).length > 0) {
+    console.log("Validation errors:", errors); // Log validation errors
+    return { errors };
+  }
+
+  // Return sanitized data
+  console.log("Returning sanitized data:", {
+    store_name: store_name.trim(),
+    address: address.trim(),
+    postal_code,
+    municipality_id,
+    manager_id,
+    store_phone: store_phone?.trim(),
+    store_email: store_email?.trim(),
+    store_chain: store_chain?.trim(),
+  });
+
+  return {
+    store_name: store_name.trim(),
+    address: address.trim(),
+    postal_code,
+    municipality_id,
+    manager_id,
+    store_phone: store_phone?.trim(),
+    store_email: store_email?.trim(),
+    store_chain: store_chain?.trim(),
+  };
+};
