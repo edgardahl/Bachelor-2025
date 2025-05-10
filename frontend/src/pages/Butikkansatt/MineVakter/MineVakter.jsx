@@ -76,7 +76,7 @@ const MineVakterAnsatt = () => {
   const shiftsToDisplay =
     activeTab === "available"
       ? filterShiftsByMunicipality(shifts)
-      : filterShiftsByMunicipality(claimedShifts);
+      : [...claimedShifts].sort((a, b) => new Date(a.date) - new Date(b.date));
 
   const groupedShifts = shiftsToDisplay.reduce((acc, shift) => {
     const dateKey = new Date(shift.date).toLocaleDateString("no-NO", {
@@ -164,7 +164,7 @@ const MineVakterAnsatt = () => {
                       endTime={shift.end_time}
                       qualifications={shift.qualifications}
                       storeName={shift.store_name}
-                      storeChain={shift.store_chain} 
+                      storeChain={shift.store_chain}
                       postedBy={`${shift.posted_by_first_name} ${shift.posted_by_last_name}`}
                       postedById={shift.posted_by_id}
                       userId={userId}

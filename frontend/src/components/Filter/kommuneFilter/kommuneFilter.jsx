@@ -10,7 +10,8 @@ const KommuneFilter = ({
   userRole = "", // 👈 new prop
 }) => {
   const [municipalities, setMunicipalities] = useState([]);
-  const [selectedMunicipalities, setSelectedMunicipalities] = useState(defaultValue);
+  const [selectedMunicipalities, setSelectedMunicipalities] =
+    useState(defaultValue);
   const [defaultSelected, setDefaultSelected] = useState([]);
 
   useEffect(() => {
@@ -29,7 +30,11 @@ const KommuneFilter = ({
   useEffect(() => {
     if (municipalities.length > 0 && userPreferredMunicipalities.length > 0) {
       const preferred = municipalities
-        .filter((m) => userPreferredMunicipalities.includes(m.municipality_name))
+        .filter(
+          (m) =>
+            m.municipality_name &&
+            userPreferredMunicipalities.includes(m.municipality_name)
+        )
         .map((m) => ({
           label: m.store_count
             ? `${m.municipality_name} (${m.store_count} butikker)`
@@ -47,19 +52,20 @@ const KommuneFilter = ({
     setSelectedMunicipalities(selectedOptions || []);
     onChange((selectedOptions || []).map((opt) => opt.value));
   };
-  
 
   const handleReset = () => {
     setSelectedMunicipalities(defaultSelected);
     onChange(defaultSelected.map((opt) => opt.value));
   };
 
-  const options = municipalities.map((m) => ({
-    label: m.store_count
-      ? `${m.municipality_name} (${m.store_count} butikker)`
-      : m.municipality_name,
-    value: m.municipality_name,
-  }));
+  const options = municipalities
+    .filter((m) => m.municipality_name)
+    .map((m) => ({
+      label: m.store_count
+        ? `${m.municipality_name} (${m.store_count} butikker)`
+        : m.municipality_name,
+      value: m.municipality_name,
+    }));
 
   const hasChanges =
     selectedMunicipalities.length !== defaultSelected.length ||
