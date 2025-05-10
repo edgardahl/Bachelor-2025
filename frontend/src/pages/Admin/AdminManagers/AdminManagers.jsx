@@ -65,7 +65,13 @@ const AdminManagers = () => {
   return (
     <div className="admin-manager-page">
       <div className="admin-managers">
-        <h1 className="admin-managers-title">Butikksjefer</h1>
+      <h1 className="mine-ansatte-title">Butikksjefer</h1>
+      <div className="mine-ansatte-beskrivelse">
+        <p>
+          Her kan du se en oversikt over alle butikksjefer i systemet. Du kan søke etter en spesifik butikksjef, butikkjede, eller butikk navn.
+        </p>
+      </div>
+        
 
         <div className="search-bar">
           <input
