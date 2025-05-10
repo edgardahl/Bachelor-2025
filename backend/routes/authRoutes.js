@@ -5,6 +5,7 @@ import {
   getCurrentUser,
   refreshAccessToken,
   registerNewEmployeeController,
+  registerNewManagerController
 } from "../controllers/authController.js";
 
 import { verifyToken } from "../middleware/authMiddleware.js";
@@ -22,6 +23,9 @@ router.post(
   authorizeRoles("store_manager"), // Må oppdateres til admin
   registerNewEmployeeController
 );
+
+// Admin lager ny butikksjef
+router.post("/store_manager/register", registerNewManagerController);
 
 // Henter den innloggede brukeren
 router.get("/me", verifyToken, getCurrentUser);

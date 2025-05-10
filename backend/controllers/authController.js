@@ -261,3 +261,97 @@ export const registerNewEmployeeController = async (req, res) => {
     });
   }
 };
+
+
+
+
+export const registerNewManagerController = async (req, res) => {
+  try {
+    const data = {
+      ...req.body,
+      role: "store_manager",
+      availability: "Ikke-fleksibel", // default for nå
+    };
+
+    let sanitizedUserData;
+    try {
+      sanitizedUserData = sanitizeUser(data);
+    } catch (sanitizeError) {
+      return res
+        .status(400)
+        .json({ error: { general: sanitizeError.message } });
+    }
+
+    if (sanitizedUserData.errors) {
+      return res.status(400).json({ error: sanitizedUserData.errors });
+    }
+
+    const {
+      first_name,
+      last_name,
+      email,
+      password,
+      phone_number,
+      availability,
+      role,
+      store_id,
+      municipality_id,
+    } = sanitizedUserData;
+
+    // Sjekk om e-post eller telefon er i bruk
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({
+        error: { email: "E-postadressen er allerede i bruk." },
+      });
+    }
+
+    const existingPhone = await getUserByPhoneNumber(phone_number);
+    if (existingPhone) {
+      return res.status(400).json({
+        error: { phone_number: "Telefonnummeret er allerede i bruk." },
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newManager = await registerUserInDB({
+      first_name,
+      last_name,
+      email,
+      password: hashedPassword,
+      phone_number,
+      availability,
+      role,
+      store_id: store_id === "" ? null : store_id,
+      municipality_id,
+    });
+    
+
+    if (!newManager) {
+      return res
+        .status(400)
+        .json({ error: { general: "Kunne ikke registrere butikksjef." } });
+    }
+
+    return res.status(201).json({
+      message: "Butikksjef registrert.",
+      user: newManager,
+    });
+  } catch (error) {
+    console.error("Register new manager error:", error);
+
+    if (error.message) {
+      return res.status(400).json({ error: { general: error.message } });
+    }
+
+    return res.status(400).json({
+      error: {
+        first_name: "Fornavn må kun inneholde bokstaver og kan ikke være tomt.",
+        email: "E-postformat er ugyldig.",
+        password: "Passord må være minst 6 tegn.",
+        phone_number: "Telefonnummeret er ugyldig.",
+      },
+    });
+  }
+};
