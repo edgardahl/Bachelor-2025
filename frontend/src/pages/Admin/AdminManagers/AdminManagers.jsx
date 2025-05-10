@@ -85,6 +85,9 @@ const AdminManagers = () => {
         </div>
 
         <div className="manager-list">
+            <Link to="/admin/managers/ny">
+              <ButikkansattCard isEmptyCard={true} cardClass="employee-theme" />
+            </Link>
           {filteredManagers.length > 0 ? (
             filteredManagers.map((manager) => (
               <Link

@@ -49,9 +49,9 @@ export const sanitizeUser = (userData) => {
   if (!validRoles.includes(role)) {
     errors.role = `Rolle må være en av: ${validRoles.join(", ")}.`;
   }
-  if (store_id && !isUUID(store_id)) {
-    errors.store_id = "Butikk-ID må være en gyldig UUID.";
-  }
+  if (store_id !== undefined && store_id !== null && store_id !== "" && !isUUID(store_id)) {
+    errors.store_id = "Butikk-ID må være en gyldig UUID eller tom.";
+  }  
   if (municipality_id && !isUUID(municipality_id)) {
     errors.municipality_id = "Kommune-ID må være en gyldig UUID.";
   }
