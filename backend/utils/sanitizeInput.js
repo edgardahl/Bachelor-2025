@@ -151,19 +151,22 @@ export const sanitizeUserUpdate = (userData) => {
     if (!Array.isArray(work_municipality_ids)) {
       errors.work_municipality_ids = "Arbeidskommuner må være en liste.";
     } else {
-      const invalid = work_municipality_ids.filter((id) => !isUUID(id));
-      if (invalid.length > 0) {
-        errors.work_municipality_ids = `Ugyldige kommune-IDer: ${invalid.join(", ")}`;
+      const invalidIds = work_municipality_ids.filter((id) => !isUUID(id));
+      if (invalidIds.length > 0) {
+        errors.work_municipality_ids = `Ugyldige kommune-IDer: ${invalidIds.join(", ")}`;
       } else {
         sanitized.work_municipality_ids = work_municipality_ids;
       }
     }
   }
 
-  if (Object.keys(errors).length > 0) return { errors };
+  if (Object.keys(errors).length > 0) {
+    return { errors };
+  }
 
   return sanitized;
 };
+
 
 // Validerer innkommende vakt
 export const sanitizeShift = (shiftData) => {

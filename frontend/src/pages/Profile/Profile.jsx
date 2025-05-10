@@ -42,11 +42,6 @@ const Profile = () => {
     availability: false,
     password: false,
   });
-
-  const [passwords, setPasswords] = useState({
-    currentPassword: "",
-    newPassword: "",
-  });
   const [municipalityOptions, setMunicipalityOptions] = useState([]);
   const [selectedMunicipalityOptions, setSelectedMunicipalityOptions] =
     useState([]);
@@ -87,16 +82,20 @@ const Profile = () => {
       setMunicipalityOptions(municipalityOptionsRes);
       setAllQualifications(qualificationsRes);
       setFormData(profileRes.data);
-      setOriginalFormData(profileRes.data); // <- denne linjen er ny
+      setFormData((prev) => ({
+        ...prev,
+        currentPassword: "",
+        newPassword: "",
+      }));
 
-      const currentSelected =
+      setOriginalFormData(profileRes.data);
+
+      // Oppdatert del: bruk nyeste work_municipalities fra profileRes
+      const updatedSelected =
         profileRes.data.work_municipalities
-          ?.map((name) => {
-            const match = municipalityOptionsRes.find((m) => m.label === name);
-            return match ? { label: match.label, value: match.value } : null;
-          })
+          ?.map((name) => municipalityOptionsRes.find((m) => m.label === name))
           .filter(Boolean) || [];
-      setSelectedMunicipalityOptions(currentSelected);
+      setSelectedMunicipalityOptions(updatedSelected);
 
       const residenceMatch = municipalityOptionsRes.find(
         (m) => m.label === profileRes.data.municipality_name
@@ -168,47 +167,57 @@ const Profile = () => {
 
   const handleFieldSave = async (field) => {
     try {
-      let payload = {};
-  
-      if (field === "first_name") {
-        payload.first_name = formData.first_name;
-      }
-      if (field === "last_name") {
-        payload.last_name = formData.last_name;
-      }
-      if (field === "email") {
-        payload.email = formData.email;
-      }
-      if (field === "phone_number") {
-        payload.phone_number = formData.phone_number;
-      }
-      if (field === "availability") {
-        payload.availability = formData.availability;
-      }
+      let payload = {
+        [field]: formData[field],
+      };
+
+      // Special handling for multiselect municipalities
       if (field === "work_municipality_ids") {
         payload.work_municipality_ids = selectedMunicipalityOptions.map(
           (opt) => opt.value
         );
       }
-  
+
+      if (field === "municipality") {
+        payload.municipality_id = selectedResidenceMunicipality?.value || null;
+      }
+
+      // Ensure municipality is preserved if it's not the field being edited
+      if (field !== "municipality" && selectedResidenceMunicipality?.value) {
+        payload.municipality_id = selectedResidenceMunicipality.value;
+      }
+
+      // Ensure preferred municipalities are preserved if not editing them
+      if (
+        field !== "work_municipality_ids" &&
+        selectedMunicipalityOptions.length > 0
+      ) {
+        payload.work_municipality_ids = selectedMunicipalityOptions.map(
+          (opt) => opt.value
+        );
+      }
+
       setErrors({});
       await axios.put("/users/current/update", payload);
       toggleFieldEdit(field, false);
       await fetchProfile();
-  
-      // Vis suksessmelding for spesifikke felt
+
       const fieldLabels = {
         first_name: "Fornavn",
         last_name: "Etternavn",
         email: "E-post",
         phone_number: "Telefonnummer",
+        availability: "Tilgjengelighet",
+        work_municipality_ids: "Ønskede kommuner",
+        municipality: "Bostedskommune",
       };
+
       if (fieldLabels[field]) {
         toast.success(`${fieldLabels[field]} oppdatert`);
       }
     } catch (err) {
       const apiError = err.response?.data?.error;
-  
+
       if (apiError) {
         if (typeof apiError === "string") {
           setErrors((prev) => ({
@@ -218,7 +227,7 @@ const Profile = () => {
         } else {
           setErrors((prev) => ({ ...prev, ...apiError }));
         }
-  
+
         if (fieldRefs[field] && fieldRefs[field].current) {
           fieldRefs[field].current.scrollIntoView({
             behavior: "smooth",
@@ -231,32 +240,37 @@ const Profile = () => {
       }
     }
   };
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (["currentPassword", "newPassword"].includes(name)) {
-      setPasswords((prev) => ({ ...prev, [name]: value }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePasswordChange = async () => {
     setErrors({}); // Fjern gamle feil
-  
-    if (!passwords.currentPassword || !passwords.newPassword) {
+
+    if (!formData.currentPassword || !formData.newPassword) {
       setErrors((prev) => ({
         ...prev,
         password: "Begge feltene må fylles ut",
       }));
       return;
     }
-  
+
     try {
-      await axios.patch("/users/current/password", passwords);
+      await axios.patch("/users/current/password", {
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword,
+      });
+
       toast.success("Passord oppdatert");
-      setPasswords({ currentPassword: "", newPassword: "" });
+
+      setFormData((prev) => ({
+        ...prev,
+        currentPassword: "",
+        newPassword: "",
+      }));
+
       toggleFieldEdit("password", false);
     } catch (err) {
       const apiError = err.response?.data?.error;
@@ -273,9 +287,6 @@ const Profile = () => {
       }
     }
   };
-  
-  
-  
 
   const handleQualificationToggle = (id) => {
     const isSelected = formData.qualifications.some(
@@ -543,19 +554,7 @@ const Profile = () => {
               <div className="field-buttons">
                 <button
                   className="primary-button"
-                  onClick={async () => {
-                    try {
-                      await axios.put("/users/current/update", {
-                        municipality_id:
-                          selectedResidenceMunicipality?.value || null,
-                      });
-                      toast.success("Bostedskommune oppdatert");
-                      toggleFieldEdit("municipality", false);
-                      await fetchProfile();
-                    } catch {
-                      toast.error("Kunne ikke oppdatere bostedskommune.");
-                    }
-                  }}
+                  onClick={() => handleFieldSave("municipality")}
                 >
                   Lagre
                 </button>
@@ -584,7 +583,19 @@ const Profile = () => {
 
         {formData.role === "employee" && (
           <div className="profile-field">
-            <label>Ønsker å jobbe i kommune(r):</label>
+            <label>
+              Ønsker å jobbe i kommune(r):
+              {isOwnProfile && formData.role === "employee" && (
+                <span className="tooltip-container">
+                  <span className="question-icon">?</span>
+                  <span className="tooltip-text">
+                    Her kan du angi hvilke kommuner du ønsker å jobbe i. Du får
+                    varslinger når relevante vakter legges ut.
+                  </span>
+                </span>
+              )}
+            </label>
+
             {isOwnProfile && editingFields.work_municipality_ids ? (
               <>
                 <Select
@@ -641,7 +652,16 @@ const Profile = () => {
 
         {formData.role === "employee" && isOwnProfile && (
           <div className="profile-field">
-            <label>Status:</label>
+            <label>
+              Status:
+              <span className="tooltip-container">
+                <span className="question-icon">?</span>
+                <span className="tooltip-text">
+                  Statusen avgjør om butikksjefer ser deg som tilgjengelig for
+                  vakter og får varslinger når nye vakter blir utlyst.
+                </span>
+              </span>
+            </label>
             {editingFields.availability ? (
               <>
                 <div className="availability-toggle">
@@ -683,7 +703,11 @@ const Profile = () => {
               </>
             ) : (
               <>
-                <p>{formData.availability}</p>
+                <p>
+                  {formData.availability === "Fleksibel"
+                    ? "Tilgjengelig"
+                    : "Utilgjengelig"}
+                </p>
                 <button
                   className="edit-icon-button"
                   onClick={() => toggleFieldEdit("availability", true)}
@@ -705,7 +729,7 @@ const Profile = () => {
                     type="password"
                     name="currentPassword"
                     placeholder="Nåværende passord"
-                    value={passwords.currentPassword}
+                    value={formData.currentPassword || ""}
                     onChange={handleChange}
                     className={errors.password ? "error" : ""}
                   />
@@ -713,7 +737,7 @@ const Profile = () => {
                     type="password"
                     name="newPassword"
                     placeholder="Nytt passord"
-                    value={passwords.newPassword}
+                    value={formData.newPassword || ""}
                     onChange={handleChange}
                     className={errors.password ? "error" : ""}
                   />
@@ -734,7 +758,12 @@ const Profile = () => {
                     className="secondary-button"
                     onClick={() => {
                       toggleFieldEdit("password", false);
-                      setPasswords({ currentPassword: "", newPassword: "" });
+                      setFormData((prev) => ({
+                        ...prev,
+                        currentPassword: "",
+                        newPassword: "",
+                      }));
+
                       setErrors((prev) => ({ ...prev, password: "" }));
                     }}
                   >

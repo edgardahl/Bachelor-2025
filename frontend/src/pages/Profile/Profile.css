@@ -134,6 +134,7 @@
   display: flex;
   gap: 0.5rem;
   margin-top: 0.5rem;
+  justify-content: center;
 }
 
 .profile-grid {
@@ -335,6 +336,51 @@ ul.municipality-list li {
   border: 2px solid red;
   margin-bottom: 0.25rem;
 }
+
+.tooltip-container {
+  display: inline-block;
+  position: relative;
+  margin-left: 6px;
+}
+
+.question-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-color: #1976d2;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 18px;
+  cursor: help;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 220px;
+  background-color: #333;
+  color: #fff;
+  text-align: left;
+  padding: 8px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  top: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
 
 /* Responsive */
 @media (max-width: 740px) {

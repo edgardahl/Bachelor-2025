@@ -46,15 +46,25 @@ export const updateUserByIdController = async (req, res) => {
   const userId = req.user.userId;
   const rawData = req.body;
 
+  // Logging rådata
+  console.log("🟡 Raw data received from frontend:", rawData);
+
   const sanitized = sanitizeUserUpdate(rawData);
+
+  // Logging sanitiserte data
+  console.log("🟢 Sanitized update payload:", sanitized);
+
   if (sanitized.errors) {
+    console.log("🔴 Validation errors from sanitizeUserUpdate:", sanitized.errors);
     return res.status(400).json({ error: sanitized.errors });
   }
+
   const { email, phone_number } = sanitized;
 
   try {
     const currentUser = await getUserByIdModel(userId);
 
+    // Sjekk om e-posten skal endres og om den allerede er i bruk
     if (email && email !== currentUser.email) {
       const { data: emailUsers, error: emailError } = await supabase
         .from("users")
@@ -63,20 +73,16 @@ export const updateUserByIdController = async (req, res) => {
         .neq("user_id", userId);
 
       if (emailError) {
-        console.error("Error checking email duplication:", emailError);
-        return res
-          .status(500)
-          .json({ error: "Intern serverfeil ved sjekk av e-post." });
+        console.error("🔴 Error checking email duplication:", emailError);
+        return res.status(500).json({ error: "Intern serverfeil ved sjekk av e-post." });
       }
 
       if (emailUsers.length > 0) {
-        return res
-          .status(400)
-          .json({ error: { email: "E-postadressen er allerede i bruk." } });
+        return res.status(400).json({ error: { email: "E-postadressen er allerede i bruk." } });
       }
-      
     }
 
+    // Sjekk om telefonnummer skal endres og om det allerede er i bruk
     if (phone_number && phone_number !== currentUser.phone_number) {
       const { data: phoneUsers, error: phoneError } = await supabase
         .from("users")
@@ -85,19 +91,26 @@ export const updateUserByIdController = async (req, res) => {
         .neq("user_id", userId);
 
       if (phoneError) {
-        console.error("Error checking phone duplication:", phoneError);
-        return res
-          .status(500)
-          .json({ error: "Intern serverfeil ved sjekk av telefonnummer." });
+        console.error("🔴 Error checking phone duplication:", phoneError);
+        return res.status(500).json({ error: "Intern serverfeil ved sjekk av telefonnummer." });
       }
 
       if (phoneUsers.length > 0) {
-        return res
-          .status(400)
-          .json({ error: { phone_number: "Telefonnummeret er allerede i bruk." } });
+        return res.status(400).json({ error: { phone_number: "Telefonnummeret er allerede i bruk." } });
       }
-      
     }
+
+    // Logg verdier som skal lagres
+    console.log("🛠️ Final update values to send to DB:");
+    console.log("Updates:", {
+      first_name: sanitized.first_name,
+      last_name: sanitized.last_name,
+      email: sanitized.email,
+      phone_number: sanitized.phone_number,
+      availability: sanitized.availability,
+      municipality_id: sanitized.municipality_id,
+    });
+    console.log("Preferred municipality IDs:", sanitized.work_municipality_ids);
 
     const updatedUser = await updateUserByIdModel(
       userId,
@@ -113,12 +126,13 @@ export const updateUserByIdController = async (req, res) => {
     );
 
     if (!updatedUser) {
+      console.error("❌ Failed to update user. Sanitized payload was:", sanitized);
       return res.status(400).json({ error: "Oppdatering av bruker feilet." });
     }
 
     return res.json(updatedUser);
   } catch (error) {
-    console.error("Error updating user:", error);
+    console.error("🔥 Uncaught error updating user:", error);
     return res.status(500).json({ error: "Intern serverfeil." });
   }
 };

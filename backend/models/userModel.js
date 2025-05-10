@@ -27,25 +27,27 @@ export const getUserByIdModel = async (userId) => {
 };
 
 // Update user
-export const updateUserByIdModel = async (
-  id,
-  updates,
-  municipality_ids = []
-) => {
-  // 1. Update main user info
-  const { data: userData, error: userError } = await supabase
-    .from("users")
-    .update(updates)
-    .eq("user_id", id)
-    .select("user_id, email, first_name")
-    .single();
+export const updateUserByIdModel = async (id, updates, municipality_ids = []) => {
+  let userData = null;
 
-  if (userError || !userData) {
-    console.error("Supabase error updating user:", userError);
-    return null;
+  // 1. Oppdaterer hovedinfo kun hvis det er noe å oppdatere
+  if (Object.keys(updates).length > 0) {
+    const { data, error } = await supabase
+      .from("users")
+      .update(updates)
+      .eq("user_id", id)
+      .select("user_id, email, first_name")
+      .maybeSingle(); // unngår feil dersom 0 rader returneres
+
+    if (error) {
+      console.error("Supabase error updating user:", error);
+      return null;
+    }
+
+    userData = data;
   }
 
-  // 2. Replace preferred municipalities
+  // 2. Sletter eksisterende foretrukne kommuner
   const { error: deleteError } = await supabase
     .from("user_municipality")
     .delete()
@@ -56,7 +58,8 @@ export const updateUserByIdModel = async (
     return null;
   }
 
-  if (municipality_ids.length > 0) {
+  // 3. Setter inn nye foretrukne kommuner hvis noen er valgt
+  if (Array.isArray(municipality_ids) && municipality_ids.length > 0) {
     const insertRows = municipality_ids.map((municipality_id) => ({
       user_id: id,
       municipality_id,
@@ -72,8 +75,10 @@ export const updateUserByIdModel = async (
     }
   }
 
-  return userData;
+  // Returner enten oppdatert bruker eller tomt objekt (ved kun kommuneoppdatering)
+  return userData || {};
 };
+
 
 export const getAvailableEmployeesInMunicipality = async (municipalityId) => {
   const { data, error } = await supabase.rpc(
