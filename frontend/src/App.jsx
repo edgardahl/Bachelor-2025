@@ -18,7 +18,7 @@ import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 import Profile from "./pages/Profile/Profile";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
 import NewEmployeePage from "./pages/Butikksjef/NewEmployeeForm/NewEmployeeForm";
-import AdminDashboard from "./pages/Admin/adminDashboard/adminDashboards";
+import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboards";
 import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk";
 import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers";
 import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages";
