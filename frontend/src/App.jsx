@@ -5,29 +5,29 @@ import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import useAuth from "./context/UseAuth";
 
 // Pages
-import LoginPage from "./pages/Login/Login";
-import ButikksjefDashboard from "./pages/Butikksjef/Dashboard/Dashboard";
-import AnsattDashboard from "./pages/Butikkansatt/Dashboard/Dashboard";
-import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter";
-import MineVakterAnsatt from "./pages/Butikkansatt/MineVakter/MineVakter";
-import MineAnsatte from "./pages/Butikksjef/MineAnsatte/MineAnsatte";
-import LedigeAnsatte from "./pages/Butikksjef/LedigeAnsatte/LedigeAnsatte";
-import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift";
-import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt";
-import Butikk from "./pages/Butikksjef/Butikk/Butikk";
-import Profile from "./pages/Profile/Profile";
-import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
-import NewEmployeePage from "./pages/Butikksjef/NewEmployeeForm/NewEmployeeForm";
-import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
-import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk";
-import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers";
-import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages";
-import NewStorePage from "./pages/Admin/NewStorePage/NewStorePages";
+import LoginPage from "./pages/Login/Login.jsx";
+import ButikksjefDashboard from "./pages/Butikksjef/Dashboard/Dashboard.jsx";
+import AnsattDashboard from "./pages/Butikkansatt/Dashboard/Dashboard.jsx";
+import MineVakter from "./pages/Butikksjef/MineVakter/MineVakter.jsx";
+import MineVakterAnsatt from "./pages/Butikkansatt/MineVakter/MineVakter.jsx";
+import MineAnsatte from "./pages/Butikksjef/MineAnsatte/MineAnsatte.jsx";
+import LedigeAnsatte from "./pages/Butikksjef/LedigeAnsatte/LedigeAnsatte.jsx";
+import CreateShift from "./pages/Butikksjef/CreateShift/CreateShift.jsx";
+import ButikkOversikt from "./pages/Butikksjef/ButikkOversikt/ButikkOversikt.jsx";
+import Butikk from "./pages/Butikksjef/Butikk/Butikk.jsx";
+import Profile from "./pages/Profile/Profile.jsx";
+import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage.jsx";
+import NewEmployeePage from "./pages/Butikksjef/NewEmployeeForm/NewEmployeeForm.jsx";
+import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard.jsx";
+import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk.jsx";
+import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers.jsx";
+import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages.jsx";
+import NewStorePage from "./pages/Admin/NewStorePage/NewStorePages.jsx";
 
-import Loading from "./components/Loading/Loading";
+import Loading from "./components/Loading/Loading.jsx";
 
-import NotFound from "./pages/NotFound/NotFound";
-import Landing from "./pages/Landing/Landing";
+import NotFound from "./pages/NotFound/NotFound.jsx";
+import Landing from "./pages/Landing/Landing.jsx";
 
 // Toastify
 import { ToastContainer } from "react-toastify";
