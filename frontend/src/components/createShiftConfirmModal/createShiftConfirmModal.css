@@ -109,12 +109,12 @@
 }
 
 .modal-buttons .confirm {
-  background-color: var(--Shifts-main);
+  background-color: var(--Button-color);
   color: #fff;
 }
 
 .modal-buttons .confirm:hover {
-  background-color: #003e7e;
+  background-color: var(--Button-hover-color);
 }
 
 .modal-buttons button:not(.confirm) {

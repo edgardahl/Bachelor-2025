@@ -4,6 +4,7 @@ import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import BackButton from "../../components/BackButton/BackButton";
 import "../Register/AuthForm.css";
 
 export default function LoginPage() {
@@ -16,12 +17,12 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setInlineError("");
-  
+
     try {
       const res = await axios.post("/auth/login", { email, password });
       localStorage.setItem("accessToken", res.data.accessToken);
       setUser(res.data.user);
-      navigate("/", { replace: true }); // ✅ Removed toast
+      navigate("/", { replace: true });
     } catch (err) {
       const msg = err.response?.data?.error;
       if (msg === "Feil e-post eller passord.") {
@@ -31,10 +32,10 @@ export default function LoginPage() {
       }
     }
   };
-  
 
   return (
     <div className="login-wrapper">
+      <BackButton to={"/hjem"} />
       <form onSubmit={handleSubmit} className="login-form">
         <h2 className="login-title">Logg inn</h2>
 
@@ -72,6 +73,5 @@ export default function LoginPage() {
         </div>
       </form>
     </div>
-
   );
 }

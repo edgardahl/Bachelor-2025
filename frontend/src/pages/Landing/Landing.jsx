@@ -53,7 +53,7 @@ const Landing = () => {
               window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
             }
           >
-            <span className="scroll-down-text">Scroll ned</span>
+            <span className="scroll-down-text">Bla ned</span>
             <span className="scroll-down-arrow">⌄</span>
           </div>
         </div>

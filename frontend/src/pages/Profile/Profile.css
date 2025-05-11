@@ -5,7 +5,6 @@
   border-radius: 12px;
   background-color: #fdfdfd;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .profile-header {
@@ -93,13 +92,13 @@
 }
 
 .primary-button {
-  background-color: #1976d2;
+  background-color: var(--Button-color);
   color: white;
   border: none;
 }
 
 .primary-button:hover {
-  background-color: #125ea8;
+  background-color: var(--Button-hover-color);
 }
 
 .secondary-button {
@@ -220,7 +219,7 @@
   margin: 1.2rem auto;
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
-  background-color: #1976d2;
+  background-color: var(--Button-color);
   color: white;
   border: none;
   border-radius: 6px;
@@ -229,7 +228,7 @@
 }
 
 .edit-qualifications-btn:hover {
-  background-color: #125ea8;
+  background-color: var(--Button-hover-color);
 }
 
 .qualification-cards {
@@ -286,12 +285,12 @@
 }
 
 .qualification-save-btn {
-  background-color: #1976d2;
+  background-color: var(--Button-color);
   color: white;
 }
 
 .qualification-save-btn:hover {
-  background-color: #125ea8;
+  background-color: var(--Button-hover-color);
 }
 
 .qualification-cancel-btn {
@@ -380,7 +379,6 @@ ul.municipality-list li {
   visibility: visible;
   opacity: 1;
 }
-
 
 /* Responsive */
 @media (max-width: 740px) {

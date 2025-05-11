@@ -4,12 +4,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Remove pointer cursor from the full link area */
   cursor: default;
 }
 
 .butikk-card {
-  color: var(--Card-header-color);
   background-color: white;
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -17,7 +15,10 @@
   overflow: hidden;
   margin: 16px;
   transition: transform 0.2s ease-in-out;
-  cursor: pointer; /* Cursor only appears when hovering over card */
+  cursor: pointer;
+  font-family: var(--Text-font, "Inter", sans-serif);
+  font-size: 1rem;
+  color: var(--Text-color);
 }
 
 .butikk-card:hover {
@@ -45,17 +46,17 @@
   object-fit: cover;
 }
 
-
 .butikk-card h2 {
   font-size: 1.2rem;
   text-align: center;
-  font-weight: bold;
+  font-weight: 600;
   margin: 0;
   width: 80%;
   height: 50px;
+  color: var(--Card-header-color);
 }
 
-.butikk-card-info{
+.butikk-card-info {
   padding: 0 16px;
 }
 
@@ -66,27 +67,28 @@
   padding: 4px 12px;
   text-align: center;
   font-size: 1rem;
-  display: block; /* Changed from inline-block */
+  font-weight: 500;
+  display: block;
   border-radius: 4px;
-  margin: 26px auto 0 auto; /* <-- Centered horizontally */
+  margin: 26px auto 0 auto;
   width: 80%;
 }
-
 
 /* General info and contact details */
 .butikk-general-info {
   color: var(--Text-color);
   margin-bottom: 16px;
+  text-align: center;
 }
 
 .butikk-address {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 500;
   margin-bottom: 8px;
 }
 
 .butikk-contact p {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: #777;
   margin: 4px 0;
 }
@@ -94,16 +96,13 @@
 /* The "More info" text at the bottom */
 .butikk-more-info {
   color: var(--Card-header-color);
-  font-size: 14px;
+  font-size: 0.95rem;
   text-align: center;
   margin-top: 16px;
   text-decoration: none;
   transition: text-decoration 0.2s ease;
 }
 
-/* Underline "Mer info" when card is hovered */
 .butikk-card:hover .butikk-more-info {
   text-decoration: underline;
 }
-
-
