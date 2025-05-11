@@ -5,7 +5,7 @@ import useAuth from "../../../context/UseAuth";
 import Loading from "../../../components/Loading/Loading";
 import { RiUserSearchLine } from "react-icons/ri";
 import { MdOutlineStorefront } from "react-icons/md";
-import "./AdminDashboard.css";
+import "./Dashboard.css";
 import CoopMap from "../../../components/mapbox/CoopMap";
 
 const AdminDashboard = () => {
@@ -76,6 +76,7 @@ const AdminDashboard = () => {
           />
         </div>
       )}
+      
       <CoopMap />
     </div>
   );
