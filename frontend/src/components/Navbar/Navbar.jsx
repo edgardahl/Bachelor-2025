@@ -115,14 +115,6 @@ export default function Navbar() {
       >
         Butikksjefer
       </NavLink>
-
-      <NavLink
-        to="/admin/statistikk"
-        className={({ isActive }) => (isActive ? "active" : "")}
-        onClick={() => setMenuOpen(false)}
-      >
-        Statistikk
-      </NavLink>
     </>
   );
 
