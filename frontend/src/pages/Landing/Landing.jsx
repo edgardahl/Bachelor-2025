@@ -39,7 +39,7 @@ const Landing = () => {
           />
           <h1 className="hero-title">Velkommen til Coop Compis</h1>
           <p className="hero-subtitle">
-            Den smarte måten å organisere vakter og ansatte i butikkene dine.
+          - En enklere måte å organisere arbeidshverdagen.
           </p>
           <button
             className="kom-i-gang-button"
@@ -189,11 +189,7 @@ const Landing = () => {
       {/* Kom i gang knapp på bunnen */}
       <section className="kom-i-gang-container">
         <div className="kom-i-gang-content">
-          <h2 className="kom-i-gang-heading">Er du klar for å komme i gang?</h2>
-          <p className="kom-i-gang-text">
-            Bli med på Coop Compis og effektiviser hvordan du administrerer
-            vakter og ansatte!
-          </p>
+          <h2 className="kom-i-gang-heading">Klar for en enklere arbeidshverdag?</h2>
           <button
             className="kom-i-gang-button"
             onClick={() => navigate("/login")}
