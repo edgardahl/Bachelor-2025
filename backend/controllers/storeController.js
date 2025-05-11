@@ -8,7 +8,8 @@ import {
   updateStoreModel
 } from "../models/storeModel.js";
 
-import { updateUserByIdModel } from "../models/userModel.js"; // importere updateUserByIdModel
+import { updateUserByIdModel, getUserByIdModel } from "../models/userModel.js"; // importere updateUserByIdModel
+
 
 import { sanitizeStoreUpdate } from "../utils/sanitizeInput.js";
 
@@ -90,6 +91,21 @@ export const createStoreController = async (req, res) => {
     const newStore = await createStoreModel(sanitized);
 
     if (sanitized.manager_id) {
+      const manager = await getUserByIdModel(sanitized.manager_id);
+
+      if (!manager) {
+        return res.status(404).json({ error: { manager_id: "Manager not found." } });
+      }
+
+      if (manager.store_id) {
+        console.error("Manager already has a store assigned.");
+        return res.status(400).json({
+          error: {
+            manager_id: "Denne brukeren er allerede registrert som butikksjef for en annen butikk.",
+          },
+        });
+      }
+
       const updatedUser = await updateUserByIdModel(sanitized.manager_id, {
         store_id: newStore.store_id,
       });
@@ -105,7 +121,6 @@ export const createStoreController = async (req, res) => {
   } catch (error) {
     console.error("Error creating store:", error);
 
-    // Hvis feilen har et `field`-attributt, send som spesifikk valideringsfeil
     if (error.field) {
       return res.status(400).json({ error: { [error.field]: error.message } });
     }
@@ -113,6 +128,7 @@ export const createStoreController = async (req, res) => {
     res.status(500).json({ error: { general: error.message } });
   }
 };
+
 
 
 
@@ -155,8 +171,22 @@ export const updateStoreController = async (req, res) => {
       return res.status(404).json({ error: "Store not found" });
     }
 
-    // If a new manager is selected, update the manager's store_id
     if (manager_id) {
+      const manager = await getUserByIdModel(manager_id);
+    
+      if (!manager) {
+        return res.status(404).json({ error: { manager_id: "Manager not found." } });
+      }
+    
+      if (manager.store_id && manager.store_id !== parseInt(storeId)) {
+        console.error("Manager is already assigned to another store.");
+        return res.status(400).json({
+          error: {
+            manager_id: "Denne brukeren er allerede registrert som butikksjef for en annen butikk.",
+          },
+        });
+      }
+    
       const updatedUser = await updateUserByIdModel(manager_id, { store_id: storeId });
       if (!updatedUser) {
         return res.status(500).json({ error: "Failed to update store_id for manager." });
