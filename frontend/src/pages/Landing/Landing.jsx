@@ -1,5 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { IoStorefrontSharp } from "react-icons/io5";
+import { FaClipboardList, FaClipboardCheck } from "react-icons/fa";
+import { FaClipboardUser } from "react-icons/fa6";
 import ButikkCard from "../../components/Cards/ButikkCard/ButikkCard";
 import ShiftCard from "../../components/Cards/ShiftCard/ShiftCard";
 import ButikkansattCard from "../../components/Cards/ButikkansattCard/ButikkansattCard";
@@ -11,7 +14,6 @@ import "../../components/Cards/ButikkansattCard/ButikkansattCard.css";
 const Landing = () => {
   const navigate = useNavigate();
 
-  // Oppretter employee objektet her
   const employee = {
     first_name: "Kari",
     last_name: "Nordmann",
@@ -39,7 +41,7 @@ const Landing = () => {
           />
           <h1 className="hero-title">Velkommen til Coop Compis</h1>
           <p className="hero-subtitle">
-          - En enklere måte å organisere arbeidshverdagen.
+            - En enklere måte å organisere arbeidshverdagen.
           </p>
           <button
             className="kom-i-gang-button"
@@ -62,11 +64,7 @@ const Landing = () => {
       {/* Section 1 – Butikker */}
       <section className="landing-section">
         <h2 className="landing-section-heading">
-          <img
-            src="/icons/red_store.png"
-            alt="Butikk ikon"
-            className="section-icon"
-          />
+          <IoStorefrontSharp className="section-icon" />
           Butikker
         </h2>
 
@@ -90,14 +88,10 @@ const Landing = () => {
 
       {/* Section 2 – Publisere vakter */}
       <section className="landing-section alt">
-      <h2 className="landing-section-heading">
-  <img
-    src="/icons/upload-file.png"
-    alt="Publisere vakter ikon"
-    className="section-icon"
-  />
-  Publisere vakter
-</h2>
+        <h2 className="landing-section-heading">
+          <FaClipboardList className="section-icon" />
+          Publisere vakter
+        </h2>
 
         <p className="landing-section-text">
           Trenger du folk på jobb? Legg ut en vakt! Systemet matcher den med
@@ -125,11 +119,7 @@ const Landing = () => {
       {/* Section 3 – Ta vakt */}
       <section className="landing-section">
         <h2 className="landing-section-heading">
-          <img
-            src="/icons/done.png"
-            alt="Ta vakt ikon"
-            className="section-icon"
-          />
+          <FaClipboardCheck className="section-icon" />
           Ta vakt
         </h2>
 
@@ -158,14 +148,10 @@ const Landing = () => {
 
       {/* Section 4 – Administrer ansatte */}
       <section className="landing-section alt">
-      <h2 className="landing-section-heading">
-  <img
-    src="/icons/contact-list.png"
-    alt="Administrer ansatte ikon"
-    className="section-icon"
-  />
-  Administrer ansatte
-</h2>
+        <h2 className="landing-section-heading">
+          <FaClipboardUser className="section-icon" />
+          Administrer ansatte
+        </h2>
 
         <p className="landing-section-text">
           Butikksjefer får full oversikt over egne ansatte, deres
@@ -189,7 +175,9 @@ const Landing = () => {
       {/* Kom i gang knapp på bunnen */}
       <section className="kom-i-gang-container">
         <div className="kom-i-gang-content">
-          <h2 className="kom-i-gang-heading">Klar for en enklere arbeidshverdag?</h2>
+          <h2 className="kom-i-gang-heading">
+            Klar for en enklere arbeidshverdag?
+          </h2>
           <button
             className="kom-i-gang-button"
             onClick={() => navigate("/login")}
