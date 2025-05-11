@@ -7,7 +7,7 @@ import Navbar from "../Navbar/Navbar";
 const Layout = ({ children }) => {
   const location = useLocation();
 
-  // Add any routes here where you want to hide navbar/footer
+  // Routes to hide navbar/footer
   const hideNavAndFooter = ["/hjem", "/login", "/register"].includes(location.pathname);
 
   return (

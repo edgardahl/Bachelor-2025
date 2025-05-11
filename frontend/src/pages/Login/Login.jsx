@@ -76,7 +76,7 @@ export default function LoginPage() {
 
         <div className="login-footer">
           <p>Har du ikke brukerkonto?</p>
-          <p className="login-note">Spørr din butikksjef om en bruker</p>
+          <p className="login-note">Kontakt butikksjefen din for brukerkonto.</p>
         </div>
       </form>
     </div>
