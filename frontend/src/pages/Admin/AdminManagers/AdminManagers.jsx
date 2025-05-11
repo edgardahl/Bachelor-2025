@@ -18,10 +18,10 @@ const AdminManagers = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          "http://localhost:5001/api/users/store_managers"
+          "/users/store_managers"
         );
         setManagers(response.data);
-        setFilteredManagers(response.data); // Set filtered list to all managers initially
+        setFilteredManagers(response.data);
       } catch (err) {
         console.error("Error fetching managers:", err);
       } finally {
@@ -36,15 +36,15 @@ const AdminManagers = () => {
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-  
+
     if (query === "") {
-      setFilteredManagers(managers); // Vis alle hvis søkefeltet er tomt
+      setFilteredManagers(managers);
     } else {
       const filtered = managers.filter((manager) => {
         const fullName = `${manager.first_name} ${manager.last_name}`.toLowerCase();
         const email = manager.email.toLowerCase();
-        const storeName = manager.store_name?.toLowerCase() || ""; // Unngå feil hvis den er undefined
-        const storeChain = manager.store_chain?.toLowerCase() || ""; // Unngå feil hvis den er undefined
+        const storeName = manager.store_name?.toLowerCase() || "";
+        const storeChain = manager.store_chain?.toLowerCase() || "";
         return (
           fullName.includes(query) ||
           email.includes(query) ||
@@ -52,11 +52,10 @@ const AdminManagers = () => {
           storeName.includes(query)
         );
       });
-  
+
       setFilteredManagers(filtered);
     }
   };
-  
 
   if (loading) {
     return <Loading />;
@@ -65,13 +64,13 @@ const AdminManagers = () => {
   return (
     <div className="admin-manager-page">
       <div className="admin-managers">
-      <h1 className="mine-ansatte-title">BUTIKKSJEFER</h1>
-      <div className="mine-ansatte-beskrivelse">
-        <p>
-          Her kan du se en oversikt over alle butikksjefer i systemet. Du kan søke etter en spesifik butikksjef, butikkjede, eller butikk navn.
-        </p>
-      </div>
-        
+        <h1 className="mine-ansatte-title">BUTIKKSJEFER</h1>
+        <div className="mine-ansatte-beskrivelse">
+          <p>
+            Oversikt over alle butikksjefer i systemet. Her kan du registrere ny
+            butikksjef.
+          </p>
+        </div>
 
         <div className="search-bar">
           <input
@@ -85,20 +84,20 @@ const AdminManagers = () => {
         </div>
 
         <div className="manager-list">
-            <Link to="/admin/managers/ny">
-              <ButikkansattCard isEmptyCard={true} cardClass="employee-theme" />
-            </Link>
+          <Link to="/admin/managers/ny">
+            <ButikkansattCard isEmptyCard={true} cardClass="employee-theme" />
+          </Link>
           {filteredManagers.length > 0 ? (
             filteredManagers.map((manager) => (
               <Link
                 key={manager.user_id}
-                to={`/admin/manager/${manager.user_id}`}
+                to={`/admin/butikksjefer/profil/${manager.user_id}`}
               >
-                <div key={manager.user_id} className="manager-card">
+                <div className="manager-card">
                   <ButikkansattCard
                     employee={manager}
-                    show="store" // For example, you might want to display the store name
-                    showQualifications={false} // Adjust as needed
+                    show="store"
+                    showQualifications={false}
                     cardClass="employee-theme"
                   />
                 </div>

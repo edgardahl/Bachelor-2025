@@ -87,7 +87,7 @@ const NewManagerPage = () => {
       <BackButton onClick={() => navigate(-1)} />
       <h2 className="form-title">Ny butikksjef</h2>
       <p className="form-subtitle">
-        Manageren kan senere redigere passord og annen informasjon selv.
+        Butikksjefen kan senere redigere passord og annen informasjon selv.
       </p>
 
       <label>Fornavn</label>

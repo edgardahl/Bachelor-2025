@@ -296,7 +296,7 @@ const AdminButikk = () => {
             {storeManagers.length === 0 ? (
               <p className="adminbutikk-text">
                 Ingen butikksjefer. legg til en butikksjef{" "}
-                <Link to={"/admin/managers"} className="adminbutikk-manager-link">
+                <Link to={"/admin/butikksjefer"} className="adminbutikk-manager-link">
                   Her
                 </Link>
               </p>
@@ -304,7 +304,7 @@ const AdminButikk = () => {
               storeManagers.map((manager) => (
                 <Link
                   key={manager.user_id}
-                  to={`/admin/manager/${manager.user_id}`}
+                  to={`/admin/butikksjefer/profil/${manager.user_id}`}
                   className="adminbutikk-manager-link"
                 >
                   <p className="adminbutikk-text">
