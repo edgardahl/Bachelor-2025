@@ -378,7 +378,7 @@ const AdminButikk = () => {
           {editing ? (
             <div>
               <button className="adminbutikk-button-edit" onClick={handleSave}>
-                Lagre endringer
+                Lagre
               </button>
               <button
                 className="adminbutikk-button-cancle"

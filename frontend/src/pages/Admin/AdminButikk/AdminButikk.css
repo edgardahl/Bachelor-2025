@@ -92,7 +92,7 @@ margin: 0 auto;
 .adminbutikk-button-edit,
 .adminbutikk-button-cancle {
   margin: 0 auto;
-  width: 40%;
+  width: 30%;
 }
 
 .adminbutikk-button-edit {
@@ -191,8 +191,16 @@ margin: 0 auto;
     border-radius: 0;
   }
 
-  .adminbutikk-title {
-    font-size: 2.4rem;
-  }
+}
 
+@media (max-width: 700px) {
+  .adminbutikk-button-edit,
+.adminbutikk-button-cancle {
+  margin: 0 auto;
+  width: 65%;
+}
+
+.adminbutikk-title {
+  font-size: 1.9rem;
+}
 }
