@@ -1,5 +1,5 @@
 // Profile.jsx
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
@@ -13,25 +13,15 @@ import { FaEdit } from "react-icons/fa";
 import "./Profile.css";
 
 const Profile = () => {
+  // Henter brukerdata og routinginformasjon
   const { user } = useAuth();
   const { id: profileId } = useParams();
   const navigate = useNavigate();
 
+  // State-variabler for skjema og redigering
   const [formData, setFormData] = useState(null);
-  const [error, setError] = useState("");
-
-  const [errors, setErrors] = useState({});
-  const fieldRefs = {
-    first_name: useRef(null),
-    last_name: useRef(null),
-    email: useRef(null),
-    phone_number: useRef(null),
-    municipality: useRef(null),
-    availability: useRef(null),
-    password: useRef(null),
-  };
-
   const [originalFormData, setOriginalFormData] = useState(null);
+  const [errors, setErrors] = useState({});
   const [isEditingQualifications, setIsEditingQualifications] = useState(false);
   const [editingFields, setEditingFields] = useState({
     first_name: false,
@@ -41,7 +31,10 @@ const Profile = () => {
     municipality: false,
     availability: false,
     password: false,
+    work_municipality_ids: false,
   });
+
+  // Andre state-variabler
   const [municipalityOptions, setMunicipalityOptions] = useState([]);
   const [selectedMunicipalityOptions, setSelectedMunicipalityOptions] =
     useState([]);
@@ -50,104 +43,119 @@ const Profile = () => {
   const [allQualifications, setAllQualifications] = useState([]);
   const [qualificationMap, setQualificationMap] = useState({});
   const [storeData, setStoreData] = useState(null);
+  const [publishedShiftCount, setPublishedShiftCount] = useState(0);
 
+  // Konstanter basert på bruker og profilvisning
   const isOwnProfile = !profileId || user?.id === profileId;
   const showBackButton = user?.role === "store_manager" && !isOwnProfile;
 
-  const fetchMunicipalities = useCallback(async () => {
+  const fieldLabels = {
+    first_name: "Fornavn",
+    last_name: "Etternavn",
+    email: "E-post",
+    phone_number: "Telefonnummer",
+    availability: "Tilgjengelighet",
+    work_municipality_ids: "Ønskede kommuner",
+    municipality: "Bostedskommune",
+  };
+
+  // Hent alle kommuner
+  const fetchMunicipalityOptions = async () => {
     const res = await axios.get("/municipalities");
     return res.data.map((m) => ({
       label: m.municipality_name,
       value: m.municipality_id,
     }));
-  }, []);
+  };
 
-  const fetchQualifications = useCallback(async () => {
+  // Hent alle kvalifikasjoner
+  const fetchQualifications = async () => {
     const res = await axios.get("/qualifications");
     return res.data.map((q) => ({ id: q.qualification_id, name: q.name }));
-  }, []);
+  };
 
+  // Hent brukerprofil (egen eller annen sin)
+  const fetchUserProfile = async (id) => {
+    const res = await axios.get(`/users/${id}`);
+    return res.data;
+  };
+
+  // Kombinert henting av nødvendige data for profilvisning
   const fetchProfile = useCallback(async () => {
     try {
       const idToFetch = profileId || user?.id;
       if (!idToFetch) return;
 
-      const [municipalityOptionsRes, qualificationsRes, profileRes] =
+      const [municipalityOptionsRes, qualificationsRes, profileData] =
         await Promise.all([
-          fetchMunicipalities(),
+          fetchMunicipalityOptions(),
           fetchQualifications(),
-          axios.get(`/users/${idToFetch}`),
+          fetchUserProfile(idToFetch),
         ]);
 
       setMunicipalityOptions(municipalityOptionsRes);
       setAllQualifications(qualificationsRes);
-      setFormData(profileRes.data);
-      setFormData((prev) => ({
-        ...prev,
-        currentPassword: "",
-        newPassword: "",
-      }));
+      setFormData({ ...profileData, currentPassword: "", newPassword: "" });
+      setOriginalFormData(profileData);
 
-      setOriginalFormData(profileRes.data);
-
-      // Oppdatert del: bruk nyeste work_municipalities fra profileRes
-      const updatedSelected =
-        profileRes.data.work_municipalities
-          ?.map((name) => municipalityOptionsRes.find((m) => m.label === name))
-          .filter(Boolean) || [];
+      const updatedSelected = profileData.work_municipalities
+        ?.map((name) => municipalityOptionsRes.find((m) => m.label === name))
+        .filter(Boolean);
       setSelectedMunicipalityOptions(updatedSelected);
 
       const residenceMatch = municipalityOptionsRes.find(
-        (m) => m.label === profileRes.data.municipality_name
+        (m) => m.label === profileData.municipality_name
       );
       setSelectedResidenceMunicipality(residenceMatch || null);
 
-      const qualificationMap = qualificationsRes.reduce((acc, q) => {
+      const map = qualificationsRes.reduce((acc, q) => {
         acc[q.id] = q.name;
         return acc;
       }, {});
-      setQualificationMap(qualificationMap);
+      setQualificationMap(map);
     } catch (err) {
       console.error("Error fetching profile:", err);
-      setError("Kunne ikke hente profildata");
+      toast.error("Kunne ikke hente profildata");
       if (isOwnProfile) navigate("/login");
     }
-  }, [
-    fetchMunicipalities,
-    fetchQualifications,
-    profileId,
-    user?.id,
-    isOwnProfile,
-    navigate,
-  ]);
+  }, [profileId, user?.id, isOwnProfile, navigate]);
 
+  // Hent data når komponenten monteres
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
 
+  // Hent butikkdata og antall publiserte vakter
   useEffect(() => {
     const fetchStore = async () => {
       if (!formData?.store_id) return;
       try {
-        const res = await axios.get(`/stores/${formData.store_id}`);
-        setStoreData(res.data);
+        const res = await axios.get(`/stores/storesWithMunicipality`);
+        const matchedStore = res.data.stores.find(
+          (store) => store.store_id === formData.store_id
+        );
+        setStoreData(matchedStore);
+        setPublishedShiftCount(matchedStore?.shift_count || 0);
       } catch (err) {
-        console.error("Error fetching store:", err);
+        console.error("Error fetching store with shift count:", err);
       }
     };
+
     fetchStore();
   }, [formData?.store_id]);
 
+  // Aktiverer/redigerer enkeltfelt eller tilbakestiller til originalverdi
   const toggleFieldEdit = (field, value = false) => {
     setEditingFields((prev) => ({ ...prev, [field]: value }));
 
-    if (!value && originalFormData && formData) {
-      // Tilbakestill feltet ved avbryt
+    // Hvis redigering avbrytes, tilbakestill verdien
+    if (!value) {
       setFormData((prev) => ({
         ...prev,
         [field]: originalFormData[field],
       }));
 
+      // Tilbakestill valgt bostedskommune
       if (field === "municipality") {
         const match = municipalityOptions.find(
           (m) => m.value === originalFormData.municipality_id
@@ -155,6 +163,7 @@ const Profile = () => {
         setSelectedResidenceMunicipality(match || null);
       }
 
+      // Tilbakestill ønskede kommuner
       if (field === "work_municipality_ids") {
         const matches =
           originalFormData.work_municipalities
@@ -165,32 +174,30 @@ const Profile = () => {
     }
   };
 
+  // Lagre oppdatert felt til backend
   const handleFieldSave = async (field) => {
     try {
       let payload = {
         [field]: formData[field],
       };
 
-      // Special handling for multiselect municipalities
+      // Håndtering for ønskede kommuner (multiselect)
       if (field === "work_municipality_ids") {
         payload.work_municipality_ids = selectedMunicipalityOptions.map(
           (opt) => opt.value
         );
       }
 
+      // Håndtering for bostedskommune
       if (field === "municipality") {
         payload.municipality_id = selectedResidenceMunicipality?.value || null;
       }
 
-      // Ensure municipality is preserved if it's not the field being edited
-      if (field !== "municipality" && selectedResidenceMunicipality?.value) {
-        payload.municipality_id = selectedResidenceMunicipality.value;
-      }
-
-      // Ensure preferred municipalities are preserved if not editing them
+      // Sørg for at ønskede kommuner beholdes hvis man ikke redigerer dem
       if (
         field !== "work_municipality_ids" &&
-        selectedMunicipalityOptions.length > 0
+        selectedMunicipalityOptions.length > 0 &&
+        !("work_municipality_ids" in payload)
       ) {
         payload.work_municipality_ids = selectedMunicipalityOptions.map(
           (opt) => opt.value
@@ -201,16 +208,6 @@ const Profile = () => {
       await axios.put("/users/current/update", payload);
       toggleFieldEdit(field, false);
       await fetchProfile();
-
-      const fieldLabels = {
-        first_name: "Fornavn",
-        last_name: "Etternavn",
-        email: "E-post",
-        phone_number: "Telefonnummer",
-        availability: "Tilgjengelighet",
-        work_municipality_ids: "Ønskede kommuner",
-        municipality: "Bostedskommune",
-      };
 
       if (fieldLabels[field]) {
         toast.success(`${fieldLabels[field]} oppdatert`);
@@ -227,25 +224,19 @@ const Profile = () => {
         } else {
           setErrors((prev) => ({ ...prev, ...apiError }));
         }
-
-        if (fieldRefs[field] && fieldRefs[field].current) {
-          fieldRefs[field].current.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-          fieldRefs[field].current.focus();
-        }
       } else {
         setErrors((prev) => ({ ...prev, general: "Noe gikk galt." }));
       }
     }
   };
 
+  // Oppdater verdier i state ved input-endringer
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Endre passord og håndter feil
   const handlePasswordChange = async () => {
     setErrors({}); // Fjern gamle feil
 
@@ -288,6 +279,7 @@ const Profile = () => {
     }
   };
 
+  // Legg til eller fjern kvalifikasjon i state
   const handleQualificationToggle = (id) => {
     const isSelected = formData.qualifications.some(
       (q) => q.qualification_id === id
@@ -301,6 +293,7 @@ const Profile = () => {
     setFormData((prev) => ({ ...prev, qualifications: updated }));
   };
 
+  // Lagre kvalifikasjoner til backend
   const saveQualifications = async () => {
     try {
       const selectedIds = formData.qualifications.map(
@@ -326,7 +319,6 @@ const Profile = () => {
   const canViewQualifications =
     formData?.role === "employee" || canEditQualifications;
 
-  if (error) return <p>{error}</p>;
   if (!user || !formData) return <Loading />;
 
   return (
@@ -364,7 +356,6 @@ const Profile = () => {
               <div className="input-error-wrapper">
                 <input
                   name="first_name"
-                  ref={fieldRefs.first_name}
                   value={formData.first_name || ""}
                   onChange={handleChange}
                   className={errors.first_name ? "error" : ""}
@@ -409,7 +400,6 @@ const Profile = () => {
             <>
               <input
                 name="last_name"
-                ref={fieldRefs.last_name}
                 value={formData.last_name || ""}
                 onChange={handleChange}
                 className={errors.last_name ? "error" : ""}
@@ -455,7 +445,6 @@ const Profile = () => {
                 <input
                   name="email"
                   type="email"
-                  ref={fieldRefs.email}
                   value={formData.email || ""}
                   onChange={handleChange}
                   className={errors.email ? "error" : ""}
@@ -501,7 +490,6 @@ const Profile = () => {
               <div className="input-error-wrapper">
                 <input
                   name="phone_number"
-                  ref={fieldRefs.phone_number}
                   value={formData.phone_number || ""}
                   onChange={handleChange}
                   className={errors.phone_number ? "error" : ""}
@@ -785,10 +773,20 @@ const Profile = () => {
           </div>
         )}
 
-        {formData.role === "employee" && storeData && (
-          <div className="profile-field">
+        {storeData && (
+          <div
+            className={`profile-field ${
+              formData.role === "store_manager" ? "full-width" : ""
+            }`}
+          >
             <label>Butikk:</label>
-            <ButikkCard store={storeData} shiftsCount={0} />
+            <div
+              className={
+                formData.role === "store_manager" ? "centered-store-card" : ""
+              }
+            >
+              <ButikkCard store={storeData} shiftsCount={publishedShiftCount} />
+            </div>
           </div>
         )}
 
@@ -824,12 +822,14 @@ const Profile = () => {
             </div>
 
             {canEditQualifications && !isEditingQualifications && (
-              <button
-                className="edit-qualifications-btn"
-                onClick={() => setIsEditingQualifications(true)}
-              >
-                Rediger kvalifikasjoner
-              </button>
+              <div className="qualification-button">
+                <button
+                  className="primary-button"
+                  onClick={() => setIsEditingQualifications(true)}
+                >
+                  Endre kvalifikasjoner
+                </button>
+              </div>
             )}
 
             {canEditQualifications && isEditingQualifications && (
@@ -845,15 +845,6 @@ const Profile = () => {
                 </button>
               </div>
             )}
-          </div>
-        )}
-
-        {storeData && formData.role === "store_manager" && (
-          <div className="profile-field full-width">
-            <label>Butikk:</label>
-            <div className="centered-store-card">
-              <ButikkCard store={storeData} shiftsCount={0} />
-            </div>
           </div>
         )}
       </div>

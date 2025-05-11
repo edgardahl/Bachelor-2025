@@ -8,7 +8,8 @@ body,
 }
 
 body {
-  background-color: var(--Shifts-main);
+  background: linear-gradient(135deg, #213653 0%, #5d89c7 100%);
+  background-attachment: fixed;
   font-family: sans-serif;
 }
 
