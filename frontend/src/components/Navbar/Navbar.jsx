@@ -99,13 +99,7 @@ export default function Navbar() {
       >
         Hjem
       </NavLink>
-      <NavLink
-        to="/admin/managers"
-        className={({ isActive }) => (isActive ? "active" : "")}
-        onClick={() => setMenuOpen(false)}
-      >
-        Butikksjefer
-      </NavLink>
+
       <NavLink
         to="/admin/butikker"
         className={({ isActive }) => (isActive ? "active" : "")}
@@ -113,6 +107,15 @@ export default function Navbar() {
       >
         Butikker
       </NavLink>
+
+      <NavLink
+        to="/admin/managers"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
+        Butikksjefer
+      </NavLink>
+
       <NavLink
         to="/admin/statistikk"
         className={({ isActive }) => (isActive ? "active" : "")}

@@ -91,7 +91,7 @@ const AdminButikk = () => {
   const handleSave = async () => {
     try {
       setErrors({});
-      const res = await axios.put(`/stores/${store_id}`, formData);
+      await axios.put(`/stores/${store_id}`, formData);
       setStore((prev) => ({ ...prev, ...formData }));
       setEditing(false);
   
