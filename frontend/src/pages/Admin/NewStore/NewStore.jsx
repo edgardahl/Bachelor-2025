@@ -49,7 +49,10 @@ export default function NewStorePage() {
     const fetchManagers = async () => {
       try {
         const res = await axios.get("/users/store_managers");
-        setManagers(res.data);
+        const availableManagers = res.data.filter(
+          (manager) => !manager.store_id
+        );
+        setManagers(availableManagers);
       } catch (error) {
         console.error("Feil ved henting av butikksjefer:", error);
         toast.error("Kunne ikke hente butikksjefer.");
@@ -240,7 +243,7 @@ export default function NewStorePage() {
       <Select
         options={managerOptions}
         onChange={(selected) => handleSelectChange(selected, "manager_id")}
-        placeholder="Velg butikksjef..."
+        placeholder={managers.length === 0 ? "Ingen tilgjengelige butikksjefer" : "Velg butikksjef"}
         className={errors.manager_id ? "error-select" : ""}
       />
       {errors.manager_id && (

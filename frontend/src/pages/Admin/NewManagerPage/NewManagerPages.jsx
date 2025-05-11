@@ -65,7 +65,7 @@ const NewManagerPage = () => {
     try {
       await axios.post("/auth/store_manager/register", formData);
       toast.success("Butikksjef opprettet!");
-      navigate("/admin/managers");
+      navigate("/admin/butikksjefer");
     } catch (err) {
       if (err.response?.data?.error) {
         const newErrors = err.response.data.error;
