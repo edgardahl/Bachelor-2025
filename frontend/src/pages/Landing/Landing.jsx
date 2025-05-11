@@ -75,6 +75,7 @@ const Landing = () => {
               address: "Majorstuveien 2, 0353 Oslo",
             }}
             shiftsCount={3}
+            interactive={false}
           />
         </div>
       </section>
@@ -100,6 +101,7 @@ const Landing = () => {
             claimedByName=""
             claimedById=""
             showLesMer={false}
+            interactive={false}
           />
         </div>
       </section>
@@ -125,6 +127,7 @@ const Landing = () => {
             claimedByName="Ola Nordmann"
             claimedById="user123"
             showLesMer={false}
+            interactive={false}
           />
         </div>
       </section>
@@ -138,8 +141,8 @@ const Landing = () => {
           jobbe i din kommune.
         </p>
         <div className="preview-card">
-          <ButikkansattCard employee={employee} cardClass="employee-theme" />
-          <ButikkansattCard employee={employee2} cardClass="available-theme" />
+          <ButikkansattCard employee={employee} cardClass="employee-theme" interactive={false} />
+          <ButikkansattCard employee={employee2} cardClass="available-theme" interactive={false} />
         </div>
       </section>
 
