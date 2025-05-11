@@ -187,7 +187,7 @@ const AdminButikk = () => {
             }
           }}
         >
-          <label className="adminbutikk-label">Adresse</label>
+          <label className="adminbutikk-label">Adresse (Eksempelgate 16)</label>
           {editing ? (
             <input
               className={`adminbutikk-input ${errors.address ? "error" : ""}`}

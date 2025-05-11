@@ -149,7 +149,7 @@ export default function NewStorePage() {
       <BackButton onClick={() => navigate(-1)} />
       <h2 className="form-title">Ny butikk</h2>
 
-      <label>Butikknavn</label>
+      <label>Butikknavn (kun navn, f.eks. <b>"Alnabru"</b>, ikke "Obs Alnabru")</label>
       <input
         name="store_name"
         ref={fieldRefs.store_name}
@@ -184,7 +184,7 @@ export default function NewStorePage() {
         <div className="error-message">{errors.municipality_id}</div>
       )}
 
-      <label>Adresse</label>
+      <label>Adresse (Eksempelgate 16)</label>
       <input
         name="address"
         ref={fieldRefs.address}
