@@ -824,12 +824,15 @@ const Profile = () => {
             </div>
 
             {canEditQualifications && !isEditingQualifications && (
+              <div className="qualification-button">
+
               <button
-                className="edit-qualifications-btn"
+                className="primary-button"
                 onClick={() => setIsEditingQualifications(true)}
               >
-                Rediger kvalifikasjoner
+                Endre kvalifikasjoner
               </button>
+              </div>
             )}
 
             {canEditQualifications && isEditingQualifications && (

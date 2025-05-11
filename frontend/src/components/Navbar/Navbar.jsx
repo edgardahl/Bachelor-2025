@@ -26,13 +26,25 @@ export default function Navbar() {
 
   const employeeLinks = (
     <>
-      <NavLink to="/ba/hjem" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+      <NavLink
+        to="/ba/hjem"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
         Hjem
       </NavLink>
-      <NavLink to="/ba/vakter" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+      <NavLink
+        to="/ba/vakter"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
         Vakter
       </NavLink>
-      <NavLink to="/ba/butikker" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+      <NavLink
+        to="/ba/butikker"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
         Butikker
       </NavLink>
     </>
@@ -40,19 +52,39 @@ export default function Navbar() {
 
   const storeManagerLinks = (
     <>
-      <NavLink to="/bs/hjem" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+      <NavLink
+        to="/bs/hjem"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
         Hjem
       </NavLink>
-      <NavLink to="/bs/vakter" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+      <NavLink
+        to="/bs/vakter"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
         Vakter
       </NavLink>
-      <NavLink to="/bs/ansatte/mine" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+      <NavLink
+        to="/bs/ansatte/mine"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
         Mine ansatte
       </NavLink>
-      <NavLink to="/bs/ansatte/ledige" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+      <NavLink
+        to="/bs/ansatte/ledige"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
         Ledige ansatte
       </NavLink>
-      <NavLink to="/bs/butikker" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+      <NavLink
+        to="/bs/butikker"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
         Butikker
       </NavLink>
     </>
@@ -60,21 +92,39 @@ export default function Navbar() {
 
   const adminLinks = (
     <>
-      <NavLink to="/admin/hjem" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+      <NavLink
+        to="/admin/hjem"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
         Hjem
       </NavLink>
-      <NavLink to="/admin/managers" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
-        Butikksjefer
-      </NavLink>
-      <NavLink to="/admin/butikker" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+
+      <NavLink
+        to="/admin/butikker"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
         Butikker
       </NavLink>
-      <NavLink to="/admin/statistikk" className={({ isActive }) => isActive ? "active" : ""} onClick={() => setMenuOpen(false)}>
+
+      <NavLink
+        to="/admin/managers"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
+        Butikksjefer
+      </NavLink>
+
+      <NavLink
+        to="/admin/statistikk"
+        className={({ isActive }) => (isActive ? "active" : "")}
+        onClick={() => setMenuOpen(false)}
+      >
         Statistikk
       </NavLink>
     </>
-  );  
-  
+  );
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -108,12 +158,11 @@ export default function Navbar() {
         </button>
 
         <div className={`nav-links ${menuOpen ? "open" : ""}`} ref={menuRef}>
-        {user?.role === "employee"
-          ? employeeLinks
-          : user?.role === "admin"
-          ? adminLinks
-          : storeManagerLinks
-        }
+          {user?.role === "employee"
+            ? employeeLinks
+            : user?.role === "admin"
+            ? adminLinks
+            : storeManagerLinks}
 
           <button className="logout-button mobile-only" onClick={handleLogout}>
             Logg ut
@@ -121,13 +170,17 @@ export default function Navbar() {
         </div>
 
         <div className="nav-right">
-          <NotificationDropdown />
-          <NavLink
-            to={user?.role === "employee" ? "/ba/profil" : "/bs/profil"}
-            className="profile-icon"
-          >
-            <FaRegUserCircle size={40} />
-          </NavLink>
+          {user?.role !== "admin" && (
+            <>
+              <NotificationDropdown />
+              <NavLink
+                to={user?.role === "employee" ? "/ba/profil" : "/bs/profil"}
+                className="profile-icon"
+              >
+                <FaRegUserCircle size={40} />
+              </NavLink>
+            </>
+          )}
           <button className="logout-button desktop-only" onClick={handleLogout}>
             Logg ut
           </button>
