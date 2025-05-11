@@ -150,6 +150,7 @@ const AdminButikk = () => {
       <p className="adminbutikk-description">
         Her kan du se og redigere informasjon om butikken.
       </p>
+      
 
       <div className="adminbutikk-form">
         <div

@@ -5,7 +5,8 @@ import useAuth from "../../../context/UseAuth";
 import Loading from "../../../components/Loading/Loading";
 import { RiUserSearchLine } from "react-icons/ri";
 import { MdOutlineStorefront } from "react-icons/md";
-import "./adminDashboard.css";
+import "./AdminDashboard.css";
+import CoopMap from "../../../components/mapbox/CoopMap";
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -16,7 +17,9 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchStoreStats = async () => {
       try {
-        const res = await axios.get("/stores/storesWithMunicipality?page=1&pageSize=1000");
+        const res = await axios.get(
+          "/stores/storesWithMunicipality?page=1&pageSize=1000"
+        );
         const stores = res.data.stores || [];
         setStoreStats({ total: stores.length });
       } catch (error) {
@@ -73,6 +76,7 @@ const AdminDashboard = () => {
           />
         </div>
       )}
+      <CoopMap />
     </div>
   );
 };
