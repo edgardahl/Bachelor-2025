@@ -22,7 +22,7 @@ import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard.jsx";
 import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk.jsx";
 import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers.jsx";
 import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages.jsx";
-import NewStorePage from "./pages/Admin/NewStorePage/NewStorePages.jsx";
+import NewStorePage from "./pages/Admin/NewStore/NewStore.jsx";
 
 import Loading from "./components/Loading/Loading.jsx";
 
