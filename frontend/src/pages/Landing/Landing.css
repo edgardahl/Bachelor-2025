@@ -48,6 +48,7 @@
 .landing-section-heading {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  margin-right: 1.5rem;
 }
 
 .landing-section-text {
@@ -186,6 +187,16 @@
   font-size: 2.5rem;
   line-height: 1;
 }
+
+.section-icon {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+  vertical-align: middle;
+  display: inline-block;
+  transform: translateY(-3px);
+}
+
 
 /* Animation for smooth bounce */
 @keyframes floatUpDown {
