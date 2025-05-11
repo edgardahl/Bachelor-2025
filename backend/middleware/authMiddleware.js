@@ -26,11 +26,19 @@ export const verifyToken = (req, res, next) => {
 export const authorizeRoles = (...allowedRoles) => {
   return (req, res, next) => {
     const userRole = req.user?.role;
-    if (!userRole || !allowedRoles.includes(userRole)) {
-      return res
-        .status(403)
-        .json({ error: "Forbidden: Insufficient permissions" });
+
+    if (!userRole) {
+      return res.status(403).json({ error: "Forbidden: No role assigned" });
     }
-    next();
+
+    // Gi alltid tilgang til admin
+    if (userRole === "admin" || allowedRoles.includes(userRole)) {
+      return next();
+    }
+
+    return res
+      .status(403)
+      .json({ error: "Forbidden: Insufficient permissions" });
   };
 };
+

@@ -95,15 +95,35 @@ export const getStoreWithFullInfoModel = async (storeId) => {
 
 // Create a new store
 export const createStoreModel = async (storeData) => {
-  const { name, store_chain, municipality_id, address, phone_number, email, manager_id } = storeData;
+  const {
+    store_name: name,
+    store_chain,
+    municipality_id,
+    address: rawAddress,
+    postal_code,
+    store_phone: phone_number,
+    store_email: email,
+    manager_id,
+  } = storeData;
+
+  // Kombiner adresse, postnummer og butikkens navn
+  const formattedAddress = `${rawAddress}, ${postal_code} ${name}`;
+
+  const searchadress = `${rawAddress}, ${postal_code}`;
 
   // Fetch coordinates using OpenStreetMap Nominatim
   const geocodeRes = await fetch(
-    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
+    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchadress)}`
   );
-  
+
   const geoData = await geocodeRes.json();
   console.log("GeoData Response: ", geoData);  // Log the full response
+  if (!geoData || geoData.length === 0) {
+    const error = new Error("Fant ingen treff på adresse. Sjekk at adressen og postnummeret er gyldige.");
+    error.field = "address";
+    throw error;
+  }
+  
 
   if (!geoData || geoData.length === 0) {
     throw new Error("Could not geocode address.");
@@ -117,7 +137,7 @@ export const createStoreModel = async (storeData) => {
     name,
     store_chain,
     municipality_id,
-    address,
+    address: formattedAddress,
     phone_number,
     email,
     manager_id,
@@ -126,55 +146,90 @@ export const createStoreModel = async (storeData) => {
   });
 
   const { data, error } = await supabase
-  .from("stores")
-  .insert([
-    {
-      name,
-      store_chain,
-      municipality_id,
-      address,
-      phone_number,
-      email,
-      manager_id,
-      latitude,
-      longitude,
-    },
-  ])
-  .select();  // This tells Supabase to return the inserted row
+    .from("stores")
+    .insert([
+      {
+        name,
+        store_chain,
+        municipality_id,
+        address: formattedAddress,
+        phone_number,
+        email,
+        manager_id,
+        latitude,
+        longitude,
+      },
+    ])
+    .select();  // This tells Supabase to return the inserted row
 
-if (error) {
-  console.error("Insert Error: ", error);
-  throw new Error(error.message);
-}
+  if (error) {
+    console.error("Insert Error: ", error);
+    throw new Error(error.message);
+  }
 
-console.log("Store successfully inserted: ", data[0]);  // Data contains the inserted row now
-return data[0];  // Return the inserted row
-
+  console.log("Store successfully inserted: ", data[0]);  // Data contains the inserted row now
+  return data[0];  // Return the inserted row
 };
+
 
 
 // In storeModel.js
 export const updateStoreModel = async (storeId, storeData) => {
-  const { name, store_chain, municipality_id, address, phone_number, email, manager_id } = storeData;
+  console.log("Update Store Data: ", storeData);  // Log the data being updated
+  const {
+    store_name,
+    store_chain,
+    municipality_id,
+    address: rawAddress,
+    postal_code,
+    store_phone: phone_number,
+    store_email: email,
+    manager_id,
+  } = storeData;
 
-  // Update the store in the database
+  console.log("storeData: ", storeData);  // Log the entire storeData object
+  
+  const name = store_name; // 👈 Match frontend
+  
+  const formattedAddress = `${rawAddress}, ${postal_code} ${name}`;  
+  const searchadress = `${rawAddress}, ${postal_code}`;
+
+  // Hent nye koordinater
+  const geocodeRes = await fetch(
+    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchadress)}`
+  );
+  const geoData = await geocodeRes.json();
+
+  if (!geoData || geoData.length === 0) {
+    const error = new Error("Fant ingen treff på adresse. Sjekk at adressen og postnummeret er gyldige.");
+    error.field = "address";
+    throw error;
+  }
+
+  const latitude = parseFloat(geoData[0].lat);
+  const longitude = parseFloat(geoData[0].lon);
+
+  console.log("phone number", phone_number)
+
   const { data, error } = await supabase
     .from("stores")
     .update({
       name,
       store_chain,
       municipality_id,
-      address,
+      address: formattedAddress,
       phone_number,
       email,
       manager_id,
+      latitude,
+      longitude,
     })
     .eq("store_id", storeId)
-    .select();  // Return the updated row
+    .select();
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return data[0];  // Return the updated store
+  return data[0];
 };
