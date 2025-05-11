@@ -62,8 +62,7 @@ const AdminManagers = () => {
   }
 
   return (
-    <div className="admin-manager-page">
-      <div className="admin-managers">
+    <div className="mine-ansatte">
         <h1 className="mine-ansatte-title">BUTIKKSJEFER</h1>
         <div className="mine-ansatte-beskrivelse">
           <p>
@@ -83,7 +82,7 @@ const AdminManagers = () => {
           <FaSearch className="search-icon" />
         </div>
 
-        <div className="manager-list">
+        <div className="employee-list">
           <Link to="/admin/butikksjefer/ny">
             <ButikkansattCard isEmptyCard={true} cardClass="employee-theme" />
           </Link>
@@ -107,7 +106,6 @@ const AdminManagers = () => {
             <p className="no-managers-found">Ingen butikksjefer funnet.</p>
           )}
         </div>
-      </div>
     </div>
   );
 };
