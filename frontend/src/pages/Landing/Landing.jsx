@@ -99,6 +99,7 @@ const Landing = () => {
             deleteShift={() => {}}
             claimedByName=""
             claimedById=""
+            showLesMer={false}
           />
         </div>
       </section>
@@ -123,6 +124,7 @@ const Landing = () => {
             deleteShift={() => {}}
             claimedByName="Ola Nordmann"
             claimedById="user123"
+            showLesMer={false}
           />
         </div>
       </section>
