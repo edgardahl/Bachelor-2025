@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardCard from "../../../components/Cards/DashboardCard/DashboardCard";
 import axios from "../../../api/axiosInstance";
 import useAuth from "../../../context/UseAuth";
