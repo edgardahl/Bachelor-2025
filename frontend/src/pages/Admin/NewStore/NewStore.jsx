@@ -55,7 +55,7 @@ export default function NewStorePage() {
         toast.error("Kunne ikke hente butikksjefer.");
       }
     };
-    
+
     fetchManagers();
     fetchMunicipalities();
   }, []);
@@ -149,7 +149,9 @@ export default function NewStorePage() {
       <BackButton onClick={() => navigate(-1)} />
       <h2 className="form-title">Ny butikk</h2>
 
-      <label>Butikknavn (kun navn, f.eks. <b>"Alnabru"</b>, ikke "Obs Alnabru")</label>
+      <label>
+        Butikknavn (kun navn, f.eks. <b>"Alnabru"</b>, ikke "Obs Alnabru")
+      </label>
       <input
         name="store_name"
         ref={fieldRefs.store_name}

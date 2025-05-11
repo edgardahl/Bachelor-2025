@@ -190,7 +190,8 @@
   margin-right: 15px;
   vertical-align: middle;
   display: inline-block;
-  transform: translateY(-3px);
+  transform: translateY(-6px);
+  color: var(--Card-header-color);
 }
 
 /* Animation for smooth bounce */

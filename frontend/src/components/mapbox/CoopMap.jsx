@@ -152,18 +152,20 @@ const CoopMap = () => {
               <br />
               <button
                 className="store-button"
-                onClick={() =>
-                  navigate(
-                    `/${
-                      user?.role === "store_manager" ? "bs" : "ba"
-                    }/butikker/${store.store_chain}/${store.name}/${
-                      store.store_id
-                    }`
-                  )
-                }
+                onClick={() => {
+                  const rolePath =
+                    user?.role === "admin"
+                      ? "admin"
+                      : user?.role === "store_manager"
+                      ? "bs"
+                      : "ba";
+
+                  navigate(`/${rolePath}/butikker/${store.store_chain}/${store.name}/${store.store_id}`);
+                }}
               >
                 Gå til butikk
               </button>
+
             </Popup>
 
             <Tooltip direction="top" offset={[0, -30]} opacity={1} permanent>
