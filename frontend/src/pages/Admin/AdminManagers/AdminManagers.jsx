@@ -84,7 +84,7 @@ const AdminManagers = () => {
         </div>
 
         <div className="manager-list">
-          <Link to="/admin/managers/ny">
+          <Link to="/admin/butikksjefer/ny">
             <ButikkansattCard isEmptyCard={true} cardClass="employee-theme" />
           </Link>
           {filteredManagers.length > 0 ? (
