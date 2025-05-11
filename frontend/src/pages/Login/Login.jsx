@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../api/axiosInstance";
 import useAuth from "../../context/UseAuth";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import BackButton from "../../components/BackButton/BackButton";
+import { FaArrowLeft } from "react-icons/fa";
 import "../Register/AuthForm.css";
 
 export default function LoginPage() {
@@ -35,7 +34,15 @@ export default function LoginPage() {
 
   return (
     <div className="login-wrapper">
-      <BackButton to={"/hjem"} />
+      <button
+        type="button"
+        className="back-to-home-button"
+        onClick={() => navigate("/hjem")}
+      >
+        <FaArrowLeft style={{ marginRight: "8px" }} />
+        Tilbake til forside
+      </button>
+
       <form onSubmit={handleSubmit} className="login-form">
         <h2 className="login-title">Logg inn</h2>
 

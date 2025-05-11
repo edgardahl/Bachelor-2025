@@ -20,17 +20,18 @@ const ShiftCard = ({
   deleteShift,
   claimedByName,
   claimedById,
-  showLesMer = true
+  showLesMer = true,
+  interactive = true,
 }) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth(); // Bruker informasjon for å sjekke om de er logget inn
+  const { user } = useAuth();
   const shiftDate = new Date(date);
   const day = shiftDate.getDate();
   const month = shiftDate.toLocaleString("nb-NO", { month: "short" });
 
   const handleCardClick = () => {
-    if (user?.role) {
+    if (interactive && user?.role) {
       const rolePath = user.role === "employee" ? "ba" : "bs";
       navigate(`/${rolePath}/vakter/detaljer/${shiftId}`);
     }
@@ -39,10 +40,7 @@ const ShiftCard = ({
   const handleConfirmDelete = async () => {
     try {
       const res = await axios.delete("/shifts/deleteShiftById", {
-        data: {
-          shiftId,
-          shiftStoreId,
-        },
+        data: { shiftId, shiftStoreId },
       });
       if (res.status === 200) {
         deleteShift(shiftId);
@@ -57,14 +55,12 @@ const ShiftCard = ({
     }
   };
 
-  const isDisabled = !user?.role; // Sjekk om brukeren er logget inn
-
   return (
     <div
       className={`shift-card-container ${claimedById ? "claimed" : ""} ${
-        isDisabled ? "disabled" : ""
+        !interactive ? "disabled" : ""
       }`}
-      onClick={isDisabled ? null : handleCardClick}
+      onClick={interactive ? handleCardClick : null}
     >
       {showDeletePopup && (
         <DeleteShiftPopup
