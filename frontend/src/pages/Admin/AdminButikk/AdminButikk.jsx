@@ -136,7 +136,7 @@ const AdminButikk = () => {
       setStoreManagers(updatedManagersRes.data);
   
       setEditing(false);
-      toast.success("Endringer lagret!");
+      toast.success("Endringer lagret");
     } catch (err) {
       if (err.response?.data?.error) {
         setErrors(err.response.data.error);
