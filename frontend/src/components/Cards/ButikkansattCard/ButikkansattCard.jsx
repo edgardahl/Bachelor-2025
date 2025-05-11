@@ -49,7 +49,9 @@ const ButikkansattCard = ({
             <p>
               {employee.availability === "Fleksibel"
                 ? "Tilgjengelig"
-                : "Utilgjengelig"}
+                : employee.availability === "Ikke-fleksibel"
+                ? "Utilgjengelig"
+                : employee.availability}
             </p>
           </div>
         )}

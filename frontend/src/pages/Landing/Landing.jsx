@@ -15,7 +15,7 @@ const Landing = () => {
   const employee = {
     first_name: "Kari",
     last_name: "Nordmann",
-    availability: "Ikke tilgjengelig",
+    availability: "Utilgjengelig",
     qualifications: "Kasse, Post",
     store_name: "Coop Mega Løren",
   };
