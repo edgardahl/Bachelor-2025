@@ -53,7 +53,7 @@ const Landing = () => {
               window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
             }
           >
-            <span className="scroll-down-text">Scroll ned</span>
+            <span className="scroll-down-text">Bla ned</span>
             <span className="scroll-down-arrow">⌄</span>
           </div>
         </div>
@@ -99,6 +99,7 @@ const Landing = () => {
             deleteShift={() => {}}
             claimedByName=""
             claimedById=""
+            showLesMer={false}
           />
         </div>
       </section>
@@ -123,6 +124,7 @@ const Landing = () => {
             deleteShift={() => {}}
             claimedByName="Ola Nordmann"
             claimedById="user123"
+            showLesMer={false}
           />
         </div>
       </section>

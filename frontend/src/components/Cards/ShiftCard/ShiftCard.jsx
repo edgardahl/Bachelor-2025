@@ -20,6 +20,7 @@ const ShiftCard = ({
   deleteShift,
   claimedByName,
   claimedById,
+  showLesMer = true
 }) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const ShiftCard = ({
       className={`shift-card-container ${claimedById ? "claimed" : ""} ${
         isDisabled ? "disabled" : ""
       }`}
-      onClick={isDisabled ? null : handleCardClick} // Hindre klikk når kortet er deaktivert
+      onClick={isDisabled ? null : handleCardClick}
     >
       {showDeletePopup && (
         <DeleteShiftPopup
@@ -96,7 +97,9 @@ const ShiftCard = ({
             </li>
             <li className="info-list-item">
               <FiMapPin className="info-icon" size={22} />
-              <p className="info-p-location">{storeChain} {storeName}</p>
+              <p className="info-p-location">
+                {storeChain} {storeName}
+              </p>
             </li>
             <li className="info-list-item">
               <FiAward className="info-icon" size={22} />
@@ -125,9 +128,12 @@ const ShiftCard = ({
             Tatt av: {claimedByName}
           </a>
         </div>
-        <div className="les-mer-text">
-          <span>Les mer →</span>
-        </div>
+
+        {showLesMer && (
+          <div className="les-mer-text">
+            <span>Les mer →</span>
+          </div>
+        )}
       </div>
     </div>
   );

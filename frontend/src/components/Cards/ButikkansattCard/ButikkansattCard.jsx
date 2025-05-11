@@ -1,7 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./ButikkansattCard.css";
-import { FaBriefcase, FaUser, FaClock, FaMapMarkerAlt, FaPlus } from "react-icons/fa";
+import {
+  FaBriefcase,
+  FaUser,
+  FaClock,
+  FaMapMarkerAlt,
+  FaPlus,
+} from "react-icons/fa";
 import { HiChevronRight } from "react-icons/hi";
 
 const ButikkansattCard = ({
@@ -9,7 +15,7 @@ const ButikkansattCard = ({
   show = "availability",
   showQualifications,
   cardClass = "",
-  isEmptyCard = false
+  isEmptyCard = false,
 }) => {
   if (isEmptyCard) {
     return (
@@ -23,7 +29,6 @@ const ButikkansattCard = ({
   }
 
   console.log("ButikkansattCard employee:", employee);
-  
 
   return (
     <div className={`butikkansatt-card ${cardClass}`}>
@@ -32,15 +37,21 @@ const ButikkansattCard = ({
       </div>
 
       <div className="card-content">
-        <h3>{employee.first_name} {employee.last_name}</h3>
+        <h3>
+          {employee.first_name} {employee.last_name}
+        </h3>
 
         {show === "availability" && (
           <div className="availability">
-          <div className="icon-wrapper">
-            <FaClock className="icon" />
+            <div className="icon-wrapper">
+              <FaClock className="icon" />
+            </div>
+            <p>
+              {employee.availability === "Fleksibel"
+                ? "Tilgjengelig"
+                : "Utilgjengelig"}
+            </p>
           </div>
-          <p>{employee.availability}</p>
-        </div>        
         )}
 
         {show === "store" && (
@@ -50,15 +61,15 @@ const ButikkansattCard = ({
           </p>
         )}
 
-          {showQualifications && (
-            <div className="qualifications">
-              <div className="icon-wrapper">
-                <FaBriefcase className="icon" />
-              </div>
-              <p>{employee.qualifications || "Ingen kvalifikasjoner"}</p>
+        {showQualifications && (
+          <div className="qualifications">
+            <div className="icon-wrapper">
+              <FaBriefcase className="icon" />
             </div>
-          )}
-</div>
+            <p>{employee.qualifications || "Ingen kvalifikasjoner"}</p>
+          </div>
+        )}
+      </div>
 
       <div className="card-arrow">
         <HiChevronRight />
@@ -66,6 +77,5 @@ const ButikkansattCard = ({
     </div>
   );
 };
-
 
 export default ButikkansattCard;
