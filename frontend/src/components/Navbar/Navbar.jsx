@@ -109,7 +109,7 @@ export default function Navbar() {
       </NavLink>
 
       <NavLink
-        to="/admin/managers"
+        to="/admin/butikksjefer"
         className={({ isActive }) => (isActive ? "active" : "")}
         onClick={() => setMenuOpen(false)}
       >
