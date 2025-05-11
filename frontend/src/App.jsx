@@ -18,11 +18,11 @@ import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 import Profile from "./pages/Profile/Profile";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
 import NewEmployeePage from "./pages/Butikksjef/NewEmployeeForm/NewEmployeeForm";
-import AdminDashboard from "./pages/Admin/adminDashboard/adminDashboard";
+import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard.jsx";
 import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk";
 import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers";
 import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages.jsx";
-import NewStorePage from "./pages/Admin/newStorePage/newStorePage.jsx";
+import NewStorePage from "./pages/Admin/NewStorePage/NewStorePage.jsx";
 
 import Loading from "./components/Loading/Loading";
 
@@ -38,11 +38,9 @@ function App() {
   const location = useLocation();
 
   const showBackButton =
-  (
-    location.pathname.startsWith("/bs/ansatte/profil/") ||
-    location.pathname.startsWith("/admin/butikksjefer/profil/")
-  ) && location.pathname.split("/").length >= 4;
-
+    (location.pathname.startsWith("/bs/ansatte/profil/") ||
+      location.pathname.startsWith("/admin/butikksjefer/profil/")) &&
+    location.pathname.split("/").length >= 4;
 
   if (loading)
     return (
