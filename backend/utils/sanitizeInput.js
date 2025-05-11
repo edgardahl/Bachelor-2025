@@ -3,7 +3,7 @@ import { validate as isUUID } from "uuid";
 // Felles regex og konstanter
 const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const phoneRegex = /^[0-9+\- ]{6,20}$/;
+const phoneRegex = /^(?:\d{8}|\+\d{2} \d{8})$/;
 const validAvailability = ["Fleksibel", "Ikke-fleksibel"];
 const validRoles = ["employee", "store_manager", "admin"];
 
