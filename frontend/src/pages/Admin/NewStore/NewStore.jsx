@@ -4,7 +4,7 @@ import axios from "../../../api/axiosInstance";
 import { toast } from "react-toastify";
 import BackButton from "../../../components/BackButton/BackButton";
 import Select from "react-select";
-import "./NewStorePages.css";
+import "./NewStorePage.css";
 
 export default function NewStorePage() {
   const navigate = useNavigate();
