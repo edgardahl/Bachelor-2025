@@ -77,18 +77,26 @@
 
 .adminbutikk-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 1rem;
   margin-top: 2rem;
+}
+.adminbutikk-actions div{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+width: 100%;
+margin: 0 auto;
 }
 
 .adminbutikk-button-edit,
 .adminbutikk-button-cancle {
-  margin: 10px 10px;
+  margin: 0 auto;
+  width: 40%;
 }
 
 .adminbutikk-button-edit {
-  background-color: var(--Success-color);
+  background-color: var(--Button-color);
   color: var(--White);
   padding: 0.75rem 1.5rem;
   border: none;
@@ -101,7 +109,7 @@
 }
 
 .adminbutikk-button-edit:hover {
-  background-color: #2e7d32; /* mørkere grønn */
+  background-color: var(--Button-hover-color); /* mørkere grønn */
 }
 
 .adminbutikk-button-cancle {
