@@ -137,7 +137,7 @@ const NewManagerPage = () => {
       />
       {errors.phone_number && <div className="error-message">{errors.phone_number}</div>}
 
-      <label>Passord</label>
+      <label>Passord (minimum 6 tegn)</label>
       <input
         name="password"
         type="password"
