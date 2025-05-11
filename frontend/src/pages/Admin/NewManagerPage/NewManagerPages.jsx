@@ -47,8 +47,6 @@ const NewManagerPage = () => {
     label: `${store.name} (${store.store_chain})`,
   }));
 
-  console.log("Store options:", storeOptions);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -64,7 +62,7 @@ const NewManagerPage = () => {
 
     try {
       await axios.post("/auth/store_manager/register", formData);
-      toast.success("Butikksjef opprettet!");
+      toast.success("Butikksjef opprettet");
       navigate("/admin/butikksjefer");
     } catch (err) {
       if (err.response?.data?.error) {
@@ -137,7 +135,7 @@ const NewManagerPage = () => {
       />
       {errors.phone_number && <div className="error-message">{errors.phone_number}</div>}
 
-      <label>Passord (minimum 6 tegn)</label>
+      <label>Passord</label>
       <input
         name="password"
         type="password"
@@ -149,7 +147,7 @@ const NewManagerPage = () => {
       />
       {errors.password && <div className="error-message">{errors.password}</div>}
 
-      <label>Tilknytt butikk (valgfritt)</label>
+      <label>Tilknytt butikk</label>
       <Select
         options={storeOptions}
         onChange={handleStoreChange}

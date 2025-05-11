@@ -136,7 +136,7 @@ const AdminButikk = () => {
       setStoreManagers(updatedManagersRes.data);
   
       setEditing(false);
-      toast.success("Endringer lagret!");
+      toast.success("Endringer lagret");
     } catch (err) {
       if (err.response?.data?.error) {
         setErrors(err.response.data.error);
@@ -168,7 +168,7 @@ const AdminButikk = () => {
   return (
     <div className="adminbutikk-page">
       <BackButton />
-      <h1 className="adminbutikk-title">Butikkdetaljer</h1>
+      <h1 className="adminbutikk-title">BUTIKK DETALJER</h1>
       <p className="adminbutikk-description">
         Her kan du se og redigere informasjon om butikken.
       </p>
@@ -409,7 +409,7 @@ const AdminButikk = () => {
           {editing ? (
             <div>
               <button className="adminbutikk-button-edit" onClick={handleSave}>
-                Lagre endringer
+                Lagre
               </button>
               <button
                 className="adminbutikk-button-cancle"

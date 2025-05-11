@@ -92,6 +92,20 @@ export const updateUserByIdModel = async (id, updates, municipality_ids = []) =>
   return userData || {};
 };
 
+export const deleteUserByIdModel = async (userId) => {
+  const { error } = await supabase
+    .from("users")
+    .delete()
+    .eq("user_id", userId);
+
+  if (error) {
+    console.error("Feil ved sletting av bruker i databasen:", error);
+    return false;
+  }
+
+  return true;
+};
+
 
 export const getAvailableEmployeesInMunicipality = async (municipalityId) => {
   const { data, error } = await supabase.rpc(

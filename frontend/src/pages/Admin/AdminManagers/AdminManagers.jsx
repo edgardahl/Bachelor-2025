@@ -3,23 +3,25 @@ import axios from "../../../api/axiosInstance";
 import Loading from "../../../components/Loading/Loading";
 import ButikkansattCard from "../../../components/Cards/ButikkansattCard/ButikkansattCard";
 import { Link } from "react-router-dom";
-import { FaSearch } from "react-icons/fa"; // Importer søkeikonet
-import "./AdminManagers.css"; // Importer CSS-filen for styling
+import { FaSearch } from "react-icons/fa";
+import "./AdminManagers.css";
+
+const PAGE_SIZE = 12;
 
 const AdminManagers = () => {
   const [managers, setManagers] = useState([]);
   const [filteredManagers, setFilteredManagers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Hent butikksjefene fra API-et
+  const paginatedManagers = filteredManagers.slice(0, currentPage * PAGE_SIZE);
+
   useEffect(() => {
     const fetchManagers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          "/users/store_managers"
-        );
+        const response = await axios.get("/users/store_managers");
         setManagers(response.data);
         setFilteredManagers(response.data);
       } catch (err) {
@@ -32,7 +34,6 @@ const AdminManagers = () => {
     fetchManagers();
   }, []);
 
-  // Håndter søkefunksjon
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
@@ -55,11 +56,15 @@ const AdminManagers = () => {
 
       setFilteredManagers(filtered);
     }
+
+    setCurrentPage(1); // reset pagination on search
   };
 
-  if (loading) {
-    return <Loading />;
-  }
+  const handleShowMore = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
+
+  if (loading) return <Loading />;
 
   return (
     <div className="admin-manager-page">
@@ -87,8 +92,9 @@ const AdminManagers = () => {
           <Link to="/admin/butikksjefer/ny">
             <ButikkansattCard isEmptyCard={true} cardClass="employee-theme" />
           </Link>
-          {filteredManagers.length > 0 ? (
-            filteredManagers.map((manager) => (
+
+          {paginatedManagers.length > 0 ? (
+            paginatedManagers.map((manager) => (
               <Link
                 key={manager.user_id}
                 to={`/admin/butikksjefer/profil/${manager.user_id}`}
@@ -106,8 +112,16 @@ const AdminManagers = () => {
           ) : (
             <p className="no-managers-found">Ingen butikksjefer funnet.</p>
           )}
+
         </div>
       </div>
+      {paginatedManagers.length < filteredManagers.length && (
+        <div className="show-more-container">
+          <button className="show-more-button" onClick={handleShowMore}>
+            Vis mer
+          </button>
+        </div>
+      )}
     </div>
   );
 };

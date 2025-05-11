@@ -8,7 +8,8 @@ import {
   updateEmployeeQualificationsController,
   changePassword,
   getAllStoreManagersController,
-  getStoreManagersController
+  getStoreManagersController,
+  deleteUserByIdController, 
 } from "../controllers/userController.js";
 import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
@@ -25,7 +26,7 @@ router.get(
   getEmployeesByStoreIdController
 );
 
-// Oppdatarer kvalifikasjoner for en ansatt
+// Oppdaterer kvalifikasjoner for en ansatt
 router.post(
   "/employees/qualifications/update",
   verifyToken,
@@ -35,12 +36,11 @@ router.post(
 
 // Hent alle store managers (uavhengig om de har butikk eller ikke)
 router.get(
-  "/store_managers", // Endret ruten fra "/store_managers_without_store" til "/store_managers"
+  "/store_managers",
   verifyToken,
   authorizeRoles("admin"),
   getAllStoreManagersController
 );
-
 
 // Henter alle tilgjengelige ansatte
 router.get(
@@ -50,13 +50,16 @@ router.get(
   getAvailableEmployeesController
 );
 
-// Hent alle managers for en butikk
+// Henter alle managers for en spesifikk butikk
 router.get("/store_managers/:storeId", verifyToken, getStoreManagersController);
 
 // Henter en bruker med en bestemt id
 router.get("/:id", verifyToken, getUserByIdController);
 
-// Henter innloggede bruker
+// Sletter en bruker (egen, ansatt, eller butikksjef)
+router.delete("/:id", verifyToken, deleteUserByIdController); // ✅ added
+
+// Oppdaterer innloggede bruker
 router.put("/current/update", verifyToken, updateUserByIdController);
 
 // Oppdaterer passord for innloggede bruker
