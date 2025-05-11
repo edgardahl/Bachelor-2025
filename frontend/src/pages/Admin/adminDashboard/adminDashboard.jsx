@@ -65,11 +65,11 @@ const AdminDashboard = () => {
             icon={<RiUserSearchLine size={52} />}
             themeClass="card-theme-employees"
             title="Butikksjefer"
-            description="Se alle butikksjefer i systemet og lag nye"
+            description="Administrer alle butikksjefer i systemet."
             statValue={managersCount}
             statText="Totalt antall butikksjefer"
             linkText="Gå til butikksjefer"
-            linkTo="/admin/managers"
+            linkTo="/admin/butikksjefer"
           />
         </div>
       )}

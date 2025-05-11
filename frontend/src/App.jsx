@@ -22,7 +22,7 @@ import AdminDashboard from "./pages/Admin/adminDashboard/adminDashboard";
 import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk";
 import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers";
 import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages.jsx";
-
+import NewStorePage from "./pages/Admin/newStorePage/newStorePage.jsx";
 
 import Loading from "./components/Loading/Loading";
 
@@ -38,8 +38,11 @@ function App() {
   const location = useLocation();
 
   const showBackButton =
-    location.pathname.startsWith("/dashboard/butikksjef/") &&
-    location.pathname.split("/").length > 4;
+  (
+    location.pathname.startsWith("/bs/ansatte/profil/") ||
+    location.pathname.startsWith("/admin/butikksjefer/profil/")
+  ) && location.pathname.split("/").length >= 4;
+
 
   if (loading)
     return (
@@ -73,7 +76,6 @@ function App() {
         path="/login"
         element={user ? <Navigate to="/" replace /> : <LoginPage />}
       />
-
 
       <Route path="/hjem" element={<Landing />} />
 
@@ -247,7 +249,7 @@ function App() {
       />
 
       <Route
-        path="/admin/managers/ny"
+        path="/admin/butikksjefer/ny"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <NewManagerPage />
@@ -256,7 +258,7 @@ function App() {
       />
 
       <Route
-        path="/admin/managers"
+        path="/admin/butikksjefer"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <AdminManagers />
@@ -264,6 +266,23 @@ function App() {
         }
       />
 
+      <Route
+        path="/admin/butikker/ny"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <NewStorePage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/butikksjefer/profil/:id"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />

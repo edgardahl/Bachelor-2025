@@ -133,3 +133,23 @@
 .select__value-container {
   padding: 2px 0;
 }
+
+.back-to-home-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: transparent;
+  color: #ffffff;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  z-index: 999;
+}
+

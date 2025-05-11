@@ -19,7 +19,7 @@ const storeChainImages = {
   default: "Default.png",
 };
 
-const ButikkCard = ({ store, shiftsCount }) => {
+const ButikkCard = ({ store, shiftsCount, interactive = true }) => {
   const { user } = useAuth();
   const role =
     user?.role === "employee"
@@ -63,6 +63,10 @@ const ButikkCard = ({ store, shiftsCount }) => {
       </p>
     </div>
   );
+
+  if (!interactive) {
+    return <div className="butikk-card-link disabled">{cardContent}</div>;
+  }
 
   return user?.role ? (
     <Link

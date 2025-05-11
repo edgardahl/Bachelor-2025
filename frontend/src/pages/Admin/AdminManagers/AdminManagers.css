@@ -1,7 +1,8 @@
 .admin-manager-page {
     max-width: 1006px;
     margin: 0 auto;
-    padding: 100px;
+    border-radius: 4px;
+    padding: 30px;
     font-family: "Segoe UI", sans-serif;
     background-color: var(--Body-background);
     color: var(--Text-color-light);
@@ -10,7 +11,6 @@
   .admin-managers {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem 1rem;
   }
   
   .admin-managers-title {
@@ -75,3 +75,8 @@
     margin-top: 3rem;
   }
   
+  @media (max-width: 1030px) {
+    .admin-manager-page {
+      border-radius: 0;
+    }
+  }

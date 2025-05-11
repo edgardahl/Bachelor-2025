@@ -3,7 +3,7 @@ import { validate as isUUID } from "uuid";
 // Felles regex og konstanter
 const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const phoneRegex = /^[0-9+\- ]{6,20}$/;
+const phoneRegex = /^(?:\d{8}|\+\d{2} \d{8})$/;
 const validAvailability = ["Fleksibel", "Ikke-fleksibel"];
 const validRoles = ["employee", "store_manager", "admin"];
 
@@ -310,8 +310,12 @@ export const sanitizeStoreUpdate = (storeData) => {
     store_chain,
   } = storeData;
 
+  console.log("Sanitizing store data:", storeData);
+
   const errors = {};
   const postalCodeRegex = /^[0-9]{4}(\s[0-9]{4})?$/;
+  const addressRegex = /^[A-Za-zÆØÅæøå\s]+ \d+[A-Za-zÆØÅæøå]?$/;
+
   const safeTrim = (val) => (typeof val === "string" ? val.trim() : val);
 
   // store_name
@@ -322,9 +326,12 @@ export const sanitizeStoreUpdate = (storeData) => {
   }
 
   // address
-  if (!address || typeof address !== "string" || address.trim() === "") {
-    errors.address = "Adresse er påkrevd.";
-  }
+if (!address || typeof address !== "string" || address.trim() === "") {
+  errors.address = "Adresse er påkrevd.";
+} else if (!addressRegex.test(address.trim())) {
+  errors.address = "Adressen må være på formatet: Veinavn 12 (f.eks. Sjøskogveien 45B).";
+}
+
 
   // postal_code
   if (postal_code && !postalCodeRegex.test(postal_code)) {

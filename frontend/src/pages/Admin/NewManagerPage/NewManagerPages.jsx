@@ -47,6 +47,8 @@ const NewManagerPage = () => {
     label: `${store.name} (${store.store_chain})`,
   }));
 
+  console.log("Store options:", storeOptions);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -87,7 +89,7 @@ const NewManagerPage = () => {
       <BackButton onClick={() => navigate(-1)} />
       <h2 className="form-title">Ny butikksjef</h2>
       <p className="form-subtitle">
-        Manageren kan senere redigere passord og annen informasjon selv.
+        Butikksjefen kan senere redigere passord og annen informasjon selv.
       </p>
 
       <label>Fornavn</label>
@@ -135,7 +137,7 @@ const NewManagerPage = () => {
       />
       {errors.phone_number && <div className="error-message">{errors.phone_number}</div>}
 
-      <label>Passord</label>
+      <label>Passord (minimum 6 tegn)</label>
       <input
         name="password"
         type="password"
@@ -147,7 +149,7 @@ const NewManagerPage = () => {
       />
       {errors.password && <div className="error-message">{errors.password}</div>}
 
-      <label>Tilknytt butikk</label>
+      <label>Tilknytt butikk (valgfritt)</label>
       <Select
         options={storeOptions}
         onChange={handleStoreChange}
