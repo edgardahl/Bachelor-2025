@@ -24,7 +24,6 @@ import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers";
 import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages.jsx";
 import NewStorePage from "./pages/Admin/newStorePage/newStorePage.jsx";
 
-
 import Loading from "./components/Loading/Loading";
 
 import NotFound from "./pages/NotFound/NotFound";
@@ -74,7 +73,6 @@ function App() {
         path="/login"
         element={user ? <Navigate to="/" replace /> : <LoginPage />}
       />
-
 
       <Route path="/hjem" element={<Landing />} />
 
@@ -248,7 +246,7 @@ function App() {
       />
 
       <Route
-        path="/admin/managers/ny"
+        path="/admin/butikksjefer/ny"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <NewManagerPage />
@@ -257,7 +255,7 @@ function App() {
       />
 
       <Route
-        path="/admin/managers"
+        path="/admin/butikksjefer"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <AdminManagers />
@@ -274,6 +272,14 @@ function App() {
         }
       />
 
+      <Route
+        path="/admin/butikksjefer/profil/:id"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />

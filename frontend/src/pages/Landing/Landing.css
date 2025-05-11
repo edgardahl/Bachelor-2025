@@ -1,5 +1,5 @@
 .landing-container {
-  font-family: 'Helvetica Neue', sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   scroll-behavior: smooth;
   color: #333;
   background: #f9f9f9;
@@ -43,18 +43,16 @@
   margin: 0;
 }
 
-
-
 .landing-section-heading {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  margin-right: 1.5rem;
 }
 
 .landing-section-text {
   font-size: 1.2rem;
   max-width: 600px;
 }
-
 
 .landing-section {
   min-height: 100vh;
@@ -78,9 +76,8 @@
   text-align: center;
 }
 
-
 /* bunn container */
-.kom-i-gang-container{
+.kom-i-gang-container {
   text-align: center;
   padding: 4rem 2rem;
   height: 100vh;
@@ -89,7 +86,11 @@
 }
 
 .kom-i-gang-container {
-  background: linear-gradient(to right, #213653, #5d89c7); /* Gradient bakgrunn */
+  background: linear-gradient(
+    to right,
+    #213653,
+    #5d89c7
+  ); /* Gradient bakgrunn */
   padding: 4rem 2rem;
   display: flex;
   justify-content: center;
@@ -116,7 +117,7 @@
   font-weight: 400;
 }
 
-.kom-i-gang-button{
+.kom-i-gang-button {
   padding: 1.2rem 3rem;
   font-size: 1.3rem;
   background-color: #fff;
@@ -141,19 +142,15 @@
   transform: scale(1);
 }
 
-
-
-
-
-
 /* cards */
-.landing-container .butikk-card-link.disabled, .landing-container .shift-card-container.disabled{
+.landing-container .butikk-card-link.disabled,
+.landing-container .shift-card-container.disabled {
   cursor: not-allowed;
   pointer-events: none;
   width: 100%;
 }
 
-.preview-card{
+.preview-card {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -187,9 +184,19 @@
   line-height: 1;
 }
 
+.section-icon {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+  vertical-align: middle;
+  display: inline-block;
+  transform: translateY(-3px);
+}
+
 /* Animation for smooth bounce */
 @keyframes floatUpDown {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {

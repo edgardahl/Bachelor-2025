@@ -18,15 +18,18 @@
   cursor: pointer;
   margin-top: 15px;
   font-size: 1rem;
-  transition: background-color 0.3s ease;
   text-align: center;
   width: 100%;
   border-radius: 4px;
   height: 45px;
   visibility: visible;
   opacity: 1;
-  transition: opacity 0.2s ease;
   margin: 15px auto;
+  transition: background-color 0.3s ease, opacity 0.2s ease;
+}
+
+.reset-preferred-button:hover {
+  background-color: #3e9341;
 }
 
 /* Hidden version: takes up space but is transparent and not interactive */
@@ -58,8 +61,6 @@
     font-size: 1rem;
   }
 }
-
-
 
 .reset-all-button {
   margin-top: 10px;

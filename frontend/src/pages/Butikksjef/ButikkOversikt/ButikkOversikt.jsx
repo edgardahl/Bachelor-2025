@@ -114,7 +114,8 @@ const ButikkOversikt = () => {
       <div className="butikkoversikt-intro">
         <h1>BUTIKKER</h1>
         <p>
-          Få en oversikt over alle butikker i Coop Øst og vakter de har lagt ut.
+          Oversikt over alle butikker i Coop Øst. Legg til eller rediger
+          butikker ved behov.
         </p>
 
         <KommuneFilter

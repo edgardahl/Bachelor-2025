@@ -41,28 +41,34 @@ const MineAnsatte = () => {
   }, []);
 
   useEffect(() => {
-    console.log(
-      "Filtering employees with qualifications:",
-      selectedQualifications
-    );
     if (selectedQualifications.length === 0) {
-      setFilteredEmployees(employees);
+      const sorted = [...employees].sort((a, b) =>
+        a.availability === "Fleksibel" && b.availability !== "Fleksibel" ? -1 :
+        a.availability !== "Fleksibel" && b.availability === "Fleksibel" ? 1 : 0
+      );
+      setFilteredEmployees(sorted);
     } else {
       const filtered = employees.filter((emp) => {
         const kvalifikasjoner = emp.qualifications
           ? emp.qualifications.split(",").map((q) => q.trim())
           : [];
-        console.log("Employee qualifications:", kvalifikasjoner);
-
+  
         return selectedQualifications.every((selectedQualification) =>
           kvalifikasjoner.includes(selectedQualification)
         );
       });
-
-      setFilteredEmployees(filtered);
+  
+      const sorted = [...filtered].sort((a, b) =>
+        a.availability === "Fleksibel" && b.availability !== "Fleksibel" ? -1 :
+        a.availability !== "Fleksibel" && b.availability === "Fleksibel" ? 1 : 0
+      );
+  
+      setFilteredEmployees(sorted);
     }
+  
     setCurrentPage(1); // Reset pagination when filters change
   }, [selectedQualifications, employees]);
+  
 
   const handleShowMore = () => {
     setCurrentPage((prev) => prev + 1);
