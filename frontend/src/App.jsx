@@ -18,7 +18,7 @@ import Butikk from "./pages/Butikksjef/Butikk/Butikk.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage.jsx";
 import NewEmployeePage from "./pages/Butikksjef/NewEmployeeForm/NewEmployeeForm.jsx";
-import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard.jsx";
+import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboards.jsx";
 import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk.jsx";
 import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers.jsx";
 import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages.jsx";
