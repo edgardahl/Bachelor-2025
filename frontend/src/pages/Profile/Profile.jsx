@@ -47,7 +47,9 @@ const Profile = () => {
 
   // Konstanter basert på bruker og profilvisning
   const isOwnProfile = !profileId || user?.id === profileId;
-  const showBackButton = user?.role === "store_manager" && !isOwnProfile;
+  const showBackButton =
+  (user?.role === "store_manager" || user?.role === "admin") && !isOwnProfile;
+
 
   const fieldLabels = {
     first_name: "Fornavn",

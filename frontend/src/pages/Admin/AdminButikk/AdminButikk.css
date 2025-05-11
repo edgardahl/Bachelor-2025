@@ -1,6 +1,7 @@
 .adminbutikk-page {
   max-width: 1006px;
   margin: 0 auto;
+  border-radius: 4px;
   padding: 24px;
   font-family: "Segoe UI", sans-serif;
   background-color: var(--Body-background);
@@ -183,4 +184,10 @@ margin: 0 auto;
   color: var(--Text-color-light);
   font-size: 16px;
   line-height: 1.6;
+}
+
+@media (max-width: 1030px) {
+  .adminbutikk-page {
+    border-radius: 0;
+  }
 }
