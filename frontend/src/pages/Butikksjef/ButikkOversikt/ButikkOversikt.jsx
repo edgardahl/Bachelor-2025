@@ -6,6 +6,8 @@ import Loading from "../../../components/Loading/Loading";
 import "./ButikkOversikt.css";
 import StoreChainFilter from "../../../components/Filter/ButikkKjedeFilter/ButikkKjedeFilter";
 import useAuth from "../../../context/UseAuth";
+import { Link } from "react-router-dom";
+import { HiPlusSm } from "react-icons/hi";
 
 const ButikkOversikt = () => {
   const { user } = useAuth();
@@ -117,6 +119,18 @@ const ButikkOversikt = () => {
           Oversikt over alle butikker i Coop Øst. Legg til eller rediger
           butikker ved behov.
         </p>
+
+        {user?.role === "admin" && (
+          <Link to="/admin/butikker/ny" className="mine-vakter-create-link">
+            <div className="mine-vakter-create-button-wrapper">
+              <div className="mine-vakter-create-round-button">
+                <HiPlusSm size={26} />
+              </div>
+              <span className="mine-vakter-create-text">Lag en ny butikk</span>
+            </div>
+          </Link>
+        )}
+
 
         <KommuneFilter
           userRole={user.role}
