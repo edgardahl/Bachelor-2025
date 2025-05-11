@@ -48,8 +48,7 @@ const Profile = () => {
   // Konstanter basert på bruker og profilvisning
   const isOwnProfile = !profileId || user?.id === profileId;
   const showBackButton =
-  (user?.role === "store_manager" || user?.role === "admin") && !isOwnProfile;
-
+    (user?.role === "store_manager" || user?.role === "admin") && !isOwnProfile;
 
   const fieldLabels = {
     first_name: "Fornavn",
@@ -530,46 +529,48 @@ const Profile = () => {
           )}
         </div>
 
-        <div className="profile-field">
-          <label>Bostedskommune:</label>
-          {editingFields.municipality ? (
-            <>
-              <Select
-                classNamePrefix="select"
-                options={municipalityOptions}
-                value={selectedResidenceMunicipality}
-                onChange={setSelectedResidenceMunicipality}
-                placeholder="Velg bostedskommune..."
-              />
-              <div className="field-buttons">
-                <button
-                  className="primary-button"
-                  onClick={() => handleFieldSave("municipality")}
-                >
-                  Lagre
-                </button>
-                <button
-                  className="secondary-button"
-                  onClick={() => toggleFieldEdit("municipality", false)}
-                >
-                  Avbryt
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <p>{formData.municipality_name || "Ikke registrert"}</p>
-              {isOwnProfile && (
-                <button
-                  className="edit-icon-button"
-                  onClick={() => toggleFieldEdit("municipality", true)}
-                >
-                  <FaEdit size={28} />
-                </button>
-              )}
-            </>
-          )}
-        </div>
+        {user?.role !== "admin" && (
+          <div className="profile-field">
+            <label>Bostedskommune:</label>
+            {editingFields.municipality ? (
+              <>
+                <Select
+                  classNamePrefix="select"
+                  options={municipalityOptions}
+                  value={selectedResidenceMunicipality}
+                  onChange={setSelectedResidenceMunicipality}
+                  placeholder="Velg bostedskommune..."
+                />
+                <div className="field-buttons">
+                  <button
+                    className="primary-button"
+                    onClick={() => handleFieldSave("municipality")}
+                  >
+                    Lagre
+                  </button>
+                  <button
+                    className="secondary-button"
+                    onClick={() => toggleFieldEdit("municipality", false)}
+                  >
+                    Avbryt
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p>{formData.municipality_name || "Ikke registrert"}</p>
+                {isOwnProfile && (
+                  <button
+                    className="edit-icon-button"
+                    onClick={() => toggleFieldEdit("municipality", true)}
+                  >
+                    <FaEdit size={28} />
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        )}
 
         {formData.role === "employee" && (
           <div className="profile-field">
