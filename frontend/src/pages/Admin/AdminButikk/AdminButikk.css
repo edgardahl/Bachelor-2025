@@ -190,4 +190,9 @@ margin: 0 auto;
   .adminbutikk-page {
     border-radius: 0;
   }
+
+  .adminbutikk-title {
+    font-size: 2.4rem;
+  }
+
 }

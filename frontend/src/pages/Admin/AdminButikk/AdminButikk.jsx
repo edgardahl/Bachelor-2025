@@ -146,7 +146,7 @@ const AdminButikk = () => {
   return (
     <div className="adminbutikk-page">
       <BackButton />
-      <h1 className="adminbutikk-title">Butikkdetaljer</h1>
+      <h1 className="adminbutikk-title">BUTIKK DETALJER</h1>
       <p className="adminbutikk-description">
         Her kan du se og redigere informasjon om butikken.
       </p>
