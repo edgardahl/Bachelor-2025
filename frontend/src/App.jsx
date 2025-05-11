@@ -22,6 +22,7 @@ import AdminDashboard from "./pages/Admin/adminDashboard/adminDashboard";
 import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk";
 import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers";
 import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages.jsx";
+import NewStorePage from "./pages/Admin/newStorePage/newStorePage.jsx";
 
 
 import Loading from "./components/Loading/Loading";
@@ -260,6 +261,15 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <AdminManagers />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/butikker/ny"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <NewStorePage />
           </ProtectedRoute>
         }
       />

@@ -47,6 +47,8 @@ const NewManagerPage = () => {
     label: `${store.name} (${store.store_chain})`,
   }));
 
+  console.log("Store options:", storeOptions);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -147,7 +149,7 @@ const NewManagerPage = () => {
       />
       {errors.password && <div className="error-message">{errors.password}</div>}
 
-      <label>Tilknytt butikk</label>
+      <label>Tilknytt butikk (valgfritt)</label>
       <Select
         options={storeOptions}
         onChange={handleStoreChange}

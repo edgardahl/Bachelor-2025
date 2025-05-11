@@ -77,16 +77,45 @@ export const getStoresWithMunicipalityController = async (req, res) => {
   }
 };
 
-// Oppretter en ny butikk
 export const createStoreController = async (req, res) => {
+  console.log("Incoming new store request:", req.body);
+
+  const sanitized = sanitizeStoreUpdate(req.body);
+
+  if (sanitized.errors) {
+    return res.status(400).json({ error: sanitized.errors });
+  }
+
   try {
-    const newStore = await createStoreModel(req.body);
+    const newStore = await createStoreModel(sanitized);
+
+    if (sanitized.manager_id) {
+      const updatedUser = await updateUserByIdModel(sanitized.manager_id, {
+        store_id: newStore.store_id,
+      });
+
+      if (!updatedUser) {
+        return res.status(500).json({
+          error: { general: "Butikk ble opprettet, men klarte ikke knytte butikksjef." },
+        });
+      }
+    }
+
     res.status(201).json(newStore);
   } catch (error) {
     console.error("Error creating store:", error);
-    res.status(500).json({ error: error.message });
+
+    // Hvis feilen har et `field`-attributt, send som spesifikk valideringsfeil
+    if (error.field) {
+      return res.status(400).json({ error: { [error.field]: error.message } });
+    }
+
+    res.status(500).json({ error: { general: error.message } });
   }
 };
+
+
+
 
 // Henter butikk med full informasjon fra denne modellen getStoreWithFullInfoModel
 export const getStoreWithInfoController = async (req, res) => {
@@ -109,9 +138,6 @@ export const updateStoreController = async (req, res) => {
   const { storeId } = req.params;
   const storeData = req.body;
   const { manager_id } = storeData;
-  console.log("Store data to update:", storeData);
-  console.log("Manager ID to update:", manager_id);
-  console.log("Store ID from params:", storeId);
 
   // Sanitize store data before updating
   console.log("STORE INFO", storeData);
@@ -123,6 +149,7 @@ export const updateStoreController = async (req, res) => {
 
   try {
     // Proceed to update the store with sanitized data
+    console.log("Sanitized store data:", sanitizedStoreData);
     const updatedStore = await updateStoreModel(storeId, sanitizedStoreData);
     if (!updatedStore) {
       return res.status(404).json({ error: "Store not found" });
@@ -139,7 +166,17 @@ export const updateStoreController = async (req, res) => {
     return res.json(updatedStore); // Send back the updated store data
   } catch (error) {
     console.error("Error updating store:", error);
+
+    if (error.field) {
+      return res.status(400).json({
+        error: {
+          [error.field]: error.message,
+        },
+      });
+    }
+
     return res.status(500).json({ error: "Internal server error" });
   }
+
 
 };

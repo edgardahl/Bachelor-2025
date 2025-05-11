@@ -21,7 +21,8 @@ const AdminButikk = () => {
     address: "",
     store_phone: "",
     store_email: "",
-    municipality_id: "", // 👈 ny
+    municipality_id: "",
+    postal_code: "", // 👈 ny
   });
   const [errors, setErrors] = useState({}); // For storing error messages
 
@@ -35,8 +36,6 @@ const AdminButikk = () => {
       }
     }
   }, [errors]);
-  
-
 
   useEffect(() => {
     const fetchStore = async () => {
@@ -44,14 +43,25 @@ const AdminButikk = () => {
         const res = await axios.get(`/stores/getStoreWithInfo/${store_id}`);
         const storeData = res.data?.[0];
         if (storeData) {
-          setStore(storeData);
+          // Splitte addressen for å hente ut postnummeret
+          const [addressPart, postalCodePart] = storeData.address
+            .split(",")
+            .map((part) => part.trim());
+          const postalCode = postalCodePart ? postalCodePart.split(" ")[0] : "";
+
+          setStore({
+            ...storeData,
+            address: addressPart,
+            postal_code: postalCode,
+          });
           setFormData({
             store_name: storeData.store_name || "",
             store_chain: storeData.store_chain || "",
-            address: storeData.address || "",
+            address: addressPart || "",
             store_phone: storeData.store_phone || "",
             store_email: storeData.store_email || "",
-            municipality_id: storeData.municipality_id || "", // 👈 ny
+            municipality_id: storeData.municipality_id || "",
+            postal_code: postalCode || "",
           });
         }
       } catch (err) {
@@ -91,20 +101,20 @@ const AdminButikk = () => {
   const handleSave = async () => {
     try {
       setErrors({});
-      const res = await axios.put(`/stores/${store_id}`, formData);
-      setStore((prev) => ({ ...prev, ...formData }));
+  
+      console.log("Form data before save:", formData);
+  
+      await axios.put(`/stores/${store_id}`, formData);
+  
+      // Oppdater store objektet med dataene fra formData
+      setStore((prev) => ({
+        ...prev,
+        ...formData,
+      }));
+  
       setEditing(false);
   
-      // ✅ Vis toast ved suksess
-      toast.success("Endringer lagret!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.success("Endringer lagret!");
     } catch (err) {
       if (err.response?.data?.error) {
         setErrors(err.response.data.error);
@@ -113,6 +123,7 @@ const AdminButikk = () => {
       }
     }
   };
+  
   
 
   const storeChainOptions = [
@@ -136,135 +147,177 @@ const AdminButikk = () => {
     <div className="adminbutikk-page">
       <BackButton />
       <h1 className="adminbutikk-title">Butikkdetaljer</h1>
-        <p className="adminbutikk-description">
+      <p className="adminbutikk-description">
         Her kan du se og redigere informasjon om butikken.
-        </p>
+      </p>
 
       <div className="adminbutikk-form">
         <div
-  className="adminbutikk-field"
-  ref={(el) => {
-    if (errors.store_name) {
-      errorRefs.current.store_name = el;
-    }
-  }}
->
-  <label className="adminbutikk-label">Navn</label>
-  {editing ? (
-    <input
-      className={`adminbutikk-input ${errors.store_name ? "error" : ""}`}
-      name="store_name"
-      value={formData.store_name}
-      onChange={handleChange}
-    />
-  ) : (
-    <p className="adminbutikk-text">{store.store_name}</p>
-  )}
-  {errors.store_name && <div className="error-message">{errors.store_name}</div>}
-</div>
-
-<div
-  className="adminbutikk-field"
-  ref={(el) => {
-    if (errors.address) {
-      errorRefs.current.address = el;
-    }
-  }}
->
-  <label className="adminbutikk-label">Adresse</label>
-  {editing ? (
-    <input
-      className={`adminbutikk-input ${errors.address ? "error" : ""}`}
-      name="address"
-      value={formData.address}
-      onChange={handleChange}
-    />
-  ) : (
-    <p className="adminbutikk-text">{store.address}</p>
-  )}
-  {errors.address && <div className="error-message">{errors.address}</div>}
-</div>
-
-<div
-  className="adminbutikk-field"
-  ref={(el) => {
-    if (errors.store_phone) {
-      errorRefs.current.store_phone = el;
-    }
-  }}
->
-  <label className="adminbutikk-label">Telefon</label>
-  {editing ? (
-    <input
-      className={`adminbutikk-input ${errors.store_phone ? "error" : ""}`}
-      name="store_phone"
-      value={formData.store_phone}
-      onChange={handleChange}
-    />
-  ) : (
-    <p className="adminbutikk-text">{store.store_phone}</p>
-  )}
-  {errors.store_phone && <div className="error-message">{errors.store_phone}</div>}
-</div>
-
-<div
-  className="adminbutikk-field"
-  ref={(el) => {
-    if (errors.store_email) {
-      errorRefs.current.store_email = el;
-    }
-  }}
->
-  <label className="adminbutikk-label">E-post</label>
-  {editing ? (
-    <input
-      className={`adminbutikk-input ${errors.store_email ? "error" : ""}`}
-      name="store_email"
-      value={formData.store_email}
-      onChange={handleChange}
-    />
-  ) : (
-    <p className="adminbutikk-text">{store.store_email}</p>
-  )}
-  {errors.store_email && <div className="error-message">{errors.store_email}</div>}
-</div>
-        <div
-        className="adminbutikk-field"
-        ref={(el) => {
-            if (errors.store_chain) {
-            errorRefs.current.store_chain = el;
+          className="adminbutikk-field"
+          ref={(el) => {
+            if (errors.store_name) {
+              errorRefs.current.store_name = el;
             }
-        }}
+          }}
+        >
+          <label className="adminbutikk-label">Navn</label>
+          {editing ? (
+            <input
+              className={`adminbutikk-input ${
+                errors.store_name ? "error" : ""
+              }`}
+              name="store_name"
+              value={formData.store_name}
+              onChange={handleChange}
+            />
+          ) : (
+            <p className="adminbutikk-text">{store.store_name}</p>
+          )}
+          {errors.store_name && (
+            <div className="error-message">{errors.store_name}</div>
+          )}
+        </div>
+
+        <div
+          className="adminbutikk-field"
+          ref={(el) => {
+            if (errors.address) {
+              errorRefs.current.address = el;
+            }
+          }}
+        >
+          <label className="adminbutikk-label">Adresse</label>
+          {editing ? (
+            <input
+              className={`adminbutikk-input ${errors.address ? "error" : ""}`}
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+            />
+          ) : (
+            <p className="adminbutikk-text">{store.address}</p>
+          )}
+          {errors.address && (
+            <div className="error-message">{errors.address}</div>
+          )}
+        </div>
+
+        <div
+          className="adminbutikk-field"
+          ref={(el) => {
+            if (errors.postal_code) {
+              errorRefs.current.postal_code = el;
+            }
+          }}
+        >
+          <label className="adminbutikk-label">Postnummer</label>
+          {editing ? (
+            <input
+              className={`adminbutikk-input ${
+                errors.postal_code ? "error" : ""
+              }`}
+              name="postal_code"
+              value={formData.postal_code}
+              onChange={handleChange}
+            />
+          ) : (
+            <p className="adminbutikk-text">{store.postal_code}</p>
+          )}
+          {errors.postal_code && (
+            <div className="error-message">{errors.postal_code}</div>
+          )}
+        </div>
+
+        <div
+          className="adminbutikk-field"
+          ref={(el) => {
+            if (errors.store_phone) {
+              errorRefs.current.store_phone = el;
+            }
+          }}
+        >
+          <label className="adminbutikk-label">Telefon</label>
+          {editing ? (
+            <input
+              className={`adminbutikk-input ${
+                errors.store_phone ? "error" : ""
+              }`}
+              name="store_phone"
+              value={formData.store_phone}
+              onChange={handleChange}
+            />
+          ) : (
+            <p className="adminbutikk-text">{store.store_phone}</p>
+          )}
+          {errors.store_phone && (
+            <div className="error-message">{errors.store_phone}</div>
+          )}
+        </div>
+
+        <div
+          className="adminbutikk-field"
+          ref={(el) => {
+            if (errors.store_email) {
+              errorRefs.current.store_email = el;
+            }
+          }}
+        >
+          <label className="adminbutikk-label">E-post</label>
+          {editing ? (
+            <input
+              className={`adminbutikk-input ${
+                errors.store_email ? "error" : ""
+              }`}
+              name="store_email"
+              value={formData.store_email}
+              onChange={handleChange}
+            />
+          ) : (
+            <p className="adminbutikk-text">{store.store_email}</p>
+          )}
+          {errors.store_email && (
+            <div className="error-message">{errors.store_email}</div>
+          )}
+        </div>
+        <div
+          className="adminbutikk-field"
+          ref={(el) => {
+            if (errors.store_chain) {
+              errorRefs.current.store_chain = el;
+            }
+          }}
         >
           <label className="adminbutikk-label">Kjedetilhørighet</label>
           {editing ? (
             <Select
               className="adminbutikk-select"
               options={storeChainOptions}
-              value={storeChainOptions.find(
-                (opt) => opt.value === formData.store_chain
-              )}
               onChange={(selected) =>
                 setFormData((prev) => ({
                   ...prev,
                   store_chain: selected.value,
                 }))
               }
+              value={storeChainOptions.find(
+                (opt) => opt.value === formData.store_chain
+              )}
             />
           ) : (
             <p className="adminbutikk-text">{store.store_chain}</p>
           )}
-          {errors.store_chain && <div className="error-message">{errors.store_chain}</div>}
+          {errors.store_chain && (
+            <div className="error-message">{errors.store_chain}</div>
+          )}
         </div>
 
         <div
-            className="adminbutikk-field"
-            ref={(el) => {
-                if (errors.municipality_id) {
-                errorRefs.current.municipality_id = el;
-                }
-            }}
-            >
+          className="adminbutikk-field"
+          ref={(el) => {
+            if (errors.municipality_id) {
+              errorRefs.current.municipality_id = el;
+            }
+          }}
+        >
           <label className="adminbutikk-label">Kommune</label>
           {editing ? (
             <Select
@@ -286,7 +339,9 @@ const AdminButikk = () => {
               {store.municipality_name}, {store.county_name}
             </p>
           )}
-          {errors.municipality_id && <div className="error-message">{errors.municipality_id}</div>}
+          {errors.municipality_id && (
+            <div className="error-message">{errors.municipality_id}</div>
+          )}
         </div>
 
         {/* Static store managers display */}
@@ -296,7 +351,10 @@ const AdminButikk = () => {
             {storeManagers.length === 0 ? (
               <p className="adminbutikk-text">
                 Ingen butikksjefer. legg til en butikksjef{" "}
-                <Link to={"/admin/managers"} className="adminbutikk-manager-link">
+                <Link
+                  to={"/admin/managers"}
+                  className="adminbutikk-manager-link"
+                >
                   Her
                 </Link>
               </p>
@@ -318,15 +376,21 @@ const AdminButikk = () => {
         <div className="adminbutikk-actions">
           {editing ? (
             <div>
-                <button className="adminbutikk-button-edit" onClick={handleSave}>
+              <button className="adminbutikk-button-edit" onClick={handleSave}>
                 Lagre endringer
-                </button>
-                <button className="adminbutikk-button-cancle" onClick={()=> setEditing(false)}>
-                    Avbryt
-                </button>
+              </button>
+              <button
+                className="adminbutikk-button-cancle"
+                onClick={() => setEditing(false)}
+              >
+                Avbryt
+              </button>
             </div>
           ) : (
-            <button className="adminbutikk-button-edit" onClick={() => setEditing(true)}>
+            <button
+              className="adminbutikk-button-edit"
+              onClick={() => setEditing(true)}
+            >
               Rediger butikk
             </button>
           )}
