@@ -18,11 +18,11 @@ import Butikk from "./pages/Butikksjef/Butikk/Butikk";
 import Profile from "./pages/Profile/Profile";
 import ShiftDetailsPage from "./pages/ShiftDetailsPage/ShiftDetailsPage";
 import NewEmployeePage from "./pages/Butikksjef/NewEmployeeForm/NewEmployeeForm";
-import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard.jsx";
+import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
 import AdminButikk from "./pages/Admin/AdminButikk/AdminButikk";
 import AdminManagers from "./pages/Admin/AdminManagers/AdminManagers";
-import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages.jsx";
-import NewStorePage from "./pages/Admin/NewStorePage/NewStorePage.jsx";
+import NewManagerPage from "./pages/Admin/NewManagerPage/NewManagerPages";
+import NewStorePage from "./pages/Admin/NewStorePage/NewStorePages";
 
 import Loading from "./components/Loading/Loading";
 
