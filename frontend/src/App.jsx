@@ -37,8 +37,11 @@ function App() {
   const location = useLocation();
 
   const showBackButton =
-    location.pathname.startsWith("/dashboard/butikksjef/") &&
-    location.pathname.split("/").length > 4;
+  (
+    location.pathname.startsWith("/bs/ansatte/profil/") ||
+    location.pathname.startsWith("/admin/butikksjefer/profil/")
+  ) && location.pathname.split("/").length >= 4;
+
 
   if (loading)
     return (

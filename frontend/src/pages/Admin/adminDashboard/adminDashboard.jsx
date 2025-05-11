@@ -69,7 +69,7 @@ const AdminDashboard = () => {
             statValue={managersCount}
             statText="Totalt antall butikksjefer"
             linkText="Gå til butikksjefer"
-            linkTo="/admin/managers"
+            linkTo="/admin/butikksjefer"
           />
         </div>
       )}
