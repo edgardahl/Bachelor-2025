@@ -9,7 +9,7 @@ import "./CreateShift.css";
 
 const CreateShift = () => {
   const { user } = useAuth();
-  const navigate = useNavigate(); // ✅ Added
+  const navigate = useNavigate();
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -46,6 +46,7 @@ const CreateShift = () => {
         setQualifications(response.data);
       } catch (error) {
         console.error("Feil ved henting av kvalifikasjoner:", error);
+        toast.error("Feil ved henting av kvalifikasjoner.");
       }
     };
     fetchQualifications();
@@ -61,6 +62,8 @@ const CreateShift = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrors({}); // Reset errors
+
     const shiftData = {
       title,
       description,
@@ -73,6 +76,7 @@ const CreateShift = () => {
       store_id: StoreId,
       posted_by: UserId,
     };
+
     setPendingShiftData(shiftData);
     setShowConfirmModal(true);
   };
@@ -80,7 +84,7 @@ const CreateShift = () => {
   const confirmCreateShift = async () => {
     if (!pendingShiftData) return;
     setLoading(true);
-    setErrors({}); // reset errors
+    setErrors({}); // Reset errors before submit
 
     try {
       await axios.post("/shifts", {
@@ -95,7 +99,7 @@ const CreateShift = () => {
       setTitle("");
       setDescription("");
       setSelectedQualifications([]);
-      navigate("/bs/vakter"); // ✅ Redirect after successful creation
+      navigate("/bs/vakter");
     } catch (error) {
       const backendErrors = error.response?.data?.error;
 
