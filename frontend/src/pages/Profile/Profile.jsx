@@ -790,7 +790,11 @@ const Profile = () => {
                 formData.role === "store_manager" ? "centered-store-card" : ""
               }
             >
-              <ButikkCard store={storeData} shiftsCount={publishedShiftCount} />
+              <div className="no-margin-wrapper">
+  <ButikkCard store={storeData} shiftsCount={publishedShiftCount} />
+</div>
+
+              
             </div>
           </div>
         )}
