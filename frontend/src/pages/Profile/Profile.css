@@ -383,6 +383,16 @@ ul.municipality-list li {
 
 /* Responsive */
 @media (max-width: 740px) {
+
+    .tooltip-text {
+      max-width: 40vw;
+      white-space: normal;
+      word-break: break-word;
+      left: 50%;
+      transform: translateX(-60%);
+    }
+  
+
   .profile-page {
     padding: 1.5rem 1rem;
     border-radius: 0;
