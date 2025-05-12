@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "../../api/axiosInstance";
-import DeleteShiftPopup from "../../components/Popup/DeleteShiftPopup/DeleteShiftPopup";
+import ConfirmDeletePopup from "../../components/Popup/ConfirmDeletePopup/ConfirmDeletePopup";
 import ClaimShiftPopup from "../../components/Popup/ClaimShiftPopup/ClaimShiftPopup";
 import BackButton from "../../components/BackButton/BackButton";
 import Loading from "../../components/Loading/Loading";
@@ -267,14 +267,15 @@ const ShiftDetailsPage = () => {
               className="delete-button"
               onClick={() => setShowDeletePopup(true)}
             >
-              <img src="/icons/delete-white.svg" alt="Slett" />
+              Slett vakt
             </button>
           </div>
         )}
 
         {showDeletePopup && (
-          <DeleteShiftPopup
-            shiftTitle={shiftDetails.title}
+          <ConfirmDeletePopup
+            title="vakt"
+            itemName={shiftDetails.title}
             onCancel={() => setShowDeletePopup(false)}
             onConfirm={handleDeleteShift}
           />

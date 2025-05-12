@@ -10,6 +10,7 @@ import {
   createStoreController,
   getAllStoresWithInfoController,
   updateStoreController,
+  deleteStoreController
 } from "../controllers/storeController.js";
 
 const router = express.Router();
@@ -53,5 +54,10 @@ router.put(
   authorizeRoles("admin"), // You can adjust the role if needed
   updateStoreController
 );
+
+
+// Add the route to your routes file
+router.delete("/:store_id",verifyToken, authorizeRoles("admin"), deleteStoreController);
+
 
 export default router;
