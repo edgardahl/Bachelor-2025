@@ -46,7 +46,7 @@
 .landing-section-heading {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  margin-right: 1.5rem;
+  transform: translateX(-15px);
 }
 
 .landing-section-text {
@@ -202,5 +202,15 @@
   }
   50% {
     transform: translateY(8px);
+  }
+}
+
+@media (max-width: 550px) {
+  .kom-i-gang-heading {
+    font-size: 1.8rem;
+  }
+
+  .landing-section-heading {
+    font-size: 1.7rem;
   }
 }
