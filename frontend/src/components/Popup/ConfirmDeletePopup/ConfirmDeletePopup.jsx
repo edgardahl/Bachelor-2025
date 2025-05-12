@@ -23,7 +23,7 @@ const ConfirmDeletePopup = ({
       try {
         await onConfirm();
         onCancel(); // Lukk popup ved suksess
-      } catch (err) {
+      } catch {
         setStatusMessage("Sletting feilet. Vennligst prøv igjen.");
       }
     } else {

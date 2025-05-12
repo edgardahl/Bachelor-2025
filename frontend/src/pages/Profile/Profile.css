@@ -102,13 +102,13 @@
 }
 
 .secondary-button {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: var(--Cancel-color);
+  color: black;
   border: 1px solid #ccc;
 }
 
 .secondary-button:hover {
-  background-color: #e0e0e0;
+  background-color: var(--Cancel-color-hover);
 }
 
 .status-badge {
@@ -376,6 +376,21 @@ ul.municipality-list li {
   margin-top: 2rem;
 }
 
+.danger-button {
+  background-color: var(--Error-delete-color);
+  color: white;
+  padding: 0.8rem 1.6rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.danger-button:hover {
+  background-color: var(--Error-delete-color-hover);
+}
+
 .no-margin-wrapper .butikk-card {
   margin: 0;
 }
@@ -389,7 +404,7 @@ ul.municipality-list li {
       white-space: normal;
       word-break: break-word;
       left: 50%;
-      transform: translateX(-60%);
+      transform: translateX(-50%);
     }
   
 

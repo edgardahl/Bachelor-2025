@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import Loading from "../../components/Loading/Loading";
 import BackButton from "../../components/BackButton/BackButton";
 import ButikkCard from "../../components/Cards/ButikkCard/ButikkCard";
-import DeleteAccountPopup from "../../components/Popup/DeleteAccountPopup/DeleteAccountPopup";
+import ConfirmDeletePopup from "../../components/Popup/ConfirmDeletePopup/ConfirmDeletePopup";
 import { FaEdit } from "react-icons/fa";
 
 import "./Profile.css";
@@ -858,13 +858,49 @@ const Profile = () => {
         )}
       </div>
 
-      <DeleteAccountPopup
-        user={user}
-        formData={formData}
-        isOwnProfile={isOwnProfile}
-        show={showDeleteUI}
-        onClose={() => setShowDeleteUI(false)}
-      />
+      {showDeleteUI && (
+  <ConfirmDeletePopup
+    title="brukerkonto"
+    itemName={`${formData.first_name} ${formData.last_name}`}
+    onCancel={() => setShowDeleteUI(false)}
+    onConfirm={async () => {
+      try {
+        await axios.delete(`/users/${formData.user_id}`);
+        toast.success("Konto slettet");
+
+        if (isOwnProfile) {
+          navigate("/login");
+        } else if (user.role === "store_manager") {
+          navigate("/bs/ansatte/mine");
+        } else if (user.role === "admin") {
+          navigate("/admin/butikksjefer");
+        }
+      } catch (err) {
+        console.error("Feil ved sletting:", err);
+        toast.error("Kunne ikke slette kontoen.");
+        throw err;
+      }
+    }}
+  />
+)}
+{((isOwnProfile && user?.role === "employee") ||
+  (user?.role === "store_manager" &&
+    !isOwnProfile &&
+    formData.role === "employee" &&
+    user.storeId === formData.store_id) ||
+  (user?.role === "admin" &&
+    !isOwnProfile &&
+    formData.role === "store_manager")) && (
+  <div className="delete-account-section">
+    <button
+      className="danger-button"
+      onClick={() => setShowDeleteUI(true)}
+    >
+      Slett konto
+    </button>
+  </div>
+)}
+
     </div>
   );
 };

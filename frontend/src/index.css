@@ -29,8 +29,10 @@
   /* Button colors */
   --Button-color: #1976d2;
   --Button-hover-color: #125ea8;
-  --Error-delete-color: #ec5446;
-  --Error-delete-color-hover: #bf4035;
+  --Error-delete-color: #d33030;
+  --Error-delete-color-hover: #b81d1d;
+  --Cancel-color: #e1dfdf;
+  --Cancel-color-hover: #cecece;
   --Success-color: #3c9350;
   --Open-link-color: #156363;
   --Create-new: #1cb066;
