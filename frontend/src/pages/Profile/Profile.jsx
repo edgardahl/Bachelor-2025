@@ -790,7 +790,11 @@ const Profile = () => {
                 formData.role === "store_manager" ? "centered-store-card" : ""
               }
             >
-              <ButikkCard store={storeData} shiftsCount={publishedShiftCount} />
+              <div className="no-margin-wrapper">
+  <ButikkCard store={storeData} shiftsCount={publishedShiftCount} />
+</div>
+
+              
             </div>
           </div>
         )}
@@ -840,7 +844,7 @@ const Profile = () => {
             {canEditQualifications && isEditingQualifications && (
               <div className="qualification-action-buttons">
                 <button className="primary-button" onClick={saveQualifications}>
-                  Lagre kvalifikasjoner
+                  Lagre
                 </button>
                 <button
                   className="secondary-button"

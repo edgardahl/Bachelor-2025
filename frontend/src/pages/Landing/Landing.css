@@ -46,7 +46,7 @@
 .landing-section-heading {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  margin-right: 1.5rem;
+  transform: translateX(-15px);
 }
 
 .landing-section-text {
@@ -158,7 +158,7 @@
 }
 
 .scroll-down-indicator {
-  margin-top: 90px;
+  margin-top: 35px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -202,5 +202,24 @@
   }
   50% {
     transform: translateY(8px);
+  }
+}
+
+@media (max-width: 550px) {
+  .kom-i-gang-heading {
+    font-size: 1.8rem;
+  }
+
+  .landing-section-heading {
+    font-size: 1.3rem;
+  }
+  
+  .landing-section-text {
+    font-size: 1rem;
+  }
+
+  .section-icon {
+    height: 40px;
+    width: 40px;
   }
 }

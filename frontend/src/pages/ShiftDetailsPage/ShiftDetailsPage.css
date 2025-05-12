@@ -188,7 +188,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 796px) {
   .two-column-layout {
     flex-direction: column;
   }
@@ -224,10 +224,6 @@
 
   .qualification-cards {
     justify-content: center;
-  }
-
-  .qualifications-header {
-    text-align: center;
   }
 
   .claim-button,
