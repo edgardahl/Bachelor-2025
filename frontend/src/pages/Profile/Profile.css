@@ -102,13 +102,13 @@
 }
 
 .secondary-button {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: var(--Cancel-color);
+  color: black;
   border: 1px solid #ccc;
 }
 
 .secondary-button:hover {
-  background-color: #e0e0e0;
+  background-color: var(--Cancel-color-hover);
 }
 
 .status-badge {
@@ -225,6 +225,7 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1rem;
+  justify-content: center;
 }
 
 .qualification-card {
@@ -375,6 +376,21 @@ ul.municipality-list li {
   margin-top: 2rem;
 }
 
+.danger-button {
+  background-color: var(--Error-delete-color);
+  color: white;
+  padding: 0.8rem 1.6rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.danger-button:hover {
+  background-color: var(--Error-delete-color-hover);
+}
+
 .no-margin-wrapper .butikk-card {
   margin: 0;
 }
@@ -382,6 +398,16 @@ ul.municipality-list li {
 
 /* Responsive */
 @media (max-width: 740px) {
+
+    .tooltip-text {
+      max-width: 40vw;
+      white-space: normal;
+      word-break: break-word;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  
+
   .profile-page {
     padding: 1.5rem 1rem;
     border-radius: 0;
@@ -403,7 +429,6 @@ ul.municipality-list li {
   .qualification-save-btn,
   .qualification-cancel-btn,
   .edit-qualifications-btn {
-    width: 30%;
     font-size: 1rem;
   }
 

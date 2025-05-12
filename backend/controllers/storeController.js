@@ -5,7 +5,8 @@ import {
   createStoreModel,
   getAllStoresWithInfoModel,
   getStoreWithFullInfoModel,
-  updateStoreModel
+  updateStoreModel,
+  deleteStoreModel
 } from "../models/storeModel.js";
 
 import { updateUserByIdModel, getUserByIdModel } from "../models/userModel.js"; // importere updateUserByIdModel
@@ -209,4 +210,28 @@ export const updateStoreController = async (req, res) => {
   }
 
 
+};
+
+
+// In your storesController.js or similar
+export const deleteStoreController = async (req, res) => {
+  const { store_id } = req.params;
+
+  try {
+    const store = await getStoreByIdModel(store_id);
+    if (!store) {
+      return res.status(404).json({ error: "Butikken finnes ikke." });
+    }
+
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ error: "Du har ikke tilgang til å slette denne butikken." });
+    }
+
+    await deleteStoreModel(store_id);
+
+    return res.status(200).json({ message: "Butikken ble slettet." });
+  } catch (error) {
+    console.error("Feil ved sletting av butikk:", error);
+    return res.status(500).json({ error: "Kunne ikke slette butikken." });
+  }
 };
