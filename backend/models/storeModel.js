@@ -236,3 +236,18 @@ export const updateStoreModel = async (storeId, storeData) => {
 
   return data[0];
 };
+
+// Delete a store
+// models/storeModel.js
+export const deleteStoreModel = async (storeId) => {
+  const { error } = await supabase
+    .from("stores")
+    .delete()
+    .eq("store_id", storeId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return true;
+};

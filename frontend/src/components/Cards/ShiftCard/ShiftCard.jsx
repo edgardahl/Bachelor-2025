@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DeleteShiftPopup from "../../Popup/DeleteShiftPopup/DeleteShiftPopup";
+import ConfirmDeletePopup from "../../Popup/ConfirmDeletePopup/ConfirmDeletePopup";
 import axios from "../../../api/axiosInstance";
 import "./ShiftCard.css";
 import useAuth from "../../../context/UseAuth";
@@ -63,7 +63,7 @@ const ShiftCard = ({
       onClick={interactive ? handleCardClick : null}
     >
       {showDeletePopup && (
-        <DeleteShiftPopup
+        <ConfirmDeletePopup
           shiftTitle={title}
           onCancel={() => setShowDeletePopup(false)}
           onConfirm={handleConfirmDelete}
