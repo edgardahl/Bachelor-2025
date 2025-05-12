@@ -26,7 +26,7 @@ const Landing = () => {
     last_name: "Nordmann",
     availability: "Tilgjengelig",
     qualifications: "Kasse, Post",
-    store_name: "Coop Extra Bekkestua",
+    store_name: "Extra Bekkestua",
   };
 
   return (
@@ -61,41 +61,15 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Section 1 – Butikker */}
+      {/* Section 1 – Publisere vakter */}
       <section className="landing-section">
-        <h2 className="landing-section-heading">
-          <IoStorefrontSharp className="section-icon" />
-          Butikker
-        </h2>
-
-        <p className="landing-section-text">
-          Få oversikt over alle Coop Øst-butikker. Se deres beliggenhet,
-          tilgjengelige vakter og hvilke behov de har for bemanning.
-        </p>
-        <div className="preview-card">
-          <ButikkCard
-            store={{
-              store_id: "1",
-              name: "Majorstua",
-              store_chain: "Coop Obs",
-              address: "Majorstuveien 2, 0353 Oslo",
-            }}
-            shiftsCount={3}
-            interactive={false}
-          />
-        </div>
-      </section>
-
-      {/* Section 2 – Publisere vakter */}
-      <section className="landing-section alt">
         <h2 className="landing-section-heading">
           <FaClipboardList className="section-icon" />
           Publisere vakter
         </h2>
 
         <p className="landing-section-text">
-          Trenger du folk på jobb? Legg ut en vakt! Systemet matcher den med
-          ansatte som har riktig kvalifikasjon og tilgjengelighet.
+        Har du behov for ekstra bemanning? Legg ut en vakt, så kan kvalifiserte ansatte ta den.
         </p>
         <div className="preview-card">
           <ShiftCard
@@ -105,7 +79,7 @@ const Landing = () => {
             startTime="09:00"
             endTime="17:00"
             qualifications={["Kasse", "Kundebehandling"]}
-            storeName="Coop Extra Bekkestua"
+            storeName="Extra Bekkestua"
             shiftStoreId="2"
             deleteShift={() => {}}
             claimedByName=""
@@ -116,12 +90,14 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Section 3 – Ta vakt */}
-      <section className="landing-section">
-        <h2 className="landing-section-heading">
-          <FaClipboardCheck className="section-icon" />
-          Ta vakt
-        </h2>
+      {/* Section 2 – Ta vakt */}
+      <section className="landing-section alt">
+        <div className="landing-heading-container">
+          <h2 className="landing-section-heading">
+            <FaClipboardCheck className="section-icon" />
+            Ta vakt
+          </h2>
+        </div>
 
         <p className="landing-section-text">
           Som ansatt kan du selv velge vakter i kommunene du er interessert i.
@@ -146,6 +122,31 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Section 3 – Butikker */}
+      <section className="landing-section">
+        <h2 className="landing-section-heading">
+          <IoStorefrontSharp className="section-icon" />
+          Butikker
+        </h2>
+
+        <p className="landing-section-text">
+          Få oversikt over alle Coop Øst-butikker. Se deres beliggenhet,
+          tilgjengelige vakter og hvilke behov de har for bemanning.
+        </p>
+        <div className="preview-card">
+          <ButikkCard
+            store={{
+              store_id: "1",
+              name: "Majorstua",
+              store_chain: "Coop Obs",
+              address: "Majorstuveien 2, 0353 Oslo",
+            }}
+            shiftsCount={3}
+            interactive={false}
+          />
+        </div>
+      </section>
+
       {/* Section 4 – Administrer ansatte */}
       <section className="landing-section alt">
         <h2 className="landing-section-heading">
@@ -154,9 +155,8 @@ const Landing = () => {
         </h2>
 
         <p className="landing-section-text">
-          Butikksjefer får full oversikt over egne ansatte, deres
-          kvalifikasjoner og hvilke eksterne ansatte som er interesserte i å
-          jobbe i din kommune.
+          Butikksjefer får oversikt over sine ansatte, deres kvalifikasjoner og
+          hvilke eksterne ansatte som er interesserte i å jobbe i din kommune.
         </p>
         <div className="preview-card">
           <ButikkansattCard

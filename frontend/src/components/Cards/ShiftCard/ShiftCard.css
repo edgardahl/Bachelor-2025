@@ -76,6 +76,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  text-align: left;
 }
 
 .info-list-item {
@@ -96,7 +97,7 @@
 .info-p-qualification {
   color: var(--Shifts-text);
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   margin: 0;
 }
 
