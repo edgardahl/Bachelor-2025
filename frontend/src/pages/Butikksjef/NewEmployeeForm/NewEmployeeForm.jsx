@@ -64,7 +64,7 @@ export default function RegisterNewEmployeeForm() {
     try {
       setErrors({});
       await axios.post("/auth/employee/register", formData);
-      toast.success("Bruker registrert!");
+      toast.success("Bruker registrert");
   
       navigate("/bs/ansatte/mine"); // ← Naviger dit
   

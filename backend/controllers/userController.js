@@ -6,6 +6,7 @@ import {
   getAvailableEmployeesInMunicipality,
   updateUserPasswordById,
   updateUserByIdModel,
+  deleteUserByIdModel,
   updateUserQualificationsModel,
   getAllStoreManagersWithStoreModel,
   getManagersByStoreId
@@ -288,5 +289,41 @@ export const updateEmployeeQualificationsController = async (req, res) => {
   } catch (error) {
     console.error("Error in updateEmployeeQualificationsController:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Sletter en bruker hvis autorisert
+export const deleteUserByIdController = async (req, res) => {
+  const userIdToDelete = req.params.id;
+  const requester = req.user;
+
+  try {
+    const userToDelete = await getUserByIdModel(userIdToDelete);
+
+    if (!userToDelete) {
+      return res.status(404).json({ error: "Bruker ikke funnet." });
+    }
+
+    const isSelf = requester.userId === userIdToDelete;
+    const isManagerDeletingEmployee =
+      requester.role === "store_manager" &&
+      userToDelete.role === "employee" &&
+      userToDelete.store_id === requester.storeId;
+    const isAdminDeletingManager =
+      requester.role === "admin" && userToDelete.role === "store_manager";
+
+    if (!(isSelf || isManagerDeletingEmployee || isAdminDeletingManager)) {
+      return res.status(403).json({ error: "Ikke autorisert til å slette denne brukeren." });
+    }
+
+    const success = await deleteUserByIdModel(userIdToDelete);
+    if (!success) {
+      return res.status(500).json({ error: "Kunne ikke slette brukeren." });
+    }
+
+    return res.json({ message: "Bruker slettet." });
+  } catch (err) {
+    console.error("Feil ved sletting:", err);
+    res.status(500).json({ error: "Intern serverfeil." });
   }
 };

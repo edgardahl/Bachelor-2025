@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import Loading from "../../components/Loading/Loading";
 import BackButton from "../../components/BackButton/BackButton";
 import ButikkCard from "../../components/Cards/ButikkCard/ButikkCard";
+import DeleteAccountPopup from "../../components/Popup/DeleteAccountPopup/DeleteAccountPopup";
 import { FaEdit } from "react-icons/fa";
 
 import "./Profile.css";
@@ -23,6 +24,7 @@ const Profile = () => {
   const [originalFormData, setOriginalFormData] = useState(null);
   const [errors, setErrors] = useState({});
   const [isEditingQualifications, setIsEditingQualifications] = useState(false);
+  const [showDeleteUI, setShowDeleteUI] = useState(false);
   const [editingFields, setEditingFields] = useState({
     first_name: false,
     last_name: false,
@@ -851,6 +853,14 @@ const Profile = () => {
           </div>
         )}
       </div>
+
+      <DeleteAccountPopup
+        user={user}
+        formData={formData}
+        isOwnProfile={isOwnProfile}
+        show={showDeleteUI}
+        onClose={() => setShowDeleteUI(false)}
+      />
     </div>
   );
 };

@@ -369,6 +369,13 @@ ul.municipality-list li {
   opacity: 1;
 }
 
+.delete-account-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+
 /* Responsive */
 @media (max-width: 740px) {
   .profile-page {

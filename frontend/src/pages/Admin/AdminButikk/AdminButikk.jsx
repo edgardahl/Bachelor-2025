@@ -14,6 +14,8 @@ const AdminButikk = () => {
   const [loading, setLoading] = useState(true);
   const [storeManagers, setStoreManagers] = useState([]);
   const [municipalities, setMunicipalities] = useState([]);
+  const [allManagers, setAllManagers] = useState([]);
+  const [selectedManagerId, setSelectedManagerId] = useState(null);
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
     store_name: "",
@@ -89,6 +91,19 @@ const AdminButikk = () => {
       }
     };
 
+    const fetchAllManagers = async () => {
+      try {
+        const res = await axios.get("/users/store_managers");
+        const availableManagers = res.data.filter((m) => !m.store_id);
+        console.log("Available managers:", availableManagers);
+        setAllManagers(availableManagers);
+
+      } catch (err) {
+        console.error("Feil ved henting av alle butikksjefer:", err);
+      }
+    };
+
+    fetchAllManagers();
     fetchStore();
     fetchStoreManagers();
     fetchMunicipalities();
@@ -102,19 +117,25 @@ const AdminButikk = () => {
     try {
       setErrors({});
   
-      console.log("Form data before save:", formData);
+      const payload = {
+        ...formData,
+        manager_id: selectedManagerId,
+      };
+
+      console.log("selectedManagerId:", selectedManagerId);
   
-      await axios.put(`/stores/${store_id}`, formData);
+      await axios.put(`/stores/${store_id}`, payload);
   
-      // Oppdater store objektet med dataene fra formData
       setStore((prev) => ({
         ...prev,
         ...formData,
       }));
+
+      const updatedManagersRes = await axios.get(`/users/store_managers/${store_id}`);
+      setStoreManagers(updatedManagersRes.data);
   
       setEditing(false);
-  
-      toast.success("Endringer lagret!");
+      toast.success("Endringer lagret");
     } catch (err) {
       if (err.response?.data?.error) {
         setErrors(err.response.data.error);
@@ -146,11 +167,10 @@ const AdminButikk = () => {
   return (
     <div className="adminbutikk-page">
       <BackButton />
-      <h1 className="adminbutikk-title">Butikkdetaljer</h1>
+      <h1 className="adminbutikk-title">BUTIKK DETALJER</h1>
       <p className="adminbutikk-description">
         Her kan du se og redigere informasjon om butikken.
       </p>
-      
 
       <div className="adminbutikk-form">
         <div
@@ -351,19 +371,13 @@ const AdminButikk = () => {
           <div>
             {storeManagers.length === 0 ? (
               <p className="adminbutikk-text">
-                Ingen butikksjefer. legg til en butikksjef{" "}
-                <Link
-                  to={"/admin/managers"}
-                  className="adminbutikk-manager-link"
-                >
-                  Her
-                </Link>
+                Ingen butikksjefer i denne butikken enda
               </p>
             ) : (
               storeManagers.map((manager) => (
                 <Link
                   key={manager.user_id}
-                  to={`/admin/manager/${manager.user_id}`}
+                  to={`/admin/butikksjefer/profil/${manager.user_id}`}
                   className="adminbutikk-manager-link"
                 >
                   <p className="adminbutikk-text">
@@ -374,11 +388,27 @@ const AdminButikk = () => {
             )}
           </div>
         </div>
+        {editing && (
+          <div className="adminbutikk-field">
+            <label className="adminbutikk-label">Legg til butikksjef</label>
+            <Select
+              className="adminbutikk-select"
+              options={allManagers.map((m) => ({
+                label: `${m.first_name} ${m.last_name} (${m.email}) – ${m.store_name ? `${m.store_chain} ${m.store_name}` : "Ingen butikk"}`,
+                value: m.user_id,
+              }))}
+              placeholder={allManagers.length === 0 ? "Ingen tilgjengelige butikksjefer" : "Velg butikksjef"}
+              onChange={(selected) => {
+                setSelectedManagerId(selected?.value || null);
+              }}              
+            />
+          </div>
+        )}
         <div className="adminbutikk-actions">
           {editing ? (
             <div>
               <button className="adminbutikk-button-edit" onClick={handleSave}>
-                Lagre endringer
+                Lagre
               </button>
               <button
                 className="adminbutikk-button-cancle"
