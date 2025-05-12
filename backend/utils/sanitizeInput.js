@@ -1,3 +1,4 @@
+import e from "express";
 import { validate as isUUID } from "uuid";
 
 // Felles regex og konstanter
@@ -339,9 +340,12 @@ if (!address || typeof address !== "string" || address.trim() === "") {
   }
 
   // municipality_id
-  if (municipality_id && !isUUID(municipality_id)) {
+  if (!municipality_id) {
+    errors.municipality_id = "Kommune må velges.";
+  } else if (!isUUID(municipality_id)) {
     errors.municipality_id = "Kommune-ID må være en gyldig UUID.";
   }
+  
 
   // manager_id
   if (manager_id && !isUUID(manager_id)) {
@@ -359,7 +363,13 @@ if (!address || typeof address !== "string" || address.trim() === "") {
   }
 
   // store_chain
-  if (store_chain && typeof store_chain !== "string") {
+  if(!store_chain) {
+    errors.store_chain = "Butikkjede er påkrevd.";
+  } else if (store_chain && store_chain.trim() === "") {
+    errors.store_chain = "Butikkjede kan ikke være tom.";
+  } else if (!nameRegex.test(store_chain)) {
+    errors.store_chain = "Butikkjede kan bare inneholde bokstaver og mellomrom.";
+  } else if (store_chain && typeof store_chain !== "string") {
     errors.store_chain = "Butikkjede må være en gyldig tekststreng.";
   }
 
