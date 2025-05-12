@@ -79,7 +79,7 @@ export const getStoresWithMunicipalityController = async (req, res) => {
 };
 
 export const createStoreController = async (req, res) => {
-  console.log("Incoming new store request:", req.body);
+  console.log("Incoming new store request in controller:", req.body);
 
   const sanitized = sanitizeStoreUpdate(req.body);
 

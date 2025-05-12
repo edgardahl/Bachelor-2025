@@ -17,7 +17,7 @@ export default function NewStorePage() {
     postal_code: "",
     store_phone: "",
     store_email: "",
-    manager_id: "",
+    manager_id: null,
   });
 
   const [municipalities, setMunicipalities] = useState([]);
@@ -81,15 +81,25 @@ export default function NewStorePage() {
   };
 
   const handleSelectChange = (selected, field) => {
+    let value;
+    if (!selected) {
+      value = field === "manager_id" ? null : "";
+    } else {
+      value = selected.value;
+    }
+  
     setFormData((prev) => ({
       ...prev,
-      [field]: selected?.value || "",
+      [field]: value,
     }));
   };
+  
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    console.log("Form data from frontend:", formData);
     try {
       await axios.post("/stores/createNewStore", formData);
       toast.success("Butikk opprettet!");
