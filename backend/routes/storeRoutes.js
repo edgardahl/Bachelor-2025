@@ -42,7 +42,7 @@ router.get("/:storeId", getStoreByIdController);
 router.post(
   "/createNewStore",
   verifyToken,
-  authorizeRoles("store_manager"), // Må oppdateres til admin
+  authorizeRoles("admin"), // Må oppdateres til admin
   createStoreController
 );
 
