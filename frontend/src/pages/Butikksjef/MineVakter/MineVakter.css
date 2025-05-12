@@ -55,7 +55,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background-color: var(--Shifts-claimed-accent);
+  background-color: green;
   padding: 10px 16px;
   border-radius: 30px;
   color: white;
@@ -67,7 +67,7 @@
 }
 
 .mine-vakter-create-button-wrapper:hover {
-  opacity: 0.85;
+  background-color: rgb(20, 150, 20);
   text-decoration: none;
 }
 

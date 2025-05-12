@@ -844,7 +844,7 @@ const Profile = () => {
             {canEditQualifications && isEditingQualifications && (
               <div className="qualification-action-buttons">
                 <button className="primary-button" onClick={saveQualifications}>
-                  Lagre kvalifikasjoner
+                  Lagre
                 </button>
                 <button
                   className="secondary-button"
