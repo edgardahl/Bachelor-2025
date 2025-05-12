@@ -45,6 +45,23 @@ export const getStoreByIdModel = async (storeId) => {
   return data;
 };
 
+export const getStoresByNameModel = async (storeName) => {
+  const { data, error } = await supabase
+    .from("stores")
+    .select(
+      "store_id, name, store_chain, municipality_id, address, phone_number, email, manager_id, latitude, longitude"
+    )
+    .ilike("name", storeName); // case-insensitive match på navn
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data; // returner alle treff, ikke bare første
+};
+
+
+
 export const getStoresWithMunicipality = async (
   municipalities = [],
   storeChains = [],
