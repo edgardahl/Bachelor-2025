@@ -194,6 +194,9 @@ export const updateStoreModel = async (storeId, storeData) => {
   const formattedAddress = `${rawAddress}, ${postal_code} ${name}`;  
   const searchadress = `${rawAddress}, ${postal_code}`;
 
+  console.log("Formatted Address: ", formattedAddress);  // Log the formatted address
+  console.log("Search Address: ", searchadress);  // Log the search address
+
   // Hent nye koordinater
   const geocodeRes = await fetch(
     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchadress)}`

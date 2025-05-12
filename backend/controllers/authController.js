@@ -13,6 +13,8 @@ import {
   getUserByPhoneNumber,
 } from "../models/authModel.js";
 import { getUserQualificationsModel } from "../models/userModel.js";
+
+import { getStoreByIdModel, updateStoreModel } from "../models/storeModel.js";
 import { sanitizeUser } from "../utils/sanitizeInput.js";
 
 // Logger inn bruker
@@ -263,14 +265,12 @@ export const registerNewEmployeeController = async (req, res) => {
 };
 
 
-
-
 export const registerNewManagerController = async (req, res) => {
   try {
     const data = {
       ...req.body,
       role: "store_manager",
-      availability: "Ikke-fleksibel", // default for nå
+      availability: "Ikke-fleksibel",
     };
 
     let sanitizedUserData;
@@ -298,7 +298,7 @@ export const registerNewManagerController = async (req, res) => {
       municipality_id,
     } = sanitizedUserData;
 
-    // Sjekk om e-post eller telefon er i bruk
+    // Valider e-post og telefon
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
       return res.status(400).json({
@@ -326,13 +326,45 @@ export const registerNewManagerController = async (req, res) => {
       store_id: store_id === "" ? null : store_id,
       municipality_id,
     });
-    
 
     if (!newManager) {
       return res
         .status(400)
         .json({ error: { general: "Kunne ikke registrere butikksjef." } });
     }
+
+    // 🔁 Oppdater butikkens manager hvis `store_id` ble gitt
+    if (store_id && store_id !== "") {
+      const store = await getStoreByIdModel(store_id);
+      console.log("Store before updating:", store);
+    
+      if (store) {
+        try {
+          // 👇 Splitte adressen: "Torggata 1, 2408 Elverum"
+          const [addressPart, postalCodePart] = store.address
+            .split(",")
+            .map((part) => part.trim());
+          const postal_code = postalCodePart?.split(" ")[0] || "";
+          const store_name = postalCodePart?.split(" ").slice(1).join(" ") || "";
+    
+          await updateStoreModel(store_id, {
+            ...store,
+            address: addressPart,
+            postal_code,
+            store_name,
+            manager_id: newManager.user_id,
+          });
+        } catch (updateError) {
+          console.error("Feil ved oppdatering av butikk:", updateError.message);
+          return res.status(500).json({
+            error: {
+              general: "Butikksjef ble opprettet, men butikken kunne ikke oppdateres.",
+            },
+          });
+        }
+      }
+    }
+    
 
     return res.status(201).json({
       message: "Butikksjef registrert.",
