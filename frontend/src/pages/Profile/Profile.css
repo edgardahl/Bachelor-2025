@@ -375,6 +375,10 @@ ul.municipality-list li {
   margin-top: 2rem;
 }
 
+.no-margin-wrapper .butikk-card {
+  margin: 0;
+}
+
 
 /* Responsive */
 @media (max-width: 740px) {
