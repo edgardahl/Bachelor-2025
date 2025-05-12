@@ -83,7 +83,7 @@
 }
 .adminbutikk-actions div{
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   gap: 1rem;
 width: 100%;
 margin: 0 auto;

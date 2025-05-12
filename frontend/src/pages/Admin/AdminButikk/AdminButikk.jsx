@@ -5,6 +5,7 @@ import axios from "../../../api/axiosInstance";
 import Loading from "../../../components/Loading/Loading";
 import BackButton from "../../../components/BackButton/BackButton";
 import { toast } from "react-toastify";
+import ConfirmDeletePopup from "../../../components/Popup/ConfirmDeletePopup/ConfirmDeletePopup";
 import "./AdminButikk.css";
 
 const AdminButikk = () => {
@@ -17,6 +18,7 @@ const AdminButikk = () => {
   const [allManagers, setAllManagers] = useState([]);
   const [selectedManagerId, setSelectedManagerId] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [formData, setFormData] = useState({
     store_name: "",
     store_chain: "",
@@ -97,7 +99,6 @@ const AdminButikk = () => {
         const availableManagers = res.data.filter((m) => !m.store_id);
         console.log("Available managers:", availableManagers);
         setAllManagers(availableManagers);
-
       } catch (err) {
         console.error("Feil ved henting av alle butikksjefer:", err);
       }
@@ -116,24 +117,26 @@ const AdminButikk = () => {
   const handleSave = async () => {
     try {
       setErrors({});
-  
+
       const payload = {
         ...formData,
         manager_id: selectedManagerId,
       };
 
       console.log("selectedManagerId:", selectedManagerId);
-  
+
       await axios.put(`/stores/${store_id}`, payload);
-  
+
       setStore((prev) => ({
         ...prev,
         ...formData,
       }));
 
-      const updatedManagersRes = await axios.get(`/users/store_managers/${store_id}`);
+      const updatedManagersRes = await axios.get(
+        `/users/store_managers/${store_id}`
+      );
       setStoreManagers(updatedManagersRes.data);
-  
+
       setEditing(false);
       toast.success("Endringer lagret");
     } catch (err) {
@@ -144,8 +147,17 @@ const AdminButikk = () => {
       }
     }
   };
-  
-  
+
+  const handleDeleteConfirmed = async () => {
+    try {
+      await axios.delete(`/stores/${store_id}`);
+      toast.success("Butikken ble slettet!");
+      window.location.href = "/admin/butikker";
+    } catch (err) {
+      console.error("Error deleting store:", err);
+      throw err; // Lar ConfirmDeletePopup vise feilmelding
+    }
+  };
 
   const storeChainOptions = [
     "Coop Mega",
@@ -198,7 +210,6 @@ const AdminButikk = () => {
             <div className="error-message">{errors.store_name}</div>
           )}
         </div>
-
         <div
           className="adminbutikk-field"
           ref={(el) => {
@@ -222,7 +233,6 @@ const AdminButikk = () => {
             <div className="error-message">{errors.address}</div>
           )}
         </div>
-
         <div
           className="adminbutikk-field"
           ref={(el) => {
@@ -248,7 +258,6 @@ const AdminButikk = () => {
             <div className="error-message">{errors.postal_code}</div>
           )}
         </div>
-
         <div
           className="adminbutikk-field"
           ref={(el) => {
@@ -274,7 +283,6 @@ const AdminButikk = () => {
             <div className="error-message">{errors.store_phone}</div>
           )}
         </div>
-
         <div
           className="adminbutikk-field"
           ref={(el) => {
@@ -330,7 +338,6 @@ const AdminButikk = () => {
             <div className="error-message">{errors.store_chain}</div>
           )}
         </div>
-
         <div
           className="adminbutikk-field"
           ref={(el) => {
@@ -364,7 +371,6 @@ const AdminButikk = () => {
             <div className="error-message">{errors.municipality_id}</div>
           )}
         </div>
-
         {/* Static store managers display */}
         <div className="adminbutikk-field">
           <label className="adminbutikk-label">Butikksjefer</label>
@@ -394,13 +400,21 @@ const AdminButikk = () => {
             <Select
               className="adminbutikk-select"
               options={allManagers.map((m) => ({
-                label: `${m.first_name} ${m.last_name} (${m.email}) – ${m.store_name ? `${m.store_chain} ${m.store_name}` : "Ingen butikk"}`,
+                label: `${m.first_name} ${m.last_name} (${m.email}) – ${
+                  m.store_name
+                    ? `${m.store_chain} ${m.store_name}`
+                    : "Ingen butikk"
+                }`,
                 value: m.user_id,
               }))}
-              placeholder={allManagers.length === 0 ? "Ingen tilgjengelige butikksjefer" : "Velg butikksjef"}
+              placeholder={
+                allManagers.length === 0
+                  ? "Ingen tilgjengelige butikksjefer"
+                  : "Velg butikksjef"
+              }
               onChange={(selected) => {
                 setSelectedManagerId(selected?.value || null);
-              }}              
+              }}
             />
           </div>
         )}
@@ -418,15 +432,33 @@ const AdminButikk = () => {
               </button>
             </div>
           ) : (
-            <button
-              className="adminbutikk-button-edit"
-              onClick={() => setEditing(true)}
+            <div>
+              <button
+                className="adminbutikk-button-edit"
+                onClick={() => setEditing(true)}
+              >
+                Rediger butikk
+              </button>
+              <button
+              className="delete-button"
+              onClick={() => setShowDeletePopup(true)}
             >
-              Rediger butikk
+              Slett butikk
             </button>
+            </div>
           )}
         </div>
       </div>
+      {showDeletePopup && (
+        <ConfirmDeletePopup
+          title="butikken"
+          itemName={store.store_name}
+          onCancel={() => setShowDeletePopup(false)}
+          onConfirm={handleDeleteConfirmed}
+          successMessage="Butikken ble slettet!"
+          errorMessageDefault="Noe gikk galt. Kunne ikke slette butikken."
+        />
+      )}
     </div>
   );
 };

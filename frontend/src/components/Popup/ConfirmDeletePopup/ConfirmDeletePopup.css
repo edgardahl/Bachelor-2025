@@ -1,0 +1,90 @@
+/* Overlay (grå bakgrunn) */
+.confirm-delete-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Popup-innhold */
+.confirm-delete-popup {
+  background-color: #fff;
+  padding: 20px 30px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 100%;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.popup-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.popup-description {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.popup-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cancel-btn,
+.confirm-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 48%;
+  transition: background-color 0.3s;
+}
+
+.cancel-btn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.cancel-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.confirm-btn {
+  background-color: var(--Error-delete-color);
+  color: white;
+}
+
+.confirm-btn:hover {
+  background-color: var(--Error-delete-color-hover);
+}
+
+/* Feilmeldinger */
+.error-message,
+.status-message {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
