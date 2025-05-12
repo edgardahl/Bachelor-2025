@@ -86,9 +86,6 @@ const AdminButikk = () => {
       try {
         const res = await axios.get(`/users/store_managers/${store_id}`);
         setStoreManagers(res.data);
-        if (res.data?.[0]) {
-          setSelectedManagerId(res.data[0].user_id);
-        }        
       } catch (err) {
         console.error("Feil ved henting av store managers:", err);
       }
@@ -124,6 +121,8 @@ const AdminButikk = () => {
         ...formData,
         manager_id: selectedManagerId,
       };
+
+      console.log("selectedManagerId:", selectedManagerId);
   
       await axios.put(`/stores/${store_id}`, payload);
   
