@@ -185,7 +185,7 @@
 .claimed-ribbon::before {
   content: "TATT";
   position: absolute;
-  right: -28px;
+  right: -29px;
   top: 14px;
   width: 140px;
   text-align: center;
