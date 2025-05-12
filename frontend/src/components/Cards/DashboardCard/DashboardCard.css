@@ -27,7 +27,7 @@
   }
 
   .dashboard-card-description{
-    color: var(--Card-icon-color);
+    color: var(--Employees-text-light);
     max-width: 70%;
     font-size: 1rem;
     align-self: center;
@@ -36,7 +36,7 @@
   }
 
   .dashboard-card-stat-text{
-    color: var(--Card-icon-color);
+    color: var(--Employees-text-light);
     font-size: 1rem;
   }
 
