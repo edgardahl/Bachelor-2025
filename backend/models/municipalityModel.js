@@ -1,7 +1,6 @@
-// models/municipalityModel.js
 import { supabase } from "../config/supabaseClient.js";
 
-// Get all municipalities
+// Henter alle kommuner og sorterer dem alfabetisk (brukt i getAllMunicipalitiesController)
 export const getAllMunicipalitiesModel = async () => {
   const { data, error } = await supabase
     .from("municipality")
@@ -11,10 +10,12 @@ export const getAllMunicipalitiesModel = async () => {
     throw new Error(error.message);
   }
 
-  // Sort the municipalities based on the Norwegian alphabet
-  data.sort((a, b) => {
-    return a.municipality_name.localeCompare(b.municipality_name, 'no', { sensitivity: 'base' });
-  });
+  // Sorterer kommunenavn etter norsk alfabetisk rekkefølge
+  data.sort((a, b) =>
+    a.municipality_name.localeCompare(b.municipality_name, "no", {
+      sensitivity: "base",
+    })
+  );
 
   return data;
 };

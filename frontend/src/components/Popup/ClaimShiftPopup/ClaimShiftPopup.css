@@ -20,8 +20,18 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.claim-shift-popup span {
-  margin-top: 20px;
+.popup-shift-info {
+  background-color: #f7f7f7;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.shift-popup-summary {
+  margin-bottom: 10px;
+  font-weight: 500;
 }
 
 .claim-shift-popup h2 {
@@ -33,6 +43,15 @@
   margin-bottom: 20px;
   font-size: 1rem;
   color: #333;
+}
+
+.confirm-question {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.claim-shift-popup span {
+  margin-top: 20px;
 }
 
 .claim-shift-popup-buttons {
@@ -66,22 +85,4 @@
 
 .confirm-button:hover {
   background-color: #218838;
-}
-.popup-shift-info {
-  background-color: #f7f7f7;
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  font-size: 0.95rem;
-  text-align: left;
-}
-
-.shift-popup-summary {
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-.confirm-question {
-  font-size: 1rem;
-  margin-bottom: 20px;
 }

@@ -1,83 +1,83 @@
 .admin-manager-page {
-    max-width: 1006px;
-    margin: 0 auto;
-    border-radius: 4px;
-    padding: 30px;
-    font-family: "Segoe UI", sans-serif;
-    background-color: var(--Body-background);
-    color: var(--Text-color-light);
-  }
+  max-width: 1006px;
+  margin: 0 auto;
+  border-radius: 4px;
+  padding: 30px;
+  font-family: "Segoe UI", sans-serif;
+  background-color: var(--Body-background);
+  color: var(--Text-color-light);
+}
 
-  .admin-managers {
-    max-width: 1200px;
-    margin: 0 auto;
+.admin-managers {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-managers-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+.search-bar {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 2rem auto;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: border 0.2s ease-in-out;
+}
+
+.search-input:focus {
+  border-color: #0077cc;
+  outline: none;
+}
+
+.search-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  pointer-events: none;
+}
+
+.manager-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 20px;
+}
+
+.manager-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.no-managers-found {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #666;
+  margin-top: 3rem;
+}
+
+.adminbutikk-manager-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+@media (max-width: 1030px) {
+  .admin-manager-page {
+    border-radius: 0;
   }
-  
-  .admin-managers-title {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: #333;
-  }
-  
-  .search-bar {
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto 2rem auto;
-  }
-  
-  .search-input {
-    width: 100%;
-    padding: 0.75rem 2.5rem 0.75rem 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: border 0.2s ease-in-out;
-  }
-  
-  .search-input:focus {
-    border-color: #0077cc;
-    outline: none;
-  }
-  
-  .search-icon {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #777;
-    pointer-events: none;
-  }
-  
-  .manager-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
-    margin-bottom: 20px;
-  }
-  
-  .manager-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .adminbutikk-manager-link {
-    text-decoration: none;
-    color: inherit;
-  }
-  
-  .no-managers-found {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #666;
-    margin-top: 3rem;
-  }
-  
-  @media (max-width: 1030px) {
-    .admin-manager-page {
-      border-radius: 0;
-    }
-  }
+}

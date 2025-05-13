@@ -114,8 +114,6 @@
   font-style: italic;
 }
 
-
-/* Optional: matching select styles */
 .select__control {
   min-height: 48px;
   border: 1px solid #ccc;
@@ -152,4 +150,3 @@
   transition: background-color 0.2s ease;
   z-index: 999;
 }
-

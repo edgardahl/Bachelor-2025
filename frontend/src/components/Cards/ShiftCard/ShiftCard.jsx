@@ -1,11 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import ConfirmDeletePopup from "../../Popup/ConfirmDeletePopup/ConfirmDeletePopup";
-import axios from "../../../api/axiosInstance";
 import "./ShiftCard.css";
 import useAuth from "../../../context/UseAuth";
 import { FiClock, FiMapPin, FiAward, FiCheckCircle } from "react-icons/fi";
-import { toast } from "react-toastify";
 
 const ShiftCard = ({
   shiftId,
@@ -16,42 +13,24 @@ const ShiftCard = ({
   qualifications,
   storeName,
   storeChain,
-  shiftStoreId,
-  deleteShift,
   claimedByName,
   claimedById,
   showLesMer = true,
   interactive = true,
 }) => {
-  const [showDeletePopup, setShowDeletePopup] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  // Formaterer dato til dag og månedsnavn (norsk)
   const shiftDate = new Date(date);
   const day = shiftDate.getDate();
   const month = shiftDate.toLocaleString("nb-NO", { month: "short" });
 
+  // Navigerer brukeren til riktig detaljside basert på rolle
   const handleCardClick = () => {
     if (interactive && user?.role) {
       const rolePath = user.role === "employee" ? "ba" : "bs";
       navigate(`/${rolePath}/vakter/detaljer/${shiftId}`);
-    }
-  };
-
-  const handleConfirmDelete = async () => {
-    try {
-      const res = await axios.delete("/shifts/deleteShiftById", {
-        data: { shiftId, shiftStoreId },
-      });
-      if (res.status === 200) {
-        deleteShift(shiftId);
-        setShowDeletePopup(false);
-        toast.success("Vakt slettet.");
-      } else {
-        toast.error(res.data.error || "Kunne ikke slette vakt.");
-      }
-    } catch (err) {
-      console.error("Delete error:", err);
-      toast.error("Noe gikk galt ved sletting av vakt.");
     }
   };
 
@@ -62,14 +41,7 @@ const ShiftCard = ({
       }`}
       onClick={interactive ? handleCardClick : null}
     >
-      {showDeletePopup && (
-        <ConfirmDeletePopup
-          shiftTitle={title}
-          onCancel={() => setShowDeletePopup(false)}
-          onConfirm={handleConfirmDelete}
-        />
-      )}
-
+      {/* Viser "TATT"-merke hvis vakten er tatt */}
       {claimedById && <div className="claimed-ribbon" />}
 
       <div className="shift-card-header">
@@ -83,6 +55,7 @@ const ShiftCard = ({
             <div className="month">{month}</div>
           </div>
         </div>
+
         <div className="shift-card-info-right">
           <ul className="info-list">
             <li className="info-list-item">
@@ -108,6 +81,7 @@ const ShiftCard = ({
       </div>
 
       <div className="shift-card-footer">
+        {/* Viser hvem som har tatt vakten hvis den er claimed */}
         <div
           className="claimed-by-text"
           style={{
@@ -125,6 +99,7 @@ const ShiftCard = ({
           </a>
         </div>
 
+        {/* "Les mer"-lenke hvis aktivert */}
         {showLesMer && (
           <div className="les-mer-text">
             <span>Les mer →</span>

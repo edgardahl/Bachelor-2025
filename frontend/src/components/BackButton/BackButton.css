@@ -37,8 +37,7 @@
   }
 }
 
-/* Mobile: hide text, keep round button */
-@media screen and (max-width: 768px) {
+@media (max-width: 768px) {
   .back-button {
     border-radius: 50%;
     padding: 10px;

@@ -89,6 +89,20 @@
   margin-top: 8px;
 }
 
+.notification-close {
+  background: none;
+  border: none;
+  color: #bbb;
+  margin-left: auto;
+  cursor: pointer;
+  padding: 2px;
+  transition: color 0.2s;
+}
+
+.notification-close:hover {
+  color: #444;
+}
+
 .loading,
 .notification-dropdown .error,
 .notification-dropdown .no-notifications {
@@ -111,21 +125,6 @@
   color: #777;
 }
 
-.notification-close {
-  background: none;
-  border: none;
-  color: #bbb;
-  margin-left: auto;
-  cursor: pointer;
-  padding: 2px;
-  transition: color 0.2s;
-}
-
-.notification-close:hover {
-  color: #444;
-}
-
-/* ✅ Mobile Fix */
 @media (max-width: 500px) {
   .notification-dropdown {
     left: 50%;

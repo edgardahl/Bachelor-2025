@@ -4,60 +4,66 @@ import { authorizeRoles } from "../middleware/authMiddleware.js";
 
 import {
   getAllStoresController,
-  getStoreByIdController,
+  getAllStoresWithInfoController,
   getStoreWithInfoController,
   getStoresWithMunicipalityController,
+  getStoreByIdController,
   createStoreController,
-  getAllStoresWithInfoController,
   updateStoreController,
-  deleteStoreController
+  deleteStoreController,
 } from "../controllers/storeController.js";
 
 const router = express.Router();
 
-// Henter alle butikker med tilhørende kommune
+// Henter alle butikker (brukes i NewManagerPages.jsx)
+router.get("/", verifyToken, getAllStoresController);
+
+// Henter alle butikker med utvidet informasjon, inkludert kjede og kommune (brukes i CoopMap.jsx)
+router.get(
+  "/getAllStoresWithInfo",
+  verifyToken,
+  getAllStoresWithInfoController
+);
+
+// Henter alle butikker med tilhørende kommune (brukes i ButikkFilter, Butikkoversikt, Profile og i alle Dashboard.jsx)
 router.get(
   "/storesWithMunicipality",
   verifyToken,
   getStoresWithMunicipalityController
 );
 
-// Henter alle butikker
-router.get("/", verifyToken, getAllStoresController);
-
-// Henter alle butikker med tilhørende informasjon
-router.get("/getAllStoresWithInfo", getAllStoresWithInfoController);
-
-// Hent all informasjon om en butikk
+// Henter detaljert informasjon om en butikk (brukes i AdminButikk.jsx)
 router.get(
   "/getStoreWithInfo/:storeId",
   verifyToken,
   getStoreWithInfoController
 );
 
-// Henter en butikk med en bestemt id
-router.get("/:storeId", getStoreByIdController);
+// Henter en butikk basert på ID (brukes i Butikk.jsx)
+router.get("/:storeId", verifyToken, getStoreByIdController);
 
-// Oppretter en ny butikk
+// Oppretter en ny butikk (brukes i NewStore.jsx)
 router.post(
   "/createNewStore",
   verifyToken,
-  authorizeRoles("admin"), // Må oppdateres til admin
+  authorizeRoles("admin"),
   createStoreController
 );
 
-
-// Update an existing store
+// Oppdaterer en eksisterende butikk (brukes i AdminButikk.jsx)
 router.put(
-  "/:storeId", 
-  verifyToken, 
-  authorizeRoles("admin"), // You can adjust the role if needed
+  "/:storeId",
+  verifyToken,
+  authorizeRoles("admin"),
   updateStoreController
 );
 
-
-// Add the route to your routes file
-router.delete("/:store_id",verifyToken, authorizeRoles("admin"), deleteStoreController);
-
+// Sletter en butikk (brukes i AdminButikk.jsx)
+router.delete(
+  "/:store_id",
+  verifyToken,
+  authorizeRoles("admin"),
+  deleteStoreController
+);
 
 export default router;

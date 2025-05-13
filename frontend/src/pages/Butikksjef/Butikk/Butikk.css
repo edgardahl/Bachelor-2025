@@ -84,7 +84,6 @@
   color: #999;
 }
 
-/* Responsive styles */
 @media (max-width: 1030px) {
   .butikk-page {
     width: 100%;
@@ -98,7 +97,6 @@
   }
 }
 
-/* Mobile view */
 @media (max-width: 700px) {
   .butikk-info {
     flex-direction: column;

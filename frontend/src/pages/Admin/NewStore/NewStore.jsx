@@ -20,10 +20,11 @@ export default function NewStorePage() {
     manager_id: null,
   });
 
-  const [municipalities, setMunicipalities] = useState([]);
-  const [managers, setManagers] = useState([]);
-  const [errors, setErrors] = useState({});
+  const [municipalities, setMunicipalities] = useState([]); // Kommuner
+  const [managers, setManagers] = useState([]); // Butikksjefer
+  const [errors, setErrors] = useState({}); // Feilmeldinger for skjemafelter
 
+  // Referanser for å kunne scrolle til feilet felt
   const fieldRefs = {
     store_name: useRef(null),
     address: useRef(null),
@@ -35,6 +36,7 @@ export default function NewStorePage() {
     manager_id: useRef(null),
   };
 
+  // Henter kommuner og butikksjefer ved oppstart
   useEffect(() => {
     const fetchMunicipalities = async () => {
       try {
@@ -46,11 +48,12 @@ export default function NewStorePage() {
       }
     };
 
+    // Henter butikksjefer
     const fetchManagers = async () => {
       try {
         const res = await axios.get("/users/store_managers");
         const availableManagers = res.data.filter(
-          (manager) => !manager.store_id
+          (manager) => !manager.store_id // Filtrerer ut butikksjefer som ikke er tilknyttet butikk
         );
         setManagers(availableManagers);
       } catch (error) {
@@ -63,6 +66,7 @@ export default function NewStorePage() {
     fetchMunicipalities();
   }, []);
 
+  // Scroll til første felt med feilmelding når errors endres
   useEffect(() => {
     const errorFields = Object.keys(errors);
     if (errorFields.length > 0) {
@@ -73,45 +77,46 @@ export default function NewStorePage() {
         errorElement.focus();
       }
     }
-  }, [errors]);
+  }, [errors]); // Kjør denne effekten når errors oppdateres
 
+  // Håndterer input-endringer
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Håndterer endring av Select-komponenter
   const handleSelectChange = (selected, field) => {
     let value;
     if (!selected) {
-      value = field === "manager_id" ? null : "";
+      value = field === "manager_id" ? null : ""; // Håndterer null-verdi for manager_id
     } else {
       value = selected.value;
     }
-  
+
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
-  
-  
 
+  // Håndterer skjemaets innsending
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({});
-    console.log("Form data from frontend:", formData);
+    setErrors({}); // Tømmer eksisterende feilmeldinger
     try {
+      // Sender data til serveren for å opprette en ny butikk
       await axios.post("/stores/createNewStore", formData);
       toast.success("Butikk opprettet!");
-      navigate("/admin/butikker"); // Endre path ved behov
+      navigate("/admin/butikker"); // Navigerer til oversikten over butikker ved suksess
     } catch (err) {
-      const serverError = err.response?.data?.error;
+      const serverError = err.response?.data?.error; // Henter feilmelding fra serveren
 
       if (serverError) {
-        setErrors(serverError);
+        setErrors(serverError); // Setter feilmeldinger i state
 
         if (serverError.general) {
-          toast.error(serverError.general);
+          toast.error(serverError.general); // Vist generell feilbeskjed fra serveren
         }
 
         // Scroll/fokus på første felt med feil
@@ -130,11 +135,13 @@ export default function NewStorePage() {
     }
   };
 
+  // Formatere kommuner til Select-komponent
   const municipalityOptions = municipalities.map((m) => ({
     value: m.municipality_id,
     label: m.municipality_name,
   }));
 
+  // Fast kjedevalg for butikk
   const storeChainOptions = [
     { value: "Coop Mega", label: "Coop Mega" },
     { value: "Coop Prix", label: "Coop Prix" },
@@ -145,6 +152,7 @@ export default function NewStorePage() {
     { value: "Coop Byggmix", label: "Coop Byggmix" },
   ];
 
+  // Formatere butikksjefer til Select-komponent
   const managerOptions = managers.map((m) => {
     const storeInfo =
       !m.store_chain && !m.store_name
@@ -253,7 +261,11 @@ export default function NewStorePage() {
       <Select
         options={managerOptions}
         onChange={(selected) => handleSelectChange(selected, "manager_id")}
-        placeholder={managers.length === 0 ? "Ingen tilgjengelige butikksjefer" : "Velg butikksjef"}
+        placeholder={
+          managers.length === 0
+            ? "Ingen tilgjengelige butikksjefer"
+            : "Velg butikksjef"
+        }
         className={errors.manager_id ? "error-select" : ""}
       />
       {errors.manager_id && (

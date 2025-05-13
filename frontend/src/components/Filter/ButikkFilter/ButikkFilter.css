@@ -9,22 +9,6 @@
   max-width: 400px;
 }
 
-.toggle-button {
-  background: var(--Open-link-color);
-  color: var(--White);
-  border: none;
-  padding: 10px;
-  font-size: 14px;
-  font-weight: bold;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: var(--Transition-button-simple);
-}
-
-.toggle-button:hover {
-  filter: brightness(var(--Transition-button-change-filter));
-}
-
 .filter-group {
   position: relative;
   margin-top: 10px;
@@ -50,6 +34,24 @@
   align-items: center;
   gap: 8px;
   font-weight: bold;
+}
+
+.county-group,
+.municipality {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color var(--Transition-button-simple);
+}
+
+.county-group:hover,
+.municipality:hover {
+  background-color: var(--Closed-tab-color-hover);
+}
+
+.county-group.selected,
+.municipality.selected {
+  background-color: var(--Closed-tab-color);
 }
 
 .municipalities {
@@ -106,20 +108,18 @@ input[type="checkbox"] {
   filter: brightness(var(--Transition-button-change-filter));
 }
 
-.county-group,
-.municipality {
-  cursor: pointer;
-  padding: 8px;
+.toggle-button {
+  background: var(--Open-link-color);
+  color: var(--White);
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: bold;
   border-radius: 4px;
-  transition: background-color var(--Transition-button-simple);
+  cursor: pointer;
+  transition: var(--Transition-button-simple);
 }
 
-.county-group:hover,
-.municipality:hover {
-  background-color: var(--Closed-tab-color-hover);
-}
-
-.county-group.selected,
-.municipality.selected {
-  background-color: var(--Closed-tab-color);
+.toggle-button:hover {
+  filter: brightness(var(--Transition-button-change-filter));
 }

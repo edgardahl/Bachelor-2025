@@ -17,6 +17,7 @@ const ButikkansattCard = ({
   cardClass = "",
   isEmptyCard = false,
 }) => {
+  // Viser "tomt kort" for å registrere ny ansatt
   if (isEmptyCard) {
     return (
       <div className={`butikkansatt-card ${cardClass} empty-card`}>
@@ -27,8 +28,6 @@ const ButikkansattCard = ({
       </div>
     );
   }
-
-  console.log("ButikkansattCard employee:", employee);
 
   return (
     <div className={`butikkansatt-card ${cardClass}`}>
@@ -41,6 +40,7 @@ const ButikkansattCard = ({
           {employee.first_name} {employee.last_name}
         </h3>
 
+        {/* Viser tilgjengelighet hvis valgt */}
         {show === "availability" && (
           <div className="availability">
             <div className="icon-wrapper">
@@ -56,6 +56,7 @@ const ButikkansattCard = ({
           </div>
         )}
 
+        {/* Viser butikkinfo hvis valgt */}
         {show === "store" && (
           <p className="store-name">
             <FaMapMarkerAlt className="icon" />
@@ -63,6 +64,7 @@ const ButikkansattCard = ({
           </p>
         )}
 
+        {/* Viser kvalifikasjoner hvis aktivert */}
         {showQualifications && (
           <div className="qualifications">
             <div className="icon-wrapper">

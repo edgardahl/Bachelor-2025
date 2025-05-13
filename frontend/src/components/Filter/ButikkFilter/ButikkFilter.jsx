@@ -7,8 +7,9 @@ const ButikkFilter = ({ onFilter }) => {
   const [municipalities, setMunicipalities] = useState({});
   const [selectedCounties, setSelectedCounties] = useState([]);
   const [selectedMunicipalities, setSelectedMunicipalities] = useState([]);
-  const [isOpen, setIsOpen] = useState(false); // Toggle filters
+  const [isOpen, setIsOpen] = useState(false);
 
+  // Henter alle fylker og tilhørende kommuner når komponenten laster
   useEffect(() => {
     const fetchCountiesAndMunicipalities = async () => {
       try {
@@ -47,15 +48,17 @@ const ButikkFilter = ({ onFilter }) => {
     fetchCountiesAndMunicipalities();
   }, []);
 
+  // Håndterer valg av fylke (toggle)
   const handleCountyChange = (county) => {
     setSelectedCounties((prev) =>
       prev.includes(county)
         ? prev.filter((c) => c !== county)
         : [...prev, county]
     );
-    setSelectedMunicipalities([]); // Reset municipalities when counties change
+    setSelectedMunicipalities([]); // Nullstiller kommuner når fylke endres
   };
 
+  // Håndterer valg av kommune (toggle)
   const handleMunicipalityChange = (municipality) => {
     setSelectedMunicipalities((prev) =>
       prev.includes(municipality)
@@ -64,13 +67,15 @@ const ButikkFilter = ({ onFilter }) => {
     );
   };
 
+  // Sender valgte filtre til foreldren
   const handleFilter = () => {
     onFilter({
-      county: selectedCounties.join(","), // Pass as a comma-separated string
+      county: selectedCounties.join(","), // Kommaseparert string
       municipality: selectedMunicipalities.join(","),
     });
   };
 
+  // Nullstiller alle valgte filtre
   const resetFilters = () => {
     setSelectedCounties([]);
     setSelectedMunicipalities([]);
@@ -102,7 +107,7 @@ const ButikkFilter = ({ onFilter }) => {
                 className={`county-group ${
                   selectedCounties.includes(county) ? "selected" : ""
                 }`}
-                onClick={() => handleCountyChange(county)} // Make the entire div clickable
+                onClick={() => handleCountyChange(county)}
               >
                 <div className="county">
                   <input
@@ -110,11 +115,12 @@ const ButikkFilter = ({ onFilter }) => {
                     id={`county-${county}`}
                     value={county}
                     checked={selectedCounties.includes(county)}
-                    onChange={() => {}} // Prevent default checkbox behavior
+                    onChange={() => {}} // Forhindrer dobbel onChange ved div-click
                   />
                   <label htmlFor={`county-${county}`}>{county}</label>
                 </div>
 
+                {/* Viser tilhørende kommuner dersom fylket er valgt */}
                 {selectedCounties.includes(county) && (
                   <div className="municipalities">
                     {municipalities[county]?.map((municipality) => (
@@ -126,7 +132,7 @@ const ButikkFilter = ({ onFilter }) => {
                             : ""
                         }`}
                         onClick={(e) => {
-                          e.stopPropagation(); // Prevent parent click event
+                          e.stopPropagation(); // Hindrer at county click trigges
                           handleMunicipalityChange(municipality);
                         }}
                       >
@@ -137,7 +143,7 @@ const ButikkFilter = ({ onFilter }) => {
                           checked={selectedMunicipalities.includes(
                             municipality
                           )}
-                          onChange={() => {}} // Prevent default checkbox behavior
+                          onChange={() => {}} // Samme som over
                         />
                         <label htmlFor={`municipality-${municipality}`}>
                           {municipality}

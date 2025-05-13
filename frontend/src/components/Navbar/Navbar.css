@@ -11,7 +11,6 @@
   margin-bottom: 2rem;
 }
 
-/* Home logo (desktop only) */
 .home-button img {
   width: 100px;
   cursor: pointer;
@@ -24,7 +23,6 @@
   cursor: pointer;
 }
 
-/* Links */
 .nav-links {
   max-width: 100%;
   width: 100%;
@@ -44,7 +42,7 @@
 }
 
 .nav-links a {
-  position: relative; /* NEW */
+  position: relative;
   color: var(--Shifts-main);
   text-decoration: none;
   font-weight: 500;
@@ -74,7 +72,6 @@
   transform: scaleX(1);
 }
 
-/* Right side of nav */
 .nav-right {
   gap: 0.8rem;
   display: flex;
@@ -88,10 +85,9 @@
   margin: 0;
 }
 
-/* Logout Button */
 .logout-button {
-  background-color: var(--Shifts-main); 
-  color: var(--White); 
+  background-color: var(--Shifts-main);
+  color: var(--White);
   border: 2px solid var(--Shifts-main);
   padding: 8px;
   cursor: pointer;
@@ -102,11 +98,10 @@
 }
 
 .logout-button:hover {
-  background-color: var(--White); 
-  color: var(--Shifts-main); 
+  background-color: var(--White);
+  color: var(--Shifts-main);
 }
 
-/* Mobile styles */
 @media (max-width: 780px) {
   .navbar {
     justify-content: space-between;
@@ -184,7 +179,6 @@
   }
 }
 
-/* Desktop styles */
 @media (min-width: 781px) {
   .nav-links {
     display: flex;

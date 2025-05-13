@@ -1,56 +1,80 @@
-.storechain-filter-container{
-    width: 100%;
+.storechain-filter-container {
+  width: 100%;
 }
 
 .storechain-filter {
-    width: 100%;
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 1rem 1.5rem;
-    text-align: center;
-  }
-  
-  .storechain-filter h4 {
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    color: #333;
-  }
-  
-  .storechain-option {
-    display: inline-block;
-    margin: 6px;
-    padding: 8px 16px;
-    border: 2px solid transparent;
-    border-radius: 20px;
-    cursor: pointer;
-    color: white;
-    transition: all 0.2s ease-in-out;
-    opacity: 0.4;
-    font-weight: 500;
-    user-select: none;
-  }
-  
-  /* Checked = full opacity + border */
-  .storechain-option.checked {
-    opacity: 1;
-    border: 2px solid white;
-    font-weight: 600;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
-  }
-  
-  /* Hover for all */
-  .storechain-option:hover {
-    opacity: 1;
-  }
-  
-  /* Unique colors (light by default, stronger on .checked) */
-  .storechain-coop-mega { background-color: var(--coop-mega); }
-  .storechain-coop-prix { background-color: var(--coop-prix); color: black; }
-  .storechain-coop-marked { background-color: var(--coop-marked); }
-  .storechain-extra { background-color: var(--extra); }
-  .storechain-obs { background-color: var(--obs); }
-  .storechain-obs-bygg { background-color: var(--obs-bygg); }
-  .storechain-coop-byggmix { background-color: var(--coop-byggmix); }
-  .storechain-prix { background-color: var(--prix); color: black; }
-  .storechain-mega { background-color: var(--mega); }
-  
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem 1.5rem;
+  text-align: center;
+}
+
+.storechain-filter h4 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.storechain-option {
+  display: inline-block;
+  margin: 6px;
+  padding: 8px 16px;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s ease-in-out;
+  opacity: 0.4;
+  font-weight: 500;
+  user-select: none;
+}
+
+.storechain-option.checked {
+  opacity: 1;
+  border: 2px solid white;
+  font-weight: 600;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.storechain-option:hover {
+  opacity: 1;
+}
+
+.storechain-coop-byggmix {
+  background-color: var(--coop-byggmix);
+}
+
+.storechain-coop-marked {
+  background-color: var(--coop-marked);
+}
+
+.storechain-coop-mega {
+  background-color: var(--coop-mega);
+}
+
+.storechain-coop-prix {
+  background-color: var(--coop-prix);
+  color: black;
+}
+
+.storechain-extra {
+  background-color: var(--extra);
+}
+
+.storechain-mega {
+  background-color: var(--mega);
+}
+
+.storechain-obs {
+  background-color: var(--obs);
+}
+
+.storechain-obs-bygg {
+  background-color: var(--obs-bygg);
+}
+
+.storechain-prix {
+  background-color: var(--prix);
+  color: black;
+}

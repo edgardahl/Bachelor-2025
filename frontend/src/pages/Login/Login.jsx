@@ -13,17 +13,20 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { setUser } = useAuth();
 
+  // Sender innloggingsdata til API, håndterer token lagring og navigering
   const handleSubmit = async (e) => {
     e.preventDefault();
     setInlineError("");
 
     try {
       const res = await axios.post("/auth/login", { email, password });
+      // Lagre token og oppdater bruker-kontekst
       localStorage.setItem("accessToken", res.data.accessToken);
       setUser(res.data.user);
       navigate("/", { replace: true });
     } catch (err) {
       const msg = err.response?.data?.error;
+      // Vis inline-feil hvis e-post/passord er feil, ellers en toast
       if (msg === "Feil e-post eller passord.") {
         setInlineError(msg);
       } else {
@@ -34,6 +37,7 @@ export default function LoginPage() {
 
   return (
     <div className="login-wrapper">
+      {/* Tilbake-til-forside knapp */}
       <button
         type="button"
         className="back-to-home-button"
@@ -68,6 +72,7 @@ export default function LoginPage() {
           />
         </div>
 
+        {/* Viser inline-feil ved ugyldig e-post/passord */}
         {inlineError && <p className="login-error">{inlineError}</p>}
 
         <button type="submit" className="login-button">
@@ -76,7 +81,9 @@ export default function LoginPage() {
 
         <div className="login-footer">
           <p>Har du ikke brukerkonto?</p>
-          <p className="login-note">Kontakt butikksjefen din for brukerkonto.</p>
+          <p className="login-note">
+            Kontakt butikksjefen din for brukerkonto.
+          </p>
         </div>
       </form>
     </div>

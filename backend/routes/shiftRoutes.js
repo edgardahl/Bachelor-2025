@@ -1,33 +1,28 @@
 import express from "express";
 import {
-  getAllShiftsController,
+  getShiftByIdController,
   getShiftsUserIsQualifiedForController,
   getShiftsByStoreController,
-  getShiftByIdController,
   getClaimedShiftsByUserController,
-  claimShiftController,
-  createShiftController,
-  deleteShiftController,
-  getShiftByPostedByController,
   getPreferredQualifiedShiftsController,
-  getRequestedQualifiedShiftsController,
+  getShiftByPostedByController,
+  createShiftController,
+  claimShiftController,
+  deleteShiftController,
 } from "../controllers/shiftController.js";
 
 import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Henter alle skift
-router.get("/", verifyToken, getAllShiftsController);
-
-// Henter alle skift som brukeren er kvalifisert for
+// Henter alle skift ansatten er kvalifisert for (brukt i ansatt sin MineVakter.jsx)
 router.get(
   "/userIsQualifiedFor",
   verifyToken,
   getShiftsUserIsQualifiedForController
 );
 
-// Henter alle skift brukeren er kvalifisert for og i foretrukket kommune
+// Henter kvalifiserte skift i ansattens foretrukne kommuner (brukt i ansatt sin Dashboard.jsx)
 router.get(
   "/qualified/preferred",
   verifyToken,
@@ -35,31 +30,23 @@ router.get(
   getPreferredQualifiedShiftsController
 );
 
-// Henter alle skift som brukeren har bedt om
-router.get(
-  "/qualified/requested/:municipality_id",
-  verifyToken,
-  authorizeRoles("employee"),
-  getRequestedQualifiedShiftsController
-);
-
-// Henter alle skift som brukeren tatt
+// Henter alle skift som er tatt av innlogget ansatt (brukt i ansatt sin MineVakter.jsx)
 router.get(
   "/claimedByCurrentUser",
   verifyToken,
   getClaimedShiftsByUserController
 );
 
-// Henter alle skift i en bestemt butikk
+// Henter alle skift i en bestemt butikk (brukt i begge sin Dashboard.jsx, Butikk.jsx, ShiftDetailsPage.jsx og butikksjef sin MineVakter.jsx )
 router.get("/store/:store_id", verifyToken, getShiftsByStoreController);
 
-// Henter alle skift i en butikk som er publisert av en bestemt bruker
+// Henter alle skift som er publisert av en spesifikk butikksjef (brukt i butiksjef sin Dashboard.jsx og MineVakter.jsx)
 router.get("/posted_by/:posted_by", verifyToken, getShiftByPostedByController);
 
-// Henter et skift med en bestemt id
+// Henter detaljer om et spesifikt skift (brukt i ShiftDetailsPage.jsx)
 router.get("/:shift_id", verifyToken, getShiftByIdController);
 
-// Route for å ta et skift
+// Ansatt tar en ledig vakt (brukt i ShiftDetailsPage.jsx)
 router.post(
   "/claim/:shift_id",
   verifyToken,
@@ -67,7 +54,7 @@ router.post(
   claimShiftController
 );
 
-// Oppretter et nytt skift
+// Oppretter et nytt skift (brukt i CreateShift.jsx)
 router.post(
   "/",
   verifyToken,
@@ -75,7 +62,7 @@ router.post(
   createShiftController
 );
 
-// Sletter et skift
+// Sletter en vakt dersom innlogget butikksjef eier butikken vakten tilhører (brukt i ShiftDetailsPage.jsx)
 router.delete(
   "/deleteShiftById",
   verifyToken,

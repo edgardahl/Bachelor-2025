@@ -1,14 +1,16 @@
-import e from "express";
 import { validate as isUUID } from "uuid";
 
-// Felles regex og konstanter
+// Felles regex og konstanter brukt i flere valideringsfunksjoner
 const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const phoneRegex = /^(?:\d{8}|\+\d{2} \d{8})$/;
 const validAvailability = ["Fleksibel", "Ikke-fleksibel"];
 const validRoles = ["employee", "store_manager", "admin"];
 
-// Oppretter ny bruker
+/**
+ * Validerer og saniterer data for å opprette en ny bruker.
+ * Returnerer et objekt med enten `errors` eller de saniterte verdiene.
+ */
 export const sanitizeUser = (userData) => {
   const {
     first_name,
@@ -26,6 +28,7 @@ export const sanitizeUser = (userData) => {
 
   const errors = {};
 
+  // Validerer hvert enkelt felt og legger til feilmeldinger der det er nødvendig
   if (!nameRegex.test(first_name || "")) {
     errors.first_name =
       "Fornavn må kun inneholde bokstaver og kan ikke være tomt.";
@@ -50,9 +53,14 @@ export const sanitizeUser = (userData) => {
   if (!validRoles.includes(role)) {
     errors.role = `Rolle må være en av: ${validRoles.join(", ")}.`;
   }
-  if (store_id !== undefined && store_id !== null && store_id !== "" && !isUUID(store_id)) {
+  if (
+    store_id !== undefined &&
+    store_id !== null &&
+    store_id !== "" &&
+    !isUUID(store_id)
+  ) {
     errors.store_id = "Butikk-ID må være en gyldig UUID eller tom.";
-  }  
+  }
   if (municipality_id && !isUUID(municipality_id)) {
     errors.municipality_id = "Kommune-ID må være en gyldig UUID.";
   }
@@ -88,7 +96,10 @@ export const sanitizeUser = (userData) => {
   };
 };
 
-// Oppdaterer eksisterende bruker
+/**
+ * Validerer og saniterer felt for oppdatering av eksisterende bruker.
+ * Returnerer enten et `errors`-objekt eller kun de feltene som er sendt inn.
+ */
 export const sanitizeUserUpdate = (userData) => {
   const {
     first_name,
@@ -103,6 +114,7 @@ export const sanitizeUserUpdate = (userData) => {
   const errors = {};
   const sanitized = {};
 
+  // Validerer hvert felt som er sendt inn (alle er valgfrie)
   if (first_name !== undefined) {
     if (!nameRegex.test(first_name || "")) {
       errors.first_name =
@@ -176,7 +188,10 @@ export const sanitizeUserUpdate = (userData) => {
   return sanitized;
 };
 
-// Validerer innkommende vakt
+/**
+ * Validerer og saniterer en ny vakt.
+ * Returnerer feilmeldinger hvis datoformat, tider eller ID-er er feil.
+ */
 export const sanitizeShift = (shiftData) => {
   const {
     title,
@@ -191,16 +206,19 @@ export const sanitizeShift = (shiftData) => {
 
   const errors = {};
 
+  // Validerer tittel
   if (typeof title !== "string" || title.trim() === "") {
     errors.title = "Tittel er påkrevd.";
   } else if (!/^[a-zA-ZæøåÆØÅ0-9\s]+$/.test(title.trim())) {
     errors.title = "Tittelen kan bare inneholde bokstaver, tall og mellomrom.";
   }
 
+  // Validerer beskrivelse
   if (typeof description !== "string" || description.trim() === "") {
     errors.description = "Beskrivelse er påkrevd.";
   }
 
+  // Validerer datoformat og at datoen er innen 7 dager fremover
   const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(date);
   if (!isValidDate) {
     errors.date = "Datoen må være i formatet ÅÅÅÅ-MM-DD.";
@@ -217,6 +235,7 @@ export const sanitizeShift = (shiftData) => {
     }
   }
 
+  // Validerer tid og at sluttid er etter starttid
   const startTimeParts = start_time?.split(":") || [];
   const endTimeParts = end_time?.split(":") || [];
 
@@ -275,7 +294,10 @@ export const sanitizeShift = (shiftData) => {
   };
 };
 
-// Validerer passordendring (brukes ved PATCH /users/current/password)
+/**
+ * Validerer og saniterer passord-endring.
+ * Returneres ved bruk av PATCH /users/current/password
+ */
 export const sanitizePasswordUpdate = ({ currentPassword, newPassword }) => {
   const errors = {};
 
@@ -299,6 +321,10 @@ export const sanitizePasswordUpdate = ({ currentPassword, newPassword }) => {
   };
 };
 
+/**
+ * Validerer og saniterer oppdatering av butikkdata.
+ * Brukes i AdminButikk.jsx
+ */
 export const sanitizeStoreUpdate = (storeData) => {
   const {
     store_name,
@@ -311,65 +337,68 @@ export const sanitizeStoreUpdate = (storeData) => {
     store_chain,
   } = storeData;
 
-  console.log("Sanitizing store data:", storeData);
-
   const errors = {};
   const postalCodeRegex = /^[0-9]{4}(\s[0-9]{4})?$/;
   const addressRegex = /^[A-Za-zÆØÅæøå\s]+ \d+[A-Za-zÆØÅæøå]?$/;
 
   const safeTrim = (val) => (typeof val === "string" ? val.trim() : val);
 
-  // store_name
-  if (!store_name || typeof store_name !== "string" || store_name.trim() === "") {
+  // Butikknavn
+  if (
+    !store_name ||
+    typeof store_name !== "string" ||
+    store_name.trim() === ""
+  ) {
     errors.store_name = "Navn på butikken er påkrevd.";
   } else if (!nameRegex.test(store_name.trim())) {
     errors.store_name = "Butikknavn kan bare inneholde bokstaver og mellomrom.";
   }
 
-  // address
-if (!address || typeof address !== "string" || address.trim() === "") {
-  errors.address = "Adresse er påkrevd.";
-} else if (!addressRegex.test(address.trim())) {
-  errors.address = "Adressen må være på formatet: Veinavn 12 (f.eks. Sjøskogveien 45B).";
-}
-
-
-  // postal_code
-  if (postal_code && !postalCodeRegex.test(postal_code)) {
-    errors.postal_code = "Postnummer må være i riktig format (f.eks. 1234 eller 1234 5678).";
+  // Adresse
+  if (!address || typeof address !== "string" || address.trim() === "") {
+    errors.address = "Adresse er påkrevd.";
+  } else if (!addressRegex.test(address.trim())) {
+    errors.address =
+      "Adressen må være på formatet: Veinavn 12 (f.eks. Sjøskogveien 45B).";
   }
 
-  // municipality_id
+  // Postnummer
+  if (postal_code && !postalCodeRegex.test(postal_code)) {
+    errors.postal_code =
+      "Postnummer må være i riktig format (f.eks. 1234 eller 1234 5678).";
+  }
+
+  // Kommune
   if (!municipality_id) {
     errors.municipality_id = "Kommune må velges.";
   } else if (!isUUID(municipality_id)) {
     errors.municipality_id = "Kommune-ID må være en gyldig UUID.";
   }
-  
 
-  // manager_id
+  // Butikksjef
   if (manager_id && !isUUID(manager_id)) {
     errors.manager_id = "Manager-ID må være en gyldig UUID.";
   }
 
-  // store_phone
+  // Telefon
   if (store_phone && !phoneRegex.test(store_phone)) {
     errors.store_phone = "Telefonnummeret er ugyldig.";
   }
 
-  // store_email
+  // E-post
   if (store_email && !emailRegex.test(store_email)) {
     errors.store_email = "E-postadressen er ugyldig.";
   }
 
-  // store_chain
-  if(!store_chain) {
+  // Kjedetilhørighet
+  if (!store_chain) {
     errors.store_chain = "Butikkjede er påkrevd.";
-  } else if (store_chain && store_chain.trim() === "") {
+  } else if (store_chain.trim() === "") {
     errors.store_chain = "Butikkjede kan ikke være tom.";
   } else if (!nameRegex.test(store_chain)) {
-    errors.store_chain = "Butikkjede kan bare inneholde bokstaver og mellomrom.";
-  } else if (store_chain && typeof store_chain !== "string") {
+    errors.store_chain =
+      "Butikkjede kan bare inneholde bokstaver og mellomrom.";
+  } else if (typeof store_chain !== "string") {
     errors.store_chain = "Butikkjede må være en gyldig tekststreng.";
   }
 
