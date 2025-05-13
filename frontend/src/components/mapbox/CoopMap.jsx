@@ -16,7 +16,7 @@ import redStoreIconUrl from "/icons/red_store.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-// Custom icon for stores
+// Egendefinert ikon for butikkmarkører
 const redStoreIcon = new L.Icon({
   iconUrl: redStoreIconUrl,
   iconSize: [40, 40],
@@ -27,7 +27,7 @@ const redStoreIcon = new L.Icon({
   shadowAnchor: [12, 41],
 });
 
-// Component to go to user's location
+// Komponent for å flytte kartet til brukerens nåværende geolokasjon
 const GoToMyLocation = ({ setUserPosition }) => {
   const map = useMap();
 
@@ -38,7 +38,7 @@ const GoToMyLocation = ({ setUserPosition }) => {
         setUserPosition([latitude, longitude]);
         map.flyTo([latitude, longitude], 13, { animate: true });
       },
-      () => toast.error("Kunne ikke hente posisjon.")
+      () => toast.error("Kunne ikke hente posisjon.") // Vist feilmelding hvis posisjonen ikke kan hentes
     );
   };
 
@@ -49,7 +49,7 @@ const GoToMyLocation = ({ setUserPosition }) => {
   );
 };
 
-// Component to search and fly to location
+// Søkelinje som geokoder input og sentrerer kartet
 const LocationSearch = () => {
   const map = useMap();
   const inputRef = useRef();
@@ -64,11 +64,13 @@ const LocationSearch = () => {
       )}`
     );
     const data = await response.json();
-    if (data && data.length > 0) {
+    if (data?.length) {
       const { lat, lon } = data[0];
-      map.flyTo([parseFloat(lat), parseFloat(lon)], 13, { animate: true });
+      map.flyTo([parseFloat(lat), parseFloat(lon)], 13, {
+        animate: true,
+      });
     } else {
-      toast.error("Ugyldig sted. Vennligst prøv igjen.");
+      toast.error("Ugyldig sted. Vennligst prøv igjen."); // Vist feilmelding hvis sted ikke finnes
     }
   };
 
@@ -87,12 +89,14 @@ const LocationSearch = () => {
   );
 };
 
+// Hovedkomponent for kartet som henter butikkdata og tegner markører
 const CoopMap = () => {
   const [userPosition, setUserPosition] = useState(null);
   const [stores, setStores] = useState([]);
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  // Ved mount: hent brukerens posisjon og butikkdata
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -100,22 +104,23 @@ const CoopMap = () => {
         setUserPosition([latitude, longitude]);
       },
       () => {
-        setUserPosition([59.9139, 10.7522]); // fallback Oslo
+        setUserPosition([59.9139, 10.7522]); // Fallback til Oslo hvis posisjon ikke kan hentes
       }
     );
 
+    // Hent butikkdata
     const fetchStores = async () => {
       try {
         const response = await axios.get("/stores/getAllStoresWithInfo");
-        const formattedStores = response.data
-          .filter((store) => store.latitude && store.longitude)
-          .map((store) => ({
-            ...store,
-            position: [store.latitude, store.longitude],
+        const formatted = response.data
+          .filter((s) => s.latitude && s.longitude) // Filter for å sikre at butikkene har gyldige koordinater
+          .map((s) => ({
+            ...s,
+            position: [s.latitude, s.longitude],
           }));
-        setStores(formattedStores);
+        setStores(formatted);
       } catch (error) {
-        console.error("Error fetching stores:", error);
+        console.error("Error fetching stores:", error); // Feilhåndtering for å hente butikkdata
       }
     };
 
@@ -125,20 +130,30 @@ const CoopMap = () => {
   return (
     <div className="coop-map-wrapper">
       <MapContainer
-        center={userPosition || [59.9139, 10.7522]}
+        center={userPosition || [59.9139, 10.7522]} // Sett standard senterposisjon til Oslo hvis brukerens posisjon ikke er tilgjengelig
         zoom={12}
         className="map-container"
       >
+        {/* Egendefinert zoomkontroll som forhindrer zooming uten Ctrl */}
         <MapControlZoom />
+
+        {/* Kartfliser */}
         <TileLayer
           attribution="&copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a>"
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
+
+        {/* Søke- og posisjonsknapper */}
         <LocationSearch />
         <GoToMyLocation setUserPosition={setUserPosition} />
 
+        {/* Marker butikkene på kartet */}
         {stores.map((store, idx) => (
-          <Marker key={idx} position={store.position} icon={redStoreIcon}>
+          <Marker
+            key={idx}
+            position={store.position}
+            icon={redStoreIcon} // Bruk egendefinert ikon
+          >
             <Popup>
               <strong>
                 {store.store_chain} {store.name}
@@ -159,15 +174,14 @@ const CoopMap = () => {
                       : user?.role === "store_manager"
                       ? "bs"
                       : "ba";
-
-                  navigate(`/${rolePath}/butikker/${store.store_chain}/${store.name}/${store.store_id}`);
+                  navigate(
+                    `/${rolePath}/butikker/${store.store_chain}/${store.name}/${store.store_id}`
+                  );
                 }}
               >
                 Gå til butikk
               </button>
-
             </Popup>
-
             <Tooltip direction="top" offset={[0, -30]} opacity={1} permanent>
               {store.store_chain} {store.name}
             </Tooltip>
@@ -178,21 +192,18 @@ const CoopMap = () => {
   );
 };
 
-// Custom zoom control component with conditional zoom behavior
+// Forhindrer zoom med musen med mindre Ctrl-tasten holdes inne
 const MapControlZoom = () => {
   const map = useMap();
 
   useEffect(() => {
     const handleWheel = (e) => {
-      if (!e.ctrlKey) {
-        e.preventDefault();
-      }
+      if (!e.ctrlKey) e.preventDefault(); // Forhindrer zooming med musen uten Ctrl-tasten
     };
-
-    map.getContainer().addEventListener("wheel", handleWheel);
-
+    const container = map.getContainer();
+    container.addEventListener("wheel", handleWheel); // Lytter på musens hjulbevegelse
     return () => {
-      map.getContainer().removeEventListener("wheel", handleWheel);
+      container.removeEventListener("wheel", handleWheel); // Fjerner event listener når komponenten unmountes
     };
   }, [map]);
 

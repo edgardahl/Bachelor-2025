@@ -12,7 +12,7 @@ import CoopMap from "../../../components/mapbox/CoopMap";
 import useAuth from "../../../context/UseAuth";
 
 const ButikksjefDashboard = () => {
-  const { user } = useAuth(); // Get the user from context
+  const { user } = useAuth();
   const [employees, setEmployees] = useState([]);
   const [availableCount, setAvailableCount] = useState(0);
   const [storeStats, setStoreStats] = useState({ total: 0, needsHelp: 0 });
@@ -20,21 +20,22 @@ const ButikksjefDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [availableInArea, setAvailableInArea] = useState(0);
 
+  // Henter all nødvendig data for dashbordet (vaktrater, ansatte, butikker osv.)
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         const managerId = user.id;
         const [availableRes, empRes, storeRes, shiftsRes] = await Promise.all([
-          axios.get("/users/available"),
-          axios.get("/users/employees"),
-          axios.get("/stores/storesWithMunicipality?page=1&pageSize=1000"),
-          axios.get(`/shifts/posted_by/${managerId}`),
+          axios.get("/users/available"),                              // Tilgjengelige ansatte i området
+          axios.get("/users/employees"),                              // Ansatte tilknyttet butikksjefen
+          axios.get("/stores/storesWithMunicipality?page=1&pageSize=1000"), // Alle butikker
+          axios.get(`/shifts/posted_by/${managerId}`),                // Vakter utlyst av butikksjefen
         ]);
 
-        // Available in manager's area
+        // Beregn og sett antall tilgjengelige ansatte i området
         setAvailableInArea(availableRes.data.length);
 
-        // Employees
+        // Håndter ansatte-listen og tell de fleksible
         const employeeList = empRes.data;
         setEmployees(employeeList);
         const available = employeeList.filter(
@@ -42,7 +43,7 @@ const ButikksjefDashboard = () => {
         ).length;
         setAvailableCount(available);
 
-        // Stores that need help
+        // Tell butikker som har vakter ledige (needsHelp)
         const stores = storeRes.data.stores || [];
         const needsHelpCount = (
           await Promise.all(
@@ -56,7 +57,7 @@ const ButikksjefDashboard = () => {
         ).filter(Boolean).length;
         setStoreStats({ total: stores.length, needsHelp: needsHelpCount });
 
-        // Shifts posted by manager
+        // Tell vakter utlyst og hvor mange som er tatt
         const allShifts = shiftsRes.data || [];
         const claimed = allShifts.filter((shift) => !!shift.claimed_by_id);
         setShiftCount({ total: allShifts.length, claimed: claimed.length });
@@ -68,15 +69,17 @@ const ButikksjefDashboard = () => {
     };
 
     fetchDashboardData();
-  }, []);
+  }, [user.id]);
 
   return (
     <div className="dashboard">
       {loading ? (
+        // Viser loader mens data hentes
         <Loading />
       ) : (
         <>
           <div className="dashboard-cards">
+            {/* Oversikt over vaktstatus */}
             <DashboardCard
               themeClass="card-theme-shifts"
               icon={<FiBriefcase size={52} />}
@@ -88,6 +91,7 @@ const ButikksjefDashboard = () => {
               linkTo="/bs/vakter"
             />
 
+            {/* Oversikt over egne ansatte */}
             <DashboardCard
               themeClass="card-theme-employees"
               icon={<FaRegUser size={52} />}
@@ -99,6 +103,7 @@ const ButikksjefDashboard = () => {
               linkTo="/bs/ansatte/mine"
             />
 
+            {/* Oversikt over alle tilgjengelige ansatte i området */}
             <DashboardCard
               themeClass="card-theme-available"
               icon={<RiUserSearchLine size={52} />}
@@ -110,6 +115,7 @@ const ButikksjefDashboard = () => {
               linkTo="/bs/ansatte/ledige"
             />
 
+            {/* Oversikt over butikker som søker ansatte */}
             <DashboardCard
               themeClass="card-theme-stores"
               icon={<MdOutlineStorefront size={52} />}
@@ -121,6 +127,7 @@ const ButikksjefDashboard = () => {
               linkTo="/bs/butikker"
             />
           </div>
+          {/* Kart som viser butikkene */}
           <CoopMap />
         </>
       )}

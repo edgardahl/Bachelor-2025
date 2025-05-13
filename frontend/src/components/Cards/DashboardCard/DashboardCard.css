@@ -1,136 +1,141 @@
 .dashboard-card {
   position: relative;
-    background-color: var(--Card-color);
-    text-align: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-    transition: box-shadow 0.3s ease, background-color 0.3s ease;
-    width: 100%;
-    height: auto;
-    margin: 0 auto;
-    border-radius: 4px;
+  background-color: var(--Card-color);
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 4px;
+}
+
+.dashboard-card:hover {
+  background-color: #f6fefc;
+}
+
+.dashboard-cards-icon {
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+  color: var(--Card-icon-color);
+}
+
+.dashboard-card h2 {
+  color: black;
+  font-size: 1.4rem;
+}
+
+.dashboard-card-description {
+  color: var(--Employees-text-light);
+  max-width: 70%;
+  font-size: 1rem;
+  align-self: center;
+  margin: 0 auto;
+  margin-bottom: 30px;
+}
+
+.dashboard-card-stat-text {
+  color: var(--Employees-text-light);
+  font-size: 1rem;
+}
+
+.dashboard-card-stat-text strong {
+  color: black;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.dashboard-link-container {
+  position: relative;
+  display: flex;
+  height: 80px;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-link {
+  color: var(--Text-highlight-color);
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: auto 0;
+}
+
+.dashboard-link:hover {
+  text-decoration: underline;
+}
+
+.card-theme-shifts:hover {
+  background-color: var(--Shifts-hover);
+}
+
+.card-theme-shifts .dashboard-cards-icon {
+  color: var(--Shifts-main);
+}
+
+.card-theme-shifts .dashboard-link {
+  color: var(--Shifts-main);
+}
+
+.card-theme-shifts .dashboard-link:hover {
+  color: var(--Shifts-hover-dark);
+}
+
+.card-theme-employees:hover {
+  background-color: var(--Employees-hover);
+}
+
+.card-theme-employees .dashboard-cards-icon {
+  color: var(--Employees-main);
+}
+
+.card-theme-employees .dashboard-link {
+  color: var(--Employees-main);
+}
+
+.card-theme-employees .dashboard-link:hover {
+  color: var(--Employees-hover-dark);
+}
+
+.card-theme-available:hover {
+  background-color: var(--Available-hover);
+}
+
+.card-theme-available .dashboard-cards-icon {
+  color: var(--Available-main);
+}
+
+.card-theme-available .dashboard-link {
+  color: var(--Available-main);
+}
+
+.card-theme-available .dashboard-link:hover {
+  color: var(--Available-hover-dark);
+}
+
+.card-theme-stores:hover {
+  background-color: var(--Stores-hover);
+}
+
+.card-theme-stores .dashboard-cards-icon {
+  color: var(--Stores-main);
+}
+
+.card-theme-stores .dashboard-link {
+  color: var(--Stores-main);
+}
+
+.card-theme-stores .dashboard-link:hover {
+  color: var(--Stores-hover-dark);
+}
+
+@media (max-width: 600px) {
+  .dashboard-card-description {
+    display: none;
   }
 
-  .dashboard-card:hover {
-    background-color: #f6fefc;
+  .dashboard-card-stat-text {
+    margin: 0 5px;
+    font-size: 0.8rem;
   }
-
-  .dashboard-card h2{
-    color: black;
-    font-size: 1.4rem;
-  }
-
-  
-  .dashboard-cards-icon{
-    margin-bottom: 1rem;
-    margin-top: 2rem;
-    color: var(--Card-icon-color);    
-  }
-
-  .dashboard-card-description{
-    color: var(--Employees-text-light);
-    max-width: 70%;
-    font-size: 1rem;
-    align-self: center;
-    margin: 0 auto;
-    margin-bottom: 30px;
-  }
-
-  .dashboard-card-stat-text{
-    color: var(--Employees-text-light);
-    font-size: 1rem;
-  }
-
-  .dashboard-card-stat-text strong{
-    color: black;
-    font-weight: bold;
-    font-size: 1.1rem;
-  }
-
-  .dashboard-link-container{
-    position: relative;
-    display: flex;
-    height: 80px;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .dashboard-link {
-    color: var(--Text-highlight-color);
-    text-decoration: none;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: auto 0;
-  }
-  
-  .dashboard-link:hover {
-    text-decoration: underline;
-  }
-  
-  
-
-
-  .card-theme-shifts:hover {
-    background-color: var(--Shifts-hover);
-  }
-  .card-theme-shifts .dashboard-cards-icon {
-    color: var(--Shifts-main);
-  }
-  .card-theme-shifts .dashboard-link {
-    color: var(--Shifts-main);
-  }
-  .card-theme-shifts .dashboard-link:hover {
-    color: var(--Shifts-hover-dark);
-  }
-  
-  .card-theme-employees:hover {
-    background-color: var(--Employees-hover);
-  }
-  .card-theme-employees .dashboard-cards-icon {
-    color: var(--Employees-main);
-  }
-  .card-theme-employees .dashboard-link {
-    color: var(--Employees-main);
-  }
-  .card-theme-employees .dashboard-link:hover {
-    color: var(--Employees-hover-dark);
-  }
-  
-  .card-theme-available:hover {
-    background-color: var(--Available-hover);
-  }
-  .card-theme-available .dashboard-cards-icon {
-    color: var(--Available-main);
-  }
-  .card-theme-available .dashboard-link {
-    color: var(--Available-main);
-  }
-  .card-theme-available .dashboard-link:hover {
-    color: var(--Available-hover-dark);
-  }
-  
-  .card-theme-stores:hover {
-    background-color: var(--Stores-hover);
-  }
-  .card-theme-stores .dashboard-cards-icon {
-    color: var(--Stores-main);
-  }
-  .card-theme-stores .dashboard-link {
-    color: var(--Stores-main);
-  }
-  .card-theme-stores .dashboard-link:hover {
-    color: var(--Stores-hover-dark);
-  }
-  
-
-
-  /* Mobile view media query */
-  @media (max-width: 600px) {
-    .dashboard-card-description{
-      display: none;
-    }
-
-    .dashboard-card-stat-text {
-      margin: 0 5px;
-      font-size: 0.8rem;
-    }
-  }
+}

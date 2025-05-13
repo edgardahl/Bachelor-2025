@@ -23,17 +23,6 @@
   text-align: left;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .modal-content h2 {
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
@@ -41,7 +30,6 @@
   text-align: center;
 }
 
-/* To-kolonnes layout */
 .modal-two-column {
   display: flex;
   gap: 2rem;
@@ -88,7 +76,6 @@
   white-space: nowrap;
 }
 
-/* Knappene nederst, sentrert */
 .modal-buttons {
   display: flex;
   gap: 1rem;
@@ -125,4 +112,15 @@
 
 .modal-buttons button:not(.confirm):hover {
   background-color: #ccc;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

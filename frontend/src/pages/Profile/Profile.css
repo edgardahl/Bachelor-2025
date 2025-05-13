@@ -25,6 +25,50 @@
   color: #1a1a1a;
 }
 
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.profile-field {
+  position: relative;
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.profile-field.full-width {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+.profile-field label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #333;
+  display: block;
+}
+
+.profile-field input,
+.profile-field select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.input-error-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-error-wrapper input {
+  margin-bottom: 0.25rem;
+}
+
 .password-input {
   display: block;
   width: 100%;
@@ -81,145 +125,6 @@
   border-color: #64b5f6;
 }
 
-.primary-button,
-.secondary-button {
-  padding: 0.35rem 0.9rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.primary-button {
-  background-color: var(--Button-color);
-  color: white;
-  border: none;
-}
-
-.primary-button:hover {
-  background-color: var(--Button-hover-color);
-}
-
-.secondary-button {
-  background-color: var(--Cancel-color);
-  color: black;
-  border: 1px solid #ccc;
-}
-
-.secondary-button:hover {
-  background-color: var(--Cancel-color-hover);
-}
-
-.status-badge {
-  padding: 0.3rem 0.8rem;
-  font-weight: 600;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  align-self: center;
-}
-
-.status-green {
-  background-color: #e6f4ea;
-  color: #2e7d32;
-}
-
-.status-red {
-  background-color: #fdecea;
-  color: #c62828;
-}
-
-.field-buttons {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  justify-content: center;
-}
-
-.profile-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
-.profile-field {
-  position: relative;
-  background-color: #fafafa;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1rem;
-}
-
-.profile-field label {
-  font-weight: 600;
-  margin-bottom: 0.3rem;
-  color: #333;
-  display: block;
-}
-
-.profile-field input,
-.profile-field select {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 100%;
-}
-
-.input-error-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.input-error-wrapper input {
-  margin-bottom: 0.25rem;
-}
-
-.qualification-card.disabled {
-  pointer-events: none;
-  opacity: 0.7;
-  cursor: default;
-}
-
-.qualification-card.clickable {
-  cursor: pointer;
-}
-
-.save-container {
-  margin-top: 2.5rem;
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.edit-icon-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
-  transition: color 0.2s ease;
-}
-
-.edit-icon-button:hover {
-  color: #1976d2;
-}
-
-.qualification-button {
-  display: flex;
-  margin-top: 1.2rem;
-  justify-content: center;
-}
-
 .qualification-cards {
   display: flex;
   flex-wrap: wrap;
@@ -244,6 +149,16 @@
 .qualification-card.selected {
   background-color: #e3f2fd;
   border-color: #64b5f6;
+}
+
+.qualification-card.clickable {
+  cursor: pointer;
+}
+
+.qualification-card.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+  cursor: default;
 }
 
 .qualification-card h4 {
@@ -293,37 +208,94 @@
   background-color: #e0e0e0;
 }
 
-ul.municipality-list {
-  margin-top: 0.4rem;
-  padding-left: 1.2rem;
-  list-style-type: disc;
-  color: #444;
-}
-
-ul.municipality-list li {
-  margin-bottom: 0.2rem;
-}
-
-.profile-field.full-width {
-  grid-column: 1 / -1;
-  text-align: center;
-}
-
-.centered-store-card {
+.qualification-button {
   display: flex;
+  margin-top: 1.2rem;
   justify-content: center;
-  margin-top: 1rem;
 }
 
-.error-message {
-  color: red;
-  font-size: 0.875rem;
-  margin: 0.4rem 0 0.8rem 8.3px;
+.field-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  justify-content: center;
 }
 
-.error {
-  border: 2px solid red;
-  margin-bottom: 0.25rem;
+.save-container {
+  margin-top: 2.5rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.primary-button,
+.secondary-button {
+  padding: 0.35rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.primary-button {
+  background-color: var(--Button-color);
+  color: white;
+  border: none;
+}
+
+.primary-button:hover {
+  background-color: var(--Button-hover-color);
+}
+
+.secondary-button {
+  background-color: var(--Cancel-color);
+  color: black;
+  border: 1px solid #ccc;
+}
+
+.secondary-button:hover {
+  background-color: var(--Cancel-color-hover);
+}
+
+.status-badge {
+  padding: 0.3rem 0.8rem;
+  font-weight: 600;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  align-self: center;
+}
+
+.status-green {
+  background-color: #e6f4ea;
+  color: #2e7d32;
+}
+
+.status-red {
+  background-color: #fdecea;
+  color: #c62828;
+}
+
+.edit-icon-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: color 0.2s ease;
+}
+
+.edit-icon-button:hover {
+  color: #1976d2;
 }
 
 .tooltip-container {
@@ -391,22 +363,35 @@ ul.municipality-list li {
   background-color: var(--Error-delete-color-hover);
 }
 
+ul.municipality-list {
+  margin-top: 0.4rem;
+  padding-left: 1.2rem;
+  list-style-type: disc;
+  color: #444;
+}
+
+ul.municipality-list li {
+  margin-bottom: 0.2rem;
+}
+
+.centered-store-card {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
 .no-margin-wrapper .butikk-card {
   margin: 0;
 }
 
-
-/* Responsive */
 @media (max-width: 740px) {
-
-    .tooltip-text {
-      max-width: 40vw;
-      white-space: normal;
-      word-break: break-word;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-  
+  .tooltip-text {
+    max-width: 40vw;
+    white-space: normal;
+    word-break: break-word;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 
   .profile-page {
     padding: 1.5rem 1rem;

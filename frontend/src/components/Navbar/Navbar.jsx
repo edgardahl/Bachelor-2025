@@ -1,7 +1,7 @@
 import { FaRegUserCircle, FaTimes } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, NavLink } from "react-router-dom"; // CHANGED
+import { useNavigate, NavLink } from "react-router-dom";
 import useAuth from "../../context/UseAuth";
 import NotificationDropdown from "../../components/NotificationDropdown/NotificationDropdown";
 import "./Navbar.css";
@@ -13,6 +13,7 @@ export default function Navbar() {
   const { user } = useAuth();
   const menuRef = useRef(null);
 
+  // Håndterer logout, fjerner accessToken og navigerer til login-siden
   const handleLogout = async () => {
     try {
       await serverLogout();
@@ -24,6 +25,7 @@ export default function Navbar() {
     }
   };
 
+  // Navigasjonslenker for ansatte
   const employeeLinks = (
     <>
       <NavLink
@@ -50,6 +52,7 @@ export default function Navbar() {
     </>
   );
 
+  // Navigasjonslenker for butikkledere
   const storeManagerLinks = (
     <>
       <NavLink
@@ -90,6 +93,7 @@ export default function Navbar() {
     </>
   );
 
+  // Navigasjonslenker for administratorer
   const adminLinks = (
     <>
       <NavLink
@@ -118,6 +122,7 @@ export default function Navbar() {
     </>
   );
 
+  // Lytter etter klikk utenfor menyen for å lukke den
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuOpen && menuRef.current && !menuRef.current.contains(e.target)) {

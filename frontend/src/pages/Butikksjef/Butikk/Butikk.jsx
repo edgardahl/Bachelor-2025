@@ -19,6 +19,7 @@ const Butikk = () => {
   const [storeId, setStoreId] = useState(null);
 
   useEffect(() => {
+    // Henter detaljene for butikken
     const fetchStoreDetails = async () => {
       try {
         const response = await axios.get(`/stores/${store_id}`);
@@ -28,6 +29,7 @@ const Butikk = () => {
       }
     };
 
+    // Henter alle vakter tilknyttet butikken
     const fetchShifts = async () => {
       try {
         const response = await axios.get(`/shifts/store/${store_id}`);
@@ -37,6 +39,7 @@ const Butikk = () => {
       }
     };
 
+    // Setter brukerdata og henter brukerrelaterte vakter
     const fetchUserAndShifts = async () => {
       try {
         setUserId(user.id);
@@ -53,6 +56,7 @@ const Butikk = () => {
     fetchUserAndShifts();
   }, [store_id]);
 
+  // Fjerner en vakt fra listen etter sletting
   const deleteShift = (shiftId) => {
     setShifts((prev) => prev.filter((shift) => shift.shift_id !== shiftId));
   };

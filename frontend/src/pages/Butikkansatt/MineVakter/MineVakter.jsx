@@ -6,6 +6,7 @@ import KommuneFilter from "../../../components/Filter/kommuneFilter/kommuneFilte
 import Loading from "../../../components/Loading/Loading";
 import "./MineVakter.css";
 
+// Hovedkomponenten som viser vaktene for ansatte og håndterer filtrering, visning og henting av data
 const MineVakterAnsatt = () => {
   const { user } = useAuth();
   const [userId, setUserId] = useState(null);
@@ -22,7 +23,9 @@ const MineVakterAnsatt = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("available");
 
+  // useEffect som henter nødvendig data når brukerens data blir tilgjengelig
   useEffect(() => {
+    // Funksjon som henter og setter brukerens foretrukne kommuner
     const fetchPreferredMunicipalities = async () => {
       try {
         const res = await axios.get(`/users/${user.id}`);
@@ -34,6 +37,7 @@ const MineVakterAnsatt = () => {
       }
     };
 
+    // Funksjon som henter vaktene brukeren er kvalifisert for
     const fetchShiftsUserIsQualifiedFor = async () => {
       try {
         setLoading(true);
@@ -46,16 +50,17 @@ const MineVakterAnsatt = () => {
       }
     };
 
+    // Funksjon som henter vaktene brukeren har tatt
     const fetchClaimedShifts = async () => {
       try {
         const respons = await axios.get(`/shifts/claimedByCurrentUser`);
-        console.log(respons.data);
         setClaimedShifts(respons.data.data);
       } catch (error) {
         console.error("Error fetching claimed shifts:", error);
       }
     };
 
+    // Sjekker at brukeren er tilgjengelig før data hentes
     if (user) {
       setUserId(user.id);
       setStoreId(user.storeId);
@@ -65,6 +70,7 @@ const MineVakterAnsatt = () => {
     }
   }, [user]);
 
+  // Funksjon som filtrerer vaktene basert på valgte kommuner
   const filterShiftsByMunicipality = (shiftsToFilter) => {
     return shiftsToFilter.filter((shift) => {
       return selectedMunicipalityIds.length === 0
@@ -73,11 +79,13 @@ const MineVakterAnsatt = () => {
     });
   };
 
+  // Bestemmer hvilke vakter som skal vises basert på aktiv tab
   const shiftsToDisplay =
     activeTab === "available"
-      ? filterShiftsByMunicipality(shifts)
-      : [...claimedShifts].sort((a, b) => new Date(a.date) - new Date(b.date));
+      ? filterShiftsByMunicipality(shifts) // Filtrerer ledige vakter
+      : [...claimedShifts].sort((a, b) => new Date(a.date) - new Date(b.date)); // Sorterer de vaktene som er tatt
 
+  // Grupperer vaktene etter dato
   const groupedShifts = shiftsToDisplay.reduce((acc, shift) => {
     const dateKey = new Date(shift.date).toLocaleDateString("no-NO", {
       weekday: "long",

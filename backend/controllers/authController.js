@@ -17,7 +17,7 @@ import { getUserQualificationsModel } from "../models/userModel.js";
 import { getStoreByIdModel, updateStoreModel } from "../models/storeModel.js";
 import { sanitizeUser } from "../utils/sanitizeInput.js";
 
-// Logger inn bruker
+// Logger inn bruker og returnerer access + refresh token i tillegg til brukerinfo
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -27,6 +27,7 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ error: "Feil e-post eller passord." });
     }
 
+    // Sammenligner oppgitt passord med hashet passord i databasen
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: "Feil e-post eller passord." });
@@ -57,13 +58,6 @@ export const loginUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    console.log("userinfo stored in cookie:", {
-      userId: user.user_id,
-      role: user.role,
-      storeId: user.store_id,
-      user_qualifications: qualificationIds,
-    });
-
     res.json({
       accessToken,
       user: {
@@ -81,19 +75,19 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// Oppfrisker access token
+// Oppretter nytt access token basert på gyldig refresh token
 export const refreshAccessToken = async (req, res) => {
   const token = req.cookies.refreshToken;
-  if (!token) return res.sendStatus(204); // Ingen feilmelding til frontend
+  if (!token) return res.sendStatus(204);
 
   try {
+    // Verifiserer refresh-token og henter bruker
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
     const user = await getUserBasicById(decoded.userId);
-    if (!user) return res.sendStatus(403); // Ingen feilmelding til frontend
+    if (!user) return res.sendStatus(403);
 
     const userQualifications = await getUserQualificationsModel([user.user_id]);
     const qualificationIds = userQualifications.map((q) => q.qualification_id);
-    console.log("userqualifications in refresh:", userQualifications);
 
     const accessToken = generateAccessToken({
       userId: user.user_id,
@@ -105,11 +99,11 @@ export const refreshAccessToken = async (req, res) => {
     res.json({ accessToken });
   } catch (error) {
     console.error("Refresh token error:", error);
-    return res.sendStatus(403); // Ingen feilmelding til frontend
+    return res.sendStatus(403);
   }
 };
 
-// Henter informasjon om den nåværende brukeren
+// Returnerer informasjon om innlogget bruker (basert på access token)
 export const getCurrentUser = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -135,19 +129,7 @@ export const getCurrentUser = async (req, res) => {
   }
 };
 
-// Logger ut bruker
-export const logoutUser = (req, res) => {
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: true,
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-    path: "/",
-  });
-
-  res.json({ message: "Du er logget ut." });
-};
-
-// Registrerer ny ansatt
+// Registrerer ny ansatt (kun tilgjengelig for butikksjefer)
 export const registerNewEmployeeController = async (req, res) => {
   try {
     const storeManager = req.user;
@@ -168,8 +150,6 @@ export const registerNewEmployeeController = async (req, res) => {
         .json({ error: { general: sanitizeError.message } });
     }
 
-    console.log("Sanitize data after", sanitizedUserData);
-
     if (sanitizedUserData.errors) {
       return res.status(400).json({ error: sanitizedUserData.errors });
     }
@@ -187,6 +167,7 @@ export const registerNewEmployeeController = async (req, res) => {
       qualifications,
     } = sanitizedUserData;
 
+    // Rolle sjekk
     if (storeManager.role !== "store_manager") {
       return res.status(403).json({ error: "Ikke autorisert." });
     }
@@ -195,8 +176,8 @@ export const registerNewEmployeeController = async (req, res) => {
       return res.status(403).json({ error: "Ingen tilknyttede butikker." });
     }
 
+    // Unikhetsvalidering
     const existingUser = await getUserByEmail(email);
-    console.log("Existing user:", existingUser);
     if (existingUser) {
       return res
         .status(400)
@@ -210,6 +191,7 @@ export const registerNewEmployeeController = async (req, res) => {
       });
     }
 
+    // Hasher passord før lagring
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await registerUserInDB({
@@ -230,6 +212,7 @@ export const registerNewEmployeeController = async (req, res) => {
         .json({ error: { general: "Kunne ikke registrere bruker." } });
     }
 
+    // Lagrer kvalifikasjoner hvis valgt
     if (qualifications?.length > 0) {
       const inserted = await insertUserQualifications(
         newUser.user_id,
@@ -264,7 +247,7 @@ export const registerNewEmployeeController = async (req, res) => {
   }
 };
 
-
+// Registrerer ny butikksjef (kun for admin), og knytter til butikk hvis oppgitt
 export const registerNewManagerController = async (req, res) => {
   try {
     const data = {
@@ -298,7 +281,7 @@ export const registerNewManagerController = async (req, res) => {
       municipality_id,
     } = sanitizedUserData;
 
-    // Valider e-post og telefon
+    // Unikhetsvalidering
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
       return res.status(400).json({
@@ -313,6 +296,7 @@ export const registerNewManagerController = async (req, res) => {
       });
     }
 
+    // Hasher passord før lagring
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newManager = await registerUserInDB({
@@ -333,20 +317,20 @@ export const registerNewManagerController = async (req, res) => {
         .json({ error: { general: "Kunne ikke registrere butikksjef." } });
     }
 
-    // 🔁 Oppdater butikkens manager hvis `store_id` ble gitt
+    // Oppdater butikkens manager hvis `store_id` ble gitt
     if (store_id && store_id !== "") {
       const store = await getStoreByIdModel(store_id);
-      console.log("Store before updating:", store);
-    
+
       if (store) {
         try {
-          // 👇 Splitte adressen: "Torggata 1, 2408 Elverum"
+          // Trekker ut postnummer og butikknavn fra adressestreng
           const [addressPart, postalCodePart] = store.address
             .split(",")
             .map((part) => part.trim());
           const postal_code = postalCodePart?.split(" ")[0] || "";
-          const store_name = postalCodePart?.split(" ").slice(1).join(" ") || "";
-    
+          const store_name =
+            postalCodePart?.split(" ").slice(1).join(" ") || "";
+
           await updateStoreModel(store_id, {
             ...store,
             address: addressPart,
@@ -358,13 +342,13 @@ export const registerNewManagerController = async (req, res) => {
           console.error("Feil ved oppdatering av butikk:", updateError.message);
           return res.status(500).json({
             error: {
-              general: "Butikksjef ble opprettet, men butikken kunne ikke oppdateres.",
+              general:
+                "Butikksjef ble opprettet, men butikken kunne ikke oppdateres.",
             },
           });
         }
       }
     }
-    
 
     return res.status(201).json({
       message: "Butikksjef registrert.",
@@ -386,4 +370,16 @@ export const registerNewManagerController = async (req, res) => {
       },
     });
   }
+};
+
+// Logger ut bruker ved å fjerne refresh-token-cookie
+export const logoutUser = (req, res) => {
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+    path: "/",
+  });
+
+  res.json({ message: "Du er logget ut." });
 };

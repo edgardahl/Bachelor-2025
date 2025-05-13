@@ -2,6 +2,7 @@ import React from "react";
 import "./Footer.css";
 import { MdEmail, MdPhone } from "react-icons/md";
 
+// Footer-komponent som viser logo, kontaktinformasjon og opphavsrett
 const Footer = () => {
   return (
     <footer className="footer">

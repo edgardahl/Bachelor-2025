@@ -1,3 +1,9 @@
+.kommune-filter-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .kommune-filter {
   display: flex;
   flex-direction: column;
@@ -9,22 +15,20 @@
   margin-bottom: 8px;
 }
 
-/* Reset Button (always takes space, visibility toggled via class) */
 .reset-preferred-button {
   background-color: #4caf50;
   color: white;
   padding: 10px 20px;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
-  margin-top: 15px;
+  margin: 15px auto;
   font-size: 1rem;
   text-align: center;
   width: 100%;
-  border-radius: 4px;
   height: 45px;
   visibility: visible;
   opacity: 1;
-  margin: 15px auto;
   transition: background-color 0.3s ease, opacity 0.2s ease;
 }
 
@@ -32,23 +36,35 @@
   background-color: #3e9341;
 }
 
-/* Hidden version: takes up space but is transparent and not interactive */
 .reset-preferred-button.hidden {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
 }
 
-.kommune-filter-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
+.reset-all-button {
+  background-color: #f44336;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
 }
 
-/* ✅ Responsive tweaks for small screens */
+.reset-all-button:hover {
+  background-color: #d32f2f;
+}
+
 @media (max-width: 700px) {
   .kommune-filter {
     width: 90%;
+  }
+
+  .kommune-filter__label {
+    font-size: 1rem;
   }
 
   .reset-preferred-button {
@@ -56,24 +72,4 @@
     padding: 8px 16px;
     height: 40px;
   }
-
-  .kommune-filter__label {
-    font-size: 1rem;
-  }
-}
-
-.reset-all-button {
-  margin-top: 10px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-}
-
-.reset-all-button:hover {
-  background-color: #d32f2f;
 }

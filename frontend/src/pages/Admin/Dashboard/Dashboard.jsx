@@ -14,6 +14,7 @@ const AdminDashboard = () => {
   const [managersCount, setManagersCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // Henter butikkdata og butikksjefer når komponenten monteres
   useEffect(() => {
     const fetchStoreStats = async () => {
       try {
@@ -25,33 +26,32 @@ const AdminDashboard = () => {
       } catch (error) {
         console.error("Error loading store data:", error);
       } finally {
-        setLoading(false);
+        setLoading(false); // Viktig: påvirker loading-indikator
       }
     };
 
     const fetchManagers = async () => {
       try {
-        setLoading(true);
+        setLoading(true); // Starter loading her også, siden begge kall påvirker visning
         const response = await axios.get(
           "http://localhost:5001/api/users/store_managers"
         );
         setManagersCount(response.data.length);
-        console.log("Store managers:", response.data.length);
       } catch (err) {
         console.error("Error fetching managers:", err);
       } finally {
-        setLoading(false);
+        setLoading(false); // Viktig å stoppe loading etter begge kall
       }
     };
 
     fetchManagers();
     fetchStoreStats();
-  }, [user.id]);
+  }, [user.id]); // Re-fetch om bruker-ID endres
 
   return (
     <div className="dashboard">
       {loading ? (
-        <Loading />
+        <Loading /> // Viser loading-spinner mens data hentes
       ) : (
         <div className="dashboard-cards">
           <DashboardCard
@@ -64,6 +64,7 @@ const AdminDashboard = () => {
             linkText="Gå til butikkoversikt"
             linkTo="/admin/butikker"
           />
+
           <DashboardCard
             icon={<RiUserSearchLine size={52} />}
             themeClass="card-theme-employees"
@@ -76,7 +77,8 @@ const AdminDashboard = () => {
           />
         </div>
       )}
-      
+
+      {/* Viser interaktivt kart uansett lastetilstand */}
       <CoopMap />
     </div>
   );

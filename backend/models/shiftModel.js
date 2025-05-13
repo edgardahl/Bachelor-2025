@@ -1,46 +1,34 @@
 import { supabase } from "../config/supabaseClient.js";
-// ✅ Named import
 import { sanitizeShift } from "../utils/sanitizeInput.js";
 
-// Get all shifts
-export const getAllShiftsModel = async () => {
-  const { data, error } = await supabase.rpc("get_all_shifts");
-
-  if (error) throw new Error(`Supabase Error: ${error.message}`);
-  return { data };
-};
-
-// Get all shifts from a store
+// Henter alle vakter fra en spesifikk butikk (brukt i getShiftsByStoreController)
 export const getShiftsByStoreModel = async (storeId) => {
   const { data, error } = await supabase.rpc("get_shifts_by_store", {
     p_store_id: storeId,
   });
-  if (error)
-    throw new Error(`Supabase Error in claimShiftModel: ${error.message}`);
+  if (error) throw new Error(`Supabase Error: ${error.message}`);
   return data;
 };
 
-// Get a single shift by ID
+// Henter én vakt basert på ID (brukt i getShiftByIdController)
 export const getShiftByIdModel = async (shiftId) => {
   const { data, error } = await supabase.rpc("get_shift_by_id", {
     p_shift_id: shiftId,
   });
-
   if (error) throw new Error(error.message);
   return data;
 };
 
-// Get all shifts posted by a specific user
+// Henter alle vakter publisert av en bruker (brukt i getShiftByPostedByController)
 export const getShiftByPostedByModel = async (postedById) => {
   const { data, error } = await supabase.rpc("get_shifts_by_posted_by", {
     p_posted_by: postedById,
   });
-
   if (error) throw new Error(error.message);
   return data;
 };
 
-// Get claimed shifts by user
+// Henter alle vakter som er tatt av en spesifikk bruker (brukt i getClaimedShiftsByUserController)
 export const getClaimedShiftsByUserModel = async (claimedById) => {
   const { data, error } = await supabase.rpc("get_claimed_shifts_by_user", {
     p_claimed_by: claimedById,
@@ -49,11 +37,9 @@ export const getClaimedShiftsByUserModel = async (claimedById) => {
   return data;
 };
 
-// Claim a shift
+// Lar en ansatt ta en ledig vakt (brukt i claimShiftController)
 export const claimShiftModel = async (shiftId, userId) => {
-  console.log("Claiming shift with ID:", shiftId);
-  console.log("User ID:", userId);
-
+  // Sørger for at vakten kun kan tas dersom den ikke allerede er tatt
   const { data, error } = await supabase
     .from("shifts")
     .update({ claimed_by_id: userId })
@@ -66,15 +52,14 @@ export const claimShiftModel = async (shiftId, userId) => {
   return data;
 };
 
-// Create a new shift with qualifications
+// Oppretter en ny vakt og lagrer tilknyttede kvalifikasjoner (brukt i createShiftController)
 export const createShiftModel = async (shiftData) => {
   const sanitizedData = sanitizeShift(shiftData);
 
-  // Calculate delete_at (24 hours after the shift end time)
-  const deleteAt = new Date(sanitizedData.date + " " + sanitizedData.end_time); // Combine date and end_time
-  deleteAt.setHours(deleteAt.getHours() + 24); // Add 24 hours to the end time
+  // Beregner når vakten skal slettes automatisk (24 timer etter sluttid)
+  const deleteAt = new Date(sanitizedData.date + " " + sanitizedData.end_time);
+  deleteAt.setHours(deleteAt.getHours() + 24);
 
-  // Insert the shift into the database with the calculated delete_at value
   const { data: shiftDataResponse, error: shiftError } = await supabase
     .from("shifts")
     .insert([
@@ -86,7 +71,7 @@ export const createShiftModel = async (shiftData) => {
         end_time: sanitizedData.end_time,
         store_id: sanitizedData.store_id,
         posted_by: sanitizedData.posted_by,
-        delete_at: deleteAt.toISOString(), // Insert the calculated delete_at
+        delete_at: deleteAt.toISOString(),
       },
     ])
     .select()
@@ -94,7 +79,7 @@ export const createShiftModel = async (shiftData) => {
 
   if (shiftError) throw new Error(shiftError.message);
 
-  // Insert qualifications into the 'shift_qualifications' table
+  // Setter inn alle kvalifikasjoner i koblingstabellen 'shift_qualifications'
   if (sanitizedData.qualifications.length > 0) {
     const qualificationInserts = sanitizedData.qualifications.map(
       async (qualificationId) => {
@@ -104,18 +89,16 @@ export const createShiftModel = async (shiftData) => {
             qualification_id: qualificationId,
           },
         ]);
-
         if (error) throw new Error(error.message);
       }
     );
-
     await Promise.all(qualificationInserts);
   }
 
   return shiftDataResponse;
 };
 
-// Delete a shift from the database
+// Sletter en vakt fra databasen (brukt i deleteShiftController)
 export const deleteShiftModel = async (shiftId) => {
   const { data, error } = await supabase
     .from("shifts")
@@ -128,43 +111,27 @@ export const deleteShiftModel = async (shiftId) => {
   return data;
 };
 
-// Get all shifts a user is qualified for
+// Henter alle vakter brukeren er kvalifisert for (brukt i getShiftsUserIsQualifiedForController)
 export const getShiftsUserIsQualifiedForModel = async (userId) => {
-  console.log("userId", userId);
   const { data, error } = await supabase.rpc(
     "get_shifts_user_is_qualified_for",
-    { p_user_id: userId }
-  );
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-};
-
-export const getPreferredQualifiedShiftsModel = async (userId) => {
-  const { data, error } = await supabase.rpc(
-    "get_qualified_shifts_preferred_municipality",
-    { p_user_id: userId }
+    {
+      p_user_id: userId,
+    }
   );
 
   if (error) throw new Error(error.message);
   return data;
 };
 
-export const getRequestedQualifiedShiftsModel = async (
-  userId,
-  municipalityId
-) => {
+// Henter vakter i foretrukne kommuner brukeren er kvalifisert for (brukt i getPreferredQualifiedShiftsController)
+export const getPreferredQualifiedShiftsModel = async (userId) => {
   const { data, error } = await supabase.rpc(
-    "get_qualified_shifts_requested_municipality",
+    "get_qualified_shifts_preferred_municipality",
     {
       p_user_id: userId,
-      p_municipality_id: municipalityId,
     }
   );
-
   if (error) throw new Error(error.message);
   return data;
 };

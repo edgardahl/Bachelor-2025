@@ -1,9 +1,8 @@
-// src/components/DashboardCard.jsx
-
 import React from "react";
 import { Link } from "react-router-dom";
-import "./DashboardCard.css"; // You can keep styles separate or merge with Dashboard.css
+import "./DashboardCard.css";
 
+// DashboardCard er en gjenbrukbar kortkomponent brukt på dashbordsider.
 const DashboardCard = ({
   icon,
   title,
@@ -12,7 +11,7 @@ const DashboardCard = ({
   statValue,
   linkText,
   linkTo,
-  themeClass = "", // <-- new prop
+  themeClass = "",
 }) => {
   return (
     <div className={`dashboard-card ${themeClass}`}>

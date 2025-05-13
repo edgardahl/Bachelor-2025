@@ -16,6 +16,7 @@ export default function NotificationDropdown() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Henter varsler for brukeren ved innlasting og ved ruteendring
   useEffect(() => {
     if (!user?.id) return;
 
@@ -24,20 +25,14 @@ export default function NotificationDropdown() {
       setError(null);
       try {
         const res = await axios.get("/notifications/user");
-
-        if (!Array.isArray(res.data)) {
-          setNotifications([]);
-          setUnopenedCount(0);
-          return;
-        }
-
-        const sorted = res.data.sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        );
+        const sorted = Array.isArray(res.data)
+          ? res.data.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            )
+          : [];
         setNotifications(sorted);
         setUnopenedCount(sorted.filter((n) => n.status === "unopened").length);
-      } catch (err) {
-        console.error("Feil ved henting av varsler:", err);
+      } catch {
         setError("Kunne ikke hente varsler.");
       } finally {
         setLoading(false);
@@ -47,17 +42,18 @@ export default function NotificationDropdown() {
     fetchNotifications();
   }, [user?.id, location]);
 
+  // Lukker dropdown når brukeren klikker utenfor
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Marker varsel som åpnet og naviger til vaktdetaljer
   const handleNavigate = async (id, status, shiftId) => {
     if (status === "unopened") {
       setNotifications((prev) =>
@@ -65,55 +61,53 @@ export default function NotificationDropdown() {
           n.notification_id === id ? { ...n, status: "opened" } : n
         )
       );
-      setUnopenedCount((count) => count - 1);
-
+      setUnopenedCount((c) => c - 1);
       try {
         await axios.put("/notifications/status/update", {
           notificationId: id,
           userId: user.id,
         });
-      } catch (err) {
-        console.error("Update status error:", err);
+      } catch {
+        // Rull tilbake ved feil
         setNotifications((prev) =>
           prev.map((n) =>
             n.notification_id === id ? { ...n, status: "unopened" } : n
           )
         );
-        setUnopenedCount((count) => count + 1);
+        setUnopenedCount((c) => c + 1);
         return;
       }
     }
-
     const path =
       user.role === "employee"
         ? `/ba/vakter/detaljer/${shiftId}`
         : `/bs/vakter/detaljer/${shiftId}`;
-
     navigate(path);
     setOpen(false);
   };
 
+  // Sletter et varsel og oppdaterer uåpnet-teller
   const handleRemoveNotification = async (id) => {
     const wasUnopened = notifications.find(
       (n) => n.notification_id === id && n.status === "unopened"
     );
-
-    setNotifications((prev) => prev.filter((n) => n.notification_id !== id));
-
-    if (wasUnopened) {
-      setUnopenedCount((count) => Math.max(0, count - 1));
-    }
-
+    setNotifications((prev) =>
+      prev.filter((n) => n.notification_id !== id)
+    );
+    if (wasUnopened) setUnopenedCount((c) => Math.max(0, c - 1));
     try {
       await axios.delete(`/notifications/delete/${id}`);
-    } catch (err) {
-      console.error("Feil ved sletting av varsel:", err);
+    } catch {
+      // Ignorer slettfeil
     }
   };
 
   return (
     <div className="notification-wrapper" ref={dropdownRef}>
-      <button className="notification-icon" onClick={() => setOpen(!open)}>
+      <button
+        className="notification-icon"
+        onClick={() => setOpen((o) => !o)}
+      >
         <FaBell size={35} />
         {unopenedCount > 0 && (
           <span className="notification-badge">{unopenedCount}</span>
@@ -159,11 +153,8 @@ export default function NotificationDropdown() {
                       <FaTimes size={12} />
                     </button>
                   </div>
-
                   <div className="notification-message">{notif.message}</div>
-
                   <div className="notification-time">
-                    {/* Vis dato og klokkeslett */}
                     {new Date(notif.created_at).toLocaleDateString("no-NO", {
                       day: "numeric",
                       month: "long",

@@ -43,10 +43,8 @@ const MineVakter = () => {
         response = await axios.get(`/shifts/posted_by/${userId}`);
       } else {
         response = await axios.get(`/shifts/store/${storeId}`);
-        console.log("Mine vakter response:", response.data);
       }
       setShifts(response.data);
-      console.log("Fetched shifts:", response.data);
     } catch (error) {
       console.error("Error fetching shifts:", error);
     } finally {
@@ -70,20 +68,22 @@ const MineVakter = () => {
       <h1 className="mine-vakter-title">DINE UTLYSTE VAKTER</h1>
       <div className="mine-vakter-beskrivelse">
         <p>
-          Her kan du se alle vaktene du har lagt ut, legge ut nye, se hvilke
-          som er tatt og se vaktene andre i butikken din har delt.
+          Her kan du se alle vaktene du har lagt ut, legge ut nye, se hvilke som
+          er tatt og se vaktene andre i butikken din har delt.
         </p>
       </div>
 
       <div className="mine-vakter-tab-bar">
-        <Link to="/bs/vakter/lag-vakt" className="mine-vakter-create-link">
-          <div className="mine-vakter-create-button-wrapper">
-            <div className="mine-vakter-create-round-button">
-              <HiPlusSm size={26} />
+        <div className="mine-vakter-create-button-center">
+          <Link to="/bs/vakter/lag-vakt" className="mine-vakter-create-link">
+            <div className="mine-vakter-create-button-wrapper">
+              <div className="mine-vakter-create-round-button">
+                <HiPlusSm size={26} />
+              </div>
+              <span className="mine-vakter-create-text">Legg ut vakt</span>
             </div>
-            <span className="mine-vakter-create-text">Legg ut vakt</span>
-          </div>
-        </Link>
+          </Link>
+        </div>
 
         <div className="mine-vakter-tab-boxes">
           <button
@@ -114,7 +114,9 @@ const MineVakter = () => {
       ) : (
         <>
           {shifts.length === 0 ? (
-            <p className="mine-vakter-empty-message">Du har ikke publisert noen vakter enda</p>
+            <p className="mine-vakter-empty-message">
+              Du har ikke publisert noen vakter enda
+            </p>
           ) : (
             Object.entries(
               shifts.reduce((acc, shift) => {

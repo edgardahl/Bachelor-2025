@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./NotFound.css";
 
+// Komponenten viser en 404-feilside når en bruker prøver å navigere til en utdatert eller feilaktig URL.
 const NotFound = () => {
   return (
     <div className="not-found-container">

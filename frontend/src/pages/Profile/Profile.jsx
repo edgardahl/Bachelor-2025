@@ -52,6 +52,7 @@ const Profile = () => {
   const showBackButton =
     (user?.role === "store_manager" || user?.role === "admin") && !isOwnProfile;
 
+  // Definerer på norsk for hvert felt i brukerprofilen
   const fieldLabels = {
     first_name: "Fornavn",
     last_name: "Etternavn",
@@ -246,34 +247,41 @@ const Profile = () => {
     if (!formData.currentPassword || !formData.newPassword) {
       setErrors((prev) => ({
         ...prev,
-        password: "Begge feltene må fylles ut",
+        password: "Begge feltene må fylles ut", // Feilmelding hvis et av feltene er tomt
       }));
       return;
     }
 
     try {
+      // Forsøk å oppdatere passordet ved å sende en PATCH-forespørsel til API-et
       await axios.patch("/users/current/password", {
         currentPassword: formData.currentPassword,
         newPassword: formData.newPassword,
       });
 
+      // Hvis passordet ble oppdatert uten problemer, vis en suksessmelding
       toast.success("Passord oppdatert");
 
+      // Tøm formfeltene etter vellykket oppdatering
       setFormData((prev) => ({
         ...prev,
         currentPassword: "",
         newPassword: "",
       }));
 
+      // Lukk redigeringsfeltet for passord
       toggleFieldEdit("password", false);
     } catch (err) {
+      // Håndter feil hvis forespørselen mislykkes
       const apiError = err.response?.data?.error;
       if (typeof apiError === "string") {
+        // Hvis API-et gir en spesifikk feil, vis denne feilen
         setErrors((prev) => ({
           ...prev,
           password: apiError,
         }));
       } else {
+        // Hvis det er en ukjent feil, vis en generell feilmelding
         setErrors((prev) => ({
           ...prev,
           password: "Kunne ikke oppdatere passordet.",
@@ -315,12 +323,15 @@ const Profile = () => {
     }
   };
 
+  // Sjekker om brukeren kan redigere kvalifikasjoner
   const canEditQualifications =
-    user?.role === "store_manager" &&
-    !isOwnProfile &&
-    user?.storeId === formData?.store_id;
+    user?.role === "store_manager" && // Brukeren må ha rollen "store_manager"
+    !isOwnProfile && // Brukeren kan ikke redigere sine egne kvalifikasjoner
+    user?.storeId === formData?.store_id; // Brukeren må ha samme butikk-ID som den som redigeres
+
+  // Sjekker om brukeren kan se kvalifikasjoner
   const canViewQualifications =
-    formData?.role === "employee" || canEditQualifications;
+    formData?.role === "employee" || canEditQualifications; // Brukeren kan se kvalifikasjonene hvis de er en ansatt eller kan redigere kvalifikasjonene
 
   if (!user || !formData) return <Loading />;
 
@@ -791,10 +802,11 @@ const Profile = () => {
               }
             >
               <div className="no-margin-wrapper">
-  <ButikkCard store={storeData} shiftsCount={publishedShiftCount} />
-</div>
-
-              
+                <ButikkCard
+                  store={storeData}
+                  shiftsCount={publishedShiftCount}
+                />
+              </div>
             </div>
           </div>
         )}
@@ -859,48 +871,47 @@ const Profile = () => {
       </div>
 
       {showDeleteUI && (
-  <ConfirmDeletePopup
-    title="brukerkonto"
-    itemName={`${formData.first_name} ${formData.last_name}`}
-    onCancel={() => setShowDeleteUI(false)}
-    onConfirm={async () => {
-      try {
-        await axios.delete(`/users/${formData.user_id}`);
-        toast.success("Konto slettet");
+        <ConfirmDeletePopup
+          title="brukerkonto"
+          itemName={`${formData.first_name} ${formData.last_name}`}
+          onCancel={() => setShowDeleteUI(false)}
+          onConfirm={async () => {
+            try {
+              await axios.delete(`/users/${formData.user_id}`);
+              toast.success("Konto slettet");
 
-        if (isOwnProfile) {
-          navigate("/login");
-        } else if (user.role === "store_manager") {
-          navigate("/bs/ansatte/mine");
-        } else if (user.role === "admin") {
-          navigate("/admin/butikksjefer");
-        }
-      } catch (err) {
-        console.error("Feil ved sletting:", err);
-        toast.error("Kunne ikke slette kontoen.");
-        throw err;
-      }
-    }}
-  />
-)}
-{((isOwnProfile && user?.role === "employee") ||
-  (user?.role === "store_manager" &&
-    !isOwnProfile &&
-    formData.role === "employee" &&
-    user.storeId === formData.store_id) ||
-  (user?.role === "admin" &&
-    !isOwnProfile &&
-    formData.role === "store_manager")) && (
-  <div className="delete-account-section">
-    <button
-      className="danger-button"
-      onClick={() => setShowDeleteUI(true)}
-    >
-      Slett konto
-    </button>
-  </div>
-)}
-
+              if (isOwnProfile) {
+                navigate("/login");
+              } else if (user.role === "store_manager") {
+                navigate("/bs/ansatte/mine");
+              } else if (user.role === "admin") {
+                navigate("/admin/butikksjefer");
+              }
+            } catch (err) {
+              console.error("Feil ved sletting:", err);
+              toast.error("Kunne ikke slette kontoen.");
+              throw err;
+            }
+          }}
+        />
+      )}
+      {((isOwnProfile && user?.role === "employee") ||
+        (user?.role === "store_manager" &&
+          !isOwnProfile &&
+          formData.role === "employee" &&
+          user.storeId === formData.store_id) ||
+        (user?.role === "admin" &&
+          !isOwnProfile &&
+          formData.role === "store_manager")) && (
+        <div className="delete-account-section">
+          <button
+            className="danger-button"
+            onClick={() => setShowDeleteUI(true)}
+          >
+            Slett konto
+          </button>
+        </div>
+      )}
     </div>
   );
 };

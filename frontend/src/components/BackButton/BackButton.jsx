@@ -8,11 +8,11 @@ const BackButton = ({ to, onClick }) => {
 
   const handleClick = (e) => {
     if (onClick) {
-      onClick(e);
+      onClick(e); // Kjører egendefinert funksjon hvis sendt inn
     } else if (to) {
-      navigate(to);
+      navigate(to); // Navigerer til angitt rute hvis "to" er spesifisert
     } else {
-      navigate(-1);
+      navigate(-1); // Går tilbake i historikken hvis ingen props er sendt
     }
   };
 

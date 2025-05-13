@@ -1,4 +1,3 @@
-/* Main container */
 .ledige-ansatte {
   background-color: var(--Body-background);
   padding: 24px;
@@ -7,7 +6,6 @@
   border-radius: 4px;
 }
 
-/* Title */
 .ledige-ansatte-title {
   color: var(--Available-main);
   font-size: 4rem;
@@ -28,10 +26,10 @@
   line-height: 1.6;
 }
 
-.no-employee-found{
+.no-employee-found {
   text-align: center;
   font-size: 1.2rem;
-  color:var(--Text-color-light);;
+  color: var(--Text-color-light);
   margin-top: 20px;
 }
 
@@ -51,7 +49,6 @@
   margin-bottom: 20px;
 }
 
-/* Responsive styles */
 @media (max-width: 1030px) {
   .ledige-ansatte {
     width: 100%;
@@ -65,7 +62,6 @@
   }
 }
 
-/* Mobile view */
 @media (max-width: 700px) {
   .ledige-ansatte {
     padding: 12px;

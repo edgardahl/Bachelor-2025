@@ -1,4 +1,3 @@
-/* Main container */
 .mine-ansatte {
   background-color: var(--Body-background);
   padding: 24px;
@@ -7,7 +6,6 @@
   border-radius: 4px;
 }
 
-/* Title */
 .mine-ansatte-title {
   color: var(--Employees-main);
   font-size: 4rem;
@@ -44,7 +42,6 @@
   margin-bottom: 20px;
 }
 
-
 @media (max-width: 1030px) {
   .mine-ansatte {
     width: 100%;
@@ -52,12 +49,11 @@
     border-radius: 0;
   }
 
-  .shift-date-group{
+  .shift-date-group {
     max-width: 100%;
   }
 }
 
-/* Mobile view */
 @media (max-width: 847px) {
   .mine-ansatte {
     padding: 12px;

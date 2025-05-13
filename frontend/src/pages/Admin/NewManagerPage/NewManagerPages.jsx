@@ -21,6 +21,7 @@ const NewManagerPage = () => {
   const [stores, setStores] = useState([]);
   const [errors, setErrors] = useState({});
 
+  // Referanser for å kunne scrolle til feilet felt
   const fieldRefs = {
     first_name: useRef(null),
     last_name: useRef(null),
@@ -28,6 +29,7 @@ const NewManagerPage = () => {
     password: useRef(null),
   };
 
+  // Henter tilgjengelige butikker når komponenten monteres
   useEffect(() => {
     const fetchStores = async () => {
       try {
@@ -42,20 +44,24 @@ const NewManagerPage = () => {
     fetchStores();
   }, []);
 
+  // Formaterer butikkdata til bruk i Select-komponenten
   const storeOptions = stores.map((store) => ({
     value: store.store_id,
     label: `${store.name} (${store.store_chain})`,
   }));
 
+  // Oppdaterer skjematilstand ved input-endringer
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Oppdaterer valgt butikk
   const handleStoreChange = (selectedOption) => {
     setFormData((prev) => ({ ...prev, store_id: selectedOption?.value || "" }));
   };
 
+  // Validerer og sender inn skjema
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
@@ -63,17 +69,21 @@ const NewManagerPage = () => {
     try {
       await axios.post("/auth/store_manager/register", formData);
       toast.success("Butikksjef opprettet");
-      navigate("/admin/butikksjefer");
+      navigate("/admin/butikksjefer"); // Navigerer tilbake ved suksess
     } catch (err) {
       if (err.response?.data?.error) {
+        // Håndterer spesifikke feilmeldinger fra backend
         const newErrors = err.response.data.error;
         setErrors(newErrors);
 
+        // Scroller til første felt med feil
         const firstErrorField = Object.keys(fieldRefs).find(
           (key) => newErrors[key]
         );
         if (firstErrorField && fieldRefs[firstErrorField].current) {
-          fieldRefs[firstErrorField].current.scrollIntoView({ behavior: "smooth" });
+          fieldRefs[firstErrorField].current.scrollIntoView({
+            behavior: "smooth",
+          });
           fieldRefs[firstErrorField].current.focus();
         }
       } else {
@@ -99,7 +109,9 @@ const NewManagerPage = () => {
         required
         className={errors.first_name ? "error" : ""}
       />
-      {errors.first_name && <div className="error-message">{errors.first_name}</div>}
+      {errors.first_name && (
+        <div className="error-message">{errors.first_name}</div>
+      )}
 
       <label>Etternavn</label>
       <input
@@ -110,7 +122,9 @@ const NewManagerPage = () => {
         required
         className={errors.last_name ? "error" : ""}
       />
-      {errors.last_name && <div className="error-message">{errors.last_name}</div>}
+      {errors.last_name && (
+        <div className="error-message">{errors.last_name}</div>
+      )}
 
       <label>E-post</label>
       <input
@@ -133,7 +147,9 @@ const NewManagerPage = () => {
         required
         className={errors.phone_number ? "error" : ""}
       />
-      {errors.phone_number && <div className="error-message">{errors.phone_number}</div>}
+      {errors.phone_number && (
+        <div className="error-message">{errors.phone_number}</div>
+      )}
 
       <label>Passord</label>
       <input
@@ -145,7 +161,9 @@ const NewManagerPage = () => {
         required
         className={errors.password ? "error" : ""}
       />
-      {errors.password && <div className="error-message">{errors.password}</div>}
+      {errors.password && (
+        <div className="error-message">{errors.password}</div>
+      )}
 
       <label>Tilknytt butikk</label>
       <Select
@@ -154,11 +172,15 @@ const NewManagerPage = () => {
         placeholder="Velg butikk..."
         className={errors.store_id ? "error-select" : ""}
       />
-      {errors.store_id && <div className="error-message">{errors.store_id}</div>}
+      {errors.store_id && (
+        <div className="error-message">{errors.store_id}</div>
+      )}
 
       {errors.general && <div className="error-message">{errors.general}</div>}
 
-      <button type="submit" className="submit-btn">Opprett butikksjef</button>
+      <button type="submit" className="submit-btn">
+        Opprett butikksjef
+      </button>
     </form>
   );
 };

@@ -5,7 +5,7 @@ import { getAllMunicipalitiesController } from "../controllers/municipalityContr
 
 const router = express.Router();
 
-// Henter alle kommuner
+// Henter alle kommuner fra databasen
 router.get("/", verifyToken, getAllMunicipalitiesController);
 
 export default router;

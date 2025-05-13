@@ -21,12 +21,12 @@ const LedigeAnsatte = () => {
     currentPage * PAGE_SIZE
   );
 
+  // Hent alle tilgjengelige ansatte når komponenten mountes
   useEffect(() => {
     const fetchAvailableEmployees = async () => {
       try {
         const res = await axios.get("/users/available");
         setEmployees(res.data);
-        console.log("Available employees:", res.data);
         setFilteredEmployees(res.data);
       } catch (err) {
         console.error("Failed to fetch available employees:", err);
@@ -39,6 +39,7 @@ const LedigeAnsatte = () => {
     fetchAvailableEmployees();
   }, []);
 
+  // Oppdater filtrert liste når kvalifikasjoner endres
   useEffect(() => {
     if (selectedQualifications.length === 0) {
       setFilteredEmployees(employees);
@@ -51,6 +52,7 @@ const LedigeAnsatte = () => {
     setCurrentPage(1);
   }, [selectedQualifications, employees]);
 
+  // Last inn flere ved paginering
   const handleShowMore = () => {
     setCurrentPage((prev) => prev + 1);
   };
@@ -64,10 +66,12 @@ const LedigeAnsatte = () => {
         </p>
       </div>
 
+      {/* Filter for å velge kvalifikasjoner */}
       <KvalifikasjonerFilter onChange={setSelectedQualifications} />
 
       {error && <p className="ledige-error-message">{error}</p>}
 
+      {/* Vis melding om ingen treff */}
       {filteredEmployees.length === 0 && !error && !loading && (
         <p className="no-employee-found">
           Ingen ledige ansatte funnet med alle valgte kvalifikasjonene.
@@ -78,6 +82,7 @@ const LedigeAnsatte = () => {
         <Loading />
       ) : (
         <>
+          {/* Liste over filtrerte og paginerte ansatte */}
           <div className="ledige-employee-list">
             {paginatedEmployees.map((employee) => (
               <Link
@@ -86,7 +91,7 @@ const LedigeAnsatte = () => {
               >
                 <ButikkansattCard
                   employee={employee}
-                  show = "store"
+                  show="store"
                   showQualifications={true}
                   cardClass="available-theme"
                 />
@@ -94,6 +99,7 @@ const LedigeAnsatte = () => {
             ))}
           </div>
 
+          {/* Vis mer-knapp for å laste neste side */}
           {paginatedEmployees.length < filteredEmployees.length && (
             <div className="show-more-container">
               <button className="show-more-button" onClick={handleShowMore}>

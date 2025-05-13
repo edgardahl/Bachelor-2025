@@ -28,7 +28,7 @@
 .register-form label {
   display: block;
   font-weight: 500;
-  margin-top: 2.2rem; /* Nytt */
+  margin-top: 2.2rem;
   margin-bottom: 0.25rem;
   color: #444;
 }
@@ -44,7 +44,7 @@
   padding: 0.5rem 0.75rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-top: 0.5rem; /* Nytt */
+  margin-top: 0.5rem;
   font-size: 1rem;
   transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }

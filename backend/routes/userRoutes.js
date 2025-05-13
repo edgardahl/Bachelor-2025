@@ -1,24 +1,20 @@
 import express from "express";
 import {
-  getAllUsersController,
   getUserByIdController,
-  updateUserByIdController,
   getEmployeesByStoreIdController,
   getAvailableEmployeesController,
-  updateEmployeeQualificationsController,
-  changePassword,
   getAllStoreManagersController,
   getStoreManagersController,
-  deleteUserByIdController, 
+  updateUserByIdController,
+  updateEmployeeQualificationsController,
+  changePassword,
+  deleteUserByIdController,
 } from "../controllers/userController.js";
 import { verifyToken, authorizeRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Henter alle brukere
-router.get("/", verifyToken, getAllUsersController);
-
-// Henter alle ansatte for en butikk
+// Henter alle ansatte for en butikk (brukes i MineAnsatte.jsx og butikksjef sin Dashboard.jsx)
 router.get(
   "/employees",
   verifyToken,
@@ -26,23 +22,7 @@ router.get(
   getEmployeesByStoreIdController
 );
 
-// Oppdaterer kvalifikasjoner for en ansatt
-router.post(
-  "/employees/qualifications/update",
-  verifyToken,
-  authorizeRoles("store_manager"),
-  updateEmployeeQualificationsController
-);
-
-// Hent alle store managers (uavhengig om de har butikk eller ikke)
-router.get(
-  "/store_managers",
-  verifyToken,
-  authorizeRoles("admin"),
-  getAllStoreManagersController
-);
-
-// Henter alle tilgjengelige ansatte
+// Henter alle tilgjengelige ansatte som ønsker å jobbe i en butikksjef sin kommune (brukes i LedigeAnsatte.jsx og butikksjef sin Dashboard.jsx)
 router.get(
   "/available",
   verifyToken,
@@ -50,19 +30,35 @@ router.get(
   getAvailableEmployeesController
 );
 
-// Henter alle managers for en spesifikk butikk
+// Henter alle butikksjefer (uavhengig av tilknytning til butikk) (brukes i NewStore.jsx og AdminButikker.jsx)
+router.get(
+  "/store_managers",
+  verifyToken,
+  authorizeRoles("admin"),
+  getAllStoreManagersController
+);
+
+// Henter butikksjefer for en spesifikk butikk (brukes i AdminButikk, AdminManagers, admin Dashboard og NewStore.jsx)
 router.get("/store_managers/:storeId", verifyToken, getStoreManagersController);
 
-// Henter en bruker med en bestemt id
+// Henter en spesifikk bruker basert på ID (brukes i MineVakter, ButikkOversikt og Profile.jsx)
 router.get("/:id", verifyToken, getUserByIdController);
 
-// Sletter en bruker (egen, ansatt, eller butikksjef)
-router.delete("/:id", verifyToken, deleteUserByIdController); // ✅ added
+// Oppdaterer kvalifikasjoner for en ansatt (brukes i Profile.jsx)
+router.post(
+  "/employees/qualifications/update",
+  verifyToken,
+  authorizeRoles("store_manager"),
+  updateEmployeeQualificationsController
+);
 
-// Oppdaterer innloggede bruker
+// Oppdaterer innlogget brukers informasjon (brukes i Profile.jsx)
 router.put("/current/update", verifyToken, updateUserByIdController);
 
-// Oppdaterer passord for innloggede bruker
+// Endrer passord for innlogget bruker (brukes i Profile.jsx)
 router.patch("/current/password", verifyToken, changePassword);
+
+// Sletter en bruker (egen, ansatt eller butikksjef) (brukes i Profile.jsx)
+router.delete("/:id", verifyToken, deleteUserByIdController);
 
 export default router;

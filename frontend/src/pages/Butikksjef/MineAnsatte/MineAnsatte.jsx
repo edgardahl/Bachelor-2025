@@ -21,17 +21,17 @@ const MineAnsatte = () => {
     currentPage * PAGE_SIZE
   );
 
+  // Henter alle ansatte for butikksjefen ved komponentmount
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         setLoading(true);
         const response = await axios.get("/users/employees");
-        console.log(response.data);
         setEmployees(response.data);
         setFilteredEmployees(response.data);
       } catch (err) {
-        setError("Failed to load employee data.");
-        console.error(err);
+        console.error("Failed to load employee data:", err);
+        setError("Kunne ikke hente ansatte.");
       } finally {
         setLoading(false);
       }
@@ -40,36 +40,37 @@ const MineAnsatte = () => {
     fetchEmployees();
   }, []);
 
+  // Filtrerer og sorterer ansatte ved endring av kvalifikasjoner eller ansattliste
   useEffect(() => {
-    if (selectedQualifications.length === 0) {
-      const sorted = [...employees].sort((a, b) =>
-        a.availability === "Fleksibel" && b.availability !== "Fleksibel" ? -1 :
-        a.availability !== "Fleksibel" && b.availability === "Fleksibel" ? 1 : 0
+    const sortByAvailability = (list) =>
+      list.sort((a, b) =>
+        a.availability === "Fleksibel" && b.availability !== "Fleksibel"
+          ? -1
+          : a.availability !== "Fleksibel" && b.availability === "Fleksibel"
+          ? 1
+          : 0
       );
-      setFilteredEmployees(sorted);
+
+    if (selectedQualifications.length === 0) {
+      // Kun sortering uten kvalifikasjonsfilter
+      setFilteredEmployees(sortByAvailability([...employees]));
     } else {
+      // Filtrering på kvalifikasjoner, deretter sortering
       const filtered = employees.filter((emp) => {
         const kvalifikasjoner = emp.qualifications
           ? emp.qualifications.split(",").map((q) => q.trim())
           : [];
-  
-        return selectedQualifications.every((selectedQualification) =>
-          kvalifikasjoner.includes(selectedQualification)
+        return selectedQualifications.every((q) =>
+          kvalifikasjoner.includes(q)
         );
       });
-  
-      const sorted = [...filtered].sort((a, b) =>
-        a.availability === "Fleksibel" && b.availability !== "Fleksibel" ? -1 :
-        a.availability !== "Fleksibel" && b.availability === "Fleksibel" ? 1 : 0
-      );
-  
-      setFilteredEmployees(sorted);
+      setFilteredEmployees(sortByAvailability(filtered));
     }
-  
-    setCurrentPage(1); // Reset pagination when filters change
-  }, [selectedQualifications, employees]);
-  
 
+    setCurrentPage(1); // Resett paginering når filter oppdateres
+  }, [selectedQualifications, employees]);
+
+  // Laster inn flere ansatte ved paginering
   const handleShowMore = () => {
     setCurrentPage((prev) => prev + 1);
   };
@@ -79,20 +80,22 @@ const MineAnsatte = () => {
       <h1 className="mine-ansatte-title">MINE ANSATTE</h1>
       <div className="mine-ansatte-beskrivelse">
         <p>
-          Her kan du se en oversikt over alle ansatte i din butikk. Du kan se
-          hvilken kompetanse de har og om de er ledige
+          Se en oversikt over alle ansatte i din butikk, deres kompetanse og
+          tilgjengelighet.
         </p>
       </div>
 
+      {/* Filter for å velge ønskede kvalifikasjoner */}
       <KvalifikasjonerFilter onChange={setSelectedQualifications} />
 
       {error && <p className="error-message">{error}</p>}
 
       {loading ? (
-        <Loading />
+        <Loading /> // Vis lastespinner mens data hentes
       ) : (
         <>
           <div className="employee-list">
+            {/* Kort for å legge til ny ansatt */}
             <Link to="/bs/ansatte/mine/nyAnsatt">
               <ButikkansattCard isEmptyCard={true} cardClass="employee-theme" />
             </Link>
@@ -100,13 +103,13 @@ const MineAnsatte = () => {
             {paginatedEmployees.length > 0 ? (
               paginatedEmployees.map((employee) => (
                 <Link
+                  key={employee.user_id}
                   to={`/bs/ansatte/profil/${employee.user_id}`}
                   state={{ fromMineAnsatte: true }}
-                  key={employee.user_id}
                 >
                   <ButikkansattCard
                     employee={employee}
-                    show = "availability"
+                    show="availability"
                     showQualifications={true}
                     cardClass="employee-theme"
                   />
@@ -114,11 +117,12 @@ const MineAnsatte = () => {
               ))
             ) : (
               <p className="no-employee-found">
-                Du har ingen ansatte med alle valgte kvalifikasjoner
+                Ingen ansatte matcher valgte kvalifikasjoner.
               </p>
             )}
           </div>
 
+          {/* Vis mer-knapp for paginering */}
           {paginatedEmployees.length < filteredEmployees.length && (
             <div className="show-more-container">
               <button className="show-more-button" onClick={handleShowMore}>
