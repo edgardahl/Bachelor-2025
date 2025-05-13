@@ -1,6 +1,7 @@
 import {
   getAllStoresModel,
   getStoreByIdModel,
+  getStoresByNameModel,
   getStoresWithMunicipality,
   createStoreModel,
   getAllStoresWithInfoModel,
@@ -102,6 +103,23 @@ export const createStoreController = async (req, res) => {
   }
 
   try {
+    // 🔍 Sjekk om butikken allerede finnes med samme navn og kjede (case-insensitive)
+    const existingStores = await getStoresByNameModel(sanitized.store_name);
+
+    const alreadyExists = existingStores.some(
+      (store) =>
+        store.name.toLowerCase() === sanitized.store_name.toLowerCase() &&
+        store.store_chain.toLowerCase() === sanitized.store_chain.toLowerCase()
+    );
+
+    if (alreadyExists) {
+      return res.status(409).json({
+        error: {
+          store_name: "En butikk med dette navnet og kjeden finnes allerede.",
+        },
+      });
+    }
+
     const newStore = await createStoreModel(sanitized);
 
     // Hvis butikksjef-ID er oppgitt, knytt den til butikken
@@ -109,14 +127,17 @@ export const createStoreController = async (req, res) => {
       const manager = await getUserByIdModel(sanitized.manager_id);
 
       if (!manager) {
-        return res.status(404).json({ error: { manager_id: "Manager not found." } });
+        return res
+          .status(404)
+          .json({ error: { manager_id: "Manager not found." } });
       }
 
       // Sjekker at butikksjef ikke allerede er tilknyttet en annen butikk
       if (manager.store_id) {
         return res.status(400).json({
           error: {
-            manager_id: "Denne brukeren er allerede registrert som butikksjef for en annen butikk.",
+            manager_id:
+              "Denne brukeren er allerede registrert som butikksjef for en annen butikk.",
           },
         });
       }
@@ -127,7 +148,9 @@ export const createStoreController = async (req, res) => {
 
       if (!updatedUser) {
         return res.status(500).json({
-          error: { general: "Butikk ble opprettet, men klarte ikke knytte butikksjef." },
+          error: {
+            general: "Butikk ble opprettet, men klarte ikke knytte butikksjef.",
+          },
         });
       }
     }
@@ -141,6 +164,22 @@ export const createStoreController = async (req, res) => {
     }
 
     res.status(500).json({ error: { general: error.message } });
+  }
+};
+
+// Henter butikk med full informasjon fra denne modellen getStoreWithFullInfoModel
+export const getStoreWithInfoController = async (req, res) => {
+  const { storeId } = req.params;
+
+  try {
+    const store = await getStoreWithFullInfoModel(storeId);
+    if (!store) {
+      return res.status(404).json({ error: "Store not found" });
+    }
+    return res.json(store);
+  } catch (error) {
+    console.error("Error fetching store:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -166,21 +205,26 @@ export const updateStoreController = async (req, res) => {
       const manager = await getUserByIdModel(manager_id);
 
       if (!manager) {
-        return res.status(404).json({ error: { manager_id: "Manager not found." } });
+        return res
+          .status(404)
+          .json({ error: { manager_id: "Manager not found." } });
       }
 
       // Sjekker at butikksjef ikke allerede er tilknyttet en annen butikk
       if (manager.store_id && manager.store_id !== parseInt(storeId)) {
         return res.status(400).json({
           error: {
-            manager_id: "Denne brukeren er allerede registrert som butikksjef for en annen butikk.",
+            manager_id:
+              "Denne brukeren er allerede registrert som butikksjef for en annen butikk.",
           },
         });
       }
 
       const updatedUser = await updateUserByIdModel(manager_id, { store_id: storeId });
       if (!updatedUser) {
-        return res.status(500).json({ error: "Failed to update store_id for manager." });
+        return res
+          .status(500)
+          .json({ error: "Failed to update store_id for manager." });
       }
     }
 
@@ -212,7 +256,9 @@ export const deleteStoreController = async (req, res) => {
 
     // Sjekker at bruker som prøver å slette er admin
     if (req.user.role !== "admin") {
-      return res.status(403).json({ error: "Du har ikke tilgang til å slette denne butikken." });
+      return res
+        .status(403)
+        .json({ error: "Du har ikke tilgang til å slette denne butikken." });
     }
 
     await deleteStoreModel(store_id);
