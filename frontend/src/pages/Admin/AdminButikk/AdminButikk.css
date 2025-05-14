@@ -93,16 +93,9 @@
 
 .adminbutikk-actions div {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
-  width: 100%;
   margin: 0 auto;
-}
-
-.adminbutikk-button-edit,
-.adminbutikk-button-cancle {
-  margin: 0 auto;
-  width: 200px;
 }
 
 .adminbutikk-button-edit {
@@ -123,8 +116,8 @@
 }
 
 .adminbutikk-button-cancle {
-  background-color: var(--Error-delete-color);
-  color: var(--White);
+  background-color: var(--Cancel-color);
+  color: black;
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 4px;
@@ -136,7 +129,7 @@
 }
 
 .adminbutikk-button-cancle:hover {
-  background-color: #c93d2f;
+  background-color: var(--Cancel-color-hover);
 }
 
 .adminbutikk-manager-link {
