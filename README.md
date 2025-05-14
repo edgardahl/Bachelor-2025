@@ -30,11 +30,14 @@ cd bacherlor2025
 
 ### 2. Installer dependencies
 
+Frontend:
 ```bash
 cd frontend
 npm install
-
-cd ../backend
+```
+Backend:
+```bash
+cd backend
 npm install
 ```
 
