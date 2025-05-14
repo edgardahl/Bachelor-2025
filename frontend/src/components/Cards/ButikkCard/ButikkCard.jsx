@@ -17,6 +17,8 @@ const storeChainImages = {
   Mega: "CoopMega.png",
   "Obs BYGG": "ObsBygg.png",
   Bygg: "ObsBygg.png",
+  "Coop Byggmix": "CoopByggmix.png",
+  Byggmix: "CoopByggmix.png",
   default: "Default.png",
 };
 

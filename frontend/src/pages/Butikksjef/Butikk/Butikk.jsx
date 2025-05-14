@@ -90,7 +90,7 @@ const Butikk = () => {
         </div>
       </div>
 
-      <h2 className="butikk-shift-heading">Publiserte Vakter</h2>
+      <h2 className="butikk-shift-heading">Publiserte vakter</h2>
       <div className="butikk-shift-list">
         {shifts.length > 0 ? (
           shifts.map((shift) => (

@@ -381,7 +381,7 @@ ul.municipality-list li {
 }
 
 .no-margin-wrapper .butikk-card {
-  margin: 0;
+  margin: 0.8rem 0;
 }
 
 @media (max-width: 740px) {

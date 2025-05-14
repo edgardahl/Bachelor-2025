@@ -82,7 +82,7 @@ const ShiftDetailsPage = () => {
       if (res.status === 200) {
         toast.success("Vakten ble slettet.");
         setShowDeletePopup(false);
-        navigate("/bs/hjem");
+        navigate("/bs/vakter");
       } else {
         toast.error("Kunne ikke slette vakten.");
       }
