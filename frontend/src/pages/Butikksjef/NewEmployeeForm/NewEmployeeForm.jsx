@@ -27,6 +27,7 @@ export default function RegisterNewEmployeeForm() {
   const [qualifications, setQualifications] = useState([]);
   const [errors, setErrors] = useState({});
 
+  // Hent kvalifikasjoner fra API ved mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,10 +43,14 @@ export default function RegisterNewEmployeeForm() {
     fetchData();
   }, []);
 
+  // Oppdaterer skjemafelter ved input-endring
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  // Legger til/fjerner kvalifikasjon i skjema
 
   const handleQualificationChange = (id) => {
     setFormData((prev) => {
@@ -59,47 +64,60 @@ export default function RegisterNewEmployeeForm() {
     });
   };
 
+  // Sender registreringen av den nye ansatte til API-et for å lagre dataene
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Hindrer at skjemaet sendes på tradisjonelt vis (fullstendig sideoppdatering)
+
     try {
-      setErrors({});
+      setErrors({}); // Nullstiller eventuelle tidligere feil før innsending
+
+      // Sender dataene til API-et for å registrere den nye ansatte
       await axios.post("/auth/employee/register", formData);
+
+      // Vist en suksessmelding etter at registreringen er gjennomført
       toast.success("Bruker registrert");
-  
-      navigate("/bs/ansatte/mine"); // ← Naviger dit
-  
+
+      // Naviger brukeren til en liste over ansatte etter at registreringen er fullført
+      navigate("/bs/ansatte/mine");
+
+      // Nullstiller skjemaet etter innsending
       setFormData({
         first_name: "",
         last_name: "",
         email: "",
         password: "",
         phone_number: "",
-        qualifications: [],
+        qualifications: [], // Resetter kvalifikasjoner
       });
     } catch (err) {
       if (err.response?.data?.error) {
+        // Finner feilmeldingene fra API-svaret og lagrer dem
         const errorMessages = err.response.data.error;
         const newErrors = {};
 
+        // Går gjennom feilmeldingene og setter dem i state
         for (const key in errorMessages) {
           if (Object.hasOwnProperty.call(errorMessages, key)) {
             newErrors[key] = errorMessages[key];
           }
         }
 
-        setErrors(newErrors);
+        setErrors(newErrors); // Oppdaterer feilmeldingene i state
 
+        // Finner det første feltet som har en feil og ruller til det
         const firstErrorField = Object.keys(fieldRefs).find(
           (key) => newErrors[key]
         );
         if (firstErrorField && fieldRefs[firstErrorField].current) {
+          // Ruller til det første feilede feltet for bedre brukeropplevelse
           fieldRefs[firstErrorField].current.scrollIntoView({
             behavior: "smooth",
             block: "center",
           });
-          fieldRefs[firstErrorField].current.focus();
+          fieldRefs[firstErrorField].current.focus(); // Setter fokus på feltet med feil
         }
       } else {
+        // Hvis det ikke er noen spesifikke feilmeldinger, vis en generell feilmelding
         toast.error("Noe gikk galt. Prøv igjen.");
       }
     }

@@ -10,23 +10,23 @@
 }
 
 :root {
-  /* Colors */
+  /* Farger */
   --White: #ffffff;
   --Card-color: #fff;
   --Black: #000000;
   --loading: #343538;
-  --Body-background: #F4F5F9;
-  --Main-dark-color: #313B45;
+  --Body-background: #f4f5f9;
+  --Main-dark-color: #313b45;
   --Main-light-color: #f9f5e0;
   --Card-header-color: #3b5f90;
-  --Card-icon-color: #A3A7B0;
-  --Text-highlight-color: #5D9F95;
+  --Card-icon-color: #a3a7b0;
+  --Text-highlight-color: #5d9f95;
 
-  /* Text-colors */
+  /* Tekst farger */
   --Text-color: #161616;
   --Text-color-light: #4f4f4f;
 
-  /* Button colors */
+  /* Knapp farger */
   --Button-color: #1976d2;
   --Button-hover-color: #125ea8;
   --Error-delete-color: #d33030;
@@ -37,7 +37,7 @@
   --Open-link-color: #156363;
   --Create-new: #1cb066;
 
-  /* Tab colors */
+  /* Tab farger */
   --Open-tab-color: #115676;
   --Closed-tab-color: #f4f4f4;
   --Closed-tab-color-hover: #dcdcdc;
@@ -48,12 +48,11 @@
   --Text-font: "Inter", sans-serif;
   --Text-font-size: 16px;
 
-  /* transition */
+  /* Transition */
   --Transition-button-simple: 0.2s ease;
   --Transition-button-change-filter: 85%;
 
-
-  /* THEME COLORS */
+  /* Theme farger */
   --Shifts-main: #2a72a5;
   --Shifts-hover: #e6f7ff;
   --Shifts-hover-dark: #1e4e72;
@@ -66,7 +65,6 @@
   --Shifts-tab-hover: #d2eefd;
   --Shifts-claimed-accent: #27ae60;
 
-
   --Employees-main: #d6a029;
   --Employees-hover: #fef6e6;
   --Employees-hover-dark: #a07811;
@@ -74,8 +72,6 @@
   --Employees-text-light: #555;
   --Employees-text-dark: #222;
   --Employees-card-radius: 12px;
-
-
 
   --Available-main: #23a188;
   --Available-hover: #e8fef8;

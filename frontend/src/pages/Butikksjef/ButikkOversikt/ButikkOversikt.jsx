@@ -25,46 +25,39 @@ const ButikkOversikt = () => {
 
   const PAGE_SIZE = 12;
 
+  // Henter butikkdata med eventuelle filterparametere og paginering
   const fetchStores = async (filters = {}, page = 1, append = false) => {
     try {
       const queryParams = new URLSearchParams();
 
       if (filters.municipality && filters.municipality.length > 0) {
         queryParams.append("municipality", filters.municipality);
-        console.log("Municipality filter:", filters.municipality);
       }
 
       if (filters.store_chain && filters.store_chain.length > 0) {
         queryParams.append("store_chain", filters.store_chain);
       }
 
-      // Paginering (kun nødvendig om det ikke er filtrert)
-      if (
-        (filters.municipality && filters.municipality.length > 0) ||
-        (filters.store_chain && filters.store_chain.length > 0)
-      ) {
-        queryParams.append("pageSize", 1000); // eller valgfritt tall
+      // Justerer paging avhengig av om vi har filtere
+      if (filters.municipality || filters.store_chain) {
+        queryParams.append("pageSize", 1000);
       } else {
         queryParams.append("page", page);
         queryParams.append("pageSize", PAGE_SIZE);
       }
-
-      console.log("Query params:", queryParams.toString());
 
       const response = await axios.get(
         `/stores/storesWithMunicipality?${queryParams.toString()}`
       );
 
       const storeData = response.data.stores;
-
-      // shiftCount allerede inkludert, så vi slipper egne API-kall
       const shiftsData = {};
-      for (const store of storeData) {
-        shiftsData[store.store_id] = store.shift_count || 0;
-      }
+      storeData.forEach((s) => {
+        shiftsData[s.store_id] = s.shift_count || 0;
+      });
 
       if (append) {
-        setStores((prevStores) => [...prevStores, ...storeData]);
+        setStores((prev) => [...prev, ...storeData]);
       } else {
         setStores(storeData);
       }
@@ -79,6 +72,7 @@ const ButikkOversikt = () => {
     }
   };
 
+  // Henter brukerens foretrukne kommuner ved innlasting
   useEffect(() => {
     const fetchPreferredMunicipalities = async () => {
       try {
@@ -95,11 +89,13 @@ const ButikkOversikt = () => {
     }
   }, [user]);
 
+  // Lytter på endringer i filters for å oppdatere butikklisten
   useEffect(() => {
     setLoading(true);
     fetchStores(filters, 1);
   }, [filters]);
 
+  // Håndterer "Vis mer"-knappen for paginering
   const handleShowMore = () => {
     setLoadingMore(true);
     const nextPage = currentPage + 1;
@@ -108,7 +104,7 @@ const ButikkOversikt = () => {
   };
 
   const filteredStores = selectedChains.length
-    ? stores.filter((store) => selectedChains.includes(store.store_chain))
+    ? stores.filter((s) => selectedChains.includes(s.store_chain))
     : stores;
 
   return (
@@ -121,16 +117,19 @@ const ButikkOversikt = () => {
         </p>
 
         {user?.role === "admin" && (
-          <Link to="/admin/butikker/ny" className="mine-vakter-create-link">
-            <div className="mine-vakter-create-button-wrapper">
-              <div className="mine-vakter-create-round-button">
-                <HiPlusSm size={26} />
+          <div className="mine-vakter-create-button-center">
+            <Link to="/admin/butikker/ny" className="mine-vakter-create-link">
+              <div className="mine-vakter-create-button-wrapper">
+                <div className="mine-vakter-create-round-button">
+                  <HiPlusSm size={26} />
+                </div>
+                <span className="mine-vakter-create-text">
+                  Lag en ny butikk
+                </span>
               </div>
-              <span className="mine-vakter-create-text">Lag en ny butikk</span>
-            </div>
-          </Link>
+            </Link>
+          </div>
         )}
-
 
         <KommuneFilter
           userRole={user.role}

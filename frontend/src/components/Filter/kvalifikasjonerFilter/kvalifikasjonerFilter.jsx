@@ -3,10 +3,12 @@ import Select from "react-select";
 import axios from "../../../api/axiosInstance";
 import "./kvalifikasjonerFilter.css";
 
+// Komponent for å filtrere på kvalifikasjoner
 const KvalifikasjonerFilter = ({ onChange, defaultValue = [] }) => {
   const [qualifications, setQualifications] = useState([]);
   const [selectedQualifications, setSelectedQualifications] = useState(defaultValue);
 
+  // Henter kvalifikasjoner fra API ved første rendering
   useEffect(() => {
     const fetchQualifications = async () => {
       try {
@@ -20,16 +22,19 @@ const KvalifikasjonerFilter = ({ onChange, defaultValue = [] }) => {
     fetchQualifications();
   }, []);
 
+  // Håndterer endringer i valgte kvalifikasjoner
   const handleChange = (selectedOptions) => {
     setSelectedQualifications(selectedOptions);
     onChange(selectedOptions.map((opt) => opt.value));
   };
 
+  // Tilbakestiller valgte kvalifikasjoner
   const handleReset = () => {
     setSelectedQualifications([]);
     onChange([]);
   };
 
+  // Mapper kvalifikasjoner til formatet som kreves av react-select
   const options = qualifications.map((q) => ({
     label: q.name,
     value: q.name,
@@ -42,6 +47,7 @@ const KvalifikasjonerFilter = ({ onChange, defaultValue = [] }) => {
           Filtrer på kvalifikasjoner
         </label>
 
+        {/* Dropdown for å velge kvalifikasjoner */}
         <Select
           id="qualification-select"
           options={options}
@@ -95,6 +101,7 @@ const KvalifikasjonerFilter = ({ onChange, defaultValue = [] }) => {
             }),
           }}
           components={{
+            // Tilpasset visning av alternativer med avkrysningsbokser
             Option: ({ data, innerRef, innerProps, isSelected }) => (
               <div
                 ref={innerRef}
@@ -111,7 +118,7 @@ const KvalifikasjonerFilter = ({ onChange, defaultValue = [] }) => {
                   type="checkbox"
                   checked={isSelected}
                   onChange={() => {}}
-                  style={{ marginRight: 10, accentColor: "#d6a029" }} // Add color for the check icon
+                  style={{ marginRight: 10, accentColor: "#d6a029" }} // Farge for avkrysningsboks
                 />
                 {data.label}
               </div>
@@ -119,6 +126,7 @@ const KvalifikasjonerFilter = ({ onChange, defaultValue = [] }) => {
           }}
         />
 
+        {/* Knapp for å tilbakestille valgte kvalifikasjoner */}
         <button
           className={`reset-preferred-button ${
             selectedQualifications.length === 0 ? "hidden" : ""

@@ -11,6 +11,7 @@ import "./AdminButikk.css";
 const AdminButikk = () => {
   const errorRefs = useRef({});
   const { store_id } = useParams();
+
   const [store, setStore] = useState(null);
   const [loading, setLoading] = useState(true);
   const [storeManagers, setStoreManagers] = useState([]);
@@ -26,10 +27,11 @@ const AdminButikk = () => {
     store_phone: "",
     store_email: "",
     municipality_id: "",
-    postal_code: "", // 👈 ny
+    postal_code: "",
   });
-  const [errors, setErrors] = useState({}); // For storing error messages
+  const [errors, setErrors] = useState({});
 
+  // Scroll til første felt med valideringsfeil når 'errors' endres
   useEffect(() => {
     const errorFields = Object.keys(errors);
     if (errorFields.length > 0) {
@@ -41,13 +43,14 @@ const AdminButikk = () => {
     }
   }, [errors]);
 
+  // Henter butikkdata og relaterte data ved lasting
   useEffect(() => {
+    // Henter info om butikken og setter formData og state
     const fetchStore = async () => {
       try {
         const res = await axios.get(`/stores/getStoreWithInfo/${store_id}`);
         const storeData = res.data?.[0];
         if (storeData) {
-          // Splitte addressen for å hente ut postnummeret
           const [addressPart, postalCodePart] = storeData.address
             .split(",")
             .map((part) => part.trim());
@@ -75,6 +78,7 @@ const AdminButikk = () => {
       }
     };
 
+    // Henter alle kommuner
     const fetchMunicipalities = async () => {
       try {
         const res = await axios.get("/municipalities");
@@ -84,6 +88,7 @@ const AdminButikk = () => {
       }
     };
 
+    // Henter butikksjefer for spesifik butikk
     const fetchStoreManagers = async () => {
       try {
         const res = await axios.get(`/users/store_managers/${store_id}`);
@@ -93,11 +98,11 @@ const AdminButikk = () => {
       }
     };
 
+    // Henter alle butikksjefer som ikke er tilknyttet en butikk
     const fetchAllManagers = async () => {
       try {
         const res = await axios.get("/users/store_managers");
         const availableManagers = res.data.filter((m) => !m.store_id);
-        console.log("Available managers:", availableManagers);
         setAllManagers(availableManagers);
       } catch (err) {
         console.error("Feil ved henting av alle butikksjefer:", err);
@@ -110,10 +115,12 @@ const AdminButikk = () => {
     fetchMunicipalities();
   }, [store_id]);
 
+  // Oppdaterer formData ved input-endring
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // Lagrer endringer til butikken og oppdaterer butikksjefene
   const handleSave = async () => {
     try {
       setErrors({});
@@ -122,8 +129,6 @@ const AdminButikk = () => {
         ...formData,
         manager_id: selectedManagerId,
       };
-
-      console.log("selectedManagerId:", selectedManagerId);
 
       await axios.put(`/stores/${store_id}`, payload);
 
@@ -148,6 +153,7 @@ const AdminButikk = () => {
     }
   };
 
+  // Sletter butikken permanent og omdirigerer brukeren
   const handleDeleteConfirmed = async () => {
     try {
       await axios.delete(`/stores/${store_id}`);
@@ -155,10 +161,11 @@ const AdminButikk = () => {
       window.location.href = "/admin/butikker";
     } catch (err) {
       console.error("Error deleting store:", err);
-      throw err; // Lar ConfirmDeletePopup vise feilmelding
+      throw err;
     }
   };
 
+  // Alternativer for kjeder og kommuner
   const storeChainOptions = [
     "Coop Mega",
     "Coop Prix",
@@ -440,11 +447,11 @@ const AdminButikk = () => {
                 Rediger butikk
               </button>
               <button
-              className="delete-button"
-              onClick={() => setShowDeletePopup(true)}
-            >
-              Slett butikk
-            </button>
+                className="delete-button"
+                onClick={() => setShowDeletePopup(true)}
+              >
+                Slett butikk
+              </button>
             </div>
           )}
         </div>

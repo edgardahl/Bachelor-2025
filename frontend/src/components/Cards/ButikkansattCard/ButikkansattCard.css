@@ -41,7 +41,6 @@
   font-size: 1.4rem;
 }
 
-/* --- EMPLOYEE THEME --- */
 .butikkansatt-card.employee-theme {
   border-color: var(--Employees-main);
 }
@@ -60,8 +59,6 @@
   color: var(--Employees-hover-dark);
 }
 
-
-/* --- AVAILABLE THEME --- */
 .butikkansatt-card.available-theme {
   border-color: var(--Available-main);
 }
@@ -79,11 +76,6 @@
 .butikkansatt-card.available-theme h3 {
   color: var(--Available-hover-dark);
 }
-
-
-
-
-
 
 .butikkansatt-card.empty-card {
   display: flex;
@@ -108,23 +100,14 @@
   align-items: center;
 }
 
-.empty-card-content p{
-  margin: 0
+.empty-card-content p {
+  margin: 0;
 }
 
 .plus-icon {
   font-size: 1;
   margin-bottom: 10px;
 }
-
-
-.qualification-text-container{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
 
 .butikkansatt-card .qualifications {
   display: flex;
@@ -144,7 +127,6 @@
   flex: 1;
   word-break: break-word;
 }
-
 
 .butikkansatt-card .availability {
   display: flex;

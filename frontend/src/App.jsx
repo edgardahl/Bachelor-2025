@@ -4,7 +4,7 @@ import Layout from "./components/Layout/Layout";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import useAuth from "./context/UseAuth";
 
-// Pages
+// Sider (importer alle sider som skal brukes i appen)
 import LoginPage from "./pages/Login/Login";
 import ButikksjefDashboard from "./pages/Butikksjef/Dashboard/Dashboard";
 import AnsattDashboard from "./pages/Butikkansatt/Dashboard/Dashboard";
@@ -29,19 +29,21 @@ import Loading from "./components/Loading/Loading";
 import NotFound from "./pages/NotFound/NotFound";
 import Landing from "./pages/Landing/Landing";
 
-// Toastify
+// Toastify for å vise meldinger
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const { user, loading } = useAuth();
-  const location = useLocation();
+  const { user, loading } = useAuth(); // Henter brukerens informasjon fra konteksten
+  const location = useLocation(); // Henter gjeldende URL for å sjekke på enkle ruter
 
+  // Bestemmer om back-button skal vises basert på URLen
   const showBackButton =
     (location.pathname.startsWith("/bs/ansatte/profil/") ||
       location.pathname.startsWith("/admin/butikksjefer/profil/")) &&
     location.pathname.split("/").length >= 4;
 
+  // Hvis brukeren laster, vis en loading screen
   if (loading)
     return (
       <div>
@@ -49,12 +51,13 @@ function App() {
       </div>
     );
 
+  // Definerer innholdet for appen basert på ruter og brukertilgang
   const appContent = (
     <Routes>
       <Route
         path="/"
         element={
-          user ? (
+          user ? ( // Sjekker om brukeren er logget inn og navigerer basert på rolle
             user.role === "admin" ? (
               <Navigate to="/admin/hjem" replace />
             ) : user.role === "store_manager" ? (
@@ -69,6 +72,8 @@ function App() {
           )
         }
       />
+
+      {/* Route for login */}
 
       <Route
         path="/login"
@@ -168,7 +173,7 @@ function App() {
         }
       />
 
-      {/* Butikkansatt */}
+      {/* Butikkansatt routes */}
       <Route
         path="/ba/hjem"
         element={
@@ -218,7 +223,7 @@ function App() {
         }
       />
 
-      {/* Admin */}
+      {/* Admin routes */}
       <Route
         path="/admin/hjem"
         element={

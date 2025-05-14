@@ -1,5 +1,4 @@
 import {
-  getAllUsersModel,
   getUserByIdModel,
   getEmployeesByStoreIdModel,
   getUserWithPasswordById,
@@ -17,18 +16,7 @@ import bcrypt from "bcryptjs";
 import { supabase } from "../config/supabaseClient.js";
 import { sanitizeUserUpdate, sanitizePasswordUpdate } from "../utils/sanitizeInput.js";
 
-// Henter alle brukere
-export const getAllUsersController = async (req, res) => {
-  try {
-    const users = await getAllUsersModel();
-    return res.json(users);
-  } catch (error) {
-    console.error("Error fetching all users:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-
-// Henter en bruker med ID
+// Henter en spesifikk bruker basert på ID
 export const getUserByIdController = async (req, res) => {
   const { id } = req.params;
 
@@ -44,10 +32,10 @@ export const getUserByIdController = async (req, res) => {
   }
 };
 
-// Hent alle store managers, uavhengig av om de har en butikk
+// Henter alle butikksjefer (med eller uten butikktilknytning)
 export const getAllStoreManagersController = async (req, res) => {
   try {
-    const storeManagers = await getAllStoreManagersWithStoreModel();  // Bruk den nye funksjonen som henter butikkinfo
+    const storeManagers = await getAllStoreManagersWithStoreModel();  
     return res.json(storeManagers);
   } catch (error) {
     console.error("Error fetching store managers:", error);
@@ -55,7 +43,7 @@ export const getAllStoreManagersController = async (req, res) => {
   }
 };
 
-// Henter alle managers for en spesifikk butikk
+// Henter butikksjefer knyttet til en spesifikk butikk
 export const getStoreManagersController = async (req, res) => {
   const { storeId } = req.params;
   
@@ -68,23 +56,64 @@ export const getStoreManagersController = async (req, res) => {
   }
 };
 
+// Henter alle ansatte for butikken som den innloggede butikksjefen tilhører
+export const getEmployeesByStoreIdController = async (req, res) => {
+  const storeId = req.user.storeId;
 
+  try {
+    const employees = await getEmployeesByStoreIdModel(storeId);
 
-// Oppdaterer bruker med ID
+    if (!employees || employees.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "No employees found for this store" });
+    }
+
+    return res.json(employees);
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Henter ansatte som ønsker å jobbe i samme kommune som butikksjefens butikk
+export const getAvailableEmployeesController = async (req, res) => {
+  try {
+    const manager = await getUserByIdModel(req.user.userId);
+
+    if (!manager || !manager.store_id) {
+      return res
+        .status(400)
+        .json({ error: "Manager does not have a store set." });
+    }
+
+    const store = await getStoreByIdModel(manager.store_id);
+
+    if (!store || !store.municipality_id) {
+      return res
+        .status(400)
+        .json({ error: "Store does not have a municipality set." });
+    }
+
+    const matchingEmployees = await getAvailableEmployeesInMunicipality(
+      store.municipality_id
+    );
+
+    res.json(matchingEmployees);
+  } catch (error) {
+    console.error("Error fetching available employees:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Oppdaterer personlig informasjon for innlogget bruker (e-post, telefon osv.)
 export const updateUserByIdController = async (req, res) => {
   const userId = req.user.userId;
   const rawData = req.body;
 
-  // Logging rådata
-  console.log("🟡 Raw data received from frontend:", rawData);
-
   const sanitized = sanitizeUserUpdate(rawData);
 
-  // Logging sanitiserte data
-  console.log("🟢 Sanitized update payload:", sanitized);
-
   if (sanitized.errors) {
-    console.log("🔴 Validation errors from sanitizeUserUpdate:", sanitized.errors);
     return res.status(400).json({ error: sanitized.errors });
   }
 
@@ -93,7 +122,6 @@ export const updateUserByIdController = async (req, res) => {
   try {
     const currentUser = await getUserByIdModel(userId);
 
-    // Sjekk om e-posten skal endres og om den allerede er i bruk
     if (email && email !== currentUser.email) {
       const { data: emailUsers, error: emailError } = await supabase
         .from("users")
@@ -102,7 +130,6 @@ export const updateUserByIdController = async (req, res) => {
         .neq("user_id", userId);
 
       if (emailError) {
-        console.error("🔴 Error checking email duplication:", emailError);
         return res.status(500).json({ error: "Intern serverfeil ved sjekk av e-post." });
       }
 
@@ -111,7 +138,6 @@ export const updateUserByIdController = async (req, res) => {
       }
     }
 
-    // Sjekk om telefonnummer skal endres og om det allerede er i bruk
     if (phone_number && phone_number !== currentUser.phone_number) {
       const { data: phoneUsers, error: phoneError } = await supabase
         .from("users")
@@ -120,7 +146,6 @@ export const updateUserByIdController = async (req, res) => {
         .neq("user_id", userId);
 
       if (phoneError) {
-        console.error("🔴 Error checking phone duplication:", phoneError);
         return res.status(500).json({ error: "Intern serverfeil ved sjekk av telefonnummer." });
       }
 
@@ -128,18 +153,6 @@ export const updateUserByIdController = async (req, res) => {
         return res.status(400).json({ error: { phone_number: "Telefonnummeret er allerede i bruk." } });
       }
     }
-
-    // Logg verdier som skal lagres
-    console.log("🛠️ Final update values to send to DB:");
-    console.log("Updates:", {
-      first_name: sanitized.first_name,
-      last_name: sanitized.last_name,
-      email: sanitized.email,
-      phone_number: sanitized.phone_number,
-      availability: sanitized.availability,
-      municipality_id: sanitized.municipality_id,
-    });
-    console.log("Preferred municipality IDs:", sanitized.work_municipality_ids);
 
     const updatedUser = await updateUserByIdModel(
       userId,
@@ -155,18 +168,54 @@ export const updateUserByIdController = async (req, res) => {
     );
 
     if (!updatedUser) {
-      console.error("❌ Failed to update user. Sanitized payload was:", sanitized);
       return res.status(400).json({ error: "Oppdatering av bruker feilet." });
     }
 
     return res.json(updatedUser);
   } catch (error) {
-    console.error("🔥 Uncaught error updating user:", error);
+    console.error("Uncaught error updating user:", error);
     return res.status(500).json({ error: "Intern serverfeil." });
   }
 };
 
-// Endrer passord
+// Oppdaterer ansatts kvalifikasjoner hvis bruker er butikksjef for butikken vedkommende jobber i
+export const updateEmployeeQualificationsController = async (req, res) => {
+  const managerStoreId = req.user.storeId;
+  const { user_id, qualification_ids } = req.body;
+
+  if (!user_id || !Array.isArray(qualification_ids)) {
+    return res
+      .status(400)
+      .json({ error: "user_id and qualification_ids are required." });
+  }
+
+  try {
+    const employee = await getUserByIdModel(user_id);
+    if (!employee || employee.store_id !== managerStoreId) {
+      return res
+        .status(403)
+        .json({ error: "You are not authorized to update this employee." });
+    }
+
+    const success = await updateUserQualificationsModel(
+      user_id,
+      qualification_ids
+    );
+
+    if (!success) {
+      return res
+        .status(500)
+        .json({ error: "Failed to update qualifications." });
+    }
+
+    return res.json({ message: "Kvalifikasjoner oppdatert." });
+  } catch (error) {
+    console.error("Error in updateEmployeeQualificationsController:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Endrer passord for innlogget bruker etter verifisering av gammelt passord
 export const changePassword = async (req, res) => {
   const userId = req.user.userId;
 
@@ -205,94 +254,7 @@ export const changePassword = async (req, res) => {
   }
 };
 
-// Henter ansatte for en butikk
-export const getEmployeesByStoreIdController = async (req, res) => {
-  const storeId = req.user.storeId;
-
-  try {
-    const employees = await getEmployeesByStoreIdModel(storeId);
-
-    if (!employees || employees.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No employees found for this store" });
-    }
-
-    return res.json(employees);
-  } catch (error) {
-    console.error("Error fetching employees:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-
-// Henter alle tilgjengelige ansatte
-export const getAvailableEmployeesController = async (req, res) => {
-  try {
-    const manager = await getUserByIdModel(req.user.userId);
-
-    if (!manager || !manager.store_id) {
-      return res
-        .status(400)
-        .json({ error: "Manager does not have a store set." });
-    }
-
-    const store = await getStoreByIdModel(manager.store_id);
-
-    if (!store || !store.municipality_id) {
-      return res
-        .status(400)
-        .json({ error: "Store does not have a municipality set." });
-    }
-
-    const matchingEmployees = await getAvailableEmployeesInMunicipality(
-      store.municipality_id
-    );
-
-    res.json(matchingEmployees);
-  } catch (error) {
-    console.error("Error fetching available employees:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-
-// Oppdaterer kvalifikasjoner for en ansatt
-export const updateEmployeeQualificationsController = async (req, res) => {
-  const managerStoreId = req.user.storeId;
-  const { user_id, qualification_ids } = req.body;
-
-  if (!user_id || !Array.isArray(qualification_ids)) {
-    return res
-      .status(400)
-      .json({ error: "user_id and qualification_ids are required." });
-  }
-
-  try {
-    const employee = await getUserByIdModel(user_id);
-    if (!employee || employee.store_id !== managerStoreId) {
-      return res
-        .status(403)
-        .json({ error: "You are not authorized to update this employee." });
-    }
-
-    const success = await updateUserQualificationsModel(
-      user_id,
-      qualification_ids
-    );
-
-    if (!success) {
-      return res
-        .status(500)
-        .json({ error: "Failed to update qualifications." });
-    }
-
-    return res.json({ message: "Kvalifikasjoner oppdatert." });
-  } catch (error) {
-    console.error("Error in updateEmployeeQualificationsController:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-
-// Sletter en bruker hvis autorisert
+// Sletter bruker (kun bruker selv, butikksjef eller admin har lov)
 export const deleteUserByIdController = async (req, res) => {
   const userIdToDelete = req.params.id;
   const requester = req.user;

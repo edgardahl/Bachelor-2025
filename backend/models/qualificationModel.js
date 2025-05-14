@@ -1,24 +1,24 @@
 import { supabase } from "../config/supabaseClient.js";
 
-// Get all qualifications from the database
+// Henter alle kvalifikasjoner, sortert alfabetisk (brukt i f.eks. createEmployeeForm og Profile)
 export const getAllQualificationsModel = async () => {
   const { data, error } = await supabase
-    .from("qualification") // Name of the table
-    .select("*"); // Select all columns (You can specify specific columns if needed)
+    .from("qualification")
+    .select("*");
 
   if (error) {
-    throw new Error(error.message); // Throw an error if there's an issue
+    throw new Error(error.message);
   }
 
-  // Sort the qualifications by name using Norwegian alphabet order
-  data.sort((a, b) => {
-    return a.name.localeCompare(b.name, "no", { sensitivity: "base" });
-  });
+  // Sorterer alfabetisk etter norske regler
+  data.sort((a, b) =>
+    a.name.localeCompare(b.name, "no", { sensitivity: "base" })
+  );
 
-  return data; // Return the sorted qualifications
+  return data;
 };
 
-// get qualifications for a specific shift
+// Henter kvalifikasjoner knyttet til en spesifikk vakt (brukt i claimShiftController)
 export const getShiftQualificationsModel = async (shiftId) => {
   const { data, error } = await supabase
     .from("shift_qualifications")
@@ -29,5 +29,5 @@ export const getShiftQualificationsModel = async (shiftId) => {
     throw new Error(error.message);
   }
 
-  return data; // Return the qualifications for the shift
+  return data;
 };

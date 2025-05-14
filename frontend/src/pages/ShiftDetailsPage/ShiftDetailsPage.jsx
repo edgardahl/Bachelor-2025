@@ -26,6 +26,7 @@ const ShiftDetailsPage = () => {
   const storeId = user?.storeId;
   const userRole = user?.role;
 
+  // Hent detaljer for en vakt ved innlasting
   useEffect(() => {
     const fetchShiftDetails = async () => {
       try {
@@ -40,6 +41,7 @@ const ShiftDetailsPage = () => {
     fetchShiftDetails();
   }, [shiftId]);
 
+  // Hent antall andre vakter for samme butikk
   useEffect(() => {
     const fetchShiftsForStore = async () => {
       if (!shiftDetails?.store_id) return;
@@ -53,6 +55,7 @@ const ShiftDetailsPage = () => {
     fetchShiftsForStore();
   }, [shiftDetails]);
 
+  // Hent alle kvalifikasjoner og lag et oppslag (id → navn)
   useEffect(() => {
     const fetchQualifications = async () => {
       try {
@@ -69,6 +72,7 @@ const ShiftDetailsPage = () => {
     fetchQualifications();
   }, []);
 
+  // Slett vakt fra backend og naviger tilbake ved suksess
   const handleDeleteShift = async () => {
     setIsLoading(true);
     try {
@@ -78,7 +82,7 @@ const ShiftDetailsPage = () => {
       if (res.status === 200) {
         toast.success("Vakten ble slettet.");
         setShowDeletePopup(false);
-        navigate("/bs/hjem");
+        navigate("/bs/vakter");
       } else {
         toast.error("Kunne ikke slette vakten.");
       }
@@ -89,6 +93,7 @@ const ShiftDetailsPage = () => {
     }
   };
 
+  // Reserver vakt for bruker og oppdater visning
   const handleClaimShift = async () => {
     setIsLoading(true);
     try {
@@ -96,6 +101,7 @@ const ShiftDetailsPage = () => {
         user_id: userId,
       });
       if (res.status === 200) {
+        // Oppdaterer lokalt at vakten er reservert
         setShiftDetails((prev) => ({
           ...prev,
           claimed_by_first_name: res.data.claimed_by_first_name,
@@ -118,14 +124,13 @@ const ShiftDetailsPage = () => {
 
   if (isLoading || !shiftDetails) return <Loading />;
 
+  // Beregn om bruker kan kreve eller slette vakten
   const requiredQualifications = shiftDetails.qualifications || [];
   const userQualifications = user?.user_qualifications || [];
   const claimedByYou = shiftDetails.claimed_by_id === userId;
-
   const hasAllQualifications = requiredQualifications.every((q) =>
     userQualifications.includes(q.qualification_id)
   );
-
   const shiftIsClaimed = !!shiftDetails.claimed_by_first_name;
   const canDelete =
     userRole === "store_manager" && shiftDetails.store_id === storeId;
@@ -135,13 +140,13 @@ const ShiftDetailsPage = () => {
     hasAllQualifications &&
     !claimedByYou;
 
+  // Begrunnelse for hvorfor knapp for reservasjon er deaktivert
   let claimDisabledReason = "";
   if (claimedByYou)
     claimDisabledReason = "Du har allerede reservert denne vakten";
   else if (shiftIsClaimed) claimDisabledReason = "Vakten er allerede tatt.";
   else if (!hasAllQualifications)
     claimDisabledReason = "Du mangler nødvendige kvalifikasjoner.";
-
   return (
     <>
       <BackButton />
@@ -169,8 +174,8 @@ const ShiftDetailsPage = () => {
                 <strong>Dato:</strong> {shiftDetails.date}
               </p>
               <p>
-                <strong>Tid:</strong>{" "}
-                {shiftDetails.start_time?.slice(0, 5)} - {shiftDetails.end_time?.slice(0, 5)}
+                <strong>Tid:</strong> {shiftDetails.start_time?.slice(0, 5)} -{" "}
+                {shiftDetails.end_time?.slice(0, 5)}
               </p>
 
               <p>
@@ -195,20 +200,20 @@ const ShiftDetailsPage = () => {
                   </p>
                 )}
                 {userRole === "store_manager" && (
-                <div className="reserved-by">
-                  <strong>Reservert av:</strong>{" "}
-                  {shiftDetails.claimed_by_first_name ? (
-                    <Link
-                      to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}
-                    >
-                      {shiftDetails.claimed_by_first_name}{" "}
-                      {shiftDetails.claimed_by_last_name}
-                    </Link>
-                  ) : (
-                    "Ingen"
-                  )}
-                </div>
-              )}
+                  <div className="reserved-by">
+                    <strong>Reservert av:</strong>{" "}
+                    {shiftDetails.claimed_by_first_name ? (
+                      <Link
+                        to={`/bs/ansatte/profil/${shiftDetails.claimed_by_id}`}
+                      >
+                        {shiftDetails.claimed_by_first_name}{" "}
+                        {shiftDetails.claimed_by_last_name}
+                      </Link>
+                    ) : (
+                      "Ingen"
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="qualifications-header">
@@ -232,7 +237,6 @@ const ShiftDetailsPage = () => {
                   <p>Ingen krav spesifisert</p>
                 )}
               </div>
-
             </div>
           </div>
         </div>
@@ -253,9 +257,8 @@ const ShiftDetailsPage = () => {
                     claimedByYou ? "success" : ""
                   }`}
                 >
-                {claimDisabledReason}
-              </p>
-              
+                  {claimDisabledReason}
+                </p>
               )}
             </div>
           )}

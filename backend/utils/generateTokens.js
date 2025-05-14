@@ -1,8 +1,11 @@
 import jwt from "jsonwebtoken";
 
-// Genererer access token
+/**
+ * Genererer et access token for brukeren.
+ * Brukes til autentisering ved hver API-forespørsel og varer i 15 minutter.
+ * Inkluderer informasjon om brukerens ID, rolle, butikk og kvalifikasjoner.
+ */
 export const generateAccessToken = (user) => {
-  console.log("generateAccessToken", user);
   return jwt.sign(
     {
       userId: user.userId,
@@ -15,9 +18,12 @@ export const generateAccessToken = (user) => {
   );
 };
 
-// Genererer refresh token
+/**
+ * Genererer et refresh token for brukeren.
+ * Brukes til å hente et nytt access token når det gamle utløper (uten at brukeren logger inn på nytt).
+ * Varer i 7 dager og inneholder samme payload som access token.
+ */
 export const generateRefreshToken = (user) => {
-  console.log("generateRefreshToken", user);
   return jwt.sign(
     {
       userId: user.userId,

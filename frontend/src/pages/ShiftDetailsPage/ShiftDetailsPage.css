@@ -24,7 +24,6 @@
   line-height: 1.3;
 }
 
-/* Two-column layout */
 .two-column-layout {
   display: flex;
   gap: 2rem;
@@ -42,7 +41,6 @@
   min-width: 250px;
 }
 
-/* Detail section */
 .shift-detail-section {
   padding: 0.5rem 0;
   line-height: 1.6;
@@ -58,7 +56,6 @@
   color: #222;
 }
 
-/* Qualification section */
 .qualifications-header {
   text-align: center;
   margin-top: 1.45rem;
@@ -100,7 +97,6 @@
   color: #1976d2;
 }
 
-/* Bottom row and buttons */
 .shift-bottom-row {
   display: flex;
   justify-content: center;
@@ -155,7 +151,6 @@
   border: 1px solid #c8e6c9;
 }
 
-
 .published-info {
   margin-top: 1.45rem;
   padding-top: 1rem;
@@ -163,7 +158,6 @@
   color: #333;
 }
 
-/* Delete button */
 .delete-button {
   background-color: var(--Error-delete-color);
   border: none;
@@ -187,7 +181,6 @@
   width: 100%;
 }
 
-/* Responsive */
 @media (max-width: 796px) {
   .two-column-layout {
     flex-direction: column;
@@ -228,7 +221,6 @@
 
   .claim-button,
   .delete-button {
-    width: 50%;
     font-size: 1rem;
   }
 

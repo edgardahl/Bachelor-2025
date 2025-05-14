@@ -76,7 +76,6 @@
   text-align: center;
 }
 
-/* bunn container */
 .kom-i-gang-container {
   text-align: center;
   padding: 4rem 2rem;
@@ -86,11 +85,7 @@
 }
 
 .kom-i-gang-container {
-  background: linear-gradient(
-    to right,
-    #213653,
-    #5d89c7
-  ); /* Gradient bakgrunn */
+  background: linear-gradient(to right, #213653, #5d89c7);
   padding: 4rem 2rem;
   display: flex;
   justify-content: center;
@@ -142,7 +137,6 @@
   transform: scale(1);
 }
 
-/* cards */
 .landing-container .butikk-card-link.disabled,
 .landing-container .shift-card-container.disabled {
   cursor: not-allowed;
@@ -194,7 +188,6 @@
   color: var(--Card-header-color);
 }
 
-/* Animation for smooth bounce */
 @keyframes floatUpDown {
   0%,
   100% {
@@ -213,7 +206,7 @@
   .landing-section-heading {
     font-size: 1.3rem;
   }
-  
+
   .landing-section-text {
     font-size: 1rem;
   }

@@ -4,7 +4,7 @@ import useAuth from "../../../context/UseAuth";
 import BackButton from "../../../components/BackButton/BackButton";
 import { toast } from "react-toastify";
 import CreateShiftConfirmModal from "../../../components/createShiftConfirmModal/createShiftConfirmModal";
-import { useNavigate } from "react-router-dom"; // ✅ Added
+import { useNavigate } from "react-router-dom";
 import "./CreateShift.css";
 
 const CreateShift = () => {
@@ -32,6 +32,7 @@ const CreateShift = () => {
     end_time: useRef(null),
   };
 
+  // Sett bruker- og butikk-ID når brukeren er lastet
   useEffect(() => {
     if (user) {
       setUserId(user.id);
@@ -39,6 +40,7 @@ const CreateShift = () => {
     }
   }, [user]);
 
+  // Henter liste over kvalifikasjoner fra API
   useEffect(() => {
     const fetchQualifications = async () => {
       try {
@@ -52,6 +54,7 @@ const CreateShift = () => {
     fetchQualifications();
   }, []);
 
+  // Legger til eller fjerner en kvalifikasjon fra utvalget
   const handleQualificationChange = (qualificationId) => {
     setSelectedQualifications((prev) =>
       prev.includes(qualificationId)
@@ -60,9 +63,10 @@ const CreateShift = () => {
     );
   };
 
+  // Forbereder data og åpner bekreftelses pop-up før opprettelse
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors({}); // Reset errors
+    setErrors({});
 
     const shiftData = {
       title,
@@ -81,10 +85,11 @@ const CreateShift = () => {
     setShowConfirmModal(true);
   };
 
+  // Sender faktisk opprettingskall til API når brukeren bekrefter
   const confirmCreateShift = async () => {
     if (!pendingShiftData) return;
     setLoading(true);
-    setErrors({}); // Reset errors before submit
+    setErrors({});
 
     try {
       await axios.post("/shifts", {
@@ -93,6 +98,7 @@ const CreateShift = () => {
       });
 
       toast.success("Vakt opprettet");
+      // Resett skjema
       setDate("");
       setStartTime("");
       setEndTime("");
@@ -106,12 +112,15 @@ const CreateShift = () => {
       if (backendErrors && typeof backendErrors === "object") {
         setErrors(backendErrors);
 
-        // Scroll to first field with error
+        // Scroll til første felt med feil
         const firstErrorField = Object.keys(fieldRefs).find(
           (key) => backendErrors[key]
         );
         if (firstErrorField && fieldRefs[firstErrorField].current) {
-          fieldRefs[firstErrorField].current.scrollIntoView({ behavior: "smooth", block: "center" });
+          fieldRefs[firstErrorField].current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
           fieldRefs[firstErrorField].current.focus();
         }
 
@@ -132,10 +141,11 @@ const CreateShift = () => {
       <h1>Ny vakt</h1>
       <form onSubmit={handleSubmit}>
         <div className="create-shift-form">
-
           <div className="form-step beskrivelse">
             <h3>Beskrivelse</h3>
-            <p className="step-description">Gi vakten en tittel og beskriv hva den går ut på.</p>
+            <p className="step-description">
+              Gi vakten en tittel og beskriv hva den går ut på.
+            </p>
             <div>
               <label>Tittel</label>
               <input
@@ -146,7 +156,9 @@ const CreateShift = () => {
                 className={errors.title ? "error" : ""}
                 required
               />
-              {errors.title && <div className="new-user-error-message">{errors.title}</div>}
+              {errors.title && (
+                <div className="new-user-error-message">{errors.title}</div>
+              )}
             </div>
             <div>
               <label>Beskrivelse</label>
@@ -157,13 +169,19 @@ const CreateShift = () => {
                 className={errors.description ? "error" : ""}
                 required
               />
-              {errors.description && <div className="new-user-error-message">{errors.description}</div>}
+              {errors.description && (
+                <div className="new-user-error-message">
+                  {errors.description}
+                </div>
+              )}
             </div>
           </div>
 
           <div className="form-step when-where">
             <h3>Når er vakten?</h3>
-            <p className="step-description">Velg dato og klokkeslett for vakten.</p>
+            <p className="step-description">
+              Velg dato og klokkeslett for vakten.
+            </p>
 
             <div>
               <label>Dato</label>
@@ -181,7 +199,9 @@ const CreateShift = () => {
                     .split("T")[0]
                 }
               />
-              {errors.date && <div className="new-user-error-message">{errors.date}</div>}
+              {errors.date && (
+                <div className="new-user-error-message">{errors.date}</div>
+              )}
             </div>
 
             <div className="time-range-group">
@@ -195,7 +215,11 @@ const CreateShift = () => {
                   className={`time-input ${errors.start_time ? "error" : ""}`}
                   required
                 />
-                {errors.start_time && <div className="new-user-error-message">{errors.start_time}</div>}
+                {errors.start_time && (
+                  <div className="new-user-error-message">
+                    {errors.start_time}
+                  </div>
+                )}
               </div>
 
               <div className="time-input-group">
@@ -208,23 +232,35 @@ const CreateShift = () => {
                   className={`time-input ${errors.end_time ? "error" : ""}`}
                   required
                 />
-                {errors.end_time && <div className="new-user-error-message">{errors.end_time}</div>}
+                {errors.end_time && (
+                  <div className="new-user-error-message">
+                    {errors.end_time}
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
           <div className="form-step">
             <h3>Kvalifikasjoner</h3>
-            <p className="step-description">Velg hvilke kvalifikasjoner som kreves for vakten.</p>
+            <p className="step-description">
+              Velg hvilke kvalifikasjoner som kreves for vakten.
+            </p>
 
             <div className="qualification-cards">
               {qualifications.map((qualification) => {
-                const isSelected = selectedQualifications.includes(qualification.qualification_id);
+                const isSelected = selectedQualifications.includes(
+                  qualification.qualification_id
+                );
                 return (
                   <div
                     key={qualification.qualification_id}
-                    className={`qualification-card ${isSelected ? "selected" : ""}`}
-                    onClick={() => handleQualificationChange(qualification.qualification_id)}
+                    className={`qualification-card ${
+                      isSelected ? "selected" : ""
+                    }`}
+                    onClick={() =>
+                      handleQualificationChange(qualification.qualification_id)
+                    }
                   >
                     <h4>{qualification.name}</h4>
                     {isSelected && <span className="checkmark">✔</span>}
@@ -235,13 +271,16 @@ const CreateShift = () => {
           </div>
         </div>
 
-        {errors.general && <div className="new-user-error-message">{errors.general}</div>}
+        {errors.general && (
+          <div className="new-user-error-message">{errors.general}</div>
+        )}
 
         <button type="submit" disabled={loading}>
           {loading ? "Oppretter..." : "Opprett vakt"}
         </button>
       </form>
 
+      {/* Bekreftelse pop-up før opprettelse */}
       {showConfirmModal && (
         <CreateShiftConfirmModal
           shiftData={pendingShiftData}

@@ -1,4 +1,3 @@
-/* Style for the card container */
 .butikk-card-link {
   text-decoration: none;
   display: flex;
@@ -25,7 +24,6 @@
   transform: scale(1.02);
 }
 
-/* Header with the image */
 .butikk-card-header {
   display: flex;
   flex-direction: column;
@@ -60,7 +58,6 @@
   padding: 0 16px;
 }
 
-/* The chip for available shifts */
 .butikk-chip {
   background-color: var(--Card-header-color);
   color: white;
@@ -74,7 +71,6 @@
   width: 80%;
 }
 
-/* General info and contact details */
 .butikk-general-info {
   color: var(--Text-color);
   margin-bottom: 16px;
@@ -93,7 +89,6 @@
   margin: 4px 0;
 }
 
-/* The "More info" text at the bottom */
 .butikk-more-info {
   color: var(--Card-header-color);
   font-size: 0.95rem;

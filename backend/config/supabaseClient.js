@@ -1,3 +1,4 @@
+// Konfigurerer og eksporterer Supabase-klienten
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 

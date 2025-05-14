@@ -1,6 +1,7 @@
 import React from "react";
 import "./createShiftConfirmModal.css";
 
+// Popup som viser en oppsummering av vaktinformasjon før bekreftelse
 const CreateShiftConfirmModal = ({ shiftData, onCancel, onConfirm }) => {
   return (
     <div className="modal-overlay">
@@ -8,7 +9,6 @@ const CreateShiftConfirmModal = ({ shiftData, onCancel, onConfirm }) => {
         <h2>Er du sikker på at du vil opprette vakten?</h2>
 
         <div className="modal-two-column">
-          {/* Venstre kolonne */}
           <div className="modal-column">
             <div className="modal-field">
               <label>Tittel:</label>
@@ -32,7 +32,6 @@ const CreateShiftConfirmModal = ({ shiftData, onCancel, onConfirm }) => {
             </div>
           </div>
 
-          {/* Høyre kolonne */}
           <div className="modal-column">
             <div className="modal-field">
               <label>Dato:</label>
@@ -41,14 +40,18 @@ const CreateShiftConfirmModal = ({ shiftData, onCancel, onConfirm }) => {
 
             <div className="modal-field">
               <label>Tid:</label>
-              <p>{shiftData.start_time} – {shiftData.end_time}</p>
+              <p>
+                {shiftData.start_time} – {shiftData.end_time}
+              </p>
             </div>
           </div>
         </div>
 
         <div className="modal-buttons center">
           <button onClick={onCancel}>Avbryt</button>
-          <button className="confirm" onClick={onConfirm}>Bekreft</button>
+          <button className="confirm" onClick={onConfirm}>
+            Bekreft
+          </button>
         </div>
       </div>
     </div>

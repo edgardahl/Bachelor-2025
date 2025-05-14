@@ -1,6 +1,6 @@
 import { supabase } from "../config/supabaseClient.js";
 
-// Fetch all stores
+// Henter alle butikker (brukt i getAllStoresController)
 export const getAllStoresModel = async () => {
   const { data, error } = await supabase
     .from("stores")
@@ -9,27 +9,18 @@ export const getAllStoresModel = async () => {
     )
     .order("name", { ascending: true });
 
-  if (error) {
-    throw new Error(error.message);
-  }
+  if (error) throw new Error(error.message);
   return data;
 };
 
-
-// Get all enriched store data from RPC
+// Henter alle butikker med utvidet informasjon via RPC (brukt i getAllStoresWithInfoController)
 export const getAllStoresWithInfoModel = async () => {
   const { data, error } = await supabase.rpc("get_all_store_info");
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
+  if (error) throw new Error(error.message);
   return data;
 };
 
-
-
-// Fetch a single store by ID
+// Henter en butikk basert på ID (brukt i getStoreByIdController)
 export const getStoreByIdModel = async (storeId) => {
   const { data, error } = await supabase
     .from("stores")
@@ -39,12 +30,26 @@ export const getStoreByIdModel = async (storeId) => {
     .eq("store_id", storeId)
     .single();
 
-  if (error) {
-    throw new Error(error.message);
-  }
+  if (error) throw new Error(error.message);
   return data;
 };
 
+export const getStoresByNameModel = async (storeName) => {
+  const { data, error } = await supabase
+    .from("stores")
+    .select(
+      "store_id, name, store_chain, municipality_id, address, phone_number, email, manager_id, latitude, longitude"
+    )
+    .ilike("name", storeName); // case-insensitive match på navn
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data; // returner alle treff, ikke bare første
+};
+
+// Henter butikker med vakt-telling basert på kommune og kjede (brukt i getStoresWithMunicipalityController)
 export const getStoresWithMunicipality = async (
   municipalities = [],
   storeChains = [],
@@ -56,11 +61,9 @@ export const getStoresWithMunicipality = async (
     p_store_chains: storeChains.length > 0 ? storeChains : null,
   });
 
-  if (error) {
-    throw new Error(error.message);
-  }
+  if (error) throw new Error(error.message);
 
-  // Paginering
+  // Manuell paginering etter at alle butikker er hentet
   const total = data.length;
   const totalPages = Math.ceil(total / pageSize);
   const validPage = Math.max(1, Math.min(page, totalPages));
@@ -76,24 +79,16 @@ export const getStoresWithMunicipality = async (
   };
 };
 
-//Get stores with all info from this rpc get_full_store_info(store_uuid uuid)
+// Henter én butikk med utvidet informasjon via RPC (brukt i getStoreWithInfoController)
 export const getStoreWithFullInfoModel = async (storeId) => {
   const { data, error } = await supabase.rpc("get_full_store_info", {
     store_uuid: storeId,
   });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
+  if (error) throw new Error(error.message);
   return data;
 };
 
-
-
-
-
-// Create a new store
+// Oppretter ny butikk og geolokaliserer adresse (brukt i createStoreController)
 export const createStoreModel = async (storeData) => {
   const {
     store_name: name,
@@ -106,44 +101,27 @@ export const createStoreModel = async (storeData) => {
     manager_id,
   } = storeData;
 
-  // Kombiner adresse, postnummer og butikkens navn
   const formattedAddress = `${rawAddress}, ${postal_code} ${name}`;
-
   const searchadress = `${rawAddress}, ${postal_code}`;
 
-  // Fetch coordinates using OpenStreetMap Nominatim
+  // Henter koordinater fra Nominatim (OpenStreetMap)
   const geocodeRes = await fetch(
-    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchadress)}`
+    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+      searchadress
+    )}`
   );
 
   const geoData = await geocodeRes.json();
-  console.log("GeoData Response: ", geoData);  // Log the full response
   if (!geoData || geoData.length === 0) {
-    const error = new Error("Fant ingen treff på adresse. Sjekk at adressen og postnummeret er gyldige.");
+    const error = new Error(
+      "Fant ingen treff på adresse. Sjekk at adressen og postnummeret er gyldige."
+    );
     error.field = "address";
     throw error;
-  }
-  
-
-  if (!geoData || geoData.length === 0) {
-    throw new Error("Could not geocode address.");
   }
 
   const latitude = parseFloat(geoData[0].lat);
   const longitude = parseFloat(geoData[0].lon);
-
-  // Log the data to be inserted
-  console.log("Data to be inserted: ", {
-    name,
-    store_chain,
-    municipality_id,
-    address: formattedAddress,
-    phone_number,
-    email,
-    manager_id,
-    latitude,
-    longitude,
-  });
 
   const { data, error } = await supabase
     .from("stores")
@@ -160,22 +138,14 @@ export const createStoreModel = async (storeData) => {
         longitude,
       },
     ])
-    .select();  // This tells Supabase to return the inserted row
+    .select();
 
-  if (error) {
-    console.error("Insert Error: ", error);
-    throw new Error(error.message);
-  }
-
-  console.log("Store successfully inserted: ", data[0]);  // Data contains the inserted row now
-  return data[0];  // Return the inserted row
+  if (error) throw new Error(error.message);
+  return data[0];
 };
 
-
-
-// In storeModel.js
+// Oppdaterer eksisterende butikk med ny data og nye koordinater (brukt i updateStoreController)
 export const updateStoreModel = async (storeId, storeData) => {
-  console.log("Update Store Data: ", storeData);  // Log the data being updated
   const {
     store_name,
     store_chain,
@@ -187,32 +157,27 @@ export const updateStoreModel = async (storeId, storeData) => {
     manager_id,
   } = storeData;
 
-  console.log("storeData: ", storeData);  // Log the entire storeData object
-  
-  const name = store_name; // 👈 Match frontend
-  
-  const formattedAddress = `${rawAddress}, ${postal_code} ${name}`;  
+  const name = store_name;
+  const formattedAddress = `${rawAddress}, ${postal_code} ${name}`;
   const searchadress = `${rawAddress}, ${postal_code}`;
 
-  console.log("Formatted Address: ", formattedAddress);  // Log the formatted address
-  console.log("Search Address: ", searchadress);  // Log the search address
-
-  // Hent nye koordinater
   const geocodeRes = await fetch(
-    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchadress)}`
+    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+      searchadress
+    )}`
   );
   const geoData = await geocodeRes.json();
 
   if (!geoData || geoData.length === 0) {
-    const error = new Error("Fant ingen treff på adresse. Sjekk at adressen og postnummeret er gyldige.");
+    const error = new Error(
+      "Fant ingen treff på adresse. Sjekk at adressen og postnummeret er gyldige."
+    );
     error.field = "address";
     throw error;
   }
 
   const latitude = parseFloat(geoData[0].lat);
   const longitude = parseFloat(geoData[0].lon);
-
-  console.log("phone number", phone_number)
 
   const { data, error } = await supabase
     .from("stores")
@@ -230,24 +195,17 @@ export const updateStoreModel = async (storeId, storeData) => {
     .eq("store_id", storeId)
     .select();
 
-  if (error) {
-    throw new Error(error.message);
-  }
-
+  if (error) throw new Error(error.message);
   return data[0];
 };
 
-// Delete a store
-// models/storeModel.js
+// Sletter en butikk basert på ID (brukt i deleteStoreController)
 export const deleteStoreModel = async (storeId) => {
   const { error } = await supabase
     .from("stores")
     .delete()
     .eq("store_id", storeId);
 
-  if (error) {
-    throw new Error(error.message);
-  }
-
+  if (error) throw new Error(error.message);
   return true;
 };

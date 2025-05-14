@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import "./AdminManagers.css";
 
+// Konstant for antall elementer per side
 const PAGE_SIZE = 12;
 
 const AdminManagers = () => {
@@ -15,8 +16,10 @@ const AdminManagers = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Beregner synlige elementer basert på pagination
   const paginatedManagers = filteredManagers.slice(0, currentPage * PAGE_SIZE);
 
+  // Henter butikksjefer ved første innlasting
   useEffect(() => {
     const fetchManagers = async () => {
       try {
@@ -34,6 +37,7 @@ const AdminManagers = () => {
     fetchManagers();
   }, []);
 
+  // Søkelogikk for å filtrere butikksjefer basert på input
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
@@ -42,7 +46,8 @@ const AdminManagers = () => {
       setFilteredManagers(managers);
     } else {
       const filtered = managers.filter((manager) => {
-        const fullName = `${manager.first_name} ${manager.last_name}`.toLowerCase();
+        const fullName =
+          `${manager.first_name} ${manager.last_name}`.toLowerCase();
         const email = manager.email.toLowerCase();
         const storeName = manager.store_name?.toLowerCase() || "";
         const storeChain = manager.store_chain?.toLowerCase() || "";
@@ -57,13 +62,15 @@ const AdminManagers = () => {
       setFilteredManagers(filtered);
     }
 
-    setCurrentPage(1); // reset pagination on search
+    setCurrentPage(1); // Resetter til første side ved nytt søk
   };
 
+  // Øker antall synlige kort ved klikking på "Vis mer"
   const handleShowMore = () => {
     setCurrentPage((prev) => prev + 1);
   };
 
+  // Viser loading-komponent ved lasting
   if (loading) return <Loading />;
 
   return (
@@ -93,6 +100,7 @@ const AdminManagers = () => {
             <ButikkansattCard isEmptyCard={true} cardClass="employee-theme" />
           </Link>
 
+          {/* Viser liste eller tomt resultat */}
           {paginatedManagers.length > 0 ? (
             paginatedManagers.map((manager) => (
               <Link
@@ -112,9 +120,10 @@ const AdminManagers = () => {
           ) : (
             <p className="no-managers-found">Ingen butikksjefer funnet.</p>
           )}
-
         </div>
       </div>
+
+      {/* Vis mer-knapp for paginering */}
       {paginatedManagers.length < filteredManagers.length && (
         <div className="show-more-container">
           <button className="show-more-button" onClick={handleShowMore}>
