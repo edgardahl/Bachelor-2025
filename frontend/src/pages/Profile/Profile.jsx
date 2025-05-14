@@ -200,6 +200,7 @@ const Profile = () => {
       // Sørg for at ønskede kommuner beholdes hvis man ikke redigerer dem
       if (
         field !== "work_municipality_ids" &&
+        Array.isArray(selectedMunicipalityOptions) &&
         selectedMunicipalityOptions.length > 0 &&
         !("work_municipality_ids" in payload)
       ) {
