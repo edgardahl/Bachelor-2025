@@ -78,22 +78,6 @@ export const getStoresWithMunicipalityController = async (req, res) => {
   }
 };
 
-// Henter en butikk med full informasjon – benytter egen modell
-export const getStoreWithInfoController = async (req, res) => {
-  const { storeId } = req.params;
-
-  try {
-    const store = await getStoreWithFullInfoModel(storeId);
-    if (!store) {
-      return res.status(404).json({ error: "Store not found" });
-    }
-    return res.json(store);
-  } catch (error) {
-    console.error("Error fetching store:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-
 // Lager ny butikk – kun tillatt for admin
 export const createStoreController = async (req, res) => {
   const sanitized = sanitizeStoreUpdate(req.body);
