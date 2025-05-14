@@ -7,7 +7,7 @@ Dette prosjektet er utviklet som en del av en bacheloroppgave i samarbeid med **
 
 Vi har utviklet en digital plattform som gjør det mulig for butikksjefer å publisere ledige vakter, og for ansatte fra egen eller andre butikker å reservere dem. Butikksjefer får oversikt over egne og eksterne ansatte som er tilgjengelige for arbeid, og både ansatte og sjefer kan se hvilke Coop Øst-butikker som har ledige vakter.
 
-Plattformen bidrar til bedre utnyttelse av personalressurser og gir ansatte økt fleksibilitet og valgfrihet. Løsningen er skreddersydd for Coop Øst – Norges største samvirkelag, med over 120 butikker og ca. 2600 ansatte.
+Plattformen bidrar til bedre utnyttelse av personalressurser og gir ansatte økt fleksibilitet og valgfrihet. Løsningen er utviklet for Coop Øst – Norges største samvirkelag, med over 120 butikker og ca. 2600 ansatte.
 
 ---
 
