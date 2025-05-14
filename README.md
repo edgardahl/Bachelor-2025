@@ -50,7 +50,7 @@ Frontend:
 cd frontend
 npm run dev
 ```
-Backend
+Backend:
 ```bash
 cd backend
 nodemon server.js
