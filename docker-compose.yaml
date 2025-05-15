@@ -11,8 +11,6 @@ services:
       - ./backend/.env
     volumes:
       - ./backend:/app
-    # depends_on:
-    #   - postgres
 
   frontend:
     build:
@@ -24,18 +22,3 @@ services:
       - ./frontend/.env
     volumes:
       - ./frontend:/app
-
-#   postgres:
-#     image: postgres:14
-#     container_name: postgres
-#     environment:
-#       POSTGRES_USER: postgres
-#       POSTGRES_PASSWORD: coop123
-#       POSTGRES_DB: postgres
-#     ports:
-#       - "5432:5432"
-#     volumes:
-#       - postgres_data:/var/lib/postgresql/data
-
-# volumes:
-#   postgres_data:

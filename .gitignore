@@ -45,5 +45,9 @@ Thumbs.db
 /backend/build
 /backend/logs
 
+# DB
+/backend/seed
+/backend/dummydata
+
 # Package files
 package-lock.json
