@@ -24,8 +24,8 @@ Plattformen bidrar til bedre utnyttelse av personalressurser og gir ansatte økt
 ### 1. Klon prosjektet
 
 ```bash
-git clone https://github.com/edgardahl/bacherlor2025.git
-cd bacherlor2025
+git clone https://github.com/edgardahl/Bachelor-2025.git
+cd Bachelor-2025
 ```
 
 ### 2. Installer dependencies
