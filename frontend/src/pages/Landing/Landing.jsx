@@ -10,7 +10,7 @@ import "../../components/Cards/ButikkCard/ButikkCard.css";
 import "../../components/Cards/ShiftCard/ShiftCard.css";
 import "../../components/Cards/ButikkansattCard/ButikkansattCard.css";
 
-import "./landing.css";
+import "./Landing.css";
 
 const Landing = () => {
   // Henter navigasjonsfunksjon for å rute brukeren til andre sider
