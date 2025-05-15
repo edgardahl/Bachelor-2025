@@ -6,10 +6,11 @@ import { FaClipboardUser } from "react-icons/fa6";
 import ButikkCard from "../../components/Cards/ButikkCard/ButikkCard";
 import ShiftCard from "../../components/Cards/ShiftCard/ShiftCard";
 import ButikkansattCard from "../../components/Cards/ButikkansattCard/ButikkansattCard";
-import "./Landing.css";
 import "../../components/Cards/ButikkCard/ButikkCard.css";
 import "../../components/Cards/ShiftCard/ShiftCard.css";
 import "../../components/Cards/ButikkansattCard/ButikkansattCard.css";
+
+import "./Landing.css";
 
 const Landing = () => {
   // Henter navigasjonsfunksjon for å rute brukeren til andre sider
