@@ -348,201 +348,86 @@ a {
 
 
 /*   MIDDLERTIDIG ADMIN BUTIKK DETAL CSS  */
-.adminbutikk-page {
+.admin-manager-page {
   max-width: 1006px;
   margin: 0 auto;
   border-radius: 4px;
-  padding: 24px;
+  padding: 30px;
   font-family: "Segoe UI", sans-serif;
   background-color: var(--Body-background);
   color: var(--Text-color-light);
 }
 
-.adminbutikk-title {
-  color: var(--Stores-main);
-  font-size: 4rem;
-  font-weight: 600;
-  text-align: center;
-  max-width: 80%;
-  margin-bottom: 20px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.adminbutikk-description {
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto 40px auto;
-  color: var(--Text-color-light);
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.adminbutikk-form {
+.admin-managers {
+  max-width: 1200px;
   margin: 0 auto;
-  background: #ffffff;
-  border-radius: 4px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  padding: 2.5rem;
-  width: 100%;
-  max-width: 700px;
-  transition: box-shadow 0.3s ease;
 }
 
-.adminbutikk-form:hover {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-.adminbutikk-field {
+.admin-managers-title {
+  font-size: 2rem;
+  font-weight: 600;
   margin-bottom: 1.5rem;
-}
-
-.adminbutikk-label {
-  display: block;
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 0.4rem;
-  color: #555;
-}
-
-.adminbutikk-text {
-  font-size: 1.05rem;
-  padding: 0.75rem 1rem;
-  background-color: #f3f4f6;
-  border-radius: 4px;
+  text-align: center;
   color: #333;
-  border-bottom: 1px solid transparent;
 }
 
-.adminbutikk-input {
+.search-bar {
+  position: relative;
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1.05rem;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  background-color: #ffffff;
-  transition: border 0.2s ease;
+  max-width: 400px;
+  margin: 0 auto 2rem auto;
+}
+
+.search-bar .search-input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: border 0.2s ease-in-out;
+}
+
+.search-input:focus {
+  border-color: #0077cc;
   outline: none;
 }
 
-.adminbutikk-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+.search-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  pointer-events: none;
 }
 
-.adminbutikk-select {
-  font-size: 1.05rem;
-}
-
-.adminbutikk-actions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+.manager-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
   margin-top: 2rem;
+  margin-bottom: 20px;
 }
 
-.adminbutikk-actions div {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 0 auto;
+.manager-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.adminbutikk-button-edit {
-  background-color: var(--Button-color);
-  color: var(--White);
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: var(--Text-font);
-  transition: background-color var(--Transition-button-simple);
-}
-
-.adminbutikk-button-edit:hover {
-  background-color: var(--Button-hover-color);
-}
-
-.adminbutikk-button-cancle {
-  background-color: var(--Cancel-color);
-  color: black;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: var(--Text-font);
-  transition: background-color var(--Transition-button-simple);
-}
-
-.adminbutikk-button-cancle:hover {
-  background-color: var(--Cancel-color-hover);
+.no-managers-found {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #666;
+  margin-top: 3rem;
 }
 
 .adminbutikk-manager-link {
   text-decoration: none;
-  color: #007bff;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.adminbutikk-manager-link:hover {
-  color: #0056b3;
-  transform: scale(1.05);
-}
-
-.adminbutikk-manager-link:active {
-  color: #003366;
-}
-
-.adminbutikk-manager-link .adminbutikk-text {
-  color: #007bff;
-  cursor: pointer;
-}
-
-.adminbutikk-manager-link .adminbutikk-text:hover {
-  text-decoration: underline;
-}
-
-.adminbutikk-page .error-message {
-  color: red;
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
-}
-
-.adminbutikk-page .error {
-  border: 2px solid red;
-}
-
-.adminbutikk-text,
-.adminbutikk-input,
-.adminbutikk-select__control {
-  font-size: 1.05rem;
-  padding: 0.75rem 1rem;
-  min-height: 48px;
-  border-radius: 4px;
-  background-color: #f3f4f6;
-  border: 1px solid transparent;
-  box-sizing: border-box;
+  color: inherit;
 }
 
 @media (max-width: 1030px) {
-  .adminbutikk-page {
+  .admin-manager-page {
     border-radius: 0;
-  }
-}
-
-@media (max-width: 700px) {
-  .adminbutikk-button-edit,
-  .adminbutikk-button-cancle {
-    margin: 0 auto;
-  }
-
-  .adminbutikk-title {
-    font-size: 1.9rem;
   }
 }
