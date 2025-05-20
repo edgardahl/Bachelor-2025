@@ -33,9 +33,7 @@ const AdminDashboard = () => {
     const fetchManagers = async () => {
       try {
         setLoading(true); // Starter loading her også, siden begge kall påvirker visning
-        const response = await axios.get(
-          "http://localhost:5001/api/users/store_managers"
-        );
+        const response = await axios.get("/users/store_managers");
         setManagersCount(response.data.length);
       } catch (err) {
         console.error("Error fetching managers:", err);
